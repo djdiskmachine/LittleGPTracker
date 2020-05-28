@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=LGPT
+Comment=LGPT "Piggy" Music Tracker
+Exec=lgpt
+Terminal=true
+Type=Application
+StartupNotify=true
+Icon=littlegptracker
+Categories=applications;
+X-OD-Manual=readme.txt
+X-OD-Manual[es]=leeme.txt
+Name[es]=LGPT
+Comment[es]=Tracker Musical LGPT "Piggy"

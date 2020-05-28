@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#El condicional
+if [ ! -f "/usr/local/home/.lgpt/lgpt.dge" ]; then
+#Si no existe:
+#Crea el directorio
+mkdir /usr/local/home/.lgpt/
+#Copia el archivo, lo descomprime, lo borra y ejecuta el programa
+cp piggy.tar.gz /usr/local/home/.lgpt/piggy.tar.gz
+tar -zxvf piggy.tar.gz -C /media/home/.lgpt/
+cd /usr/local/home/.lgpt
+rm /usr/local/home/.lgpt/piggy.tar.gz
+/usr/local/home/.lgpt/lgpt.dge
+else
+#Si existe:
+#Ejecuta el programa
+cd /usr/local/home/.lgpt
+/usr/local/home/.lgpt/lgpt.dge
+fi

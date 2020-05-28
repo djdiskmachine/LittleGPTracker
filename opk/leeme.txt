@@ -1,0 +1,37 @@
+===============================
+LittleGPTracker
+===============================
+Version del OPK: 1.0
+================================
+Fecha de Lanzamiento: 27/05/2020
+================================
+
+Compilado por: RafaVico
+
+Empaquetado por: _-Caleb-_ 
+e-mail: cqleb@tuta.io
+Telegram: @calebin
+
+==========================
+LittleGPTracker para RG350 
+==========================
+
+>> Sitio web de LittleGPTracker: https://www.littlegptracker.com/
+
+>> Sitio web de RafaVico: https://github.com/RafaVico
+
+================================
+INFO
+================================
+
+LittleGpTracker es un tracker musical (programa para crear música) de código abierto con una interfaz desarrollada principalmente para consolas (Desde Gameboy en Adelante)
+
+Esta versión está basada en la versión de Dingux publicada por gameblabla.
+
+Se desconoce si la entrada usb OTG para MIDI es o no es funcional.
+
+Durante el primer arranque se creará una carpeta llamada "/media/home/.lgptr/" en la tarjeta microsd interna ya que la aplicación sólo trabaja en su carpeta.
+
+Se ha creado un theme siguiendo el esquema de colores de la RG350 Negro-Naranja. 
+
+Se incluye un tema de ejemplo: lgpt10k
