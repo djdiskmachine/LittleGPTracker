@@ -7,7 +7,7 @@ LittleGPTracker port for RG350 handheld.
 
 
 
-LittleGPTracker website: littlegptracker.com/
+LittleGPTracker website: https://www.littlegptracker.com/
 
 LittleGPTracker manual: https://wiki.littlegptracker.com/doku.php?id=lgpt:reference_manual
 
