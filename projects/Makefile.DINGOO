@@ -1,9 +1,9 @@
 
-DEVKIT=/opt/mipsel-linux-uclibc
+DEVKIT=/opt/gcw0-toolchain
 
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	mipsel-linux-
-SDL_BASE = /opt/mipsel-linux-uclibc/usr/bin/
+SDL_BASE = /opt/gcw0-toolchain/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/
 
 include $(PWD)/dingoo_rules
 
@@ -13,5 +13,5 @@ CXXFLAGS:=	$(CFLAGS)
 
 EXTENSION:= dge
 
-LIBS	:=  -L/opt/mipsel-linux-uclibc/usr/lib -lSDL -lpthread 
+LIBS	:=  -L/opt/gcw0-toolchain/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/lib -lSDL -lpthread 
 LIBDIRS	:=	$(DEKVIT)/usr/lib

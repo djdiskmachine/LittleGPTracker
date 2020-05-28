@@ -4,7 +4,7 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
-PLATFORM:=  RASPI
+PLATFORM:=  DINGOO
 
 include $(PWD)/Makefile.$(PLATFORM)
 
@@ -216,6 +216,8 @@ DINGOOFILES             :=  GPSDLMain.o \
 					Process.o \
 					UnixProcess.o \
 					SDLAudioDriver.o \
+					DINGOOMidiService.o \
+					DINGOOSerialMidiDevice.o \
 					DINGOOAudioDriver.o \
 					DINGOOSystem.o \
 					DINGOOEventQueue.o \
