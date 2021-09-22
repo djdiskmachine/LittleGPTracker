@@ -94,7 +94,7 @@ class sfReader {
   #ifdef USE_MACINTOSH
   HydraClass*  ReadSFBFile(FSSpec * pSpecifier, CHAR *chReqdWaveTable = '\0');
   #endif
-  HydraClass*  ReadSFBFile(CHAR *sfFileName, CHAR *chReqdWaveTable = '\0');
+  HydraClass*  ReadSFBFile(CHAR *sfFileName, CHAR *chReqdWaveTable = "\0");
  
   BOOL         IsValid(void);
 
