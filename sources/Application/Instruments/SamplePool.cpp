@@ -5,9 +5,6 @@
 #include "Application/Persistency/PersistencyService.h" 
 #include "System/io/Status.h"
 #include <string>
-#include "SoundFontSample.h"
-#include "SoundFontPreset.h"
-#include "SoundFontManager.h"
 #include "Application/Model/Config.h"
 
 #define SAMPLE_LIB "root:samplelib" 
@@ -39,7 +36,6 @@ void SamplePool::Reset() {
 		SAFE_DELETE(wav_[i]) ;
 		SAFE_FREE(names_[i]) ;
 	} ;
-	SoundFontManager::GetInstance()->Reset() ;
 } ;
 
 void SamplePool::Load() {
@@ -67,18 +63,6 @@ void SamplePool::Load() {
 		} ;
 
 	} ;
-
-	// now, let's look at soundfonts
-
-	dir->GetContent("*.sf2") ;
-	IteratorPtr<Path> it2(dir->GetIterator()) ;
-
-	for(it2->Begin();!it2->IsDone();it2->Next()) {
-		Path &path=it2->CurrentItem() ;
-		loadSoundFont(path.GetPath().c_str()) ;
-	} ;
-
-	delete dir ;
 
 	// now sort the samples
 
@@ -224,51 +208,4 @@ void SamplePool::PurgeSample(int i) {
 	ev.index_=i ;
 	ev.type_=SPET_DELETE ;
 	NotifyObservers(&ev) ;
-} ;
-
-bool SamplePool::loadSoundFont(const char *path) {
-
-	sfBankID  id=SoundFontManager::GetInstance()->LoadBank(path) ;
-	if (id==-1) {
-		return false ;
-	} 
-
-	// Grab the sample offset
-
-	long offset=sfGetSMPLOffset(id) ;
-
-	// Add all presets of the sf
-
-	WORD presetCount=0 ;
-	SFPRESETHDRPTR pHeaders=sfGetPresetHdrs(id,&presetCount); 
-
-	for (int i=0;i<presetCount;i++) {
-		if (count_<MAX_PIG_SAMPLES) {
-			sfPresetHdr current=pHeaders[i] ;
-			wav_[count_]=new SoundFontPreset(id,i) ;
-			const char *name=pHeaders[i].achPresetName ;
-			names_[count_]=(char*)SYS_MALLOC(strlen(name)+1) ;
-			strcpy(names_[count_],name) ;
-			count_++ ;
-		}
-	}
-/*
-	// Get Sample information
-
-	WORD headerCount=0 ;
-	SFSAMPLEHDRPTR  &headers=sfGetSampHdrs(id,&headerCount ); 
-
-	// Loop on every sample, add them
-
-	for (int i=0;i<headerCount;i++) {
-		if (count_<MAX_PIG_SAMPLES) {
-			sfSampleHdr &current=headers[i] ;
-			wav_[count_]=new SoundFontSample(current) ;
-			const char *name=headers[i].achSampleName ;
-			names_[count_]=(char*)SYS_MALLOC(strlen(name)+1) ;
-			strcpy(names_[count_],name) ;
-			count_++ ;
-		}
-	}
-*/	return true ;
 } ;

@@ -13,7 +13,11 @@ DINGOOGUIWindowImp *instance_ ;
 
 DINGOOGUIWindowImp::DINGOOGUIWindowImp(GUICreateWindowParams &p) {
 
+#ifndef PLATFORM_DINGOO
 	screen_ = SDL_SetVideoMode(p.rect.Width(),p.rect.Height(), 16, SDL_HWSURFACE);
+#endif
+
+	screen_ =  SDL_SetVideoMode(320, 240, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if (!screen_) {
 		Trace::Debug("Trying SDL SW Mode") ;
 		screen_ = SDL_SetVideoMode(p.rect.Width(),p.rect.Height(), 16, SDL_SWSURFACE);

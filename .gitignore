@@ -1,4 +1,8 @@
 bin/**
 build/**
 projects/buildPSP/**
+projects/buildDINGOO/**
+projects/buildDEB/**
+projects/pkg
+projects/lgpt10k
 tracks/**

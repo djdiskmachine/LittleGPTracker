@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=MksLGPT
+Comment=lgpt
+Exec=lgpt.dge
+Terminal=true
+Type=Application
+StartupNotify=true
+Icon=icon32
+Categories=applications;
+X-OD-Manual=readme.txt

@@ -60,9 +60,11 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 
   windowed_ = !framebuffer_;
 
+#ifndef PLATFORM_DINGOO
   const SDL_VideoInfo* videoInfo = SDL_GetVideoInfo();
   NAssert(videoInfo != NULL);
- 
+#endif
+
  #if defined(PLATFORM_GP2X)
   int screenWidth = 320;
   int screenHeight = 240;
@@ -71,15 +73,20 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenHeight = 272;
   windowed_ = false;
  #else
+ #ifndef PLATFORM_DINGOO
   int screenWidth = videoInfo->current_w;
   int screenHeight = videoInfo->current_h;
  #endif
-  bitDepth_ = videoInfo->vfmt->BitsPerPixel;
+	int screenWidth = 320;
+	int screenHeight = 240;
+ #endif
+  // bitDepth_ = videoInfo->vfmt->BitsPerPixel;
+	bitDepth_ = 16;
   
   char driverName[64] ;
   SDL_VideoDriverName(driverName,64);
   
-  Trace::Log("DISPLAY","Using driver %s. Screen (%d,%d) Bpp:%d",driverName,screenWidth,screenHeight,bitDepth_);
+  // Trace::Log("DISPLAY","Using driver %s. Screen (%d,%d) Bpp:%d",driverName,screenWidth,screenHeight,bitDepth_);
   
   bool fullscreen=false ;
   
@@ -122,9 +129,14 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   screenRect_._topLeft._y=0;
   screenRect_._bottomRight._x=windowed_?appWidth*mult_:screenWidth;
   screenRect_._bottomRight._y=windowed_?appHeight*mult_:screenHeight;
-
+ 
+#ifdef PLATFORM_DINGOO
+	Trace::Log("DISPLAY", "===MAKS=====");
+	screen_ = SDL_SetVideoMode(320, 240, 16, SDL_HWSURFACE | SDL_FULLSCREEN);
+#else
   Trace::Log("DISPLAY","Creating SDL Window (%d,%d)",screenRect_.Width(), screenRect_.Height());
 	screen_ = SDL_SetVideoMode(screenRect_.Width(),screenRect_.Height(),bitDepth_ ,fullscreen?SDL_FULLSCREEN:SDL_HWSURFACE);
+#endif
 	NAssert(screen_) ;
 
 	// Compute the x & y offset to locate our app window

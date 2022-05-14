@@ -4,7 +4,7 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
-PLATFORM:=  RASPI
+PLATFORM:=  DINGOO
 
 include $(PWD)/Makefile.$(PLATFORM)
 
@@ -113,7 +113,8 @@ DINGOODIRS      :=    . \
 				../sources/Adapters/SDL/Audio \
 				../sources/Adapters/SDL/Process \
 				../sources/Adapters/SDL/GUI \
-				../sources/Adapters/SDL/Timer
+				../sources/Adapters/SDL/Timer 
+				
 
 PSPDIRS	:=    . \
 				../sources/Adapters/PSP/Main \
@@ -176,7 +177,6 @@ COMMONDIRS	:=	../sources/System/Console \
   				../sources/Foundation/Services \
 				../sources/Foundation/Variables \
 				../sources/Externals/Compression \
-				../sources/Externals/Soundfont \
 				../sources/Externals/TinyXML
 
 #---------------------------------------------------------------------------------
@@ -360,8 +360,6 @@ CAANOOFILES		:=	CAANOOSDLMain.o \
 					MixerService.o PlayerMixer.o \
 					Service.o ServiceRegistry.o SubService.o \
 					Variable.o VariableContainer.o WatchedVariable.o \
-					SoundFontPreset.o SoundFontManager.o SoundFontSample.o \
-					ENAB.o HYDRA.o OMEGA.o RIFF.o SFDETECT.o SFLOOKUP.o SFNAV.o SFREADER.o WIN_MEM.o \
 					HexBuffers.o lz.o \
 					tinyxmlparser.o tinyxml.o tinyxmlerror.o tinystr.o Tiny2NosStub.o \
 

@@ -1,17 +1,21 @@
 
-DEVKIT=/opt/mipsel-linux-uclibc
+#DEVKIT=/opt/mipsel-linux-uclibc
+DEVKIT=/opt/gcw0-toolchain
 
-TOOLPATH=$(DEVKIT)/usr/bin
+TOOLPATH=$(DEVKIT)/bin
 PREFIX		:=	mipsel-linux-
-SDL_BASE = /opt/mipsel-linux-uclibc/usr/bin/
+SDL_BASE = /opt/gcw0-toolchain/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/
 
 include $(PWD)/dingoo_rules
 
-CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 -D_DEBUG -Wall -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources -D__LINUX_ALSA__  -DCPP_MEMORY
+#CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 -D_DEBUG -Wall -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources -D__LINUX_ALSA__  -DCPP_MEMORY
+CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O2 -D_DEBUG -Wall -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources -D__LINUX_ALSA__  -DCPP_MEMORY
 
 CXXFLAGS:=	$(CFLAGS)
 
 EXTENSION:= dge
 
-LIBS	:=  -L/opt/mipsel-linux-uclibc/usr/lib -lSDL -lpthread 
-LIBDIRS	:=	$(DEKVIT)/usr/lib
+LIBS	:=  -Wl,--allow-multiple-definition,--allow-shlib-undefined -lSDL -lpthread
+LIBDIRS	:=	$(DEKVIT)/usr/lib 
+
+LDFLAGS := -Wl,--allow-shlib-undefined,--allow-multiple-definition -static-libstdc++ -static-libgcc
