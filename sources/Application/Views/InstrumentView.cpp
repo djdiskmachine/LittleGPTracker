@@ -174,6 +174,14 @@ void InstrumentView::fillSampleParameters() {
 	f1=new UIIntVarField(position,*v,"loop mode: %s",0,SILM_LAST-1,1,1) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
+	position._x+=16 ;
+
+	v=instrument->FindVariable(SIP_SLICES) ;
+	f1=new UIIntVarField(position,*v,"slices: %2.2X",1,0xFF,1,0x10) ;
+	T_SimpleList<UIField>::Insert(f1) ;
+
+	position._x-=16 ;
+
 	position._y+=2 ;
 	v=instrument->FindVariable(SIP_START) ;
 	f1=new UIBigHexVarField(position,*v,7,"start: %7.7X",0,instrument->GetSampleSize()-1,16) ;

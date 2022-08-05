@@ -88,6 +88,9 @@ SampleInstrument::SampleInstrument() {
 	 Insert(loopMode_) ;
 	 loopMode_->SetInt(0) ;
 
+	 slices_=new Variable("slices",SIP_SLICES,16) ;
+	 Insert(slices_) ;
+
 	 loopStart_=new WatchedVariable("loopstart",SIP_LOOPSTART,0) ;
 	 Insert(loopStart_) ;
 	 loopStart_->AddObserver(*this) ;
