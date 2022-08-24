@@ -1,0 +1,18 @@
+DEVKIT=/opt/miyoomini-toolchain
+
+TARGET = lgpt.elf
+
+TOOLPATH=$(DEVKIT)/usr/bin
+PREFIX		:=	arm-linux-gnueabihf-
+SDL_BASE = /opt/miyoomini-toolchain/usr/arm-linux-gnueabihf/sysroot/usr/bin/
+
+include $(PWD)/miyoomini_rules
+
+CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 -D_NDEBUG -D_NO_JACK_ -Wall -DPLATFORM_DINGOO -I$(PWD)/../sources -D__LINUX_ALSA__  -DCPP_MEMORY -DMIYOOMINI
+
+CXXFLAGS:=	$(CFLAGS) -fpermissive -std=gnu++03
+
+EXTENSION:= elf
+
+LIBS	:=  -lSDL -lasound -lpthread 
+LIBDIRS	:=	$(DEKVIT)/usr/lib

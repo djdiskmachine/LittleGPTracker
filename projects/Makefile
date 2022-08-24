@@ -4,7 +4,7 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
-PLATFORM:=  RASPI
+PLATFORM:=  MIYOOMINI
 
 include $(PWD)/Makefile.$(PLATFORM)
 
@@ -179,6 +179,20 @@ COMMONDIRS	:=	../sources/System/Console \
 				../sources/Externals/Soundfont \
 				../sources/Externals/TinyXML
 
+MIYOOMINIDIRS      :=    . \
+				../sources/Adapters/DINGOO/Main \
+				../sources/Adapters/Unix/FileSystem \
+				../sources/System/Process \
+				../sources/Adapters/Unix/Process \
+				../sources/Adapters/DINGOO/System \
+				../sources/Adapters/DINGOO/Midi \
+				../sources/Adapters/Dummy/Midi \
+				../sources/Adapters/DINGOO/Audio \
+				../sources/Adapters/SDL/Audio \
+				../sources/Adapters/SDL/Process \
+				../sources/Adapters/SDL/GUI \
+				../sources/Adapters/SDL/Timer
+
 #---------------------------------------------------------------------------------
 # files definition
 #---------------------------------------------------------------------------------
@@ -314,7 +328,7 @@ CAANOOFILES		:=	CAANOOSDLMain.o \
 					SDLTimer.o \
 					GUIFactory.o SDLEventManager.o SDLGUIWindowImp.o 
 
-					COMMONFILES		:=	Logger.o Trace.o Result.o Status.o Config.o \
+COMMONFILES		:=	Logger.o Trace.o Result.o Status.o Config.o \
 					Timer.o FileSystem.o \
 					SysMutex.o TimeService.o \
 					MidiOutDevice.o MidiInDevice.o MidiService.o Groove.o \
@@ -364,6 +378,23 @@ CAANOOFILES		:=	CAANOOSDLMain.o \
 					ENAB.o HYDRA.o OMEGA.o RIFF.o SFDETECT.o SFLOOKUP.o SFNAV.o SFREADER.o WIN_MEM.o \
 					HexBuffers.o lz.o \
 					tinyxmlparser.o tinyxml.o tinyxmlerror.o tinystr.o Tiny2NosStub.o \
+
+
+MIYOOMINIFILES             :=  GPSDLMain.o \
+					DummyMidi.o \
+					UnixFileSystem.o \
+					DINGOOAudio.o \
+					Process.o \
+					UnixProcess.o \
+					SDLAudioDriver.o \
+					DINGOOAudioDriver.o \
+					DINGOOSystem.o \
+					DINGOOEventQueue.o \
+					SDLProcess.o \
+					SDLTimer.o \
+					GUIFactory.o \
+					SDLEventManager.o \
+					SDLGUIWindowImp.o
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
