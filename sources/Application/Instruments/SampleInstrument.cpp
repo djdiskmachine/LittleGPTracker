@@ -88,7 +88,7 @@ SampleInstrument::SampleInstrument() {
 	 Insert(loopMode_) ;
 	 loopMode_->SetInt(0) ;
 
-	 slices_=new Variable("slices",SIP_SLICES,16) ;
+	 slices_=new Variable("slices",SIP_SLICES,1) ;
 	 Insert(slices_) ;
 
 	 loopStart_=new WatchedVariable("loopstart",SIP_LOOPSTART,0) ;
@@ -268,6 +268,14 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
       }
       break ;
 		}
+	case SILM_SLICE: {
+		int slice = rp->rendLoopEnd_/slices_->GetInt();
+		rp->rendFirst_ = rp->midiNote_*slice;
+		rp->position_= float(rp->rendFirst_);
+		rp->rendLoopEnd_ = (rp->midiNote_+1)*slice;
+		rp->baseSpeed_=fl2fp(source_->GetSampleRate(1)/driverRate);
+		break ;
+	}
 		case SILM_LAST:
 			NAssert(0) ;
 			break ;
@@ -394,6 +402,7 @@ void SampleInstrument::updateFeedback(renderParams *rp) {
 		switch(loopMode) {
 			case SILM_ONESHOT:
 			case SILM_LOOP:
+			case SILM_SLICE:
 			case SILM_LOOPSYNC:
 				rp->feedbackMode_=FB_ADD ;
 				if (offset<0x80) {
@@ -624,6 +633,7 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 				if (input>=lastSample/*-((loopMode==SILM_OSCFINE)?1:0)*/) {
 					switch(loopMode) {
 						case SILM_ONESHOT:
+						case SILM_SLICE:
 							*rpFinished=true ;
 							break ;
 						case SILM_LOOP:
@@ -659,6 +669,7 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 				if (input<lastSample) {
 					switch(loopMode) {
 						case SILM_ONESHOT:
+						case SILM_SLICE:
 							*rpFinished=true ;
 							break ;
 						case SILM_LOOP:

@@ -6,7 +6,8 @@ char *loopTypes[SILM_LAST]= {
 	"loop",
 	"oscillator",
 //	"oscillator fine",
-	"looper sync"
+	"looper sync",
+	"slicer"
 } ;
 
 char *interpolationTypes[] = {
