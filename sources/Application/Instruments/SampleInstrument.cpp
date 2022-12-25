@@ -269,11 +269,11 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
       break ;
 		}
 	case SILM_SLICE: {
-		int slice = rp->rendLoopEnd_/slices_->GetInt();
-		rp->rendFirst_ = rp->midiNote_*slice;
-		rp->position_= float(rp->rendFirst_);
+		int wavSize=source_->GetSize(0);
+		int slice = wavSize/slices_->GetInt();
+		rp->position_= float(rp->midiNote_*slice);
+		rp->baseSpeed_=fl2fp(source_->GetSampleRate(0)/driverRate) ;
 		rp->rendLoopEnd_ = (rp->midiNote_+1)*slice;
-		rp->baseSpeed_=fl2fp(source_->GetSampleRate(1)/driverRate);
 		break ;
 	}
 		case SILM_LAST:
@@ -287,7 +287,10 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 
 	float fineTune=float(fineTune_->GetInt()-0x7F) ;
 	fineTune/=float(0x80) ;
-	int offset=midinote-rootNote ;
+	int offset = -24; // Like WTF m8?
+	if (loopmode != SILM_SLICE) {
+		offset=midinote-rootNote;
+	}
 	while (offset>127)
   {
 		offset-=12 ;
