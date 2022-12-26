@@ -272,8 +272,8 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 		int wavSize=rp->rendLoopEnd_;
 		int slice = wavSize/slices_->GetInt();
 		int note = rp->midiNote_;
-		if (note > slices_->GetInt()) {
-			note = slices_->GetInt();
+		if (note > slices_->GetInt()-1) {
+			break;
 			}
 		rp->position_= float(note*slice);
 		rp->baseSpeed_=fl2fp(source_->GetSampleRate(0)/driverRate) ;
