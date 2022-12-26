@@ -272,14 +272,12 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 		int wavSize=rp->rendLoopEnd_;
 		int slice = wavSize/slices_->GetInt();
 		int note = rp->midiNote_;
-		if (note > slices_->GetInt()-1) {
-			break;
-			}
+		if (note > slices_->GetInt()-1) break; // No sound outside of slice range
+
 		rp->position_= float(note*slice);
 		rp->baseSpeed_=fl2fp(source_->GetSampleRate(0)/driverRate) ;
 		rp->speed_ = rp->baseSpeed_;
-		if(note<127) rp->rendLoopEnd_ = (note+1)*slice;
-		else rp->rendLoopEnd_ = 127*slice;
+		rp->rendLoopEnd_ = (note+1)*slice;
 		break ;
 	}
 		case SILM_LAST:
