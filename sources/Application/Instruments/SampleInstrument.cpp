@@ -657,9 +657,10 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 							}
 							break ;
 						case SILM_LOOP_P2P:
-							if (rp->position_ >= rp->rendLoopEnd_-1) {
+							if (rp->position_ >= rp->rendLoopEnd_) {
 								Trace::Debug("Reached end");
 								rpReverse = true;
+								fpSpeed =- rp->speed_;
 							}
 							break;
 /*						case SILM_OSCFINE:
@@ -699,8 +700,10 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 							}
 							break ;
 						case SILM_LOOP_P2P:
-							if (rp->position_ <= rp->rendLoopStart_+100) {
+							if (rp->position_ <= rp->rendLoopStart_ + 1) {
 								Trace::Debug("Reached start");
+								fpSpeed = rp->speed_;
+								Trace::Debug("Post speed");
 								rpReverse = false; //Doesn't work for some reason, crashes
 							}
 							break;
