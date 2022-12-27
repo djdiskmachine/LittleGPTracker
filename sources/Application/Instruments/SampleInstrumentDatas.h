@@ -4,6 +4,7 @@
 char *loopTypes[SILM_LAST]= {
 	"none",
 	"loop",
+	"loop p2p",
 	"oscillator",
 //	"oscillator fine",
 	"looper sync",

@@ -218,6 +218,7 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 	 switch (loopmode) {
 		 case SILM_ONESHOT:
 		 case SILM_LOOP:
+		 case SILM_LOOP_P2P:
 
 			// Compute speed factor
 			// if instrument sampled below 44.1Khz, should
@@ -409,6 +410,7 @@ void SampleInstrument::updateFeedback(renderParams *rp) {
 		switch(loopMode) {
 			case SILM_ONESHOT:
 			case SILM_LOOP:
+			case SILM_LOOP_P2P:
 			case SILM_SLICE:
 			case SILM_LOOPSYNC:
 				rp->feedbackMode_=FB_ADD ;
@@ -654,6 +656,12 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 								fpSpeed=rp->speed_ ; 
 							}
 							break ;
+						case SILM_LOOP_P2P:
+							if (rp->position_ >= rp->rendLoopEnd_-1) {
+								Trace::Debug("Reached end");
+								rpReverse = true;
+							}
+							break;
 /*						case SILM_OSCFINE:
 						{
 							int offset=(input-lastSample)/channelCount ;
@@ -690,6 +698,12 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 								fpSpeed=rp->speed_ ; 
 							}
 							break ;
+						case SILM_LOOP_P2P:
+							if (rp->position_ <= rp->rendLoopStart_+100) {
+								Trace::Debug("Reached start");
+								rpReverse = false; //Doesn't work for some reason, crashes
+							}
+							break;
 /*						case SILM_OSCFINE:
 						{
 							int offset=(lastSample-input)/channelCount ;

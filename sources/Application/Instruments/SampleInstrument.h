@@ -14,6 +14,7 @@
 enum SampleInstrumentLoopMode {
 	SILM_ONESHOT=0,
 	SILM_LOOP,
+	SILM_LOOP_P2P,
 	SILM_OSC,
 //	SILM_OSCFINE,
 	SILM_LOOPSYNC,
