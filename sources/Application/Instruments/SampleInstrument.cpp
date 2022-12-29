@@ -658,9 +658,25 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 							break ;
 						case SILM_LOOP_P2P:
 							if (rp->position_ >= rp->rendLoopEnd_) {
+								Trace::Debug("====");
 								Trace::Debug("Reached end");
+								Trace::Debug("LoopPos: %d", loopPosition);
+								Trace::Debug("position: %d", rp->position_);
+								Trace::Debug("LastSample: %d", lastSample);
+								Trace::Debug("&LastSample: %d", &lastSample);
+								Trace::Debug("rendLoopEnd: %d", rp->rendLoopEnd_);
+								Trace::Debug("rendLoopStart: %d", rp->rendLoopStart_);
+								Trace::Debug("input: %d", input);
+								Trace::Debug("&input: %d", &input);
+								Trace::Debug("Assign reverse: %s", rpReverse?"true":"false");
 								rpReverse = true;
-								fpSpeed =- rp->speed_;
+								fpSpeed = -rp->speed_;
+								rp->couldClick_=SHOULD_KILL_CLICKS ;
+
+								Trace::Debug("input: %d", input);
+								Trace::Debug("LastSample: %d", lastSample);
+								Trace::Debug("&input: %d", &input);
+								Trace::Debug("&LastSample: %d", &lastSample);
 							}
 							break;
 /*						case SILM_OSCFINE:
@@ -700,11 +716,29 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 							}
 							break ;
 						case SILM_LOOP_P2P:
-							if (rp->position_ <= rp->rendLoopStart_ + 1) {
+							if (rp->position_ <= rp->rendLoopStart_) {
+								Trace::Debug("====");
 								Trace::Debug("Reached start");
-								fpSpeed = rp->speed_;
-								Trace::Debug("Post speed");
-								rpReverse = false; //Doesn't work for some reason, crashes
+								Trace::Debug("LoopPos: %d", loopPosition);
+								Trace::Debug("position: %d", rp->position_);
+								Trace::Debug("LastSample: %d", lastSample);
+								Trace::Debug("&LastSample: %d", &lastSample);
+								Trace::Debug("rendLoopEnd: %d", rp->rendLoopEnd_);
+								Trace::Debug("rendLoopStart: %d", rp->rendLoopStart_);
+								Trace::Debug("input: %d", input);
+								Trace::Debug("&input: %d", &input);
+								Trace::Debug("Assign reverse: %s", rpReverse?"true":"false");
+									fpSpeed = rp->speed_;
+									rpReverse = false;
+									input=loopPosition ;
+									rp->couldClick_=SHOULD_KILL_CLICKS ;
+
+
+								Trace::Debug("input: %d", input);
+								Trace::Debug("LastSample: %d", lastSample);
+								Trace::Debug("&input: %d", &input);
+								Trace::Debug("&LastSample: %d", &lastSample);
+
 							}
 							break;
 /*						case SILM_OSCFINE:
