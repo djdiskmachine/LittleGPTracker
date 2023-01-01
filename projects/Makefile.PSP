@@ -1,5 +1,5 @@
 
-PATH=$PATH:/c/devkitpro/devkitPSP/bin
+PATH=$PATH:/home/$(USER)/pspdev/bin/
 
 TARGET = lgpt
 
@@ -10,7 +10,7 @@ PSP_EBOOT_PIC1 = $(PWD)/psp_bg.png
 
 include $(PWD)/psp_rules
 
-PSPSDK=$(shell /c/devkitpro/devkitPSP/bin/psp-config --pspsdk-path)
+PSPSDK=$(shell /home/$(USER)/pspdev/bin/psp-config --pspsdk-path)
 PSPBIN = $(PSPSDK)/../bin
 
 CFLAGS	:=	-O3 -G0 -Wall -DPLATFORM_$(PLATFORM) -DNDEBUG -DCPP_MEMORY -I$(PWD)/../sources -I$(PSPSDK)/include
@@ -19,6 +19,6 @@ CXXFLAGS:=	$(CFLAGS) -fexceptions -fno-rtti
 
 EXTENSION:= elf
 
-LIBS = -L/usr/local/pspsdk/lib -lSDL_image -lpng -lz -lstdc++
-LIBS += -lSDL -lGL -lglu -lglut -lpspvfpu -lm -lpspdebug -lpspgu -lpspctrl -lpspge -lpspdisplay -lpsphprm -lpspsdk -lpsprtc -lpspaudio -lc -lpspuser -lpsputility -lpspkernel -lpspnet_inet -ljpeg
+LIBS = -L/home/$(USER)/pspdev/psp/lib -lSDL_image -lpng -lz -lstdc++
+LIBS += -lSDL -lGL -lglut -lpspvfpu -lm -lpspgu -lpsphprm -lpspsdk -lpsprtc -lpspaudio -lc -lpspuser -lpsputility -lpspirkeyb -lpsppower -lpspkernel -lpspnet_inet -ljpeg
 
