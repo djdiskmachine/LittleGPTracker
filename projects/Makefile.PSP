@@ -1,16 +1,14 @@
-
-PATH=$PATH:/home/$(USER)/pspdev/bin/
-
 TARGET = lgpt
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = LittleGPTracker
 PSP_EBOOT_ICON = $(PWD)/psp_icon.png
+PSP_EBOOT_ICON1 = $(PWD)/lgpt_icon.bmp
 PSP_EBOOT_PIC1 = $(PWD)/psp_bg.png
 
 include $(PWD)/psp_rules
 
-PSPSDK=$(shell /home/$(USER)/pspdev/bin/psp-config --pspsdk-path)
+PSPSDK=$(shell $(PSPDEV)/bin/psp-config --pspsdk-path)
 PSPBIN = $(PSPSDK)/../bin
 
 CFLAGS	:=	-O3 -G0 -Wall -DPLATFORM_$(PLATFORM) -DNDEBUG -DCPP_MEMORY -I$(PWD)/../sources -I$(PSPSDK)/include
@@ -19,6 +17,6 @@ CXXFLAGS:=	$(CFLAGS) -fexceptions -fno-rtti
 
 EXTENSION:= elf
 
-LIBS = -L/home/$(USER)/pspdev/psp/lib -lSDL_image -lpng -lz -lstdc++
-LIBS += -lSDL -lGL -lglut -lpspvfpu -lm -lpspgu -lpsphprm -lpspsdk -lpsprtc -lpspaudio -lc -lpspuser -lpsputility -lpspirkeyb -lpsppower -lpspkernel -lpspnet_inet -ljpeg
+LIBS = -L$(PSPDEV)/psp/lib -lstdc++ -lz -lm -lc -lSDL_image -lpng -lSDL -lGL -lglut -ljpeg
+LIBS += -lpspvfpu -lpspgu -lpsphprm -lpsprtc -lpspaudio -lpspirkeyb -lpsppower
 

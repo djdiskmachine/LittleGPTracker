@@ -1,5 +1,5 @@
 /*
- * PSP Software Development Kit - http://www.pspdev.org
+ * PSP Software Development Kit - https://github.com/pspdev
  * -----------------------------------------------------------------------
  * Licensed under the BSD license, see LICENSE in PSPSDK root for details.
  *
@@ -9,7 +9,6 @@
  * Copyright (c) 2005 James Forshaw <tyranid@gmail.com>
  * Copyright (c) 2005 John Kelley <ps2dev@kelley.ca>
  *
- * $Id: pspiofilemgr.h 1099 2005-10-02 13:06:46Z shine $
  */
 #ifndef __FILEIO_H__
 #define __FILEIO_H__
@@ -28,7 +27,7 @@ extern "C" {
 #endif
 
 /** @addtogroup FileIO File IO Library */
-/*@{*/
+/**@{*/
 
 /** Permission value for the sceIoAssign function */
 enum IoAssignPerms
@@ -396,7 +395,7 @@ int sceIoSync(const char *device, unsigned int unk);
   *
   * @return < 0 on error.
   */
-int sceIoWaitAsync(SceUID fd, long long *res);
+int sceIoWaitAsync(SceUID fd, SceInt64 *res);
 
 /**
   * Wait for asyncronous completion (with callbacks).
@@ -406,7 +405,7 @@ int sceIoWaitAsync(SceUID fd, long long *res);
   *
   * @return < 0 on error.
   */
-int sceIoWaitAsyncCB(SceUID fd, long long *res);
+int sceIoWaitAsyncCB(SceUID fd, SceInt64 *res);
 
 /**
   * Poll for asyncronous completion.
@@ -416,7 +415,7 @@ int sceIoWaitAsyncCB(SceUID fd, long long *res);
   *
   * @return < 0 on error.
   */
-int sceIoPollAsync(SceUID fd, long long *res);
+int sceIoPollAsync(SceUID fd, SceInt64 *res);
 
 /**
   * Get the asyncronous completion status.
@@ -427,7 +426,7 @@ int sceIoPollAsync(SceUID fd, long long *res);
   *
   * @return < 0 on error.
   */
-int sceIoGetAsyncStat(SceUID fd, int poll, long long *res);
+int sceIoGetAsyncStat(SceUID fd, int poll, SceInt64 *res);
 
 /**
   * Cancel an asynchronous operation on a file descriptor.
@@ -468,7 +467,7 @@ int sceIoChangeAsyncPriority(SceUID fd, int pri);
   */
 int sceIoSetAsyncCallback(SceUID fd, SceUID cb, void *argp);
 
-/*@}*/
+/**@}*/
 
 #ifdef __cplusplus
 }
