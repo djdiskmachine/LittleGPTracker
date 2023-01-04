@@ -17,6 +17,5 @@ CXXFLAGS:=	$(CFLAGS) -fexceptions -fno-rtti
 
 EXTENSION:= elf
 
-LIBS = -L$(PSPDEV)/psp/lib -lstdc++ -lz -lm -lc -lSDL_image -lpng -lSDL -lGL -lglut -ljpeg
+LIBS = -L$(PSPDEV)/psp/lib -lSDL_image -lpng -lz -lstdc++ -lSDL -lGL -lGLU -lglut -lm -lc -ljpeg
 LIBS += -lpspvfpu -lpspgu -lpsphprm -lpsprtc -lpspaudio -lpspirkeyb -lpsppower
-

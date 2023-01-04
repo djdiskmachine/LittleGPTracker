@@ -16,7 +16,7 @@
 #define VAR_TRANSPOSE  MAKE_FOURCC('T','R','S','P')
 
 #define PROJECT_NUMBER "1.3"
-#define PROJECT_RELEASE "psp_uplift"
+#define PROJECT_RELEASE "psp_djdiskmachine"
 #define BUILD_COUNT "000"
 
 #define MAX_TAP 3
