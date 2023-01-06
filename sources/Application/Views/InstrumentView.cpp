@@ -147,8 +147,12 @@ void InstrumentView::fillSampleParameters() {
 	f1=new UIIntVarField(position,*v,"Mode: %s",0,2,1,1) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
+	position._y+=1 ;
+	v=instrument->FindVariable(SIP_FILTATTN) ;
+	f1=new UIIntVarField(position,*v,"attn: %d [%2.2X]",1,0x7F,1,0x10) ;
+	T_SimpleList<UIField>::Insert(f1) ;
 
-	position._y+=2 ;
+	position._y+=1 ;
 	sf=new UIStaticField(position,"fb tune/mix: ") ;
 	T_SimpleList<UIField>::Insert(sf) ;
 

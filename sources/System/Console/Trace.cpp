@@ -21,7 +21,7 @@ void Trace::AddLine(const char* line)
   } 
   else
   {
-	printf("Trying to log %s before logger is installed",line);
+	printf("%s (logger uninit)\n",line);
   }
 }
 
