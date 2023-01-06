@@ -82,7 +82,6 @@ SampleInstrument::SampleInstrument() {
 
 	 filterAttenuate_=new Variable("filter attenuate",SIP_FILTATTN,0x80) ;
 	 Insert(filterAttenuate_) ;
-	 Trace::Log("ATTENUATION","Insert filterAtt: '%d'", filterAttenuate_);
 
 	 start_=new WatchedVariable("start",SIP_START,0) ;
 	 Insert(start_) ;
@@ -191,8 +190,6 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 
 	 rp->volume_=rp->baseVolume_=i2fp(volume_->GetInt()) ;
 	 rp->filterAttenuate_=i2fp(filterAttenuate_->GetInt()) ;
-	Trace::Log("ATTENUATION","Init filterAtt: '%d'", filterAttenuate_);
-
 
 	 rp->pan_=rp->basePan_=i2fp(pan_->GetInt()) ;
 
