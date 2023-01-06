@@ -14,7 +14,7 @@
 		https://github.com/djdiskmachine/pspdev
 	using nano ~/.bashrc, add
 		export PSPDEV=~/pspdev
-		export PATH=\$PATH:\$PSPDEV/bin
+		export PATH=$PATH:$PSPDEV/bin
 	at the end, then 
 		source ~/.bashrc
 
