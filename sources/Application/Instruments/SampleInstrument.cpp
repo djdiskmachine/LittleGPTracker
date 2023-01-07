@@ -232,6 +232,14 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
       rp->position_= float(rp->rendFirst_); 
 			rp->baseSpeed_=fl2fp(source_->GetSampleRate(rp->midiNote_)/driverRate) ;
 			rp->reverse_=(rp->rendLoopEnd_<rp->position_) ;
+
+			Trace::Log("PINGPONG","Start!");
+			Trace::Log("PINGPONG","rp->rendFirst_: %d", rp->rendFirst_);
+			Trace::Log("PINGPONG","position: %d", rp->position_);
+			Trace::Log("PINGPONG","rendLoopEnd: %d", rp->rendLoopEnd_);
+			Trace::Log("PINGPONG","rendLoopStart: %d", rp->rendLoopStart_);
+			Trace::Log("PINGPONG","Assigned rp->reverse: %s", rp->reverse_?"true":"false");
+			Trace::Log("PINGPONG","Assigned fpSpeed: %d", rp->baseSpeed_);
       
 			break ;
 
@@ -646,7 +654,7 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 
 			// look where we are, if we need to
 
-			if (!rpReverse) {
+			if (!rpReverse) { //Looping forward 
 				if (input>=lastSample/*-((loopMode==SILM_OSCFINE)?1:0)*/) {
 					switch(loopMode) {
 						case SILM_ONESHOT:
@@ -666,25 +674,27 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 							break ;
 						case SILM_LOOP_P2P:
 							if (rp->position_ >= rp->rendLoopEnd_) {
-								Trace::Debug("====");
-								Trace::Debug("Reached end");
-								Trace::Debug("LoopPos: %d", loopPosition);
-								Trace::Debug("position: %d", rp->position_);
-								Trace::Debug("LastSample: %d", lastSample);
-								Trace::Debug("&LastSample: %d", &lastSample);
-								Trace::Debug("rendLoopEnd: %d", rp->rendLoopEnd_);
-								Trace::Debug("rendLoopStart: %d", rp->rendLoopStart_);
-								Trace::Debug("input: %d", input);
-								Trace::Debug("&input: %d", &input);
-								Trace::Debug("Assign reverse: %s", rpReverse?"true":"false");
 								rpReverse = true;
 								fpSpeed = -rp->speed_;
 								rp->couldClick_=SHOULD_KILL_CLICKS ;
 
-								Trace::Debug("input: %d", input);
-								Trace::Debug("LastSample: %d", lastSample);
-								Trace::Debug("&input: %d", &input);
-								Trace::Debug("&LastSample: %d", &lastSample);
+
+								Trace::Log("PINGPONG","====");
+								Trace::Log("PINGPONG","Reached End");
+								Trace::Log("PINGPONG","LoopPos: %d", loopPosition);
+								Trace::Log("PINGPONG","position: %d", rp->position_);
+								Trace::Log("PINGPONG","LastSample: %d", lastSample);
+								Trace::Log("PINGPONG","&LastSample: %d", &lastSample);
+								Trace::Log("PINGPONG","rendLoopEnd: %d", rp->rendLoopEnd_);
+								Trace::Log("PINGPONG","rendLoopStart: %d", rp->rendLoopStart_);
+								Trace::Log("PINGPONG","input: %d", input);
+								Trace::Log("PINGPONG","&input: %d", &input);
+								Trace::Log("PINGPONG","Assigned reverse: %s", rpReverse?"true":"false");
+								Trace::Log("PINGPONG","Assigned fpSpeed: %d", fpSpeed);
+								Trace::Log("PINGPONG","input: %d", input);
+								Trace::Log("PINGPONG","LastSample: %d", lastSample);
+								Trace::Log("PINGPONG","&input: %d", &input);
+								Trace::Log("PINGPONG","&LastSample: %d", &lastSample);
 							}
 							break;
 /*						case SILM_OSCFINE:
@@ -705,7 +715,7 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 							break ;
 					} ;
 				}
-			} else {
+			} else { // Looping backward
 				if (input<lastSample) {
 					switch(loopMode) {
 						case SILM_ONESHOT:
@@ -725,27 +735,28 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 							break ;
 						case SILM_LOOP_P2P:
 							if (rp->position_ <= rp->rendLoopStart_) {
-								Trace::Debug("====");
-								Trace::Debug("Reached start");
-								Trace::Debug("LoopPos: %d", loopPosition);
-								Trace::Debug("position: %d", rp->position_);
-								Trace::Debug("LastSample: %d", lastSample);
-								Trace::Debug("&LastSample: %d", &lastSample);
-								Trace::Debug("rendLoopEnd: %d", rp->rendLoopEnd_);
-								Trace::Debug("rendLoopStart: %d", rp->rendLoopStart_);
-								Trace::Debug("input: %d", input);
-								Trace::Debug("&input: %d", &input);
-								Trace::Debug("Assign reverse: %s", rpReverse?"true":"false");
 									fpSpeed = rp->speed_;
 									rpReverse = false;
 									input=loopPosition ;
 									rp->couldClick_=SHOULD_KILL_CLICKS ;
 
 
-								Trace::Debug("input: %d", input);
-								Trace::Debug("LastSample: %d", lastSample);
-								Trace::Debug("&input: %d", &input);
-								Trace::Debug("&LastSample: %d", &lastSample);
+								Trace::Log("PINGPONG","====");
+								Trace::Log("PINGPONG","Reached Start");
+								Trace::Log("PINGPONG","LoopPos: %d", loopPosition);
+								Trace::Log("PINGPONG","position: %d", rp->position_);
+								Trace::Log("PINGPONG","LastSample: %d", lastSample);
+								Trace::Log("PINGPONG","&LastSample: %d", &lastSample);
+								Trace::Log("PINGPONG","rendLoopEnd: %d", rp->rendLoopEnd_);
+								Trace::Log("PINGPONG","rendLoopStart: %d", rp->rendLoopStart_);
+								Trace::Log("PINGPONG","input: %d", input);
+								Trace::Log("PINGPONG","&input: %d", &input);
+								Trace::Log("PINGPONG","Assigned reverse: %s", rpReverse?"true":"false");
+								Trace::Log("PINGPONG","Assigned fpSpeed: %d", fpSpeed);
+								Trace::Log("PINGPONG","input: %d", input);
+								Trace::Log("PINGPONG","LastSample: %d", lastSample);
+								Trace::Log("PINGPONG","&input: %d", &input);
+								Trace::Log("PINGPONG","&LastSample: %d", &lastSample);
 
 							}
 							break;
