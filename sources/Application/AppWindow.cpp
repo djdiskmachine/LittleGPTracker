@@ -77,6 +77,7 @@ AppWindow::AppWindow(I_GUIWindowImp &imp):GUIWindow(imp)  {
 	_mixerView=0 ;
 	_grooveView=0 ;
 	_closeProject=0 ;
+	_loadAfterSaveAsProject=0 ;
 	_lastA=0 ;
 	_lastB=0 ;
 	_mask=0 ;
@@ -264,10 +265,11 @@ void AppWindow::Flush() {
 } ;
 
 void AppWindow::LoadProject(const Path &p)  {
-
+	Trace::Log("LoadProject","%s\n", p.GetPath().c_str());
 	_root=p ;
 
 	_closeProject=false ;
+	_loadAfterSaveAsProject=false;
 
 	PersistencyService *persist=PersistencyService::GetInstance() ;
 
@@ -450,6 +452,11 @@ bool AppWindow::onEvent(GUIEvent &event) {
 		CloseProject() ;
 		_isDirty=true ;
 	}
+	if(_loadAfterSaveAsProject) {
+	  CloseProject();
+	  _isDirty=true;
+	  LoadProject(_newProjectToLoad);
+	}
 #ifdef _SHOW_GP2X_
 	Redraw() ;
 #else
@@ -535,6 +542,15 @@ void AppWindow::Update(Observable &o,I_ObservableData *d) {
 		LoadProject(name) ;
 		break ;
 	  } */
+
+	  case VET_SAVEAS_PROJECT:
+	  {
+		char *name=(char*)ve->GetData() ;
+		_loadAfterSaveAsProject=true;
+		strcpy(_newProjectToLoad,name);
+		break ;
+	  }
+
 	  case VET_QUIT_PROJECT:
 	  {
    // defer event to after we got out of the view

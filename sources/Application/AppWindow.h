@@ -77,11 +77,13 @@ private:
 
 	bool _isDirty ;
 	bool _closeProject ;
+	bool _loadAfterSaveAsProject ;
 	bool _shouldQuit ;
 	unsigned short _mask ;
 	unsigned long _lastA ;
 	unsigned long _lastB ;
 	char _statusLine[80] ;
+	char _newProjectToLoad[80];
 	unsigned char _charScreen[1200] ;
 	unsigned char _charScreenProp[1200] ;
 	unsigned char _preScreen[1200] ;

@@ -6,13 +6,79 @@
 #include "System/System/System.h"
 #include "Services/Midi/MidiService.h"
 #include "Application/Views/ModalDialogs/MessageBox.h"
+#include "Application/Views/ModalDialogs/NewProjectDialog.h"
+#include "Application/Views/ModalDialogs/SelectProjectDialog.h"
 
-#define ACTION_PURGE MAKE_FOURCC('P','U','R','G')
-#define ACTION_SAVE  MAKE_FOURCC('S','A','V','E')
-#define ACTION_LOAD  MAKE_FOURCC('L','O','A','D')
-#define ACTION_QUIT  MAKE_FOURCC('Q','U','I','T')
+#define ACTION_PURGE            MAKE_FOURCC('P','U','R','G')
+#define ACTION_SAVE             MAKE_FOURCC('S','A','V','E')
+#define ACTION_SAVE_AS          MAKE_FOURCC('S','V','A','S')
+#define ACTION_LOAD             MAKE_FOURCC('L','O','A','D')
+#define ACTION_QUIT             MAKE_FOURCC('Q','U','I','T')
 #define ACTION_PURGE_INSTRUMENT MAKE_FOURCC('P','R','G','I')
-#define ACTION_TEMPO_CHANGED MAKE_FOURCC('T','E','M','P')
+#define ACTION_TEMPO_CHANGED    MAKE_FOURCC('T','E','M','P')
+
+static void SaveAsProjectCallback(View &v,ModalView &dialog) {
+
+    FileSystemService FSS;
+    NewProjectDialog &npd=(NewProjectDialog &)dialog ;
+
+    if (dialog.GetReturnCode()>0) {
+	  char* up = "../";
+	  const char* str_dstprjdir;
+	  const char* str_dstsmpdir;
+	//   if (PLATFORM == PSP){
+		// str_dstprjdir = (npd.GetName()).c_str();
+		// str_dstsmpdir = (npd.GetName() + "/samples/").c_str();
+	//   } else {
+		str_dstprjdir = (up + npd.GetName()).c_str();
+		str_dstsmpdir = (up + npd.GetName() + "/samples/").c_str();
+	//   }
+
+      Path path_dstprjdir = Path(str_dstprjdir);
+      Path path_dstsmpdir = Path(str_dstsmpdir);
+      Path path_srcprjdir("project:");
+      Path path_srcsmpdir("project:samples");
+
+      Path path_srclgptdatsav = path_srcprjdir.GetPath() + "/lgptsav.dat";
+      Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
+
+
+      if (path_dstprjdir.Exists()) Trace::Debug("Dst Dir Exist == true");
+      else {
+		Result result = FileSystem::GetInstance()->MakeDir(path_dstprjdir.GetPath().c_str()) ;
+		if (result.Failed()) {
+			Trace::Log("ProjectView", "Failed to create dir %s", path_dstprjdir.GetPath().c_str());
+			return;
+		};
+		result = FileSystem::GetInstance()->MakeDir(path_dstsmpdir.GetPath().c_str()) ;
+		if (result.Failed()) {
+			Trace::Log("ProjectView", "Failed to create sample dir %s", path_dstprjdir.GetPath().c_str());
+			return;
+		};
+
+		FSS.Copy(path_srclgptdatsav,path_dstlgptdatsav);
+
+		I_Dir *idir_srcsmpdir=FileSystem::GetInstance()->Open(path_srcsmpdir.GetPath().c_str()) ;
+		if (idir_srcsmpdir) {
+			idir_srcsmpdir->GetContent("*") ;
+			idir_srcsmpdir->Sort() ;
+			IteratorPtr<Path>it(idir_srcsmpdir->GetIterator()) ;
+			for (it->Begin();!it->IsDone();it->Next()) {
+			Path &current=it->CurrentItem() ;
+			if (current.IsFile())
+			{
+				const char* dstPath = (str_dstsmpdir + current.GetName()).c_str(); 
+				Path dstfile = Path((str_dstsmpdir+current.GetName()).c_str());
+				Path srcfile = Path(current.GetPath());
+				FSS.Copy(srcfile.GetPath(),dstfile.GetPath());
+			}
+			}
+		}
+		char* destination = (char*)str_dstprjdir;
+		((ProjectView &)v).OnSaveAsProject(destination) ;
+	}
+    }
+}
 
 static void LoadCallback(View &v,ModalView &dialog) {
 	if (dialog.GetReturnCode()==MBL_YES) {
@@ -72,6 +138,11 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
 	position._y+=1 ;
 	a1=new UIActionField("Save Song",ACTION_SAVE,position) ;
+	a1->AddObserver(*this) ;
+	T_SimpleList<UIField>::Insert(a1) ;
+
+	position._y+=1 ;
+	a1=new UIActionField("Save As",ACTION_SAVE_AS,position) ;
 	a1->AddObserver(*this) ;
 	T_SimpleList<UIField>::Insert(a1) ;
 
@@ -169,6 +240,20 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 				DoModal(mb) ;
 			}
 			break ;
+		case ACTION_SAVE_AS:
+			if (!player->IsRunning()) {
+				PersistencyService *service=PersistencyService::GetInstance() ;
+				service->Save() ;
+				//MessageBox *mb=new MessageBox(*this,"Load song and lose changes ?",MBBF_YES|MBBF_NO) ;
+				NewProjectDialog *mb=new NewProjectDialog(*this) ;
+				DoModal(mb,SaveAsProjectCallback) ;
+
+			} else {
+				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
+				DoModal(mb) ;
+			}
+			break ;
+
 		case ACTION_LOAD:
 		{
 			if (!player->IsRunning()) {
@@ -207,6 +292,12 @@ void ProjectView::OnPurgeInstruments(bool removeFromDisk) {
 
 void ProjectView::OnLoadProject() {
 	ViewEvent ve(VET_QUIT_PROJECT) ;
+	SetChanged();
+	NotifyObservers(&ve) ;
+} ;
+
+void ProjectView::OnSaveAsProject(char * data) {
+        ViewEvent ve(VET_SAVEAS_PROJECT,data) ;
 	SetChanged();
 	NotifyObservers(&ve) ;
 } ;

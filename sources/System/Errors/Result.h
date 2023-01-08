@@ -20,6 +20,7 @@ public:
 	Result &operator=(const Result &) ;
 
 	static Result NoError ;
+
 protected:
 	Result() ; 
 private:
@@ -29,5 +30,5 @@ private:
 	mutable Result *child_ ;
 } ;
 
-#define RETURN_IF_FAILED_MESSAGE(r,m) if (r.Failed()) { return Result(r,m) ; }
+#define RETURN_IF_FAILED(r,m) ({Result result = Result(r,m); if (r.Failed()) result;})
 #define LOG_IF_FAILED(r,m) if (r.Failed()) { Trace::Log(m) ; Trace::Log(r.GetDescription().c_str()); }
