@@ -245,7 +245,6 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			if (!player->IsRunning()) {
 				PersistencyService *service=PersistencyService::GetInstance() ;
 				service->Save() ;
-				//MessageBox *mb=new MessageBox(*this,"Load song and lose changes ?",MBBF_YES|MBBF_NO) ;
 				NewProjectDialog *mb=new NewProjectDialog(*this) ;
 				DoModal(mb,SaveAsProjectCallback) ;
 

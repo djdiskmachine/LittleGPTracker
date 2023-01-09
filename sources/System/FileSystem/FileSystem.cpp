@@ -206,7 +206,6 @@ int FileSystemService::Copy(const Path &src,const Path &dst)
     return nbwrite;
   }
 
-
   while (count=isrc->Read(buffer,sizeof(char),bufsize))
     {
       idst->Write(buffer,sizeof(char),count);
