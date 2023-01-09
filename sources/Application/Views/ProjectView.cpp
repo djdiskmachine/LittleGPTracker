@@ -20,63 +20,64 @@
 static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 
     FileSystemService FSS;
-    NewProjectDialog &npd=(NewProjectDialog &)dialog ;
+    NewProjectDialog &npd=(NewProjectDialog &)dialog;
 
     if (dialog.GetReturnCode()>0) {
-	  char* up = "../";
-	  const char* str_dstprjdir;
-	  const char* str_dstsmpdir;
-	//   if (PLATFORM == PSP){
-		// str_dstprjdir = (npd.GetName()).c_str();
-		// str_dstsmpdir = (npd.GetName() + "/samples/").c_str();
-	//   } else {
-		str_dstprjdir = (up + npd.GetName()).c_str();
-		str_dstsmpdir = (up + npd.GetName() + "/samples/").c_str();
-	//   }
+		std::string str_dstprjdir;
+		std::string str_dstsmpdir;
+		#ifdef PLATFORM_PSP
+			str_dstprjdir = npd.GetName();
+			str_dstsmpdir = npd.GetName() + "/samples/";
+		#else
+			std::string up = "../";
+			str_dstprjdir = up + npd.GetName();
+			str_dstsmpdir = up + npd.GetName() + "/samples/";
+		#endif
 
-      Path path_dstprjdir = Path(str_dstprjdir);
-      Path path_dstsmpdir = Path(str_dstsmpdir);
-      Path path_srcprjdir("project:");
-      Path path_srcsmpdir("project:samples");
+		Path path_dstprjdir = Path(str_dstprjdir);
+		Path path_dstsmpdir = Path(str_dstsmpdir);
+		Path path_srcprjdir("project:");
+		Path path_srcsmpdir("project:samples");
 
-      Path path_srclgptdatsav = path_srcprjdir.GetPath() + "/lgptsav.dat";
-      Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
+		Path path_srclgptdatsav = path_srcprjdir.GetPath() + "/lgptsav.dat";
+		Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
 
+		if (path_dstprjdir.Exists()) { Trace::Log("ProjectView", "Dst Dir '%s' Exist == true",
+			path_dstprjdir.GetPath().c_str()); }
+		else {
+			Result result = FileSystem::GetInstance()->MakeDir(path_dstprjdir.GetPath().c_str());
+			if (result.Failed()) {
+				Trace::Log("ProjectView", "Failed to create dir '%s'", path_dstprjdir.GetPath().c_str());
+				return;
+			};
 
-      if (path_dstprjdir.Exists()) Trace::Debug("Dst Dir Exist == true");
-      else {
-		Result result = FileSystem::GetInstance()->MakeDir(path_dstprjdir.GetPath().c_str()) ;
-		if (result.Failed()) {
-			Trace::Log("ProjectView", "Failed to create dir %s", path_dstprjdir.GetPath().c_str());
-			return;
-		};
 		result = FileSystem::GetInstance()->MakeDir(path_dstsmpdir.GetPath().c_str()) ;
+
 		if (result.Failed()) {
-			Trace::Log("ProjectView", "Failed to create sample dir %s", path_dstprjdir.GetPath().c_str());
+			Trace::Log("ProjectView", "Failed to create sample dir '%s'", path_dstprjdir.GetPath().c_str());
 			return;
 		};
 
 		FSS.Copy(path_srclgptdatsav,path_dstlgptdatsav);
 
-		I_Dir *idir_srcsmpdir=FileSystem::GetInstance()->Open(path_srcsmpdir.GetPath().c_str()) ;
+		I_Dir *idir_srcsmpdir=FileSystem::GetInstance()->Open(path_srcsmpdir.GetPath().c_str());
 		if (idir_srcsmpdir) {
-			idir_srcsmpdir->GetContent("*") ;
-			idir_srcsmpdir->Sort() ;
-			IteratorPtr<Path>it(idir_srcsmpdir->GetIterator()) ;
-			for (it->Begin();!it->IsDone();it->Next()) {
-			Path &current=it->CurrentItem() ;
-			if (current.IsFile())
-			{
-				const char* dstPath = (str_dstsmpdir + current.GetName()).c_str(); 
-				Path dstfile = Path((str_dstsmpdir+current.GetName()).c_str());
-				Path srcfile = Path(current.GetPath());
-				FSS.Copy(srcfile.GetPath(),dstfile.GetPath());
+				idir_srcsmpdir->GetContent("*");
+				idir_srcsmpdir->Sort();
+				IteratorPtr<Path>it(idir_srcsmpdir->GetIterator());
+				for (it->Begin();!it->IsDone();it->Next()) {
+					Path &current=it->CurrentItem();
+					if (current.IsFile())
+					{
+						Path dstfile = Path((str_dstsmpdir+current.GetName()).c_str());
+						Path srcfile = Path(current.GetPath());
+						FSS.Copy(srcfile.GetPath(),dstfile.GetPath());
+					}
+				}
 			}
-			}
+
+		((ProjectView &)v).OnSaveAsProject((char*)str_dstprjdir.c_str());
 		}
-		char* destination = (char*)str_dstprjdir;
-		((ProjectView &)v).OnSaveAsProject(destination) ;
-	}
     }
 }
 
@@ -142,14 +143,14 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	T_SimpleList<UIField>::Insert(a1) ;
 
 	position._y+=1 ;
-	a1=new UIActionField("Save As",ACTION_SAVE_AS,position) ;
+	a1=new UIActionField("Save Song As",ACTION_SAVE_AS,position) ;
 	a1->AddObserver(*this) ;
 	T_SimpleList<UIField>::Insert(a1) ;
 
 	v=project_->FindVariable(VAR_MIDIDEVICE) ;
 	NAssert(v) ;
 	position._y+=2 ;
-	UIIntVarField *f3=new UIIntVarField(position,*v,"midi: %s",0,MidiService::GetInstance()->Size(),1,1) ;
+	UIIntVarField *f3=new UIIntVarField(position,*v,"MIDI: %s",0,MidiService::GetInstance()->Size(),1,1) ;
 	T_SimpleList<UIField>::Insert(f3) ;
 
 	position._y+=2 ;
