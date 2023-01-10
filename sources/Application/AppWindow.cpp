@@ -19,11 +19,11 @@
 AppWindow *instance=0 ;
 
 GUIColor AppWindow::backgroundColor_(0x1D,0x0A,0x1F); 
-GUIColor AppWindow::normalColor_	(0xF5,0xEB,0xFF);
-GUIColor AppWindow::highlightColor_	(0xB7,0x50,0xD1);
+GUIColor AppWindow::normalColor_    (0xF5,0xEB,0xFF);
+GUIColor AppWindow::highlightColor_ (0xB7,0x50,0xD1);
 GUIColor AppWindow::highlight2Color_(0xDB,0x33,0xDB);
-GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
-GUIColor AppWindow::cursorColor_	(0xFF,0x00,0x8C);
+GUIColor AppWindow::consoleColor_   (0x00,0xFF,0x00);
+GUIColor AppWindow::cursorColor_    (0xFF,0x00,0x8C);
 
 int AppWindow::charWidth_=8;
 int AppWindow::charHeight_=8 ;
