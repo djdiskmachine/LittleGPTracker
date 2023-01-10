@@ -18,92 +18,12 @@
 
 AppWindow *instance=0 ;
 
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05) ;//200518
-// GUIColor AppWindow::normalColor_(0xEC,0x66,0xCC) ;	//EC66CC
-// GUIColor AppWindow::highlightColor_(0xAE,0x00,0xFF) ;//FF3399
-// GUIColor AppWindow::highlight2Color_(0xFF,0x00,0xFF) ;//FF00FF
-// GUIColor AppWindow::consoleColor_(0xFF,0x00,0xFF) ;
-// GUIColor AppWindow::cursorColor_(0x77,0x6B,0x56) ;
-
-// My preset
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05);
-// GUIColor AppWindow::normalColor_	(0xEC,0x66,0xCC);
-// GUIColor AppWindow::highlightColor_	(0xAE,0x00,0xFF);
-// GUIColor AppWindow::highlight2Color_(0xFF,0x00,0xFF);
-// GUIColor AppWindow::consoleColor_	(0xFF,0x00,0xFF);
-// GUIColor AppWindow::cursorColor_	(0x77,0x6B,0x56);
-
-// Infu
-// GUIColor AppWindow::backgroundColor_(0x20,0x00,0x00);
-// GUIColor AppWindow::normalColor_	(0xFF,0xBF,0xB0);
-// GUIColor AppWindow::highlightColor_	(0xF5,0x90,0xB0);
-// GUIColor AppWindow::highlight2Color_(0xB8,0x90,0xF8);
-// GUIColor AppWindow::consoleColor_	(0xFF,0x00,0xFF);
-// GUIColor AppWindow::cursorColor_	(0x77,0x6B,0x56);
-
-// Mix1
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05);
-// GUIColor AppWindow::normalColor_	(0xFF,0xBF,0xB0);
-// GUIColor AppWindow::highlightColor_	(0xAE,0x00,0xFF);
-// GUIColor AppWindow::highlight2Color_(0xB8,0x90,0xF8);
-// GUIColor AppWindow::consoleColor_	(0xFF,0x00,0xFF);
-// GUIColor AppWindow::cursorColor_	(0x77,0x6B,0x56);
-
-// Mix2
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05);
-// GUIColor AppWindow::normalColor_	(0xFF,0xBF,0xB0);
-// GUIColor AppWindow::highlightColor_	(0xAE,0x00,0xFF);
-// GUIColor AppWindow::highlight2Color_(0xB8,0x90,0xF8);
-// GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
-// GUIColor AppWindow::cursorColor_	(0x00,0xFF,0x00);
-
-// Mix3
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05);
-// GUIColor AppWindow::normalColor_	(0xFF,0xDD,0xDD);
-// GUIColor AppWindow::highlightColor_	(0xAE,0x00,0xFF);
-// GUIColor AppWindow::highlight2Color_(0xB8,0x90,0xF8);
-// GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
-// GUIColor AppWindow::cursorColor_	(0x00,0xFF,0x00);
-
-// Mix3
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05);
-// GUIColor AppWindow::normalColor_	(0xFF,0xDD,0xDD);
-// GUIColor AppWindow::highlightColor_	(0xAE,0x00,0xFF);
-// GUIColor AppWindow::highlight2Color_(0xB8,0x90,0xF8);
-// GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
-// GUIColor AppWindow::cursorColor_	(0x00,0xFF,0x00);
-
-// Mix4
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05);
-// GUIColor AppWindow::normalColor_	(0xFF,0xDD,0xDD);
-// GUIColor AppWindow::highlightColor_	(0xAE,0x00,0xFF);
-// GUIColor AppWindow::highlight2Color_(0xFF,0xDD,0xDD);
-// GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
-// GUIColor AppWindow::cursorColor_	(0x00,0xFF,0x00);
-
-// Mix5
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05);
-// GUIColor AppWindow::normalColor_	(0xFF,0xDD,0xDD);
-// GUIColor AppWindow::highlightColor_	(0xAE,0x00,0xFF);
-// GUIColor AppWindow::highlight2Color_(0xFF,0xDD,0xDD);
-// GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
-// GUIColor AppWindow::cursorColor_	(0x00,0xFF,0x00);
-
-// Mix5
 GUIColor AppWindow::backgroundColor_(0x1D,0x0A,0x1F); 
 GUIColor AppWindow::normalColor_	(0xF5,0xEB,0xFF);
 GUIColor AppWindow::highlightColor_	(0xB7,0x50,0xD1);
 GUIColor AppWindow::highlight2Color_(0xDB,0x33,0xDB);
 GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
 GUIColor AppWindow::cursorColor_	(0xFF,0x00,0x8C);
-
-// Mix6
-// GUIColor AppWindow::backgroundColor_(0x0F,0x05,0x05); 
-// GUIColor AppWindow::normalColor_	(0xF5,0xEB,0xFF);
-// GUIColor AppWindow::highlightColor_	(0xB7,0x50,0xD1);
-// GUIColor AppWindow::highlight2Color_(0xDB,0x33,0xDB);
-// GUIColor AppWindow::consoleColor_	(0x00,0xFF,0x00);
-// GUIColor AppWindow::cursorColor_	(0xFF,0x00,0x8C);
 
 int AppWindow::charWidth_=8;
 int AppWindow::charHeight_=8 ;
