@@ -80,6 +80,9 @@ SampleInstrument::SampleInstrument() {
 	 filterMode_=new Variable("filter mode",SIP_FILTMODE,filterMode,3,0) ;
 	 Insert(filterMode_) ;
 
+	 filterAttenuate_=new Variable("filter attenuate",SIP_FILTATTN,0x80) ;
+	 Insert(filterAttenuate_) ;
+
 	 start_=new WatchedVariable("start",SIP_START,0) ;
 	 Insert(start_) ;
 	 start_->AddObserver(*this) ;
@@ -186,6 +189,7 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 	 int rootNote=(rootNote_->GetInt()-60)+source_->GetRootNote(rp->midiNote_) ;
 
 	 rp->volume_=rp->baseVolume_=i2fp(volume_->GetInt()) ;
+	 rp->filterAttenuate_=i2fp(filterAttenuate_->GetInt()) ;
 
 	 rp->pan_=rp->basePan_=i2fp(pan_->GetInt()) ;
 
@@ -560,6 +564,10 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 
 		fixed volscale=fl2fp(0.003921568627450980392156862745098f) ;
 		fixed volfactor=fp_mul(rp->volume_,volscale) ;
+
+		// Filter attenuate
+		fixed fpfiltatt=fp_mul(rp->filterAttenuate_,volscale) ;
+
 	  int pan=fp2i(rp->pan_) ;
 		fixed fixedpanl=panlaw[pan] ;
 		fixed fixedpanr=panlaw[254-pan] ;
@@ -751,6 +759,7 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 						feedbackEta=fp_mul(rp->fbMix_,fl2fp(4.0f));
 
 						volfactor=fp_mul(rp->volume_,volscale) ;
+						fpfiltatt=fp_mul(rp->filterAttenuate_,volscale) ;
 						pan=fp2i(rp->pan_) ;
 						fixed fixedpanl=panlaw[pan] ;
 						fixed fixedpanr=panlaw[254-pan] ;
@@ -891,6 +900,8 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 						fltDelayPtr++ ;
 						fltHeightPtr++ ;
 						fltSpeedPtr++ ;
+						// apply filter attenuation
+						s2=fp_mul(s2,fpfiltatt) ;
 					}
 				}
 

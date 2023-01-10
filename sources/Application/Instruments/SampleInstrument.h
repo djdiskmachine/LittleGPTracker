@@ -39,6 +39,7 @@ enum SampleInstrumentLoopMode {
 #define SIP_SAMPLE 		    MAKE_FOURCC('S','M','P','L')
 #define SIP_SLICES 		    MAKE_FOURCC('S','L','C','S')
 #define SIP_FILTMODE		MAKE_FOURCC('F','I','M','O') 
+#define SIP_FILTATTN		MAKE_FOURCC('F','I','A','T')
 #define SIP_FILTMIX			MAKE_FOURCC('F','M','I','X')
 #define SIP_FILTCUTOFF		MAKE_FOURCC('F','C','U','T')
 #define SIP_FILTRESO		MAKE_FOURCC('F','R','E','S')
@@ -123,6 +124,7 @@ private:
 	   WatchedVariable *loopEnd_ ;
 	   Variable *filterMix_ ;
 	   Variable *filterMode_ ;
+	   Variable *filterAttenuate_ ;
 	   Variable *pan_ ;
 	   Variable *loopMode_ ;
 	   Variable *slices_ ;
