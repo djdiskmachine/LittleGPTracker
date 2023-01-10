@@ -224,6 +224,8 @@ In that case, you can use an alias called “root:” representing the folder de
 Additionally to playing the song, LittleGPTracker can be used to render the audio to file.
 To control file rendering, the variable RENDER can be set to either `FILE`,`FILESPLIT`,`FILERT`,`FILESPLITRT`.
 Note that there's a small issue with the speed when using FILE/FILESPLIT so the xxRT seem like the best choice at the moment
+The xxRT options render in real time
+The xSPLITx options render separate files for the channels (stems)
 
 ```
 <CONFIG>
