@@ -165,7 +165,8 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 			}
 		}
 
-		if ((selected_!=2)&&(element->IsDirectory())) {
+		if ((selected_!=2)&&(element->IsDirectory()) && // Folders
+			!(mask&EPBM_UP||mask&EPBM_DOWN)) { // Don't browse preview folders
 			if (element->GetName()=="..") {
 				if (currentPath_.GetPath()==sampleLib_.GetPath()) {
 	//				EndModal(true) ;
@@ -183,7 +184,7 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
 		switch(selected_) {
 			case 0: // preview
-				preview(*element) ;
+			if(!element->IsDirectory()) preview(*element) ; // Don't browse preview folders
 				break ;
 			case 1: // import
 				import(*element) ;
