@@ -184,7 +184,7 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
 		switch(selected_) {
 			case 0: // preview
-			if(!element->IsDirectory()) preview(*element) ; // Don't browse preview folders
+				if(!element->IsDirectory()) preview(*element) ; // Don't browse preview folders
 				break ;
 			case 1: // import
 				import(*element) ;
