@@ -119,6 +119,10 @@ void ImportSampleDialog::preview(Path &element) {
 	Player::GetInstance()->StartStreaming(element) ;
 }
 
+void ImportSampleDialog::endPreview() {
+	Player::GetInstance()->StopStreaming() ;
+}
+
 void ImportSampleDialog::import(Path &element) {
 
 	SamplePool *pool=SamplePool::GetInstance() ;
@@ -138,7 +142,7 @@ void ImportSampleDialog::import(Path &element) {
 
 void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
-	if (!pressed) return ;
+	if (!pressed){ endPreview(); return; } //Not continue to playing when browsing etc.
 
 	if (mask&EPBM_B) {  
 		if (mask&EPBM_UP) warpToNextSample(-LIST_SIZE) ;

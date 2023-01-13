@@ -21,6 +21,7 @@ protected:
 	void warpToNextSample(int dir) ;
 	void import(Path &element) ;
 	void preview(Path &element) ;
+	void endPreview() ;
 private:
 	T_SimpleList<Path> sampleList_ ;
 	int currentSample_ ;
