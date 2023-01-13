@@ -720,7 +720,9 @@ void ChainView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
     			if (viewData_->currentPlayChain_[i]==viewData_->currentChain_) {
     				pos._y=anchor._y+viewData_->chainPlayPos_[i] ;
     				if (!player->IsChannelMuted(i)) {
+						SetColor(CD_CURSOR) ;
     					DrawString(pos._x,pos._y,">",props) ;
+    					SetColor(CD_NORMAL) ;
     				} else {
     					DrawString(pos._x,pos._y,"-",props) ;
     				}

@@ -202,6 +202,7 @@ void GrooveView::OnPlayerUpdate(PlayerEventType ,unsigned int tick) {
 		lastPosition_=groovepos ;
 		pos._x=anchor._x-1 ;
 		pos._y=anchor._y+lastPosition_ ;
+		SetColor(CD_CURSOR) ;
 		DrawString(pos._x,pos._y,">",props) ;
 	} ;
 

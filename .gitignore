@@ -1,4 +1,7 @@
 bin/**
 build/**
-projects/buildPSP/**
+projects/build**
 tracks/**
+*.dat
+*.wav
+*exe*

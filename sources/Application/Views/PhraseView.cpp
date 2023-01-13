@@ -1159,7 +1159,9 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
     			if (viewData_->currentPlayPhrase_[i]==viewData_->currentPhrase_) {
     				pos._y=anchor._y+viewData_->phrasePlayPos_[i] ;
     				if (!player->IsChannelMuted(i)) {
-    					DrawString(pos._x,pos._y,">",props) ;
+						SetColor(CD_CURSOR) ;
+						DrawString(pos._x,pos._y,">",props) ;
+						SetColor(CD_NORMAL) ;
     				} else {
     					DrawString(pos._x,pos._y,"-",props) ;
     				}
