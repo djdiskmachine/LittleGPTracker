@@ -142,7 +142,7 @@ void ImportSampleDialog::import(Path &element) {
 
 void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
-	if (!pressed){ endPreview(); return; } //Not continue to playing when browsing etc.
+	if (!pressed){ endPreview(); return; } //Don't continue to play when browsing etc
 
 	if (mask&EPBM_B) {  
 		if (mask&EPBM_UP) warpToNextSample(-LIST_SIZE) ;
