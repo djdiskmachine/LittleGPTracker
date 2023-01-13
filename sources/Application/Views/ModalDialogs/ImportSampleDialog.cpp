@@ -151,6 +151,11 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
 	  // A modifier
 	  if (mask&EPBM_A) { 
+
+		// Allow preview while browsing
+		if (mask&EPBM_UP) warpToNextSample(-1) ;
+		if (mask&EPBM_DOWN) warpToNextSample(1) ;
+
 		IteratorPtr<Path> it(sampleList_.GetIterator()) ;
 		int count=0 ;
 		Path *element=0 ;
