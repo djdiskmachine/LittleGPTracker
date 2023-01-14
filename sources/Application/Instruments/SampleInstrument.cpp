@@ -24,7 +24,7 @@ bool SampleInstrument::useDirtyDownsampling_ = false;
 
 #define SHOULD_KILL_CLICKS false
 
-int8_t SampleInstrument::lastMidiNote_[SONG_CHANNEL_COUNT]= {
+int SampleInstrument::lastMidiNote_[SONG_CHANNEL_COUNT]= {
 	-1,-1,-1,-1,-1,-1,-1,-1
 } ;
 

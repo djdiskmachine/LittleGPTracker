@@ -281,7 +281,7 @@ W32FILES        :=	WSDLmain.o \
 					Process.o \
 					W32Process.o  \
 					W32Audio.o  \
-					#WSDLGUIWindowImp.o \
+					WSDLGUIWindowImp.o \
 					GUIFactory.o \
 					W32Midi.o
 
@@ -363,7 +363,7 @@ CAANOOFILES		:=	CAANOOSDLMain.o \
 					Variable.o VariableContainer.o WatchedVariable.o \
 					SoundFontPreset.o SoundFontManager.o SoundFontSample.o \
 					ENAB.o \
-					# HYDRA.o \
+					HYDRA.o \
 					OMEGA.o RIFF.o SFDETECT.o SFLOOKUP.o SFNAV.o SFREADER.o WIN_MEM.o \
 					HexBuffers.o lz.o \
 					tinyxmlparser.o tinyxml.o tinyxmlerror.o tinystr.o Tiny2NosStub.o \
