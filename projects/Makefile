@@ -275,15 +275,14 @@ NDSFILES		:=	NDSmain.o \
 
 W32FILES        :=	WSDLmain.o \
 					W32FileSystem.o \
+					W32Midi.o \
 					W32AudioDriver.o \
 					WSDLSystem.o \
 					SDLInput.o  \
 					Process.o \
 					W32Process.o  \
 					W32Audio.o  \
-					WSDLGUIWindowImp.o \
-					GUIFactory.o \
-					W32Midi.o
+					GUIFactory.o WSDLGUIWindowImp.o
 
 GP2XFILES		:=	GPSDLMain.o \
 					GP2XFileSystem.o \
@@ -362,9 +361,7 @@ CAANOOFILES		:=	CAANOOSDLMain.o \
 					Service.o ServiceRegistry.o SubService.o \
 					Variable.o VariableContainer.o WatchedVariable.o \
 					SoundFontPreset.o SoundFontManager.o SoundFontSample.o \
-					ENAB.o \
-					HYDRA.o \
-					OMEGA.o RIFF.o SFDETECT.o SFLOOKUP.o SFNAV.o SFREADER.o WIN_MEM.o \
+					ENAB.o HYDRA.o OMEGA.o RIFF.o SFDETECT.o SFLOOKUP.o SFNAV.o SFREADER.o WIN_MEM.o \
 					HexBuffers.o lz.o \
 					tinyxmlparser.o tinyxml.o tinyxmlerror.o tinystr.o Tiny2NosStub.o \
 
