@@ -37,14 +37,22 @@
 	Build with:
 		make PLATFORM=BITTBOY
 
-##### MIYOOMINI: Compile under Linux
-	Required libs:
-		sudo apt install -y libncurses-dev
-	Dev kit:
-		https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.0.0/miyoomini-toolchain.tar.xz
-	    install in /opt/
-	Build with:
-		make PLATFORM=MIYOOM
+##### MIYOO: Compile with containerized Sdk
+
+For the Miyoo Mini the recommended way to build is using a community Sdk in docker.
+
+<https://github.com/OnionUI/dev-miyoomini-toolchain>
+
+TBD: document building customSDL
+
+after setting up the Sdk, clone the repository to the workspace directory, then from an Sdk shell run:
+
+```
+cd LittleGPTracker/projects
+make PLATFORM=MIYOO
+```
+
+This will build an Onion OS package in the SDCARD directory, the contents of which can be copied to an Onion OS sd card to install.
 
 ##### RS97/RG350: Compile under Linux
 	Required libs:
