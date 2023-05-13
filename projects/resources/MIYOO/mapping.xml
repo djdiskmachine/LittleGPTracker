@@ -1,0 +1,53 @@
+<MAPPINGS>
+<!--
+DEFAULT MIYOO MAPPING
+shoulder, face, start/select buttons are doubled
+enable DUMPEVENT in config.xml and check log to help with mapping
+eg:
+<MAP src="input reported by OS" dst="virtual button" />
+-->
+    <!-- miyoo dpad -->
+    <MAP src="key:0:up" dst="/event/up" />
+    <MAP src="key:0:down" dst="/event/down" />
+    <MAP src="key:0:left" dst="/event/left" />
+    <MAP src="key:0:right" dst="/event/right" />
+    <!-- miyoo a -->
+    <MAP src="key:0:space" dst="/event/a" />
+    <!-- miyoo b -->
+    <MAP src="key:0:left ctrl" dst="/event/b" />
+    <!-- miyoo x -->
+    <MAP src="key:0:left shift" dst="/event/a" />
+    <!-- miyoo y -->
+    <MAP src="key:0:left alt" dst="/event/b" />
+    <!-- miyoo start -->
+    <MAP src="key:0:return" dst="/event/start" />
+    <!-- miyoo select -->
+    <MAP src="key:0:right ctrl" dst="/event/start" />
+    <!-- miyoo l1 -->
+    <MAP src="key:0:e" dst="/event/lshoulder" />
+    <!-- miyoo r1 -->
+    <MAP src="key:0:t" dst="/event/rshoulder" />
+    <!-- miyoo l2 -->
+    <MAP src="key:0:tab" dst="/event/lshoulder" />
+    <!-- miyoo r2 -->
+    <MAP src="key:0:backspace" dst="/event/rshoulder" />
+<!--
+Macro 1
+    Stop Phrase (Selected phrase cue stop)
+    <MAP src="but:0:3" dst="/event/rshoulder" />
+    <MAP src="but:0:3" dst="/event/start" />
+-->
+<!--
+Macro 2
+    Queue Phrases (Current row Phrases cue play)
+    <MAP src="but:0:2" dst="/event/lshoulder" />
+    <MAP src="but:0:2" dst="/event/start" />
+-->
+<!--
+Macro 3
+    Solo phrase (hold to solo, release to unsolo)
+    Warning: will do weirdness if combined with other buttons! Use with caution ;)
+    <MAP src="but:0:5" dst="/event/a" />
+    <MAP src="but:0:5" dst="/event/rshoulder" />
+-->
+</MAPPINGS>

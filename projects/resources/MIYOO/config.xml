@@ -1,0 +1,9 @@
+<!--CONFIG.XML-->
+<CONFIG>
+    <DUMPEVENT value="NO"/>
+    <ROOTFOLDER value="/mnt/SDCARD/Tracks"/>
+    <SAMPLELIB value="/mnt/SDCARD/Samples"/>
+    <!-- Uncomment to render
+    <RENDER value="FILE" />
+    -->
+</CONFIG>
