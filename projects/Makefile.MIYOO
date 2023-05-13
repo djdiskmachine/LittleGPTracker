@@ -19,12 +19,12 @@ PREFIX		:=	arm-linux-gnueabihf-
 
 include $(PWD)/miyoo_rules
 
-CFLAGS	:=	$(DEFINES) $(INCLUDES) -O3 -D_NDEBUG -D_NO_JACK_ -Wall -DPLATFORM_DINGOO -I$(PWD)/../sources -D__LINUX_ALSA__  -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DRS97 
+CFLAGS	:=	$(DEFINES) $(INCLUDES) -O3 -D_NDEBUG -D_NO_JACK_ -Wall -DPLATFORM_DINGOO -I$(PWD)/../sources -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DBUFFERED
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
 #LDFLAGS = -Wl,--start-group -lSDL -lSDL_image -lpng -ljpeg -lSDL_mixer -lfreetype -lSDL_ttf -logg -lvorbisidec -lmikmod -lmodplug -lm -pthread -lz -lstdc++ $(EXTRA_LDFLAGS) -Wl,--end-group
 
 EXTENSION:= elf
 
-LIBS	:=  -lSDL -lSDL_mixer -lasound -lpthread 
+LIBS	:=  -lSDL -lSDL_mixer -lpthread 
 LIBDIRS	:=	$(DEKVIT)/usr/lib
 LIBDIRS	+=	$(DEKVIT)/usr/include

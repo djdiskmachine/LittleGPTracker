@@ -630,6 +630,14 @@ void SDLGUIWindowImp::Unlock()
 	}
 }
 
+#ifdef BUFFERED
+void SDLGUIWindowImp::Flush()
+{
+  SDL_Flip(screen_);
+}
+#endif
+
+#ifndef BUFFERED
 void SDLGUIWindowImp::Flush()
 {
 #ifdef _SHOW_GP2X_
@@ -650,6 +658,7 @@ void SDLGUIWindowImp::Flush()
 	}
 	updateCount_=0;
 }
+#endif
 
 void SDLGUIWindowImp::ProcessExpose() 
 {
