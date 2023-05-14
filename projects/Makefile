@@ -157,13 +157,14 @@ BITTBOYDIRS      :=    . \
 				../sources/Adapters/SDL/GUI \
 				../sources/Adapters/SDL/Timer
 
-MIYOODIRS      :=    . \
+MIYOODIRS :=    . \
 				../sources/Adapters/DINGOO/Main \
 				../sources/Adapters/Unix/FileSystem \
 				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/DINGOO/System \
 				../sources/Adapters/DINGOO/Midi \
+				../sources/Adapters/Dummy/Midi \
 				../sources/Adapters/DINGOO/Audio \
 				../sources/Adapters/SDL/Audio \
 				../sources/Adapters/SDL/Process \
@@ -288,21 +289,19 @@ BITTBOYFILES    :=  GPSDLMain.o \
 					BITTBOYMidiService.o \
 					SDLGUIWindowImp.o
 
-MIYOOFILES    :=  GPSDLMain.o \
+MIYOOFILES := GPSDLMain.o \
 					UnixFileSystem.o \
-					DINGOOAudio.o \
+					SDLAudio.o \
 					Process.o \
 					UnixProcess.o \
 					SDLAudioDriver.o \
-					DINGOOAudioDriver.o \
-					BITTBOYSystem.o \
+					MIYOOSystem.o \
 					DINGOOEventQueue.o \
 					SDLProcess.o \
 					SDLTimer.o \
 					GUIFactory.o \
 					SDLEventManager.o \
-					BITTBOYSerialMidiDevice.o \
-					BITTBOYMidiService.o \
+					DummyMidi.o \
 					SDLGUIWindowImp.o 
 
 PSPFILES		:=	PSPmain.o  \
