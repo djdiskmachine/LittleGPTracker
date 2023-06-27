@@ -46,6 +46,15 @@
 	Build with:
 		make PLATFORM=BITTBOY
 
+##### MIYOOMINI: Compile under Linux
+	Required libs:
+		sudo apt install -y libncurses-dev
+	Dev kit:
+		https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.0.0/miyoomini-toolchain.tar.xz
+	    install in /opt/
+	Build with:
+		make PLATFORM=MIYOO
+
 ##### RS97/RG350: Compile under Linux
 	Required libs:
 		sudo apt install -y libncurses-dev
