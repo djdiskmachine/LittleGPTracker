@@ -632,23 +632,29 @@ void SDLGUIWindowImp::Unlock()
 
 void SDLGUIWindowImp::Flush()
 {
-#ifdef _SHOW_GP2X_
-  drawGP2XOverlay() ;
-  SDL_UpdateRect(screen_, 0, 0, rect_.Width(), rect_.Height());
+#ifdef BUFFERED
+    // flip front and back buffers in hardware
+    SDL_Flip(screen_);
 #endif
-  
-	if ((!framebuffer_)&&(updateCount_!=0)) 
-  {
-		if (updateCount_<MAX_OVERLAYS)
+#ifdef _SHOW_GP2X_
+    drawGP2XOverlay() ;
+    SDL_UpdateRect(screen_, 0, 0, rect_.Width(), rect_.Height());
+#endif
+#ifndef BUFFERED
+    // blit partial updates on resource constrained platforms
+    if ((!framebuffer_)&&(updateCount_!=0))
     {
-			SDL_UpdateRects(screen_,updateCount_, updateRects_);
-		} 
-    else
-    {
-			SDL_UpdateRect(screen_, 0, 0, screenRect_.Width(),screenRect_.Height());
-		}
-	}
-	updateCount_=0;
+        if (updateCount_<MAX_OVERLAYS)
+        {
+            SDL_UpdateRects(screen_,updateCount_, updateRects_);
+        }
+        else
+        {
+            SDL_UpdateRect(screen_, 0, 0, screenRect_.Width(),screenRect_.Height());
+        }
+    }
+    updateCount_=0;
+#endif
 }
 
 void SDLGUIWindowImp::ProcessExpose() 

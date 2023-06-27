@@ -1,0 +1,8 @@
+-include $(PWD)/base_rules
+
+STRIP = $(CROSS_COMPILE)strip
+
+#---------------------------------------------------------------------------------
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@

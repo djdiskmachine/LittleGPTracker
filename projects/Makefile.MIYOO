@@ -1,0 +1,28 @@
+DEVKIT = /opt/miyoomini-toolchain/
+CROSS_COMPILE=$(DEVKIT)bin/arm-linux-gnueabihf-
+
+CC = $(CROSS_COMPILE)gcc
+CXX = $(CROSS_COMPILE)g++
+SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
+SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
+SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
+
+DEFINES = -DHAVE_STDINT_H -DVERSION_BITTBOY -DPLATFORM_DINGOO -D_NDEBUG -D_NO_JACK_ -I$(PWD)/../sources -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DBUFFERED
+INCLUDES = -Iinclude $(SDL_CFLAGS)
+OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7ve+simd
+
+TARGET = lgpt.elf
+
+TOOLPATH=$(DEVKIT)/usr/bin
+PREFIX		:=	arm-linux-gnueabihf-
+
+include $(PWD)/miyoo_rules
+
+CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
+CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
+
+EXTENSION:= elf
+
+LIBS	:=  -lSDL -lSDL_mixer -lpthread 
+LIBDIRS	:=	$(DEKVIT)/usr/lib
+LIBDIRS	+=	$(DEKVIT)/usr/include
