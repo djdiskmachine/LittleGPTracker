@@ -1,0 +1,17 @@
+<!--
+miyoo mini default config:
+create folders for your tracks and samples on the
+root of your sd card.
+-->
+<CONFIG>
+  <ROOTFOLDER value="/mnt/sdcard/Tracks"/>
+  <SAMPLELIB value="/mnt/sdcard/Samples"/>
+  <!-- uncomment to dump events to stdout -->
+  <!--
+  <DUMPEVENT value="YES"/>
+  -->
+  <!-- uncomment to render -->
+  <!--
+  <RENDER value="FILE"/>
+  -->
+</CONFIG>

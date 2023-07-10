@@ -1,0 +1,53 @@
+<!--
+miyoo mini button codes:
+- up "key:0:up"
+- down "key:0:down"
+- left "key:0:left"
+- right "key:0:right"
+- A "key:0:space"
+- B "key:0:left ctrl"
+- X "key:0:left shift"
+- Y "key:0:left alt"
+- start "key:0:return" 
+- select "key:0:right ctrl"
+- L1 "key:0:e"
+- R1 "key:0:t"
+- L2 "key:0:tab"
+- R2 "key:0:backspace"
+-->
+<MAPPINGS>
+  <!-- basic binds -->
+  <MAP src="key:0:up" dst="/event/up" />
+  <MAP src="key:0:down" dst="/event/down" />
+  <MAP src="key:0:left" dst="/event/left" />
+  <MAP src="key:0:right" dst="/event/right" />
+  <MAP src="key:0:space" dst="/event/a" />
+  <MAP src="key:0:left ctrl" dst="/event/b" />
+  <MAP src="key:0:return" dst="/event/start" />
+  <MAP src="key:0:e" dst="/event/lshoulder" />
+  <MAP src="key:0:t" dst="/event/rshoulder" />
+
+  <!-- macro binds -->
+  <!--
+  WARNING: macros press (and hold) buttons, pressing
+  additional buttons may have unintended consequences
+  -->
+
+  <!-- macro 1: cue stop selected phrase -->
+  <!--
+  <MAP src="key:0:right ctrl" dst="/event/rshoulder" />
+  <MAP src="key:0:right ctrl" dst="/event/start" />
+  -->
+
+  <!-- macro 2: cue current row -->
+  <!--
+  <MAP src="key:0:left alt" dst="/event/lshoulder" />
+  <MAP src="key:0:left alt" dst="/event/start" />
+  -->
+
+  <!-- macro 3: solo phrase (hold) -->
+  <!--
+  <MAP src="key:0:tab" dst="/event/a" />
+  <MAP src="key:0:tab" dst="/event/rshoulder" />
+  -->
+</MAPPINGS>
