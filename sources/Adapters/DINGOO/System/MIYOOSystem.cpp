@@ -22,15 +22,12 @@
 #include <sys/time.h>
 #include <malloc.h>
 #include <stdlib.h>
-#include <malloc.h>
-#include <stdlib.h>
 #include <string.h>
 
 EventManager *GPSDLSystem::eventManager_ = NULL;
 bool GPSDLSystem::invert_ = false;
 int GPSDLSystem::lastBattLevel_ = 100;
 unsigned int GPSDLSystem::lastBeatCount_ = 0;
-static FILE* devbatt;
 static char* strval;
 static size_t n;
 static size_t t;
@@ -111,7 +108,6 @@ void GPSDLSystem::Boot(int argc,char **argv) {
     eventManager_->MapAppButton("down", APP_BUTTON_DOWN);
     eventManager_->MapAppButton("up", APP_BUTTON_UP);
 
-    devbatt = fopen("/proc/jz/battery", "r");
     n = 4;
     t = sizeof(char);
     strval = (char*)malloc((size_t)5*sizeof(char));
@@ -119,7 +115,6 @@ void GPSDLSystem::Boot(int argc,char **argv) {
 
 void GPSDLSystem::Shutdown() {
     delete Audio::GetInstance();
-    fclose(devbatt);
 }
 
 unsigned long GPSDLSystem::GetClock() {
@@ -134,22 +129,7 @@ unsigned long GPSDLSystem::GetClock() {
 }
 
 int GPSDLSystem::GetBatteryLevel() {
-    if (0) {
-        unsigned int beatCount=SyncMaster::GetInstance()->GetBeatCount();
-        if (beatCount != lastBeatCount_) {
-            unsigned short currentval=0;
-            fseek (devbatt, 0, SEEK_SET);
-            fread (strval, t, n, devbatt);
-            currentval = atoi(strval);
-            if (currentval > 4000) currentval = 4000;
-            if (currentval < 3000) currentval = 3000;
-            lastBattLevel_ = ((currentval - 3000) / 10);
-            lastBeatCount_ = beatCount;
-        }
-    } else {
-        lastBattLevel_ = -1;
-    }
-    return lastBattLevel_;
+    return -1;
 }
 
 void GPSDLSystem::Sleep(int millisec) {
