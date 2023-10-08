@@ -1,7 +1,7 @@
 
 #include "W32MidiService.h"
-#include "W32MidiDEvice.h"
-#include "System/io/Trace.h"
+#include "W32MidiDevice.h"
+#include "System/Console/Trace.h"
 
 W32MidiService::W32MidiService() {
 } ;

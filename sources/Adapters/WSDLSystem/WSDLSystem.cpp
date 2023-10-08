@@ -1,11 +1,10 @@
 
 #include "WSDLSystem.h"
 #include "Adapters/RTAudio/RTAudioStub.h"
+#include "Adapters/RTMidi/RTMidiService.h"
 #include "Adapters/SDL/GUI/SDLEventManager.h"
 #include "Adapters/SDL/GUI/GUIFactory.h"
 #include "Adapters/SDL/GUI/SDLGUIWindowImp.h"
-#include "Adapters/RTAudio/RTAudioStub.h"
-#include "Adapters/RTMidi/RTMidiService.h"
 #include "Adapters/W32/Midi/W32MidiService.h"
 #include "Adapters/W32/Audio/W32Audio.h"
 #include "Adapters/W32FileSystem/W32FileSystem.h"

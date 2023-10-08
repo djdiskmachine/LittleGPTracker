@@ -1,7 +1,7 @@
 
 #include "W32MidiService.h"
 #include "W32MidiDevice.h"
-#include "System/io/Trace.h"
+#include "System/Console/Trace.h"
 
 
 W32MidiDevice::W32MidiDevice(const char *name):MidiOutDevice(name) {
