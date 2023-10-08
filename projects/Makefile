@@ -190,13 +190,16 @@ GP32DIRS	:=	.\
 
 W32DIRS     :=  .\
 				../sources/Adapters/W32FileSystem \
-				../sources/Adapters/W32Midi \
-				../sources/Adapters/W32Sound \
+				../sources/Adapters/W32/Midi \
+				../sources/Adapters/W32/Sound \
+				../sources/Adapters/RTAudio \
+				../sources/Adapters/RTMidi \
 				../sources/Adapters/WSDLSystem \
-				../sources/Adapters/WSDLUI \
 				../sources/Adapters/SDL/Input \
+				../sources/Adapters/SDL/GUI \
 				../sources/Adapters/W32/Main \
 				../sources/Adapters/W32/Process \
+				../sources/Adapters/W32/Timer \
 				../sources/Adapters/W32/Audio \
 				../sources/System/Process
 
@@ -398,14 +401,23 @@ NDSFILES		:=	NDSmain.o \
 
 W32FILES        :=	WSDLmain.o \
 					W32FileSystem.o \
-					W32Midi.o \
+					W32MidiDevice.o \
+					W32MidiService.o \
+					RTAudioDriver.o \
+					RTAudioStub.o \
+					RTMidiService.o \
+					RTMidiInDevice.o \
+					RTMidiOutDevice.o \
 					W32AudioDriver.o \
 					WSDLSystem.o \
 					SDLInput.o  \
+					SDLEventManager.o \
 					Process.o \
 					W32Process.o  \
-					W32Audio.o  \
-					GUIFactory.o WSDLGUIWindowImp.o
+					W32Audio.o \
+					W32Timer.o \
+					GUIFactory.o \
+					SDLGUIWindowImp.o
 
 GP2XFILES		:=	GPSDLMain.o \
 					GP2XFileSystem.o \

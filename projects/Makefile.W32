@@ -1,14 +1,13 @@
-
-WTOOLPATH=C:\MinGW\bin
-
-PREFIX := 
-
 include $(PWD)/rules_base
 
-CFLAGS	:= -mthreads -g -Wall $(INCLUDES) -D_DEBUG -DDEBUG -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources
-
+CC := i686-w64-mingw32-gcc
+CXX := i686-w64-mingw32-g++
+INCLUDES := -I /usr/i686-w64-mingw32/include
+CFLAGS := -DCPP_MEMORY -g -Wall $(INCLUDES) -D_DEBUG -DDEBUG -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources
 CXXFLAGS:= $(CFLAGS)
-LDFLAGS := -L../libs/Wsdl-mingw
-LIBS     :=  -lmingw32 -lSDL -lSDLmain -mwindows -luser32 -lgdi32 -lwinmm -ldxguid
 
-EXTENSION:= exe
+LD := $(CXX)
+LDFLAGS := -L /usr/i686-w64-mingw32/lib
+LIBS := -lSDL -lSDLmain -lmingw32 -llibrtaudio -llibrtmidi -mthreads -mwindows -luser32 -lgdi32 -lwinmm -ldxguid
+
+EXTENSION := exe
