@@ -17,14 +17,16 @@ public:
 	virtual void ProcessButtonMask(unsigned short mask,bool pressed) ;
 
 protected:
-	void setCurrentFolder(Path *path) ;
-	void warpToNextSample(int dir) ;
+    void setCurrentFolder(Path *path);
+    void warpToNextSample(int dir) ;
 	void import(Path &element) ;
 	void preview(Path &element) ;
 	void endPreview() ;
 private:
-	T_SimpleList<Path> sampleList_ ;
-	int currentSample_ ;
+    Path *getImportElement();
+    void setCurrent(Path *element, unsigned short mask);
+    T_SimpleList<Path> sampleList_;
+    int currentSample_ ;
 	int topIndex_ ;
 	int toInstr_ ;
 	int selected_ ;

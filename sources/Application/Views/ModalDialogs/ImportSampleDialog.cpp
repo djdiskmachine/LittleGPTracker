@@ -101,8 +101,9 @@ void ImportSampleDialog::warpToNextSample(int direction) {
 
 	currentSample_+=direction ;
 	int size=sampleList_.Size() ;
-	if (currentSample_<0) currentSample_+=size ;
-	if (currentSample_>=size) currentSample_-=size ;
+	if (currentSample_ < 0) currentSample_ = 0;
+	if (currentSample_ >= size) currentSample_ = size - 1;
+	endPreview();
 	isDirty_=true ;
 }
 
@@ -156,38 +157,19 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 		if (mask&EPBM_UP) warpToNextSample(-1) ;
 		if (mask&EPBM_DOWN) warpToNextSample(1) ;
 
-		IteratorPtr<Path> it(sampleList_.GetIterator()) ;
-		int count=0 ;
-		Path *element=0 ;
-		for(it->Begin();!it->IsDone();it->Next()) {
-			if (count++==currentSample_) {
-				element=&it->CurrentItem() ;
-			}
-		}
-
-		if ((selected_!=2)&&(element->IsDirectory()) && // Folders
-			!(mask&EPBM_UP||mask&EPBM_DOWN)) { // Don't browse preview folders
-			if (element->GetName()=="..") {
-				if (currentPath_.GetPath()==sampleLib_.GetPath()) {
-	//				EndModal(true) ;
-				} else {;
-					Path parent=element->GetParent().GetParent() ;
-					setCurrentFolder(&parent) ;
-				}
-			} else {
-				setCurrentFolder(element) ;
-			}
-			isDirty_=true ;
-			return ;
-		}
-
+		Path *element = getImportElement();
+		setCurrent(element, mask);
 
 		switch(selected_) {
 			case 0: // preview
-				if(!element->IsDirectory()) preview(*element) ; // Don't browse preview folders
+				if(!element->IsDirectory()) { // Don't browse preview folders
+					preview(*element);
+				}
 				break ;
 			case 1: // import
-				if(!element->IsDirectory()) import(*element) ; // Don't browse import folders
+				if(!element->IsDirectory()) { // Don't browse import folders
+					import(*element);
+				}
 				break ;
 			case 2: // Exit ;
 				endPreview(); // Stop playback when exiting
@@ -195,27 +177,70 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				break ;
 		}
 	  } else {
-
-		  // R Modifier
-
-          	if (mask&EPBM_R) {
-	    	} else {
-                // No modifier
-				if (mask==EPBM_UP) warpToNextSample(-1) ;
-				if (mask==EPBM_DOWN) warpToNextSample(1) ;
-				if (mask==EPBM_LEFT) {
-					selected_-=1 ;
-					if (selected_<0) selected_+=3 ;
-					isDirty_=true ;
+		// START Modifier
+		if (mask&EPBM_START) {
+			if (mask&(EPBM_RIGHT|EPBM_LEFT|EPBM_L)) { return; } //No action
+			if (mask&EPBM_UP) warpToNextSample(-1);
+			if (mask&EPBM_DOWN) warpToNextSample(1);
+			Path *element = getImportElement();
+			setCurrent(element, mask);
+			if(!element->IsDirectory()) { // Don't browse preview folders
+				preview(*element); 
+			}
+			if (mask&EPBM_R) { 
+				if (!element->IsDirectory()) { // Don't browse import folders
+					endPreview();
+					import(*element);
 				}
-				if (mask==EPBM_RIGHT) {
-					selected_=(selected_+1)%3 ;
-					isDirty_=true ;
-				}
-		    }
+			}
+		} else {
+			// No modifier
+			if (mask==EPBM_UP) warpToNextSample(-1) ;
+			if (mask==EPBM_DOWN) warpToNextSample(1) ;
+			if (mask==EPBM_LEFT) {
+				selected_-=1 ;
+				if (selected_<0) selected_+=3 ;
+				isDirty_=true ;
+			}
+			if (mask==EPBM_RIGHT) {
+				selected_=(selected_+1)%3 ;
+				isDirty_=true ;
+			}
+		}
 	  } 
 	}
 } ;
+
+Path* ImportSampleDialog::getImportElement() {
+	IteratorPtr<Path> it(sampleList_.GetIterator()) ;
+	int count = 0 ;
+	Path *element = 0 ;
+	for(it->Begin(); !it->IsDone(); it->Next()) {
+		if (count++ == currentSample_) {
+			return &it->CurrentItem();
+		}
+	}
+}
+
+void ImportSampleDialog::setCurrent(Path *element, unsigned short mask) {
+	if (
+		(selected_ != 2) && (element->IsDirectory())  // Folders
+		//&& !(mask&EPBM_UP || mask&EPBM_DOWN) // Don't browse preview folders
+	   )
+	{
+		if (element->GetName()=="..") {
+			if (currentPath_.GetPath()==sampleLib_.GetPath()) {
+			} else {
+				Path parent = element->GetParent().GetParent();
+				setCurrentFolder(&parent);
+			}
+		} else {
+			setCurrentFolder(element) ;
+		}
+		isDirty_=true;
+		return;
+	}
+}
 
 void ImportSampleDialog::setCurrentFolder(Path *path) {
 
