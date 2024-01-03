@@ -330,9 +330,11 @@ In oscillator modes, under 0x80 the feedback of specified length is added to the
 - **interpolation:** Interpolation mode ('linear'/'none'): selects which interpolation mode is used when in between samples. linear interpols linearly while none takes the nearest neighbor. Use none when playing samples at low range to add some typical overtones.
 - **loop mode:** selects the looping mode.
   - none will play sample from zero to end.
-  - loop will start at zero and loop from loopstart to end.
+  - loop will start at zero and loop from loop start to loop end.
+  - pingpong will start at "start" and bounce the loop between loop start and loop end.
+  - oscillator is a special mode where the loop selection (from loop start to loop end) is taken as oscillator data and automatically tuned. Experiment with different settings, do not forget 'root note' is your friend to tune the oscillator back in a useful range
   - looper sync will automatically tune a loop so that it plays exactly 16 bars. Use the root note to play twice faster/slower
-  - oscillator is a special mode where the loop selection (from loopstart to end) is taken as oscillator data and automatically tuned. Experiment with different settings, do not forget 'root note' is your friend to tune the oscillator back in a useful range
+  - slicer will cut the sample into "slices" amount of samples, mapped from C-2 up to amount of slices
 - **start:** start point of the sample regardless of if loop is enabled; in hex
 - **loop Start:** start point of the sample when loop is enabled; in hex
 - **loop End:** end point of the sample; in hex. You can play samples backwards by setting the end value lower than the start!
@@ -348,11 +350,11 @@ The samples of the library have to be located in a folder samplelib at the same 
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140496106_sample_import_1.1f.png)
 
 
-When entering the import screen, the current folder is the library root folder “samplelib”. All sample in that folder are listed.
-Use U/D to select a sample and 'A' to load it
-B+L/R to rotates between all sub directories.
-In the latest ghetto, hitting 'A,A“ will bring up a sample loader pop-up screen, use the cursor to select directories and samples, and chose “listen” to play the sample, “import” to add it to your project, or “exit” to return the instrument screen.
-For quick sample navigation, hold Start to preview. Keep holding start and navigate up/down to preview samples while navigating. Hold Start and Press Left to navigate up in the folder structure. Hold Start and press Right to load a sample.
+Hitting "A,A“ on the sample selection of the instrument screen will bring up a sample import pop-up screen. Use the cursor to select directories and samples. 
+When entering the import screen, the current folder is the library root folder “samplelib”. All samples and folders in that folder are listed.
+B+L/R jumps a page up/down in the sample folder.
+Legacy: Using A, choose “listen” to play the sample, “import” to add it to your project, or “exit” to return the instrument screen. Hold A and navigate up/down to preview samples while navigating.
+New in beta-2: Hold Start to preview. Keep holding start and navigate up/down to preview samples while navigating. Hold Start and Press Left to navigate up in the folder structure. Hold Start and press Right to load a sample.
 
 ## Midi Instrument Screen
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140537386_midi_1.1f.png)

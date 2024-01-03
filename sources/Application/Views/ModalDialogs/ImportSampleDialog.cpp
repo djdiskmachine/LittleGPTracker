@@ -197,25 +197,25 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				}
 			}
 	  } else { // No modifier
-			if (mask==EPBM_UP) warpToNextSample(-1) ;
-			if (mask==EPBM_DOWN) warpToNextSample(1) ;
+			if (mask==EPBM_UP) warpToNextSample(-1);
+			if (mask==EPBM_DOWN) warpToNextSample(1);
 			if (mask==EPBM_LEFT) {
-				selected_-=1 ;
-				if (selected_<0) selected_+=3 ;
-				isDirty_=true ;
+				selected_-=1;
+				if (selected_<0) selected_+=3;
+				isDirty_=true;
 			}
 			if (mask==EPBM_RIGHT) {
-				selected_=(selected_+1)%3 ;
-				isDirty_=true ;
+				selected_=(selected_+1)%3;
+				isDirty_=true;
 			}
 		}
 	}
 } ;
 
 Path* ImportSampleDialog::getImportElement() {
-	IteratorPtr<Path> it(sampleList_.GetIterator()) ;
-	int count = 0 ;
-	Path *element = 0 ;
+	IteratorPtr<Path> it(sampleList_.GetIterator());
+	int count = 0;
+	Path *element = 0;
 	for(it->Begin(); !it->IsDone(); it->Next()) {
 		if (count++ == currentSample_) {
 			return &it->CurrentItem();
@@ -233,9 +233,9 @@ void ImportSampleDialog::setCurrent(Path *element, unsigned short mask) {
 				setCurrentFolder(&parent);
 			}
 		} else {
-			setCurrentFolder(element) ;
+			setCurrentFolder(element);
 		}
-		isDirty_=true;
+		isDirty_ = true;
 		return;
 	}
 }
