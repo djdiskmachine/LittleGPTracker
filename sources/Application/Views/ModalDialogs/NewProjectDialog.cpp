@@ -1,7 +1,9 @@
 
 #include "NewProjectDialog.h"
+#include "Application/Utils/RandomName.h"
 
-static char *buttonText[2]= {
+static char *buttonText[BUTTONS_LENGTH] = {
+	"Regen",
 	"Ok",
 	"Cancel"
 } ;
@@ -42,11 +44,11 @@ void NewProjectDialog::DrawView() {
 	props.invert_=false ;
 
 
-	int offset=DIALOG_WIDTH/3 ;
+	int offset = DIALOG_WIDTH / (BUTTONS_LENGTH + 1);
 
-	for (int i=0;i<2;i++) {
+	for (int i = 0; i < BUTTONS_LENGTH; i++) {
 		const char *text=buttonText[i] ;
-		x=offset*(i+1)-strlen(text)/2 ;
+		x = offset*(i + 1) - strlen(text) / BUTTONS_LENGTH;
 		props.invert_=(selected_==i+1) ;
 		DrawString(x,4,text,props) ;
 	}	
@@ -57,9 +59,13 @@ void NewProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick)
 };
 
 void NewProjectDialog::OnFocus() {
-	selected_=currentChar_=0 ;
+	selected_ = 1;
+	currentChar_ = 0;
+	std::string randomName = getRandomName();
 	memset(name_,' ',MAX_NAME_LENGTH+1) ;
-	lastChar_='A';
+	strncpy(name_, randomName.c_str(), sizeof(randomName) - 1);
+	lastChar_ = randomName.c_str()[0];
+	isDirty_ = true;
 };
 
 void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
@@ -73,6 +79,7 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 	  // A modifier
 	  if (mask&EPBM_A) { 
 		if (mask==EPBM_A) {
+			std::string randomName = getRandomName();
 			switch(selected_) {
 				case 0:
 					if (name_[currentChar_]==' ') {
@@ -81,9 +88,13 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					isDirty_=true ;
 					break ;
 				case 1:
+					strncpy(name_, randomName.c_str(), sizeof(randomName) - 1);
+					isDirty_ = true;
+					break;
+				case 2:
 					EndModal(1) ;
 					break ;	
-				case 2:
+				case 3:
 					EndModal(0) ;
 					break ;	
 			}
@@ -121,7 +132,8 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 							break ;
 						case 1:
 						case 2:
-							selected_=(selected_==1)?2:1 ;
+						case 3:
+							if (selected_ > 0) selected_--;
 							break ;
 					}
 					isDirty_=true ;
@@ -130,10 +142,12 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					switch (selected_) {
 						case 0:
 							if (currentChar_<MAX_NAME_LENGTH-1) currentChar_++;
+							else selected_++;
 							break ;
 						case 1:
 						case 2:
-							selected_=(selected_==1)?2:1 ;
+						case 3:
+							if (selected_ < BUTTONS_LENGTH) selected_++;
 							break ;
 					}
 					isDirty_=true ;

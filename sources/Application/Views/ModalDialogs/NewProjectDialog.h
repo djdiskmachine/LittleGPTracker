@@ -5,6 +5,7 @@
 #include <string>
 
 #define MAX_NAME_LENGTH 12
+#define BUTTONS_LENGTH 3
 
 class NewProjectDialog:public ModalView {
 public:
