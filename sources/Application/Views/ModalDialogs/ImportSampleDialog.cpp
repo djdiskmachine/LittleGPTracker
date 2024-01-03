@@ -152,7 +152,6 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
 	  // A modifier
 	  if (mask&EPBM_A) { 
-
 		// Allow browse preview
 		if (mask&EPBM_UP) warpToNextSample(-1) ;
 		if (mask&EPBM_DOWN) warpToNextSample(1) ;
@@ -176,10 +175,7 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				EndModal(0) ;
 				break ;
 		}
-	  } else {
-		// START Modifier
-		if (mask&EPBM_START) {
-			if (mask&(EPBM_L)) { return; } //No action
+	  } else if (mask&EPBM_START) { // START Modifier
 			if (mask&EPBM_UP) warpToNextSample(-1);
 			if (mask&EPBM_DOWN) warpToNextSample(1);
 			Path *element = getImportElement();
@@ -200,8 +196,7 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					isDirty_=true;
 				}
 			}
-		} else {
-			// No modifier
+	  } else { // No modifier
 			if (mask==EPBM_UP) warpToNextSample(-1) ;
 			if (mask==EPBM_DOWN) warpToNextSample(1) ;
 			if (mask==EPBM_LEFT) {
@@ -214,7 +209,6 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				isDirty_=true ;
 			}
 		}
-	  } 
 	}
 } ;
 
