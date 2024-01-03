@@ -352,6 +352,7 @@ When entering the import screen, the current folder is the library root folder �
 Use U/D to select a sample and 'A' to load it
 B+L/R to rotates between all sub directories.
 In the latest ghetto, hitting 'A,A“ will bring up a sample loader pop-up screen, use the cursor to select directories and samples, and chose “listen” to play the sample, “import” to add it to your project, or “exit” to return the instrument screen.
+For quick sample navigation, hold Start to preview. Keep holding start and navigate up/down to preview samples while navigating. Hold Start and Press Left to navigate up in the folder structure. Hold Start and press Right to load a sample.
 
 ## Midi Instrument Screen
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140537386_midi_1.1f.png)
