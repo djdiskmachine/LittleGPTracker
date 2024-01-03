@@ -5,25 +5,33 @@
 std::vector<std::string> adjectives =
                                     {
                                         "Red", "Swift", "Spoopy", "Gentle", "Fierce",
-                                        "Sparkling", "Magic", "Curious", "Dope", "Hype",
+                                        "Sparkling", "Magic", "Curious", "Fast", "Hyped",
                                         "Rizzy", "Radiant", "Soothing", "Weird", "Haunted",
                                         "Buzzy", "Wild", "Joyful", "Serene", "Wobbly",
-                                        "Lively", "Dopy", "Dynamic", "Graceful", "Cool",
-                                        "Playful", "Dorky", "Singing", "Clever", "Quirky"
+                                        "Lively", "Dopey", "Dynamic", "Graceful", "Cool",
+                                        "Playful", "Dorky", "Singing", "Clever", "Quirky",
+                                        "Dull", "Fine", "Gold", "Gray", "Huge",
+                                        "Light", "Chocolate", "Ripe", "Sour", "Tart",
+                                        "Tough", "Brisk", "Fresh", "Grand", "Lean",
+                                        "Lush", "Mild", "Pale", "Rich", "Ripe"
                                     };
 std::vector<std::string> verbs =
                                     {
                                         "Jump", "Explore", "Dance", "Whisper", "Roar",
                                         "Run", "Climb", "Song", "Sleep", "Laugh",
-                                        "Swimm", "Fly", "Reader", "Build", "Create",
+                                        "Banana", "Fly", "Reader", "Build", "Create",
                                         "Hiker", "Cook", "Brows", "Cod", "Dope",
-                                        "Glow", "Search", "Dream", "Play", "Wire",
-                                        "Holla", "Question", "Rizz", "Plant", "Craft"
+                                        "Glow", "Gyatt", "Dream", "Play", "Wire",
+                                        "Holla", "Question", "Rizz", "Plant", "Craft",
+                                        "Pecker", "Roar", "Purr", "Surfer", "Drum",
+                                        "Kick", "Flip", "Snap", "Clap", "Snap",
+                                        "Bite", "Chew", "Hunt", "Singer", "Draw",
+                                        "Sleeper", "Skier", "Smile", "Yell", "Zoomer"
                                     };
 
 class RandomNames {
   public:
-  RandomNames() { srand(uint8_t(time(NULL))); }
+  RandomNames() { srand(uint(time(NULL))); }
   std::string getRandomName();
 };
 

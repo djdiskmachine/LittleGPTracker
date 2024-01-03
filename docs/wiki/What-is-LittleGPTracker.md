@@ -46,6 +46,9 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 **Piggy now supports .sf2 Soundfonts. You must add these by hand to your SAMPLES directory, use PROGRAM CHANGE commands to load different patches. Loop points are automatically loaded, but you'll need to make VOLM setting to adjust decay.**
 
+## New project
+When creating a new project, a random name is selected for you. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down
+
 ## Multiple Projects
 
 The Piggy supports multiple projects! Just create multiple directories in the root folder (where lgptNew and lgpt10k were found). Examples: “lgptProject1”, “lgpt*Author*Name”, “lgptSomethingElse”, “lgptWhatever”, etc. Each project directory must contain its own samples which must be stored in a sub-directory called “samples”. Lgpt will prompt you to choose one of the projects found in the root (lgpt- directories) when starting up.
@@ -318,7 +321,8 @@ To move from one screen to the other, press the RTrigger combined with the direc
 - **cutoff:** filter cutoff frequency
 - **reso:** filter resonance frequency
 - **type:** this is where it gets a little trickier. The filter now supports continuous change from low pass to high pass. set type to 00 for low pazz. FF for hi-pass and 7f for Band pass (or is it notch? n0s must check). all intermediate values morph in between them.
-- **dist:** filter distortion. for the moment we have none & scream. i'm planning on maybe add a third choice that would make the filter behave a little better when resonance is set very high in the old/default mode
+- **mode:** filter distortion. Modes are none, bassy & scream. Scream adds loads of distortion when increasing resonance. Bassy makes the filter behave a little better when resonance is set very high compared to the default mode.
+- **attenuate:** volume attenuator post (scream) filter
 - **fb tune:** length of the feedback delay line
 - **fb mix:** how much of the feedback is pushed back in the circuit
 
