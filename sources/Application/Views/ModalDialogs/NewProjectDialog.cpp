@@ -60,7 +60,7 @@ void NewProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick)
 void NewProjectDialog::OnFocus() {
 	selected_ = 1;
 	currentChar_ = 0;
-	std::string randomName = RandomNames::getRandomName();
+	std::string randomName = getRandomName();
 	memset(name_,' ',MAX_NAME_LENGTH+1) ;
 	strncpy(name_, randomName.c_str(), sizeof(randomName) - 1);
 	lastChar_ = randomName.c_str()[0];
@@ -78,7 +78,7 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 	  // A modifier
 	  if (mask&EPBM_A) { 
 		if (mask==EPBM_A) {
-			std::string randomName = RandomNames::getRandomName();
+			std::string randomName = getRandomName();
 			switch(selected_) {
 				case 0:
 					if (name_[currentChar_]==' ') {
