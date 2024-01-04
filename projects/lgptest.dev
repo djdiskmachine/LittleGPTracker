@@ -2937,3 +2937,24 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+
+[Unit288]
+FileName=..\sources\Application\utils\RandomNames.h
+CompileCpp=1
+Folder=Application/Utils
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+
+[Unit289]
+FileName=..\sources\Application\utils\RandomNames.cpp
+CompileCpp=1
+Folder=Application/Utils
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=

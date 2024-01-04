@@ -301,6 +301,7 @@
     <ClCompile Include="..\sources\Application\utils\assert.cpp" />
     <ClCompile Include="..\sources\Application\utils\char.cpp" />
     <ClCompile Include="..\sources\Application\utils\fixed.cpp" />
+    <ClCompile Include="..\sources\Application\utils\RandomNames.cpp" />
     <ClCompile Include="..\sources\Application\utils\HexBuffers.cpp" />
     <ClCompile Include="..\sources\Application\Utils\wildcard.cpp" />
     <ClCompile Include="..\sources\Application\Player\Player.cpp" />
@@ -434,6 +435,7 @@
     <ClInclude Include="..\sources\Application\Views\ModalDialogs\SelectProjectDialog.h" />
     <ClInclude Include="..\sources\Application\utils\fixed.h" />
     <ClInclude Include="..\sources\Application\utils\HexBuffers.h" />
+    <ClInclude Include="..\sources\Application\utils\RandomNames.h" />
     <ClInclude Include="..\sources\Application\Player\FileEngine.h" />
     <ClInclude Include="..\sources\Application\Player\Player.h" />
     <ClInclude Include="..\sources\Application\Player\PlayerChannel.h" />

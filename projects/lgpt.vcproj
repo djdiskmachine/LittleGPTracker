@@ -1053,6 +1053,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\sources\Application\utils\RandomNames.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\sources\Application\utils\HexBuffers.cpp"
 						>
 					</File>
