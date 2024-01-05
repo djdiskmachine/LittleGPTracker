@@ -599,8 +599,8 @@ endif
 deploy:
 	make PLATFORM=PSP
 	make PLATFORM=DEB
-	make PLATFORM=RS97
-	make PLATFORM=BITTBOY
+#	make PLATFORM=RS97
+#	make PLATFORM=BITTBOY
 	make PLATFORM=MIYOO
 #	./resources/packaging/docker_steam.sh
 	./resources/packaging/build_and_copy_from_pi.sh

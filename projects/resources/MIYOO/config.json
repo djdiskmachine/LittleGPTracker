@@ -2,5 +2,5 @@
   "label": "LittleGPTracker",
   "icon": "lgpt.png",
   "launch": "launch.sh",
-  "description": "LSDJ Inspired Pocket DAW"
+  "description": "16bit sample-based tracker"
 }

@@ -107,25 +107,27 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
     windowed_ = false;
   }
  
-  int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
- 
-  const char *mult=Config::GetInstance()->GetValue("SCREENMULT") ;
-  if (mult)
-  {
-    mult_=atoi(mult);
-  }
-  else
-  {
-    if (framebuffer_)
-    {
-      mult_ = multFromSize;
-    }
-    else
-    {
-      mult_ = 1;
-    }
-  }
-
+  #ifdef PLATFORM_PSP
+  	mult_ = 1;
+  #else
+	int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
+	const char *mult=Config::GetInstance()->GetValue("SCREENMULT") ;
+	if (mult)
+	{
+		mult_=atoi(mult);
+	}
+	else
+	{
+		if (framebuffer_)
+		{
+		mult_ = multFromSize;
+		}
+		else
+		{
+		mult_ = 1;
+		}
+	}
+  #endif
   // Create a window that is the requested size
   
   screenRect_._topLeft._x=0;

@@ -8,7 +8,7 @@
 
 <!--
     EXAMPLE
-    maps the button "q" to light shoulder
+    maps the button "q" to left shoulder
     maps the button "w" to right shoulder
 -->
         <MAP src="key:0:q" dst="/event/lshoulder" />

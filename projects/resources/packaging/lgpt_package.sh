@@ -23,15 +23,16 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
     zip -9 $PACKAGE bin/* && rm -r bin/
   fi
   cd ./resources/packaging 
-  CONTENTS="$(find -name README.txt)"
-  CONTENTS+=" samplelib/*wav lgpt_ALPHA/* lgpt_ALPHA/samples/*"
-  zip -9 ../../$PACKAGE $CONTENTS && cd -
+  CONTENTS="README.txt samplelib/ lgpt_BETA/"
+  zip -9 -r ../../$PACKAGE $CONTENTS
+  CONTENTS="../../../docs/wiki/What-is-LittleGPTracker.md"
+  zip -9 ../../$PACKAGE -j $CONTENTS && cd -
 }
 
 collect_resources PSP EBOOT.PBP
 collect_resources DEB lgpt.deb-exe
-collect_resources RS97 lgpt.dge
-collect_resources BITTBOY lgpt-bittboy.elf
+# collect_resources RS97 lgpt.dge
+# collect_resources BITTBOY lgpt-bittboy.elf
 collect_resources MIYOO lgpt-miyoo.elf
 # collect_resources STEAM lgpt.steam-exe
 collect_resources W32 lgpt-W32.exe

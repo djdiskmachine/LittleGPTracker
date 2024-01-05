@@ -15,7 +15,25 @@ projects but make sure to backup your old cherished work
 just to be safe <3
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Changelog Jan 1 2024
+Changelog Jan 5 2024
+1.3o-beta-2
+    Random name generator
+        New project or Save As project creates a random name
+        Courtesy of djdiskmachine
+
+    Preview with start in sample browser
+      Browse preview with start + up / down
+      Load sample with start + right
+      Up one level in folder structure with start + left
+
+      B navigation no longer wraps around but stays at end points
+
+    Skip build for bittboy and RG350 for now, no testers
+    Bugs:
+      SCREENMULT no longer applies for PSP issue (47)
+      Disable default mapping for MIYOO to not conflict with mapping.xml issue (53)
+        Shoutouts to fpiesik and Sacaredo for help debugging
+
 1.3o-beta-1
     Pingpong loop now stable
         Courtesy of djdiskmachine 

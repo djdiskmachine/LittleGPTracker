@@ -92,21 +92,21 @@ void GPSDLSystem::Boot(int argc,char **argv) {
     if ((s) && (!strcmp(s, "YES"))) {
         invert=true;
     }
-
-    if (!invert) {
-        eventManager_->MapAppButton("left ctrl", APP_BUTTON_A);
-        eventManager_->MapAppButton("left alt", APP_BUTTON_B);
-    } else {
-        eventManager_->MapAppButton("left alt", APP_BUTTON_A);
-        eventManager_->MapAppButton("left ctrl", APP_BUTTON_B);
-    }
-    eventManager_->MapAppButton("return", APP_BUTTON_START);
-    eventManager_->MapAppButton("tab", APP_BUTTON_L);
-    eventManager_->MapAppButton("backspace", APP_BUTTON_R);
-    eventManager_->MapAppButton("right", APP_BUTTON_RIGHT);
-    eventManager_->MapAppButton("left", APP_BUTTON_LEFT);
-    eventManager_->MapAppButton("down", APP_BUTTON_DOWN);
-    eventManager_->MapAppButton("up", APP_BUTTON_UP);
+    // Disable for now while we work on double mappings
+    // if (!invert) {
+    //     eventManager_->MapAppButton("left ctrl", APP_BUTTON_A);
+    //     eventManager_->MapAppButton("left alt", APP_BUTTON_B);
+    // } else {
+    //     eventManager_->MapAppButton("left alt", APP_BUTTON_A);
+    //     eventManager_->MapAppButton("left ctrl", APP_BUTTON_B);
+    // }
+    // eventManager_->MapAppButton("return", APP_BUTTON_START);
+    // eventManager_->MapAppButton("tab", APP_BUTTON_L);
+    // eventManager_->MapAppButton("backspace", APP_BUTTON_R);
+    // eventManager_->MapAppButton("right", APP_BUTTON_RIGHT);
+    // eventManager_->MapAppButton("left", APP_BUTTON_LEFT);
+    // eventManager_->MapAppButton("down", APP_BUTTON_DOWN);
+    // eventManager_->MapAppButton("up", APP_BUTTON_UP);
 
     n = 4;
     t = sizeof(char);
