@@ -1,12 +1,14 @@
 # What is LittleGPTracker?
-[*LittleGPTracker*](http://www.10pm.org/nostromo/lgpt/) *(a.k.a piggy tracker) is a sample based tracker originally programed for the gamepark handhelds, but now also available for Microsoft Windows and Mac OSX. It implements a user interface similar to the refined track-by-joypad software* [*littlesounddj*](http://www.littlesounddj.com/)*. Piggy currently supports 8 monophonic 8Bit/16Bit/44.1Khz stereo channels as well as 16 channel midi output. Piggy is currently under development and the latest versions of the program (along with unstable ghetto builds) can be found at* [*http://gorehole.org/lgptWiki/*](http://gorehole.org/lgptWiki/)*.*
-You are reading a reference manual for those who are comfortable with LSDj or trackers in general. An alternative introduction to LittleGPTracker is our very own [quick_start_guide](http://wiki.littlegptracker.com/doku.php?id=lgpt:quick_start_guide). If you have a question this manual does not answer, please ask on the [lgpt mailing list](http://groups.yahoo.com/groups/littlegptracker/) or in #hexawe on efnet. Don't forget to check out the advanced [tips_tricks](http://wiki.littlegptracker.com/doku.php?id=lgpt:tips_tricks)
+[*LittleGPTracker*](http://www.10pm.org/nostromo/lgpt/) *(a.k.a piggy tracker) is a sample based tracker originally programed for the gamepark handhelds and PSP but now also available for Microsoft Windows and ~~Mac OSX~~. It implements a user interface similar to the refined track-by-joypad software* [*littlesounddj*](http://www.littlesounddj.com/)*. Piggy currently supports 8 monophonic 8Bit/16Bit/44.1Khz stereo channels as well as 16 channel midi output. Piggy is currently under development and the latest versions of the program (along with unstable ghetto builds) can be found at* [*https://github.com/djdiskmachine/LittleGPTracker/releases/*](https://github.com/djdiskmachine/LittleGPTracker/releases/)*.*
+You are reading a reference manual for those who are comfortable with LSDj or trackers in general. An alternative introduction to LittleGPTracker is our very own [quick_start_guide](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:quick_start_guide). If you have a question this manual does not answer, please join the [Discord](https://discord.com/invite/NMQVbrFgr3) or in #hexawe on efnet. Don't forget to check out the advanced [tips_tricks](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:tips_tricks)
 If you want to grab some sounds to get off the ground quickly, or want to hear and see what other people have been doing with piggy tracker, download some of the .zip archives from [http://hexawe.net](http://hexawe.net/)!
 
 # Files
 ## Installation
 
 Grab the installation package for your platform from the [download page](http://www.10pm.org/nostromo/lgpt/download.php). Extract the files from the archive & copy it where you like. after that you can run the executable type for your system, located in the lgpt root or in the /bin folder. linux users may need to set the binary as executable (chmod a+x lgpt.deb-exe).
+If you're using PPSSPP, LittleGPTracker might boot with a black screen. To workaround
+this, set Software rendering **or** change rendering resolution
 
 ## Directory Structure
 - **bin**
