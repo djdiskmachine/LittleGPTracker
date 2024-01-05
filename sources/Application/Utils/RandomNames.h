@@ -47,9 +47,8 @@ class RandomNames {
 std::string getRandomName() {
     std::string adjective = adjectives_[rand() % adjectives_.size()];
     std::string verb = verbs_[rand() % verbs_.size()];
-    int maxLength = 12;
 
-    while ((adjective + verb).length() > maxLength) {
+    while ((adjective + verb).length() > MAX_NAME_LENGTH) {
         adjective = adjectives_[rand() % adjectives_.size()];
         verb = verbs_[rand() % verbs_.size()];
     }
