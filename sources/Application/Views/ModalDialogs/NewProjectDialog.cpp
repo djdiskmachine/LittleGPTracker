@@ -62,7 +62,7 @@ void NewProjectDialog::OnFocus() {
 	currentChar_ = 0;
 	std::string randomName = getRandomName();
 	memset(name_,' ',MAX_NAME_LENGTH+1) ;
-	strncpy(name_, randomName.c_str(), sizeof(randomName.c_str()) - 1);
+	strncpy(name_, randomName.c_str(), MAX_NAME_LENGTH);
 	lastChar_ = randomName.c_str()[0];
 	isDirty_ = true;
 };
@@ -87,7 +87,7 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					isDirty_=true ;
 					break ;
 				case 1:
-					strncpy(name_, randomName.c_str(), sizeof(randomName.c_str()) - 1);
+					strncpy(name_, randomName.c_str(), MAX_NAME_LENGTH);
 					isDirty_ = true;
 					break;
 				case 2:
