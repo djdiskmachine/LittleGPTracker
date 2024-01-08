@@ -77,7 +77,7 @@ bool SDLAudioDriver::InitDriver() {
   // Allocates a rotating sound buffer
   unalignedMain_=(char *)SYS_MALLOC(fragSize_+SOUND_BUFFER_MAX) ;
   // Make sure the buffer is aligned
-  mainBuffer_=(char *)((((int)unalignedMain_)+1)&(0xFFFFFFFC)) ;
+  mainBuffer_=(char *)unalignedMain_;
 
   Trace::Log("AUDIO","%s successfully opened with %d samples",bufferName,fragSize_/4 ) ;
 
