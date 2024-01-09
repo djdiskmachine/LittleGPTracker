@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <unistd.h>
-#include <sys/dir.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #include <ctype.h>
 #include <errno.h>
@@ -133,7 +133,6 @@ long UnixFile::Tell() {
 } ;
 void UnixFile::Close() {
 	fflush(file_) ;
-	fsync(fileno(file_)) ;
 	fclose(file_) ;
 } ;
 
@@ -183,7 +182,11 @@ void UnixFileSystem::Delete(const char *path) {
 
 Result UnixFileSystem::MakeDir(const char *path) {
   
-	int success = mkdir(path,S_IRWXU) ;
+  #ifdef __MINGW32__
+	int success = mkdir(path) ;
+  #else
+ 	int success = mkdir(path,S_IRWXU) ;
+  #endif
   if (success <0)
   {
     std::ostringstream oss;

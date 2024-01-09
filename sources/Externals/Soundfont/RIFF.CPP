@@ -55,6 +55,11 @@ PURPOSE.
 #include "System/Console/Trace.h"
 #include <stdio.h>
 
+#ifndef _WIN32
+#include <stdint.h>
+#endif
+
+
 using namespace::soundfont ;
 
 /////////////////////////////
@@ -235,7 +240,7 @@ WORD RIFFClass::OpenRIFF(CHAR* pName)
 {
   byWhereIsRIFFData = RIFF_ONDISK;
 
-  if ((RIFFOpen((LONG)pName) != SUCCESS ) || (pFile == NULL))
+  if ((RIFFOpen((intptr_t)pName) != SUCCESS ) || (pFile == NULL))
   { 
      SetError(errno); // Set inside RIFFOpen
      return (uiErrorNdx = RIFF_OPENFILEERROR);

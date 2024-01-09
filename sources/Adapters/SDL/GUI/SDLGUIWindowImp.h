@@ -7,7 +7,7 @@
 bool ProcessDEBEvent(SDL_Event &event) ;
 void ProcessButtonChange(unsigned short,unsigned short) ;
 
-#define MAX_OVERLAYS 250
+#define MAX_OVERLAYS 1
 
 struct SDLCreateWindowParams: public GUICreateWindowParams {
 	SDLCreateWindowParams():cacheFonts_(true),framebuffer_(false) {} ;

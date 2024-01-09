@@ -41,6 +41,7 @@
 // RtAudio: Version 4.0.4
 
 #include "RtAudio.h"
+#include <cstring>
 #include <iostream>
 
 // Static variable definitions.

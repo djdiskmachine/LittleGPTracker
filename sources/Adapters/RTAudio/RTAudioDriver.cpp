@@ -104,7 +104,7 @@ bool RTAudioDriver::InitDriver() {
 	// Allocates a rotating sound buffer
 	unalignedMain_=(char *)SYS_MALLOC(fragSize_+SOUND_BUFFER_MAX) ;
 	// Make sure the buffer is aligned
-	mainBuffer_=(char *)((((int)unalignedMain_)+1)&(0xFFFFFFFC)) ;
+	mainBuffer_ = (char *)unalignedMain_;
 
 	// Create mini blank buffer in case of underruns
 

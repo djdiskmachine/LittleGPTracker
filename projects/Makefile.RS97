@@ -1,37 +1,24 @@
-## File name suffix, for example .exe
-EXTENSION	:=dge
-## Path to toolchain, usually /opt/somepath
-TOOLCHAIN	=/opt/mipsel-rg350-linux-uclibc_sdk-buildroot/
-## Platform-specific gcc / g++ / sdl  binary prefix
-## usually under toolchainpath/bin/architecture-name-gcc
-PREFIX		:=mipsel-rg350-linux-uclibc-
-## Name of output binary
-OUTPUT		= ../lgpt-rg350
-
-
-## Below should not need further config
-
 -include $(PWD)/rules_base
-CROSS_COMPILE=$(TOOLCHAIN)bin/$(PREFIX)
-SDL_CONFIG   =/usr/bin/sdl-config
 
-%.$(EXTENSION): $(OFILES)
+STRIP = ls
+
+%.dge: $(OFILES)
 	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
 	@$(STRIP) $@
 
-STRIP		= $(CROSS_COMPILE)strip
-CC			= $(CROSS_COMPILE)gcc
-CXX			= $(CROSS_COMPILE)g++
+DEVKIT=/opt/mipsel-rg350-linux-uclibc_sdk-buildroot
 
-SYSROOT		:= $(shell $(CC) --print-sysroot)
-SDL_CFLAGS	:= $(shell $(SYSROOT)/$(SDL_CONFIG) --cflags)
-SDL_LIBS	:= $(shell $(SYSROOT)/$(SDL_CONFIG) --libs)
+TARGET = lgpt.dge
 
-DEFINES		= -DHAVE_STDINT_H -D_NDEBUG -D_NO_JACK_ -I$(PWD)/../sources -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DBUFFERED
-INCLUDES	= -Iinclude $(SDL_CFLAGS)
-OPT_FLAGS	= -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto
+TOOLPATH=$(DEVKIT)/usr/bin
+PREFIX		:=	mipsel-linux-
+SDL_BASE = /opt/mipsel-rg350-linux-uclibc_sdk-buildroot/usr/mipsel-rg350-linux-uclibc/sysroot/usr/bin/
 
-CFLAGS		:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
-CXXFLAGS	:=	$(CFLAGS) -std=gnu++03 
+CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 -D_NDEBUG -D_NO_JACK_ -Wall -DPLATFORM_DINGOO -I$(PWD)/../sources -D__LINUX_OSS__  -DCPP_MEMORY -DRS97 -DUSB_TTY
 
-LIBS		:=  -lSDL -lSDL_mixer -lpthread 
+CXXFLAGS:=	$(CFLAGS) -std=gnu++03
+
+EXTENSION:= dge
+
+LIBS	:=  -lSDL -lpthread 
+LIBDIRS	:=	$(DEKVIT)/usr/lib

@@ -73,6 +73,7 @@ bool SDLAudioDriver::InitDriver() {
   char bufferName[256] ;
   SDL_AudioDriverName(bufferName,256) ;
 
+  settings_.bufferSize_ = returned.size;
   fragSize_=returned.size ;
   // Allocates a rotating sound buffer
   unalignedMain_=(char *)SYS_MALLOC(fragSize_+SOUND_BUFFER_MAX) ;

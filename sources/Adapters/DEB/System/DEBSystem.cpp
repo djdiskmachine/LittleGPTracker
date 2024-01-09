@@ -160,7 +160,7 @@ void DEBSystem::Free(void *ptr) {
 
 void DEBSystem::Memset(void *addr,char val,int size) {
 
-    unsigned int ad=(unsigned int)addr ;
+    unsigned int ad = (intptr_t)addr;
     if (((ad&0x3)==0)&&((size&0x3)==0)) { // Are we 4-byte aligned ?
         unsigned int intVal=0 ;
         for (int i=0;i<4;i++) {

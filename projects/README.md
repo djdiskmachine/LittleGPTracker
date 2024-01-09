@@ -23,10 +23,9 @@
 ##### DINGOO: Compile under Linux
 
 ##### DEB: Compile under Linux
-	Needs to be built under 32bit architecture for now
+	Now available for x64!
 	Required libs:
-		sudo dpkg --add-architecture i386 && sudo apt update
-	    sudo apt install -y git make gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+	    sudo apt install -y git make gcc g++ libsdl1.2-dev libasound2-plugins libjack-dev
 
 	Build with:
 		make PLATFORM=DEB
