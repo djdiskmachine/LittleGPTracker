@@ -56,6 +56,7 @@ private:
 	int lastPlayingPos_ ;
 	Variable cmdEdit_ ;
 	UIBigHexVarField *cmdEditField_ ;
+	std::string* getCmdHelp(char* buffer);
 
 	struct clipboard {
 		bool active_ ;

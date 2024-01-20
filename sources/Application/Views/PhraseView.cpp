@@ -138,6 +138,7 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction,int xOffset,int
 					break ;
 			}
 			lastCmd_=*cc ;
+			//Set legend
 			break ;
 
 		case 3:
@@ -1024,7 +1025,7 @@ void PhraseView::DrawView() {
 		} else {
 			hex2char(d,buffer+1) ;
 			DrawString(pos._x,pos._y,buffer,props) ;
-   			if (j==row_) {
+   			if (j==row_ && (col_ == 0 || col_ == 1)) {
                 sprintf(buffer,"I%2.2x: ",d) ;
 				std::string instrLine=buffer ;
                 setTextProps(props,1,j,true) ;
@@ -1056,6 +1057,14 @@ void PhraseView::DrawView() {
 		DrawString(pos._x,pos._y,buffer,props) ;
         setTextProps(props,2,j,true) ;
 		pos._y++ ;
+		if (j==row_ && (col_ == 2)) {
+			GUIPoint location = GetTitlePosition() ;
+			location._x += 12 ;
+			std::string* cmdstr = getCmdHelp(buffer);
+			DrawString(location._x, location._y+0, cmdstr[0].c_str(), props);
+			DrawString(location._x, location._y+1, cmdstr[1].c_str(), props);
+			DrawString(location._x, location._y+2, cmdstr[2].c_str(), props);
+		}
 	}
 
 
@@ -1096,6 +1105,14 @@ void PhraseView::DrawView() {
 		DrawString(pos._x,pos._y,buffer,props) ;
         setTextProps(props,4,j,true) ;
 		pos._y++ ;
+		if (j==row_ && col_ == 4) {
+			GUIPoint location = GetTitlePosition() ;
+			location._x += 12 ;
+			std::string* cmdstr = getCmdHelp(buffer);
+			DrawString(location._x, location._y+0, cmdstr[0].c_str(), props);
+			DrawString(location._x, location._y+1, cmdstr[1].c_str(), props);
+			DrawString(location._x, location._y+2, cmdstr[2].c_str(), props);
+		}
 	}
 
 // Draw commands params
@@ -1205,3 +1222,114 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
     }
 */
 } ;
+
+std::string* PhraseView::getCmdHelp(char* buffer) {
+	std::string* result = new std::string[3];
+	result[0] = buffer;
+	if (strcmp(buffer, "KILL") == 0) {
+		result[0].append(", stop playing after");
+		result[1] = "aa ticks";
+		result[2] = "";
+	} else if (strcmp(buffer, "LPOF") == 0) {
+		result[0].append(", LooP OFset: Shift both");
+		result[1] = "the loop start & loop ";
+		result[2] = "end values aaaa digits";
+	} else if (strcmp(buffer, "ARPG") == 0) {
+		result[0].append(", ARPeGgio: Cycle");
+		result[1] = "through relative pitches";
+		result[2] = "from original pitch";
+	} else if (strcmp(buffer, "VOLM") == 0) {
+		result[0].append(", VOLuMe:aabb");
+		result[1] = "approach volume";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "PTCH") == 0) {
+		result[0].append(", PiTCH:aabb");
+		result[1] = "approach volm";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "HOP ") == 0) {
+		result[0].append(":aabb");
+		result[1] = "hop to bb";
+		result[2] = "aa times";
+	} else if (strcmp(buffer, "LEGA") == 0) {
+		result[0].append(", LEGAto: slide from");
+		result[1] = "previous note to pitch";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "RTRG") == 0) {
+		result[0].append(", ReTRiG: retrigger loop");
+		result[1] = "from current position over";
+		result[2] = "bb ticks at speed aa";
+	} else if (strcmp(buffer, "TMPO") == 0) {
+		result[0].append(", TeMPO:--bb");
+		result[1] = "sets the tempo to hex";
+		result[2] = "value bb";
+	} else if (strcmp(buffer, "MDCC") == 0) {
+		result[0].append(", MiDiCC:aabb");
+		result[1] = "CC message aa";
+		result[2] = "value bb";
+	} else if (strcmp(buffer, "MDPG") == 0) {
+		result[0].append(", MiDi ProGram Change");
+		result[1] = "send program change bb";
+		result[2] = "to current channel";
+	} else if (strcmp(buffer, "PLOF") == 0) {
+		result[0].append(", PLay OFfset:aabb");
+		result[1] = "jump abs to aa or";
+		result[2] = "move rel bb chunks";
+	} else if (strcmp(buffer, "FLTR") == 0) {
+		result[0].append(", FiLTeR:aabb");
+		result[1] = "cutoff aa";
+		result[2] = "resonance bb";
+	} else if (strcmp(buffer, "TABL") == 0) {
+		result[0].append(", TABLe:--bb");
+		result[1] = "trigger table bb";
+		result[2] = "";
+	} else if (strcmp(buffer, "CRSH") == 0) {
+		result[0].append(", CRuSH:aa-b");
+		result[1] = "drive aa";
+		result[2] = "crush -b";
+	} else if (strcmp(buffer, "FCUT") == 0) {
+		result[0].append(", FilterCUToff:aabb");
+		result[1] = "set cutoff to";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "FRES") == 0) {
+		result[0].append(", FilterRESonance:aabb");
+		result[1] = "set resonance to";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "PAN ") == 0) {
+		result[0].append(", PAN:aabb");
+		result[1] = "pan to value";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "GROV") == 0) {
+		result[0].append(", GROoVe:--bb");
+		result[1] = "trigger groove bb";
+		result[2] = "";
+	} else if (strcmp(buffer, "IRTG") == 0) {
+		result[0].append(", InstrumentReTriG:aabb");
+		result[1] = "retrig and transpose to";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "PFIN") == 0) {
+		result[0].append(", PitchFINetune:aabb");
+		result[1] = "fine tune to ";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "DLAY") == 0) {
+		result[0].append(", DeLAY:--bb");
+		result[1] = "delay bb tics";
+		result[2] = "";
+	} else if (strcmp(buffer, "FBMX") == 0) {
+		result[0].append(", FeedBack MiX:aabb");
+		result[1] = "feedback mix to";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "FBTN") == 0) {
+		result[0].append(", FeedBack TuNe:aabb");
+		result[1] = "feedback tune to";
+		result[2] = "bb at speed aa";
+	} else if (strcmp(buffer, "STOP") == 0) {
+		result[0].append(" playing song");
+		result[1] = "immediately";
+		result[2] = "";
+	} else {
+		result[0] = "";
+		result[1] = "";
+		result[2] = "";
+	}
+	return result;
+}
