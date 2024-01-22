@@ -148,10 +148,7 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 	if (mask&EPBM_B) {  
 		if (mask&EPBM_UP) warpToNextSample(-LIST_SIZE) ;
 		if (mask&EPBM_DOWN) warpToNextSample(LIST_SIZE) ;
-	} else {
-
-	  // A modifier
-	  if (mask&EPBM_A) { 
+	} else if (mask&EPBM_A) {
 		// Allow browse preview
 		if (mask&EPBM_UP) warpToNextSample(-1) ;
 		if (mask&EPBM_DOWN) warpToNextSample(1) ;
@@ -175,42 +172,47 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				EndModal(0) ;
 				break ;
 		}
-	  } else if (mask&EPBM_START) { // START Modifier
-			if (mask&EPBM_UP) warpToNextSample(-1);
-			if (mask&EPBM_DOWN) warpToNextSample(1);
-			Path *element = getImportElement();
-			setCurrent(element, mask);
-			if(!element->IsDirectory()) {
-				preview(*element); 
+	} else if (mask&EPBM_START) { // START Modifier
+		if (mask&EPBM_UP) warpToNextSample(-1);
+		if (mask&EPBM_DOWN) warpToNextSample(1);
+		Path *element = getImportElement();
+		setCurrent(element, mask);
+		if(!element->IsDirectory()) {
+			preview(*element);
+		}
+		if (mask&EPBM_RIGHT) { // Load sample
+			if (!element->IsDirectory()) {
+				endPreview();
+				import(*element);
 			}
-			if (mask&EPBM_RIGHT) { // Load sample
-				if (!element->IsDirectory()) {
-					endPreview();
-					import(*element);
-				}
-			}
-			if (mask&EPBM_LEFT) { // Navigate up
-				if (currentPath_.GetPath()!=sampleLib_.GetPath()) {
-					Path parent = element->GetParent().GetParent();
-					setCurrentFolder(&parent);
-					isDirty_=true;
-				}
-			}
-	  } else { // No modifier
-			if (mask==EPBM_UP) warpToNextSample(-1);
-			if (mask==EPBM_DOWN) warpToNextSample(1);
-			if (mask==EPBM_LEFT) {
-				selected_-=1;
-				if (selected_<0) selected_+=3;
-				isDirty_=true;
-			}
-			if (mask==EPBM_RIGHT) {
-				selected_=(selected_+1)%3;
+		}
+		if (mask&EPBM_LEFT) { // Navigate up
+			if (isSampleLibRoot()) {
+			} else {
+				Path parent = element->GetParent().GetParent();
+				setCurrentFolder(&parent);
 				isDirty_=true;
 			}
 		}
+	} else { // No modifier
+		if (mask==EPBM_UP) warpToNextSample(-1);
+		if (mask==EPBM_DOWN) warpToNextSample(1);
+		if (mask==EPBM_LEFT) {
+			selected_-=1;
+			if (selected_<0) selected_+=3;
+			isDirty_=true;
+		}
+		if (mask==EPBM_RIGHT) {
+			selected_=(selected_+1)%3;
+			isDirty_=true;
+		}
 	}
 } ;
+
+bool ImportSampleDialog::isSampleLibRoot()
+{
+    return sampleLib_.GetPath().find(currentPath_.GetPath()) != std::string::npos;
+};
 
 Path* ImportSampleDialog::getImportElement() {
 	IteratorPtr<Path> it(sampleList_.GetIterator());
@@ -224,14 +226,14 @@ Path* ImportSampleDialog::getImportElement() {
 }
 
 void ImportSampleDialog::setCurrent(Path *element, unsigned short mask) {
-	if (selected_ != 2 && element->IsDirectory())
-	{
-		if (element->GetName()=="..") {
-			if (currentPath_.GetPath()==sampleLib_.GetPath()) {
-			} else {
-				Path parent = element->GetParent().GetParent();
-				setCurrentFolder(&parent);
-			}
+	if (selected_ != 2 && element->IsDirectory() && // Folders
+		!(mask&EPBM_UP||mask&EPBM_DOWN)) { // Don't browse preview folders
+			if (element->GetName()=="..") {
+				if (isSampleLibRoot()) {
+				} else {
+					Path parent = element->GetParent().GetParent();
+					setCurrentFolder(&parent);
+				}
 		} else {
 			setCurrentFolder(element);
 		}
