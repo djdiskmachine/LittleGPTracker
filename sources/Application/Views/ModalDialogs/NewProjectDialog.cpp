@@ -58,13 +58,9 @@ void NewProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick)
 };
 
 void NewProjectDialog::OnFocus() {
-	selected_ = 1;
-	currentChar_ = 0;
-	std::string randomName = getRandomName();
+	selected_=currentChar_=0;
 	memset(name_,' ',MAX_NAME_LENGTH+1) ;
-	strncpy(name_, randomName.c_str(), MAX_NAME_LENGTH);
-	lastChar_ = randomName.c_str()[0];
-	isDirty_ = true;
+	lastChar_ = 'A';
 };
 
 void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
@@ -87,7 +83,9 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					isDirty_=true ;
 					break ;
 				case 1:
-					strncpy(name_, randomName.c_str(), MAX_NAME_LENGTH);
+					strncpy(name_, "           \0", MAX_NAME_LENGTH);
+					strncpy(name_, randomName.c_str(), randomName.length());
+					lastChar_ = currentChar_ = randomName.length() - 1;
 					isDirty_ = true;
 					break;
 				case 2:
