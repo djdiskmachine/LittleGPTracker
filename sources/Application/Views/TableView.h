@@ -13,8 +13,7 @@ public:
 	virtual void ProcessButtonMask(unsigned short mask,bool pressed) ;
 	virtual void DrawView() ;
 	virtual void OnPlayerUpdate(PlayerEventType ,unsigned int tick=0) ;
-	virtual void OnFocus() ;
-
+    virtual void OnFocus();
 
 protected:
 
@@ -48,7 +47,8 @@ private:
 
 	Variable cmdEdit_ ;
 	UIBigHexVarField *cmdEditField_ ;
-
+	void printHelpLegend(char *buffer, GUITextProperties props);
+    
 	struct clipboard {
 		bool active_ ;
 		int col_ ;

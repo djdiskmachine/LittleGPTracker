@@ -24,8 +24,7 @@ static FourCC _all[]= {
 	I_CMD_PLOF,
 	I_CMD_PTCH,
 	I_CMD_RTRG,
-	I_CMD_SLCE,
-  I_CMD_STOP,
+	I_CMD_STOP,
 	I_CMD_TABL,
 	I_CMD_TMPO,
 	I_CMD_VOLM

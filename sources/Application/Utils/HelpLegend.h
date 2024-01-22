@@ -5,19 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-class HelpLegend {
-  public:
-	static inline std::string* getHelpLegend(char* fx);
-};
-
 static inline std::string* getHelpLegend(char* fx) {
 	std::string* result = new std::string[3];
 	result[0].assign(fx);
 	result[2].assign("bb at speed aa");
 	if (strcmp(fx, "KILL") == 0) {
-		result[0].append(", stop playing after");
-		result[1].assign("aa ticks");
-		result[2].assign("");
+		result[0].append(", KILl:--bb");
+		result[1].assign("stop playing");
+		result[2].assign("after bb ticks");
 	} else if (strcmp(fx, "LPOF") == 0) {
 		result[0].append(", LooP OFset: Shift both");
 		result[1].assign("the loop start & loop ");
@@ -68,7 +63,7 @@ static inline std::string* getHelpLegend(char* fx) {
 		result[1].assign("trigger table bb");
 		result[2].assign("");
 	} else if (strcmp(fx, "CRSH") == 0) {
-		result[0].append(", CRuSH:aa-b");
+		result[0].append(", drive&CRuSH:aa-b");
 		result[1].assign("drive aa");
 		result[2].assign("crush -b");
 	} else if (strcmp(fx, "FCUT") == 0) {
@@ -78,7 +73,7 @@ static inline std::string* getHelpLegend(char* fx) {
 		result[0].append(", FilterRESonance:aabb");
 		result[1].assign("set resonance to");
 	} else if (strcmp(fx, "PAN ") == 0) {
-		result[0].append(", PAN:aabb");
+		result[0].append("PAN:aabb");
 		result[1].assign("pan to value");
 	} else if (strcmp(fx, "GROV") == 0) {
 		result[0].append(", GROoVe:--bb");
