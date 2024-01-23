@@ -879,8 +879,8 @@ void TableView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
 }
 
 void TableView::printHelpLegend(char *buffer, GUITextProperties props) {
-  auto cmdstr = getHelpLegend(buffer);
-  DrawString(10, 0, cmdstr[0].c_str(), props);
-  DrawString(10, 1, cmdstr[1].c_str(), props);
-  DrawString(10, 2, cmdstr[2].c_str(), props);
+  std::string* cmdStr = getHelpLegend(buffer);
+  DrawString(10, 0, cmdStr[0].c_str(), props);
+  DrawString(10, 1, cmdStr[1].c_str(), props);
+  DrawString(10, 2, cmdStr[2].c_str(), props);
 }

@@ -15,7 +15,22 @@ projects but make sure to backup your old cherished work
 just to be safe <3
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Changelog Jan 5 2024
+Changelog Jan 23 2024
+1.3o-1
+    First stable release!
+    Fixed errors when random naming projects (shoutouts to 256k!)
+    Start sample navigation behavior adjusted
+    New: When in Phrase or Table view, FX commands have
+         a help legend at the top of the screen
+
+    Official builds for:
+        Miyoo mini
+        Win32
+        CHIP
+        Raspberry Pi
+        PSP
+        Deb32
+
 1.3o-beta-2
     Random name generator
         New project or Save As project creates a random name

@@ -1,13 +1,12 @@
 #!/bin/bash
 cd $(git rev-parse --show-toplevel)/projects/
 BUILD="$(grep -oP 'BUILD_COUNT [^"]*"\K[^"]*' ../sources/Application/Model/Project.h)"
-VERSION=1.3o_$BUILD
+VERSION=1.3o$BUILD
 PACKAGE=LGPT-$VERSION.zip
 
 collect_resources() { #1PLATFORM #2lgpt.*-exe
-  # if [[ ! -f $2 ]]; then
   if [[ -n $(find -name "$2") ]]; then
-    echo "" # Found it
+    echo "Build for $2!" # Found it
   else
     echo "-->file $2 not found<---"
     return;
@@ -26,6 +25,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   CONTENTS="README.txt samplelib/ lgpt_BETA/"
   zip -9 -r ../../$PACKAGE $CONTENTS
   CONTENTS="../../../docs/wiki/What-is-LittleGPTracker.md"
+  CONTENTS+=" ../$1/*.txt"
   zip -9 ../../$PACKAGE -j $CONTENTS && cd -
 }
 
