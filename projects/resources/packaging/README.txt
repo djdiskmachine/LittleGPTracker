@@ -22,6 +22,7 @@ Changelog Jan 23 2024
     Start sample navigation behavior adjusted
     New: When in Phrase or Table view, FX commands have
          a help legend at the top of the screen
+    Update license to CC BY-NC-SA 4.0
 
     Official builds for:
         Miyoo mini
