@@ -53,7 +53,7 @@ std::string getRandomName() {
         verb = verbs_[rand() % verbs_.size()];
     }
 
-    return (adjective + verb).c_str();
+    return (adjective + verb);
 }
 
 #endif //_RANDOM_NAMES_H_

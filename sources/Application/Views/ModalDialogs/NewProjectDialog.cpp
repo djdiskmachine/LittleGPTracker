@@ -83,7 +83,7 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					isDirty_=true ;
 					break ;
 				case 1:
-					strncpy(name_, "           \0", MAX_NAME_LENGTH);
+					std::fill(name_ + randomName.length(), name_ + sizeof(name_) / sizeof(name_[0]), ' ');
 					strncpy(name_, randomName.c_str(), randomName.length());
 					lastChar_ = currentChar_ = randomName.length() - 1;
 					isDirty_ = true;
