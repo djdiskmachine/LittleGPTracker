@@ -211,7 +211,8 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
 bool ImportSampleDialog::isSampleLibRoot()
 {
-    return sampleLib_.GetPath().find(currentPath_.GetPath()) != std::string::npos;
+    // return sampleLib_.GetPath().find(currentPath_.GetPath()) != std::string::npos; // Causes issues in Win, Miyoo
+	return currentPath_.GetPath()==sampleLib_.GetPath();
 };
 
 Path* ImportSampleDialog::getImportElement() {
