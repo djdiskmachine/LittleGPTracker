@@ -32,19 +32,18 @@ static const std::string vrb[] =
         "Sleeper", "Skier", "Smile", "Yell", "Zoomer"
     };
 
+bool noSeed = true;
 //Wonky assignment because < C++11
 std::vector<std::string> adjectives_ (adj, adj + sizeof(adj) / sizeof(adj[0]) );
 std::vector<std::string> verbs_ (vrb, vrb + sizeof(vrb) / sizeof(vrb[0]) );
 
-
-class RandomNames {
-  public:
-    RandomNames() { srand(uint(time(NULL))); }
-    std::string getRandomName();
-};
-
 // Generate a random name made in the format of: "adjective-verb"
 std::string getRandomName() {
+    if (noSeed){
+        srand(uint(time(NULL)));
+        noSeed = false;
+    }
+
     std::string adjective = adjectives_[rand() % adjectives_.size()];
     std::string verb = verbs_[rand() % verbs_.size()];
 
