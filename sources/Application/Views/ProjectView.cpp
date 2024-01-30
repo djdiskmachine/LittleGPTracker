@@ -25,35 +25,29 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
     if (dialog.GetReturnCode()>0) {
 		std::string str_dstprjdir;
 		std::string str_dstsmpdir;
-		#ifdef PLATFORM_PSP
-			str_dstprjdir = npd.GetName();
-			str_dstsmpdir = npd.GetName() + "/samples/";
-		#else
-			std::string up = "../";
-			str_dstprjdir = up + npd.GetName();
-			str_dstsmpdir = up + npd.GetName() + "/samples/";
-		#endif
 
-		Path path_dstprjdir = Path(str_dstprjdir);
-		Path path_dstsmpdir = Path(str_dstsmpdir);
+		Path root("root:");
+		str_dstprjdir = root.GetName() + "/" + npd.GetName();
+		str_dstsmpdir = str_dstprjdir + "/samples/";
+
 		Path path_srcprjdir("project:");
 		Path path_srcsmpdir("project:samples");
+		Path path_dstprjdir = Path(str_dstprjdir);
+		Path path_dstsmpdir = Path(str_dstsmpdir);
 
-		Path path_srclgptdatsav = path_srcprjdir.GetPath() + "/lgptsav.dat";
+		Path path_srclgptdatsav = path_srcprjdir.GetPath() + "lgptsav.dat";
 		Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
 
-		if (path_dstprjdir.Exists()) { Trace::Log("ProjectView", "Dst Dir '%s' Exist == true",
-			path_dstprjdir.GetPath().c_str()); }
-		else {
-			Result result = FileSystem::GetInstance()->MakeDir(path_dstprjdir.GetPath().c_str());
-			if (result.Failed()) {
+		if (path_dstprjdir.Exists()) {
+			Trace::Log("ProjectView", "Dst Dir '%s' Exist == true",
+			path_dstprjdir.GetPath().c_str());
+		} else {
+			if (FileSystem::GetInstance()->MakeDir(path_dstprjdir.GetPath().c_str()).Failed()) {
 				Trace::Log("ProjectView", "Failed to create dir '%s'", path_dstprjdir.GetPath().c_str());
 				return;
 			};
 
-		result = FileSystem::GetInstance()->MakeDir(path_dstsmpdir.GetPath().c_str()) ;
-
-		if (result.Failed()) {
+		if (FileSystem::GetInstance()->MakeDir(path_dstsmpdir.GetPath().c_str()).Failed()) {
 			Trace::Log("ProjectView", "Failed to create sample dir '%s'", path_dstprjdir.GetPath().c_str());
 			return;
 		};
@@ -67,8 +61,7 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 				IteratorPtr<Path>it(idir_srcsmpdir->GetIterator());
 				for (it->Begin();!it->IsDone();it->Next()) {
 					Path &current=it->CurrentItem();
-					if (current.IsFile())
-					{
+					if (current.IsFile()) {
 						Path dstfile = Path((str_dstsmpdir+current.GetName()).c_str());
 						Path srcfile = Path(current.GetPath());
 						FSS.Copy(srcfile.GetPath(),dstfile.GetPath());
