@@ -55,7 +55,9 @@ enum ColorDefinition {
 	CD_CONSOLE,
 	CD_CURSOR,
 	CD_SONGVIEWFE,
-	CD_SONGVIEW00
+	CD_SONGVIEW00,
+	CD_ROW,
+	CD_ROW2
 } ;
 
 enum ViewUpdateDirection {
@@ -155,6 +157,7 @@ public:
 	static int margin_ ;
 	static int songRowCount_ ;
 	static bool miniLayout_ ;
+	static int altRowNumber_;
 } ;
 
 #endif

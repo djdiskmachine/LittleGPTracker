@@ -788,12 +788,12 @@ void SongView::DrawView() {
 	
 // Display row numbers
 
-	SetColor(CD_HILITE1) ;
 	char row[3] ;
 	pos=anchor ;
 	pos._x-=3;
 	for (int j=0;j<View::songRowCount_;j++) {
 		char p=j+viewData_->songOffset_ ;
+		((p/altRowNumber_)%2)?SetColor(CD_ROW):SetColor(CD_ROW2);
 		hex2char(p,row) ;
 		DrawString(pos._x,pos._y,row,props) ;
 		pos._y+=1 ;

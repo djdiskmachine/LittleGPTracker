@@ -23,4 +23,13 @@
     <!-- Uncomment to render
     <RENDER value="FILE" />
     -->
+<!-- Default colors below -->
+    <BACKGROUND   value = "1D0A1F"/> <!--Background color-->
+    <FOREGROUND   value = "F5EBFF"/> <!--Text color-->
+    <HICOLOR1     value = "B750D1"/> <!--Highlight color 1-->
+    <HICOLOR2     value = "DB33DB"/> <!--Highlight color 2-->
+    <CURSORCOLOR  value = "FF00DD"/> <!--Cursor color-->
+    <ROWCOLOR1    value = "BA28F9"/> <!--Row count color 1 -->
+    <ROWCOLOR2    value = "FF00FF"/> <!--Row count color 2-->
+    <ALTROWNUMBER value = "4"/>      <!--How many rows before alternating-->
 </CONFIG>

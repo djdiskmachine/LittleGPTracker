@@ -106,7 +106,16 @@ LittleGPTracker uses 4 colours to do all the drawing. If you want, you can redef
     
 -   `HICOLOR1`: row count in song screen
     
--   `HICOLOR2`: cursor color
+-   `HICOLOR2`: inverted color
+
+-   `CURSORCOLOR` :  Cursor color
+
+-   `ROWCOLOR1` :    Row count color 1
+
+-   `ROWCOLOR2` :    Row count color 2
+
+-   `ALTROWNUMBER` : How many rows before alternating between ROWCOLOR1/2
+
     
 
 All colors are defined by a set of hexadecimal triplet for RGB. Here's an example:

@@ -1,19 +1,20 @@
+<!-- CONFIG-CHIP.xml-->
 <CONFIG>
-	<DUMPEVENT value="YES"/>
-	<SCREENMULT value="2"/> <!-- increase screen size -->
-<!--
-	<KEY_A value="key:0:x"/>
-	<KEY_B value="key:0:z"/>
-	<KEY_LSHOULDER value="key:0:a" />
-	<KEY_RSHOULDER value="key:0:s" />
 
-	<KEY_UP value="key:0:up" />
-	<KEY_DOWN value="key:0:down" />
-	<KEY_LEFT value="key:0:left" />
-	<KEY_RIGHT value="key:0:right" />
-
-	<KEY_START value="key:0:return" />
--->
+	
+	<FULLSCREEN value='YES'/>
+	<DUMPEVENT value='YES'/>
+    <!-- use if you want to put your tracks somewhere special
+            Must be absolute path
+    <ROOTFOLDER value="/home/chip/lgpt/"/>
+    -->
+    <!-- Useful if you don't want to clone your samplelib
+            Must be absolute path
+    <SAMPLELIB value="/home/chip/lgpt/"/>
+    -->
+    <!-- Uncomment to render
+    <RENDER value="FILE" />
+    -->
 <!-- Default colors below -->
     <BACKGROUND   value = "1D0A1F"/> <!--Background color-->
     <FOREGROUND   value = "F5EBFF"/> <!--Text color-->

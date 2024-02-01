@@ -25,6 +25,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   CONTENTS="README.txt samplelib/ lgpt_BETA/"
   zip -9 -r ../../$PACKAGE $CONTENTS
   CONTENTS="../../../docs/wiki/What-is-LittleGPTracker.md"
+  CONTENTS+="../../../docs/LGPTConfiguration.md"
   CONTENTS+=" ../$1/*.txt"
   zip -9 ../../$PACKAGE -j $CONTENTS && cd -
 }
