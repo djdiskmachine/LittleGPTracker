@@ -1,7 +1,7 @@
 #!/bin/bash
 cd $(git rev-parse --show-toplevel)/projects/
 BUILD="$(grep -oP 'BUILD_COUNT [^"]*"\K[^"]*' ../sources/Application/Model/Project.h)"
-VERSION=1.3o$BUILD
+VERSION=1.3o_$BUILD
 PACKAGE=LGPT-$VERSION.zip
 
 collect_resources() { #1PLATFORM #2lgpt.*-exe
@@ -25,7 +25,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   CONTENTS="README.txt samplelib/ lgpt_BETA/"
   zip -9 -r ../../$PACKAGE $CONTENTS
   CONTENTS="../../../docs/wiki/What-is-LittleGPTracker.md"
-  CONTENTS+="../../../docs/LGPTConfiguration.md"
+  CONTENTS+=" ../../../docs/wiki/config_xml.md"
   CONTENTS+=" ../$1/*.txt"
   zip -9 ../../$PACKAGE -j $CONTENTS && cd -
 }

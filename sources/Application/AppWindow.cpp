@@ -20,8 +20,8 @@ AppWindow *instance=0 ;
 
 GUIColor AppWindow::backgroundColor_(0x1D,0x0A,0x1F); 
 GUIColor AppWindow::normalColor_    (0xF5,0xEB,0xFF);
-GUIColor AppWindow::songviewfeColor_(0xF5,0xEB,0xFF);
-GUIColor AppWindow::songview00Color_(0xF5,0xEB,0xFF);
+GUIColor AppWindow::songviewfeColor_(0xA5,0x5B,0x8F);
+GUIColor AppWindow::songview00Color_(0x85,0x3B,0x6F);
 GUIColor AppWindow::highlightColor_ (0xB7,0x50,0xD1);
 GUIColor AppWindow::highlight2Color_(0xDB,0x33,0xDB);
 GUIColor AppWindow::consoleColor_   (0x00,0xFF,0x00);

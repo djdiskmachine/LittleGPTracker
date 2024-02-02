@@ -64,6 +64,9 @@ LittleGPTracker uses 6 colours to do all the drawing. If you want, you can redef
 -   `HICOLOR2`: cursor color
 -   `SONGVIEW_FE`: color of the chain "FE" in song screen
 -   `SONGVIEW_00`: color of the chain "00" in song screen
+-   `ROWCOLOR1`: Row count color 1
+-   `ROWCOLOR2`: Row count color 2
+-   `ALTROWNUMBER`: How many rows for each rowcolor
 
 All colors are defined by a set of hexadecimal triplet for RGB. Here's an example:
 
@@ -71,10 +74,14 @@ All colors are defined by a set of hexadecimal triplet for RGB. Here's an exampl
 <CONFIG>
 	<BACKGROUND value="505444" />
 	<FOREGROUND value="FFFFFF" /> <!-- text and cursor in cursor -->
-	<HICOLOR1 value="F41B38" /> <!-- row count in song screen -->
-	<HICOLOR2 value="FF0000" /> <!-- cursor-->
-	<SONGVIEW_FE value="AAAAAA" /> <!-- color of the chain "FE" in song screen-->
-	<SONGVIEW_00 value="AAAAAA" /> <!-- color of the chain "00" in song screen-->
+	<HICOLOR1 value="F41B38" /> <!-- Highlight color 1 -->
+	<HICOLOR2 value="FF0000" /> <!-- Highlight color 2 -->
+	<SONGVIEW_FE value="A55B8F" /> <!-- color of the chain "FE" in song screen-->
+	<SONGVIEW_00 value="853B6F" /> <!-- color of the chain "00" in song screen-->
+	<CURSORCOLOR value = "FF00DD"/> <!--Cursor color-->
+	<ROWCOLOR1 value = "BA28F9"/> <!--Row count color 1 -->
+	<ROWCOLOR2 value = "FF00FF"/> <!--Row count color 2-->
+	<ALTROWNUMBER value = "4"/>      <!--How many rows of each ROWCOLOR-->
 </CONFIG>
 ```
 

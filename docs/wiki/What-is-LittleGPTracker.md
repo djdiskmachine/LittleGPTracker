@@ -1,14 +1,14 @@
 # What is LittleGPTracker?
-[*LittleGPTracker*](http://www.10pm.org/nostromo/lgpt/) *(a.k.a piggy tracker) is a sample based tracker originally programed for the gamepark handhelds and PSP but now also available for Microsoft Windows and ~~Mac OSX~~. It implements a user interface similar to the refined track-by-joypad software* [*littlesounddj*](http://www.littlesounddj.com/)*. Piggy currently supports 8 monophonic 8Bit/16Bit/44.1Khz stereo channels as well as 16 channel midi output. Piggy is currently under development and the latest versions of the program (along with unstable ghetto builds) can be found at* [*https://github.com/djdiskmachine/LittleGPTracker/releases/*](https://github.com/djdiskmachine/LittleGPTracker/releases/)*.*
+[*LittleGPTracker*](http://www.10pm.org/nostromo/lgpt/) *(a.k.a piggy tracker) is a sample based tracker originally programed for the gamepark handhelds and PSP but now also available for Microsoft Windows and ~~Mac OSX~~. It implements a user interface similar to the refined track-by-joypad software* [*littlesounddj*](http://www.littlesounddj.com/)*. Piggy currently supports 8 monophonic 8Bit/16Bit/44.1Khz stereo channels as well as 16 channel midi output. Piggy is currently under development and the latest versions of the program (along with beta builds) can be found at* [*https://github.com/djdiskmachine/LittleGPTracker/releases/*](https://github.com/djdiskmachine/LittleGPTracker/releases/)*.*
 You are reading a reference manual for those who are comfortable with LSDj or trackers in general. An alternative introduction to LittleGPTracker is our very own [quick_start_guide](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:quick_start_guide). If you have a question this manual does not answer, please join the [Discord](https://discord.com/invite/NMQVbrFgr3) or in #hexawe on efnet. Don't forget to check out the advanced [tips_tricks](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:tips_tricks)
 If you want to grab some sounds to get off the ground quickly, or want to hear and see what other people have been doing with piggy tracker, download some of the .zip archives from [http://hexawe.net](http://hexawe.net/)!
 
 # Files
 ## Installation
 
-Grab the installation package for your platform from the [download page](http://www.10pm.org/nostromo/lgpt/download.php). Extract the files from the archive & copy it where you like. after that you can run the executable type for your system, located in the lgpt root or in the /bin folder. linux users may need to set the binary as executable (chmod a+x lgpt.deb-exe).
+Grab the installation package for your platform from the [download page](https://github.com/djdiskmachine/LittleGPTracker/releases/). If the package contains an INSTALL_HOW_TO.txt, follow those instructions. Otherwise, extract the files from the archive & copy it where you like. After that you can run the executable type for your system, located in the lgpt root or in the /bin folder. linux users may need to set the binary as executable (chmod a+x lgpt.deb-exe).
 If you're using PPSSPP, LittleGPTracker might boot with a black screen. To workaround
-this, set Software rendering **or** change rendering resolution
+this, set Software rendering **or** change rendering resolution after LGPT has started
 
 ## Directory Structure
 - **bin**
@@ -16,10 +16,10 @@ this, set Software rendering **or** change rendering resolution
   - **SDL.dll** … dependency
   - **stderr.txt** … debugging output file (created at startup and removed upon exit)
   - **stdout.txt** … debugging output file (created at startup and removed upon exit)
-- **docs**
-  - **readme.txt** … credits and links to piggy resources
-  - **revision.txt** … version history, describes how new features work if they're not included in the manual yet
-- **lgpt10k** … Project folder to the author's entry for the [10k compo](http://www.10pm.org/nostromo/lgpt/10k.php) (M-.-n : Tardline) Note: all projects start with lgpt*
+- **README.txt** … credits and changelog
+- **config_xml.md** … config.xml documentation
+- **INSTALL_HOW_TO.txt** … How to install for tricky systems
+- **BETA** … Example song by djdiskmachine showcasing some new featres. Note: all projects start with lgpt_*
   - **Samples** … each project loads wav files from it's own Samples directory
   - **lgptsav.dat** … all projects store their data in xml files called lgptsav.dat
 - **lgptNew** … another piggy project, following the lgpt* naming convention for projects
@@ -69,7 +69,7 @@ For more details check out the [config](https://github.com/djdiskmachine/LittleG
 
 # Controls & Moves
 
-If you want to change the default mapping in LGPT, you will want to edit the confiq.xml. More information can be found on this on the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md)
+If you want to change the default mapping in LGPT, you will want to edit the config.xml. More information can be found on this on the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md)
 If you want to augment the mapping controls to add a usb footpedal, another joystick, macros using additional buttons on your device, or even control of piggy via midi commands, check out [mapping](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/mapping_xml.md)
 
 ## Key Mapping
@@ -340,7 +340,7 @@ In oscillator modes, under 0x80 the feedback of specified length is added to the
   - pingpong will start at "start" and bounce the loop between loop start and loop end.
   - oscillator is a special mode where the loop selection (from loop start to loop end) is taken as oscillator data and automatically tuned. Experiment with different settings, do not forget 'root note' is your friend to tune the oscillator back in a useful range
   - looper sync will automatically tune a loop so that it plays exactly 16 bars. Use the root note to play twice faster/slower
-  - slicer will cut the sample into "slices" amount of samples, mapped from C-2 up to amount of slices
+  - slicer will cut the sample into "slices" amount of samples, mapped from C-2 (the lowest possible note) up to amount of slices. Example: slices == 4 will give you four slices mapped to C-2, C#-2, D-2, D#-2
 - **start:** start point of the sample regardless of if loop is enabled; in hex
 - **loop Start:** start point of the sample when loop is enabled; in hex
 - **loop End:** end point of the sample; in hex. You can play samples backwards by setting the end value lower than the start!
