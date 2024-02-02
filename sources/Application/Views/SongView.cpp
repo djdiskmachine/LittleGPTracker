@@ -828,18 +828,30 @@ void SongView::DrawView() {
                     invert=true ;
                 }
             }
-            
-            if (invert) {
-				SetColor(CD_HILITE2) ;
-				props.invert_=true ;
-			}
 			
 			// draw current step
 			
 			unsigned char d=*data++ ;
+
+			if (d==0xFE) {
+				SetColor(CD_SONGVIEWFE) ;
+			} 
+			else if (d==0x00) {
+				SetColor(CD_SONGVIEW00) ;
+			} 
+			else{
+				SetColor(CD_NORMAL) ;
+			}
+           
+            if (invert) {
+				SetColor(CD_HILITE2) ;
+				props.invert_=true ;
+			}
+
 			if (d==0xFF) {
 				DrawString(pos._x,pos._y,"--",props) ;
-			} else {
+			} 
+			else {
 				hex2char(d,row) ;
 				DrawString(pos._x,pos._y,row,props) ;
 			}

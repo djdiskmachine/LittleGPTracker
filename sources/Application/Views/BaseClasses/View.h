@@ -53,7 +53,9 @@ enum ColorDefinition {
 	CD_HILITE1,
 	CD_HILITE2,
 	CD_CONSOLE,
-	CD_CURSOR
+	CD_CURSOR,
+	CD_SONGVIEWFE,
+	CD_SONGVIEW00
 } ;
 
 enum ViewUpdateDirection {

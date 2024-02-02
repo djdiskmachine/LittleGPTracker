@@ -91,6 +91,8 @@ private:
 
     static GUIColor backgroundColor_ ;
     static GUIColor normalColor_ ;
+	static GUIColor songviewfeColor_ ;
+	static GUIColor songview00Color_ ;
     static GUIColor highlight2Color_;
     static GUIColor highlightColor_;
     static GUIColor consoleColor_;

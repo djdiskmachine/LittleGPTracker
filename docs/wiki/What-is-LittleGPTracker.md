@@ -65,12 +65,12 @@ Important Points to Remember:
 ## config.xml
 
 The config file is used to tweak certain global parameters of the application. It is not mandatory to have one but it will allow you to change key mapping, color scheme, key repeat setting and other.
-For more details check out the [config](http://wiki.littlegptracker.com/doku.php?id=lgpt:config) page
+For more details check out the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md) page
 
 # Controls & Moves
 
-If you want to change the default mapping in LGPT, you will want to edit the confiq.xml. More information can be found on this on the [config](http://wiki.littlegptracker.com/doku.php?id=lgpt:config)
-If you want to augment the mapping controls to add a usb footpedal, another joystick, macros using additional buttons on your device, or even control of piggy via midi commands, check out [mapping](http://wiki.littlegptracker.com/doku.php?id=lgpt:mapping)
+If you want to change the default mapping in LGPT, you will want to edit the confiq.xml. More information can be found on this on the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md)
+If you want to augment the mapping controls to add a usb footpedal, another joystick, macros using additional buttons on your device, or even control of piggy via midi commands, check out [mapping](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/mapping_xml.md)
 
 ## Key Mapping
 
@@ -82,7 +82,7 @@ If you want to augment the mapping controls to add a usb footpedal, another joys
 - RT: Right trigger (shoulder button).
 - LT: Left trigger (shoulder button).
 
-*GP2X Specific notice*: The A & B buttons are “inverted” (when compared to GP32 and LSDJ on Gameboy). This can be modified in the [config](http://wiki.littlegptracker.com/doku.php?id=lgpt:config).
+*GP2X Specific notice*: The A & B buttons are “inverted” (when compared to GP32 and LSDJ on Gameboy). This can be modified in the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md).
 
 The moves are close to what you would pull in lsdj, but shoulder buttons replace the lsdj SELECT key. Most of the time, the equivalent of SELECT is the shoulder button opposite the other buttons you're pushing. For example SELECT+B is LT+B, SELECT+RIGHT is RT+RIGHT.
 
@@ -561,7 +561,7 @@ The following values can set for RENDER in the config.xml:
 - FILERT: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
 - FILESPLITRT: Real Time file split: same except all channels are rendered separately.
 
-Here is an example of the proper XML syntax: (See [The config.xml setup guide](http://wiki.littlegptracker.com/doku.php?id=lgpt:config))
+Here is an example of the proper XML syntax: (See [The config.xml setup guide](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md))
 
 ```
 <RENDER value = "FILERT" />
