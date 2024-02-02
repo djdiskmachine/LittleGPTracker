@@ -56,12 +56,14 @@ Be careful as large values take a lot of juice and interfere with sound playback
 
 ## Screen Colors
 
-LittleGPTracker uses 4 colours to do all the drawing. If you want, you can redefine them using the following parameters:
+LittleGPTracker uses 6 colours to do all the drawing. If you want, you can redefine them using the following parameters:
 
 -   `BACKGROUND`: color of the background
 -   `FOREGROUND`: color of the foreground
 -   `HICOLOR1`: row count in song screen
 -   `HICOLOR2`: cursor color
+-   `SONGVIEW_FE`: color of the chain "FE" in song screen
+-   `SONGVIEW_00`: color of the chain "00" in song screen
 
 All colors are defined by a set of hexadecimal triplet for RGB. Here's an example:
 
@@ -71,6 +73,8 @@ All colors are defined by a set of hexadecimal triplet for RGB. Here's an exampl
 	<FOREGROUND value="FFFFFF" /> <!-- text and cursor in cursor -->
 	<HICOLOR1 value="F41B38" /> <!-- row count in song screen -->
 	<HICOLOR2 value="FF0000" /> <!-- cursor-->
+	<SONGVIEW_FE value="AAAAAA" /> <!-- color of the chain "FE" in song screen-->
+	<SONGVIEW_00 value="AAAAAA" /> <!-- color of the chain "00" in song screen-->
 </CONFIG>
 ```
 
@@ -120,7 +124,7 @@ Here's an example that maps the start button to the X on PSP:
 </CONFIG>
 ```
 
-And if you want to configure a USB joypad, you'll have to use the [mapping.xml](https://wiki.littlegptracker.com/doku.php?id=lgpt:mapping "lgpt:mapping")
+And if you want to configure a USB joypad, you'll have to use the [mapping.xml](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/mapping_xml.md "lgpt:mapping")
 
 ## Auto repeat
 
@@ -197,7 +201,7 @@ This setting is also W32 only. It can be use to delay the output of midi by a ce
 
 also note: Because MIDI on PC is a bitch to synchronise and that the ONLY system that kind of worked was, surprisingly, the old MMSYSTEM audio system, I've re-enabled it as an option. So, if you need good midi sync or good timing, you will NEED to use this. The latency isn't great but in our case it's not a problem. To enable the old ass audio system and enjoy pretty stable midi out, add an entry in the config.xml with <AUDIOAPI value='MMSYSTEM' />
 
-##Log Dumping
+## Log Dumping
 
 Get piggy dumping a log on the terminal or to a .log file, useful for debugging crashes or making a mapping.xml for your usb pad:
 

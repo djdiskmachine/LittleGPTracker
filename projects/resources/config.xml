@@ -20,4 +20,8 @@
     <!-- Uncomment to render
     <RENDER value="FILE" />
     -->
+    <!-- Uncomment to change FE/00 colors in song view
+    <SONGVIEW_FE value = "653B6F" />
+    <SONGVIEW_00 value = "653B6F" />
+     -->
 </CONFIG>
