@@ -31,5 +31,7 @@
     <ROWCOLOR1    value = "BA28F9"/> <!--Row count color 1 -->
     <ROWCOLOR2    value = "FF00FF"/> <!--Row count color 2-->
     <ALTROWNUMBER value = "4"/>      <!--How many rows before alternating-->
+    <MAJORBEAT    value = "BA28F9"/> <!--major beat color -->
+    
 
 </CONFIG>

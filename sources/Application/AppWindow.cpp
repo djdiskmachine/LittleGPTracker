@@ -28,6 +28,8 @@ GUIColor AppWindow::consoleColor_   (0x00,0xFF,0x00);
 GUIColor AppWindow::cursorColor_    (0xFF,0x00,0x8C);
 GUIColor AppWindow::rownumberColor_ (0xBA,0x28,0xF9);
 GUIColor AppWindow::rownumber2Color_(0xFF,0x00,0xFF);
+GUIColor AppWindow::majorbeatColor_ (0xBA,0x28,0xF9);
+
 
 
 int AppWindow::charWidth_=8;
@@ -105,6 +107,8 @@ AppWindow::AppWindow(I_GUIWindowImp &imp):GUIWindow(imp)  {
     defineColor("CURSORCOLOR",cursorColor_) ;
     defineColor("ROWCOLOR1",rownumberColor_);
     defineColor("ROWCOLOR2",rownumber2Color_);
+	defineColor("MAJORBEAT",majorbeatColor_);
+	
 
 	GUIWindow::Clear(backgroundColor_) ;
 	
@@ -254,6 +258,9 @@ void AppWindow::Flush() {
 							break;
 						case CD_ROW2:
 							gcolor = rownumber2Color_;
+							break;
+						case CD_MAJORBEAT:
+							gcolor = majorbeatColor_;
 							break;
 						default:
 							NAssert(0) ;

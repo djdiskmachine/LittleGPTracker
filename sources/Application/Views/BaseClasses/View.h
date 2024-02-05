@@ -57,7 +57,8 @@ enum ColorDefinition {
 	CD_SONGVIEWFE,
 	CD_SONGVIEW00,
 	CD_ROW,
-	CD_ROW2
+	CD_ROW2,
+	CD_MAJORBEAT
 } ;
 
 enum ViewUpdateDirection {

@@ -1000,6 +1000,7 @@ void PhraseView::DrawView() {
 		unsigned char d=*data++ ;
         setTextProps(props,0,j,false) ;
 		if (d==0xFF) {
+			(0==j||4==j||8==j||12==j)?SetColor(CD_MAJORBEAT):SetColor(CD_NORMAL) ;
 			DrawString(pos._x,pos._y,"----",props) ;
 		} else {
             note2char(d,buffer) ;
@@ -1022,7 +1023,10 @@ void PhraseView::DrawView() {
 		unsigned char d=*data++ ;
         setTextProps(props,1,j,false) ;
 		if (d==0xFF) {
-			DrawString(pos._x,pos._y,"I--",props) ;
+			SetColor(CD_NORMAL) ;
+			DrawString(pos._x,pos._y,"I",props) ;
+			(0==j||4==j||8==j||12==j)?SetColor(CD_MAJORBEAT):SetColor(CD_NORMAL) ;
+			DrawString(pos._x+1,pos._y,"--",props) ;
 		} else {
 			hex2char(d,buffer+1) ;
 			DrawString(pos._x,pos._y,buffer,props) ;
@@ -1055,6 +1059,7 @@ void PhraseView::DrawView() {
 		FourCC command=*f++ ;
 		fourCC2char(command,buffer) ;
         setTextProps(props,2,j,false) ;
+		('-'==buffer[0]&&(0==j||4==j||8==j||12==j))?SetColor(CD_MAJORBEAT):SetColor(CD_NORMAL) ;
 		DrawString(pos._x,pos._y,buffer,props) ;
         setTextProps(props,2,j,true) ;
 		pos._y++ ;
@@ -1078,7 +1083,8 @@ void PhraseView::DrawView() {
 /*		if (p==0xFFFF) {
 			DrawString(pos._x,pos._y,"----",props) ;
 		} else {
-*/			hexshort2char(p,buffer) ;
+*/			
+			hexshort2char(p,buffer) ;
 			DrawString(pos._x,pos._y,buffer,props) ;
 /*		}
 */      setTextProps(props,3,j,true) ;
@@ -1097,6 +1103,7 @@ void PhraseView::DrawView() {
 	for (int j=0;j<16;j++) {
 		FourCC command=*f++ ;
 		fourCC2char(command,buffer) ;
+		('-'==buffer[0]&&(0==j||4==j||8==j||12==j))?SetColor(CD_MAJORBEAT):SetColor(CD_NORMAL) ;
         setTextProps(props,4,j,false) ;
 		DrawString(pos._x,pos._y,buffer,props) ;
         setTextProps(props,4,j,true) ;
@@ -1120,7 +1127,8 @@ void PhraseView::DrawView() {
 /*		if (p==0xFFFF) {
 			DrawString(pos._x,pos._y,"----",props) ;
 		} else {
-*/			hexshort2char(p,buffer) ;
+*/			
+			hexshort2char(p,buffer) ;
 			DrawString(pos._x,pos._y,buffer,props) ;
 /*		}
 */      setTextProps(props,5,j,true) ;

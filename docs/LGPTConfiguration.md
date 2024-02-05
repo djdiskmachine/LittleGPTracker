@@ -116,6 +116,7 @@ LittleGPTracker uses 4 colours to do all the drawing. If you want, you can redef
 
 -   `ALTROWNUMBER` : How many rows before alternating between ROWCOLOR1/2
 
+-   `MAJORBEAT`: color of "--" at row 00,04,08,0c in phrase screen
     
 
 All colors are defined by a set of hexadecimal triplet for RGB. Here's an example:

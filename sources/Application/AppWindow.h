@@ -99,6 +99,7 @@ private:
     static GUIColor cursorColor_;
     static GUIColor rownumberColor_;
     static GUIColor rownumber2Color_;
+	static GUIColor majorbeatColor_;
 
 	ColorDefinition colorIndex_ ;
 
