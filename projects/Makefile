@@ -35,7 +35,6 @@ NDSDIRS	:=    . \
 DEBDIRS	:=			../sources/Adapters/Unix/FileSystem \
 				../sources/Adapters/DEB/Main \
 				../sources/Adapters/Unix/Process \
-				../sources/System/Process \
 				../sources/Externals/RTAudio \
 				../sources/Externals/RtMidi \
 				../sources/Adapters/DEB/System \
@@ -51,7 +50,6 @@ DEBDIRS	:=			../sources/Adapters/Unix/FileSystem \
 BEAGLEBOARDDIRS :=                      ../sources/Adapters/Unix/FileSystem \
                                 ../sources/Adapters/DEB/Main \
                                 ../sources/Adapters/Unix/Process \
-                                ../sources/System/Process \
                                 ../sources/Externals/RTAudio \
                                 ../sources/Adapters/DEB/System \
                                 ../sources/Adapters/Dummy/Midi \
@@ -66,7 +64,6 @@ BEAGLEBOARDDIRS :=                      ../sources/Adapters/Unix/FileSystem \
 RASPIDIRS :=                      ../sources/Adapters/Unix/FileSystem \
                                 ../sources/Adapters/DEB/Main\
                                 ../sources/Adapters/Unix/Process\
-                                ../sources/System/Process\
                                 ../sources/Externals/RTAudio\
                                 ../sources/Externals/RtMidi\
                                 ../sources/Adapters/DEB/System\
@@ -82,7 +79,6 @@ RASPIDIRS :=                      ../sources/Adapters/Unix/FileSystem \
 STEAMDIRS 	:=	../sources/Adapters/Unix/FileSystem \
 				../sources/Adapters/DEB/Main\
 				../sources/Adapters/Unix/Process\
-				../sources/System/Process\
 				../sources/Externals/RTAudio\
 				../sources/Externals/RtMidi\
 				../sources/Adapters/DEB/System\
@@ -98,7 +94,6 @@ STEAMDIRS 	:=	../sources/Adapters/Unix/FileSystem \
 GP2XDIRS	:=    . \
 				../sources/Adapters/GP2X/Main \
 				../sources/Adapters/GP2X/FileSystem \
-				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/GP2X/System \
 				../sources/Adapters/GP2X/Midi \
@@ -109,7 +104,6 @@ GP2XDIRS	:=    . \
 CAANOODIRS	:=    . \
 				../sources/Adapters/CAANOO/Main \
 				../sources/Adapters/Unix/FileSystem \
-				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/CAANOO/System \
 				../sources/Adapters/CAANOO/Midi \
@@ -120,7 +114,6 @@ CAANOODIRS	:=    . \
 DINGOODIRS      :=    . \
 				../sources/Adapters/DINGOO/Main \
 				../sources/Adapters/Unix/FileSystem \
-				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/DINGOO/System \
 				../sources/Adapters/DINGOO/Midi \
@@ -134,7 +127,6 @@ DINGOODIRS      :=    . \
 RS97DIRS      :=    . \
 				../sources/Adapters/DINGOO/Main \
 				../sources/Adapters/Unix/FileSystem \
-				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/DINGOO/System \
 				../sources/Adapters/DINGOO/Midi \
@@ -147,7 +139,6 @@ RS97DIRS      :=    . \
 BITTBOYDIRS      :=    . \
 				../sources/Adapters/DINGOO/Main \
 				../sources/Adapters/Unix/FileSystem \
-				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/DINGOO/System \
 				../sources/Adapters/DINGOO/Midi \
@@ -160,7 +151,6 @@ BITTBOYDIRS      :=    . \
 MIYOODIRS      :=    . \
 				../sources/Adapters/DINGOO/Main \
 				../sources/Adapters/Unix/FileSystem \
-				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/DINGOO/System \
 				../sources/Adapters/Dummy/Midi \
@@ -172,7 +162,6 @@ MIYOODIRS      :=    . \
 PSPDIRS	:=    . \
 				../sources/Adapters/PSP/Main \
 				../sources/Adapters/PSP/FileSystem \
-				../sources/System/Process \
 				../sources/Adapters/PSP/System \
 				../sources/Adapters/Dummy/Midi \
 				../sources/Adapters/SDL/Process \
@@ -198,9 +187,9 @@ W32DIRS     :=  .\
 				../sources/Adapters/W32/Main \
 				../sources/Adapters/W32/Process \
 				../sources/Adapters/W32/Audio \
-				../sources/System/Process
 
 COMMONDIRS	:=	../sources/System/Console \
+				../sources/System/Process \
 				../sources/System/io \
 				../sources/Services/Midi \
 				../sources/Services/Time \

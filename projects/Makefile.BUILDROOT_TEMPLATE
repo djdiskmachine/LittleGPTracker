@@ -1,0 +1,39 @@
+## File name suffix, for example .exe
+EXTENSION	:=dge
+## Path to toolchain, usually /opt/somepath
+TOOLCHAIN	=/opt/mipsel-rg350-linux-uclibc_sdk-buildroot/
+## Platform-specific gcc / g++ / sdl  binary prefix
+## usually under toolchainpath/bin/architecture-name-gcc
+PREFIX		:=mipsel-rg350-linux-uclibc-
+## Name of output binary
+OUTPUT		= ../lgpt-rg350
+
+PLATFORM	:=RS97
+
+
+## Below should not need further config
+
+-include $(PWD)/rules_base
+CROSS_COMPILE=$(TOOLCHAIN)bin/$(PREFIX)
+SDL_CONFIG   =/usr/bin/sdl-config
+
+%.$(EXTENSION): $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@
+
+STRIP		= $(CROSS_COMPILE)strip
+CC			= $(CROSS_COMPILE)gcc
+CXX			= $(CROSS_COMPILE)g++
+
+SYSROOT		:= $(shell $(CC) --print-sysroot)
+SDL_CFLAGS	:= $(shell $(SYSROOT)/$(SDL_CONFIG) --cflags)
+SDL_LIBS	:= $(shell $(SYSROOT)/$(SDL_CONFIG) --libs)
+
+DEFINES		= -DHAVE_STDINT_H -D_NDEBUG -D_NO_JACK_ -I$(PWD)/../sources -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DBUFFERED
+INCLUDES	= -Iinclude $(SDL_CFLAGS)
+OPT_FLAGS	= -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto
+
+CFLAGS		:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
+CXXFLAGS	:=	$(CFLAGS) -std=gnu++03 
+
+LIBS		:=  -lSDL -lSDL_mixer -lpthread 
