@@ -129,36 +129,87 @@ void SongView::cutPosition() {
 } ;
 
 /******************************************************
- clonePosition:
-        slim clone current position
+ deepClonePosition:
+        deep clone chain and phrases
+		made by koisignal (https://github.com/koi-ikeno)
  ******************************************************/
  
 void SongView::clonePosition() {
-    
+	Phrase *ph = viewData_->song_->phrase_;
+	Chain *ch = viewData_->song_->chain_;
+	unsigned char *pos = viewData_->GetCurrentSongPointer();
+	unsigned char chainNumOfCurrentPos = *pos;
 
-    unsigned char *pos=viewData_->GetCurrentSongPointer() ;
-    unsigned char current=*pos ;
-	if (current==255) return;
-    
-	unsigned short next=viewData_->song_->chain_->GetNext() ;
-	if (next==NO_MORE_CHAIN) return ;
-    
-    unsigned char *src=viewData_->song_->chain_->data_+16*current ;
-    unsigned char *dst=viewData_->song_->chain_->data_+16*next ;
+	if (chainNumOfCurrentPos == CHAIN_COUNT) return;
+	unsigned short nextAvailableChainNum = ch->GetNext();
+	if (nextAvailableChainNum == NO_MORE_CHAIN) return;
 
-    for (int i=0;i<16;i++) {
-        *dst++=*src++ ;
-    } ;
+	unsigned char *srcChain = ch->data_ + 16 * chainNumOfCurrentPos;
+	unsigned char *dstChain = ch->data_ + 16 * nextAvailableChainNum;
+	unsigned short srcPhrases[16];
+	unsigned short dstPhrases[16];
 
-    src=viewData_->song_->chain_->transpose_+16*current ;
-    dst=viewData_->song_->chain_->transpose_+16*next ;
+	// Init outside valid range
+	for (int i = 0; i < 16; i++) {
+		srcPhrases[i] = NO_MORE_CHAIN;
+		dstPhrases[i] = NO_MORE_CHAIN;
+	}
+
+	for (int i = 0; i < 16; i++) {
+		unsigned short srcPhraseNum = *srcChain;
+		
+		// skip when "--"
+		if (srcPhraseNum == CHAIN_COUNT) {
+			srcChain++;
+			dstChain++;
+			continue;
+		}
+
+		unsigned short newPhraseNum = NO_MORE_CHAIN;
+
+		for (int j = 0; j < 16; j++) {
+			if (srcPhrases[j] == srcPhraseNum) {
+				newPhraseNum = dstPhrases[j];
+				break;
+			}
+		}
+		
+		if (newPhraseNum == NO_MORE_CHAIN)
+		{
+			newPhraseNum = ph->GetNext();
+			if (newPhraseNum == NO_MORE_PHRASE) return;
+			for (int k = 0; k < 16; k++) {
+				*(ph->note_ + 16 * newPhraseNum + k)
+					= *(ph->note_ + 16 * srcPhraseNum + k);
+				*(ph->instr_ + 16 * newPhraseNum + k)
+					= *(ph->instr_ + 16 * srcPhraseNum + k);
+				*(ph->cmd1_ + 16 * newPhraseNum + k)
+					= *(ph->cmd1_ + 16 * srcPhraseNum + k);
+				*(ph->cmd2_ + 16 * newPhraseNum + k)
+					= *(ph->cmd2_ + 16 * srcPhraseNum + k);
+				*(ph->param1_ + 16 * newPhraseNum + k)
+					= *(ph->param1_ + 16 * srcPhraseNum + k);
+				*(ph->param2_ + 16 * newPhraseNum + k)
+					= *(ph->param2_ + 16 * srcPhraseNum + k);
+			}
+		}
+		srcPhrases[i] = srcPhraseNum;
+		dstPhrases[i] = newPhraseNum;
+		*dstChain = newPhraseNum;
+		srcChain++;
+		dstChain++;
+	}
     
-    for (int i=0;i<16;i++) {
-        *dst++=*src++ ;
-    } ;
-    setChain((unsigned char)next) ;
-    isDirty_=true ;
-} ;
+	srcChain = ch->transpose_ + 16 * chainNumOfCurrentPos;
+	dstChain = ch->transpose_ + 16 * nextAvailableChainNum;
+    
+	for (int i = 0; i < 16; i++) {
+		*dstChain++ = *srcChain++;
+	}
+
+	setChain((unsigned char) nextAvailableChainNum);
+	isDirty_ = true;
+}
 
 void SongView::extendSelection() {
 	GUIRect rect=getSelectionRect() ;
