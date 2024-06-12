@@ -28,6 +28,7 @@ protected:
 	void setChain(unsigned char) ;
 	void cutPosition() ;
 	void clonePosition() ;
+	void deepClonePosition() ;
 	void pasteLast() ;
 	void fillClipboardData() ;
 	GUIRect getSelectionRect() ;
