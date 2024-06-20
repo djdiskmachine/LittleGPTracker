@@ -135,7 +135,6 @@ void SongView::cutPosition() {
  ******************************************************/
  
 void SongView::clonePosition() {
-	Trace::Log("SV", "cloneposition");
 
     unsigned char *pos=viewData_->GetCurrentSongPointer() ;
     unsigned char current=*pos ;
@@ -168,7 +167,6 @@ void SongView::clonePosition() {
  ******************************************************/
  
 void SongView::deepClonePosition() {
-	Trace::Log("SV", "deepClonePosition");
 	Phrase *ph = viewData_->song_->phrase_;
 	Chain *ch = viewData_->song_->chain_;
 	unsigned char *pos = viewData_->GetCurrentSongPointer();
@@ -500,7 +498,6 @@ void SongView::onStop() {
 } ;
 
 void SongView::jumpToNextSection(int direction) {
-				Trace::Log("SV", "jumptonextsection [%d]", direction);
 
 	int current=viewData_->songY_+viewData_->songOffset_ ;
 	bool foundGap=false ;
@@ -583,7 +580,6 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
         if ((mask&EPBM_A)&&(mask&EPBM_L)) {
 			clonePosition() ;
 			mask&=(0xFFFF-(EPBM_A|EPBM_L));
-			Trace::Log("SV", "set VM_DEEPCLONE");
 			canDeepClone_ = true;
 		} 
 		else {
@@ -593,7 +589,6 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
 	if (canDeepClone_&&(mask&EPBM_A)&&(mask&EPBM_L)) {
 		deepClonePosition();
 		mask&=(0xFFFF-(EPBM_A|EPBM_L));
-		Trace::Log("SV", "unset VM_DEEPCLONE");
 		canDeepClone_ = false;
 	}
 	if (clipboard_.active_) {
@@ -613,11 +608,8 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
         }
         processSelectionButtonMask(mask) ;
     } else {
-		Trace::Log("SV", "go to processNormalButtonMask");
-		Trace::Log("SV", "1vm == %d", viewMode_);
 	   
 		// Switch back to normal mode
-		Trace::Log("SV", "set VM_NORMAL");
 		viewMode_=VM_NORMAL ;
         processNormalButtonMask(mask) ;
     }
@@ -630,13 +622,10 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
  ******************************************************/
  
 void SongView::processNormalButtonMask(unsigned int mask) {
-				Trace::Log("SV", "enter processNormalButtonMask");
-		Trace::Log("SV", "2vm == %d", viewMode_);
 
 	// B Modifier
 
 	if (mask&EPBM_B) {
-				Trace::Log("SV", "B mod");
 
 		if (mask&EPBM_DOWN) updateSongOffset(View::songRowCount_) ;
 		if (mask&EPBM_UP) updateSongOffset(-View::songRowCount_);
@@ -654,7 +643,6 @@ void SongView::processNormalButtonMask(unsigned int mask) {
         }
 		if ((mask&EPBM_A)&&(!(mask&EPBM_R))) cutPosition();
         if (mask&EPBM_L) {
-			Trace::Log("SV", "set VM_CLONE");
 
             viewMode_=VM_CLONE ;
         } ;
@@ -675,7 +663,6 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 		if (mask&EPBM_LEFT) updateChain(-0x01) ;
 		if (mask&EPBM_RIGHT) updateChain(0x01) ;
 		if (mask&EPBM_L && !canDeepClone_) {
-			Trace::Log("SV", "pasteClipboard");
 			pasteClipboard() ;
 		}
 		if (mask==EPBM_A) {
