@@ -136,6 +136,7 @@ void SongView::cutPosition() {
  
 void SongView::clonePosition() {
 
+
     unsigned char *pos=viewData_->GetCurrentSongPointer() ;
     unsigned char current=*pos ;
 	if (current==255) return;
@@ -578,14 +579,15 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
 	
 	if (viewMode_==VM_CLONE) {
         if ((mask&EPBM_A)&&(mask&EPBM_L)) {
-			clonePosition() ;
-			mask&=(0xFFFF-(EPBM_A|EPBM_L));
-			canDeepClone_ = true;
-		} 
-		else {
+            clonePosition() ;
+            mask&=(0xFFFF-(EPBM_A|EPBM_L));
+            canDeepClone_ = true;
+        }
+        else {
             viewMode_=VM_SELECTION ;
         }
     } ;
+
 	if (canDeepClone_&&(mask&EPBM_A)&&(mask&EPBM_L)) {
 		deepClonePosition();
 		mask&=(0xFFFF-(EPBM_A|EPBM_L));
@@ -609,8 +611,9 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
         processSelectionButtonMask(mask) ;
     } else {
 	   
-		// Switch back to normal mode
-		viewMode_=VM_NORMAL ;
+        // Switch back to normal mode
+
+        viewMode_=VM_NORMAL ;
         processNormalButtonMask(mask) ;
     }
 }
@@ -753,6 +756,7 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 void SongView::processSelectionButtonMask(unsigned int mask) {
 
 	// B Modifier
+
 	if (mask&EPBM_B) {
 		if (mask&EPBM_R) {
 			toggleMute() ;
@@ -815,6 +819,7 @@ void SongView::processSelectionButtonMask(unsigned int mask) {
                 }
                 
 	    	} else {
+
     			// No modifier
 
     			if (mask&EPBM_DOWN) updateCursor(0,1) ;
