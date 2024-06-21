@@ -28,6 +28,7 @@ protected:
 	void setChain(unsigned char) ;
 	void cutPosition() ;
 	void clonePosition() ;
+	void deepClonePosition() ;
 	void pasteLast() ;
 	void fillClipboardData() ;
 	GUIRect getSelectionRect() ;
@@ -79,6 +80,7 @@ private:
 	std::string songname_ ;
 	bool invertBatt_ ;
 	bool needClear_ ;
+	bool canDeepClone_;
 } ;
 
 #endif

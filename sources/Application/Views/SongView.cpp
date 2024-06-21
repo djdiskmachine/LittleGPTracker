@@ -26,6 +26,7 @@ SongView::SongView(GUIWindow &w,ViewData *viewData,const char *song):View(w,view
 	clipboard_.active_=false ;
 	clipboard_.data_=0 ;
 	invertBatt_=false ;
+	canDeepClone_ = false;
 }
 
 /****************
@@ -134,7 +135,7 @@ void SongView::cutPosition() {
  ******************************************************/
  
 void SongView::clonePosition() {
-    
+
 
     unsigned char *pos=viewData_->GetCurrentSongPointer() ;
     unsigned char current=*pos ;
@@ -159,6 +160,81 @@ void SongView::clonePosition() {
     setChain((unsigned char)next) ;
     isDirty_=true ;
 } ;
+
+/******************************************************
+ deepClonePosition:
+        deep clone chain and all phrases within
+		made by koisignal (https://github.com/koi-ikeno)
+ ******************************************************/
+ 
+void SongView::deepClonePosition() {
+	Phrase *ph = viewData_->song_->phrase_;
+	Chain *ch = viewData_->song_->chain_;
+	unsigned char *pos = viewData_->GetCurrentSongPointer();
+	unsigned char curChainNum = *pos;
+
+	if (curChainNum == CHAIN_COUNT) return;
+
+	unsigned char *srcChain = ch->data_ + 16 * curChainNum;
+	unsigned char *dstChain = ch->data_ + 16 * curChainNum;
+	unsigned short srcPhrases[16];
+	unsigned short dstPhrases[16];
+
+	// Init outside valid range
+	for (int i = 0; i < 16; i++) {
+		srcPhrases[i] = NO_MORE_CHAIN;
+		dstPhrases[i] = NO_MORE_CHAIN;
+	}
+
+	for (int i = 0; i < 16; i++) {
+		unsigned short srcPhraseNum = *srcChain;
+		
+		// skip when "--"
+		if (srcPhraseNum == CHAIN_COUNT) {
+			srcChain++;
+			dstChain++;
+			continue;
+		}
+
+		unsigned short newPhraseNum = NO_MORE_CHAIN;
+
+		for (int j = 0; j < 16; j++) {
+			if (srcPhrases[j] == srcPhraseNum) {
+				newPhraseNum = dstPhrases[j];
+				break;
+			}
+		}
+		
+		if (newPhraseNum == NO_MORE_CHAIN)
+		{
+			newPhraseNum = ph->GetNext();
+			if (newPhraseNum == NO_MORE_PHRASE) return;
+			for (int k = 0; k < 16; k++) {
+				*(ph->note_ + 16 * newPhraseNum + k)
+					= *(ph->note_ + 16 * srcPhraseNum + k);
+				*(ph->instr_ + 16 * newPhraseNum + k)
+					= *(ph->instr_ + 16 * srcPhraseNum + k);
+				*(ph->cmd1_ + 16 * newPhraseNum + k)
+					= *(ph->cmd1_ + 16 * srcPhraseNum + k);
+				*(ph->cmd2_ + 16 * newPhraseNum + k)
+					= *(ph->cmd2_ + 16 * srcPhraseNum + k);
+				*(ph->param1_ + 16 * newPhraseNum + k)
+					= *(ph->param1_ + 16 * srcPhraseNum + k);
+				*(ph->param2_ + 16 * newPhraseNum + k)
+					= *(ph->param2_ + 16 * srcPhraseNum + k);
+			}
+		}
+		srcPhrases[i] = srcPhraseNum;
+		dstPhrases[i] = newPhraseNum;
+		*dstChain = newPhraseNum;
+		srcChain++;
+		dstChain++;
+	}
+
+
+	setChain((unsigned char) curChainNum);
+	isDirty_ = true;
+}
 
 void SongView::extendSelection() {
 	GUIRect rect=getSelectionRect() ;
@@ -504,12 +580,19 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
 	if (viewMode_==VM_CLONE) {
         if ((mask&EPBM_A)&&(mask&EPBM_L)) {
             clonePosition() ;
-            mask&=(0xFFFF-(EPBM_A|EPBM_L)) ;
-        } else {
+            mask&=(0xFFFF-(EPBM_A|EPBM_L));
+            canDeepClone_ = true;
+        }
+        else {
             viewMode_=VM_SELECTION ;
         }
     } ;
-	
+
+	if (canDeepClone_&&(mask&EPBM_A)&&(mask&EPBM_L)) {
+		deepClonePosition();
+		mask&=(0xFFFF-(EPBM_A|EPBM_L));
+		canDeepClone_ = false;
+	}
 	if (clipboard_.active_) {
 		viewMode_=VM_SELECTION ;
 	} ;
@@ -528,7 +611,7 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
         processSelectionButtonMask(mask) ;
     } else {
 	   
-       // Switch back to normal mode
+        // Switch back to normal mode
 
         viewMode_=VM_NORMAL ;
         processNormalButtonMask(mask) ;
@@ -546,6 +629,7 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 	// B Modifier
 
 	if (mask&EPBM_B) {
+
 		if (mask&EPBM_DOWN) updateSongOffset(View::songRowCount_) ;
 		if (mask&EPBM_UP) updateSongOffset(-View::songRowCount_);
 		if (mask&(EPBM_RIGHT|EPBM_LEFT)) {
@@ -562,6 +646,7 @@ void SongView::processNormalButtonMask(unsigned int mask) {
         }
 		if ((mask&EPBM_A)&&(!(mask&EPBM_R))) cutPosition();
         if (mask&EPBM_L) {
+
             viewMode_=VM_CLONE ;
         } ;
 		if (mask&EPBM_R) {
@@ -580,8 +665,11 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 		if (mask&EPBM_UP) updateChain(0x10) ;
 		if (mask&EPBM_LEFT) updateChain(-0x01) ;
 		if (mask&EPBM_RIGHT) updateChain(0x01) ;
-		if (mask&EPBM_L) pasteClipboard() ;
+		if (mask&EPBM_L && !canDeepClone_) {
+			pasteClipboard() ;
+		}
 		if (mask==EPBM_A) {
+
             pasteLast() ;
 			viewMode_=VM_NEW ;
 		}
