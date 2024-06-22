@@ -15,7 +15,20 @@ projects but make sure to backup your old cherished work
 just to be safe <3
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Changelog Jan 23 2024
+Changelog Feb 1 2024
+1.3o_2
+    Adds:
+        Alt row count colors, shoutout to https://github.com/edne !
+        00 and FE song screen colors, shoutout to https://github.com/koi-ikeno !
+        RG35XX build, thanks to https://github.com/jpma29 for help with testing!
+    Fixes:
+        Root folder detection causing issues with importing samples on some systems (thank you jpma29)
+        Name generator causing issues with importing samples on some systems (thanks Dosly)
+        Actually random names (fixed random seed, thx Eldsvåda:)
+        Save as fixed on MIYOO systems (thx Pret4t)
+    Other:
+        Refactor help legend
+
 1.3o-1
     First stable release!
     Fixed errors when random naming projects (shoutouts to 256k!)

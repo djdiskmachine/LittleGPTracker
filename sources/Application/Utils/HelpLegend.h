@@ -61,6 +61,11 @@ static inline std::string* getHelpLegend(FourCC command) {
 			result[1].assign("send program change bb");
 			result[2].assign("to current channel");
 			break;
+		case I_CMD_MVEL:
+			result[0].assign("MidiVELocity:--bb");
+			result[1].assign("Set velocity bb for step");
+			result[2].assign("");
+	    break;
 		case I_CMD_PLOF:
 			result[0].assign("PLay OFfset:aabb");
 			result[1].assign("jump abs to aa or");

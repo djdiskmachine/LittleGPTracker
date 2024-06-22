@@ -19,6 +19,7 @@ static FourCC _all[]= {
 	I_CMD_LPOF,
 	I_CMD_MDCC,
 	I_CMD_MDPG,
+	I_CMD_MVEL,
 	I_CMD_PAN_,
 	I_CMD_PFIN,
 	I_CMD_PLOF,

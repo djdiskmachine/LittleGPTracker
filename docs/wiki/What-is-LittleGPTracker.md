@@ -1,5 +1,5 @@
 # What is LittleGPTracker?
-[*LittleGPTracker*](http://www.10pm.org/nostromo/lgpt/) *(a.k.a piggy tracker) is a sample based tracker originally programed for the gamepark handhelds and PSP but now also available for Microsoft Windows and ~~Mac OSX~~. It implements a user interface similar to the refined track-by-joypad software* [*littlesounddj*](http://www.littlesounddj.com/)*. Piggy currently supports 8 monophonic 8Bit/16Bit/44.1Khz stereo channels as well as 16 channel midi output. Piggy is currently under development and the latest versions of the program (along with beta builds) can be found at* [*https://github.com/djdiskmachine/LittleGPTracker/releases/*](https://github.com/djdiskmachine/LittleGPTracker/releases/)*.*
+[*LittleGPTracker*](https://www.littlegptracker.com/) *(a.k.a piggy tracker) is a sample based tracker originally programed for the gamepark handhelds and PSP but now also available for Microsoft Windows, ~~Mac OSX~~ and an assortment of more modern handheld devices. It implements a user interface similar to the refined track-by-joypad software* [*littlesounddj*](http://www.littlesounddj.com/)*. Piggy currently supports 8 monophonic 8Bit/16Bit/44.1Khz stereo channels as well as 16 channel midi output. Piggy is currently under development and the latest versions of the program (along with beta builds) can be found at* [*https://github.com/djdiskmachine/LittleGPTracker/releases/*](https://github.com/djdiskmachine/LittleGPTracker/releases/)*.*
 You are reading a reference manual for those who are comfortable with LSDj or trackers in general. An alternative introduction to LittleGPTracker is our very own [quick_start_guide](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:quick_start_guide). If you have a question this manual does not answer, please join the [Discord](https://discord.com/invite/NMQVbrFgr3) or in #hexawe on efnet. Don't forget to check out the advanced [tips_tricks](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:tips_tricks)
 If you want to grab some sounds to get off the ground quickly, or want to hear and see what other people have been doing with piggy tracker, download some of the .zip archives from [http://hexawe.net](http://hexawe.net/)!
 
@@ -104,6 +104,7 @@ Note: CTRL Key mappings of RT and LT are inverted. Since the keyboard's Arrow Ke
 - A: Insert Chain/Phrase/Note.
 - A,A: Insert next unused Chain/Phrase/Instrument.
 - LT+(B,A): Clone. This will overwrite the current Highlighted Item with a copy of itself using the next unused Item available.
+(in song view) while keeping LT pressed, press A again without moving to Deep Clone (clone the phrases within the chain)
 - B+A: Cuts the current Highlighted Item .
 - A+ARROWS: Updates Highlighted Item value.
   - A+UP/DOWN: +/- 0x10.
@@ -499,6 +500,10 @@ don't forget trying to combine it with complex hop structure !
 ## MDPG --bb
 
 sends a program change command on the current channel. 0000 is program change 1
+
+## MVEL --bb
+
+Sets MIDI note velocity
 
 ## PAN aabb
 
