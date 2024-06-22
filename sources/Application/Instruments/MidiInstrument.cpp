@@ -24,6 +24,7 @@ MidiInstrument::MidiInstrument() {
 	Insert(v) ;
 	v=new Variable("table automation",MIP_TABLEAUTO,false) ;
 	Insert(v) ;
+	velocity_  = 127;
 }
 
 MidiInstrument::~MidiInstrument() {
@@ -59,7 +60,7 @@ bool MidiInstrument::Start(int c,unsigned char note,bool retrigger) {
 	v=FindVariable(MIP_VOLUME) ;
 	msg.status_=MIDI_CC+channel ;
 	msg.data1_=7 ;
-	msg.data2_ = floor(v->GetInt() / 2);
+	msg.data2_ = floor(static_cast<float>(v->GetInt()+0.99)/2) ;
 	svc_->QueueMessage(msg) ;
 
 
@@ -155,7 +156,7 @@ void MidiInstrument::ProcessCommand(int channel,FourCC cc,ushort value) {
             }
 			break ;
 		case I_CMD_MVEL: {
-			velocity_ = floor(value / 2);
+			velocity_ = floor(static_cast<float>(value / 2));
 		}; break;
 
 		case I_CMD_VOLM:
@@ -163,7 +164,7 @@ void MidiInstrument::ProcessCommand(int channel,FourCC cc,ushort value) {
 				MidiMessage msg ;
 				msg.status_=MIDI_CC+mchannel ;
 				msg.data1_=7 ;
-				msg.data2_ = floor(value / 2);
+				msg.data2_ = floor(static_cast<float>(value / 2));
 				svc_->QueueMessage(msg) ;
 			} ;
 			break ;
