@@ -1,0 +1,22 @@
+name: Check build viability
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install required libraries
+        run: |
+            dpkg --add-architecture i386 
+            apt update
+            apt install -y git make gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+
+      - name: Build DEB
+        run: |
+          cd projects
+          make PLATFORM=DEB

@@ -1,0 +1,84 @@
+name: Release build
+
+on: # Make a release build
+   workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Install DirectX SDK and Visual Studio 2019 Build Tools
+        run: choco install -y directx-sdk visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools"
+        shell: powershell
+
+      - name: Set DirectX SDK environment variable
+        run: |
+          [System.Environment]::SetEnvironmentVariable('DXSDK_DIR', 'C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)', [System.EnvironmentVariableTarget]::Machine)
+        shell: powershell
+
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Build solution
+        run: |
+          cd projects
+          & "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\VsDevCmd.bat" &&
+          msbuild lgpt.sln /Upgrade
+          msbuild lgpt.sln /p:Configuration=Release /p:Platform=Win32
+
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PSPDEV: ${{ github.workspace }}/pspdev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install required libraries
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install -y gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 build-essential cmake pkgconf libusb-0.1-4 libgpgme11 libarchive-tools fakeroot libncurses-dev
+
+      - name: Set up PSP dev kit
+        run: |
+          echo "$PSPDEV/bin" >> $GITHUB_PATH 
+          git clone https://github.com/djdiskmachine/pspdev
+
+      - name: Install Miyoo Mini toolchain
+        run: |
+          wget -O /tmp/miyoomini-toolchain.tar.xz https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.0.0/miyoomini-toolchain.tar.xz
+          mkdir /opt/miyoomini-toolchain
+          tar -xvf /tmp/miyoomini-toolchain.tar.xz -C /opt/miyoomini-toolchain  --strip-components=1
+
+      - name: Build Miyoo Mini
+        run: |
+          cd projects
+          make PLATFORM=MIYOO
+          
+      - name: Build DEB
+        run: |
+          cd projects
+          make PLATFORM=DEB
+
+      - name: Build PSP
+        run: |
+          cd projects
+          make PLATFORM=PSP
+
+
+      - name: Package artifacts
+        run: ./resources/packaging/lgpt_package.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-${{ github.sha }}
+          path: |
+            ./projects/*.zip
+    
