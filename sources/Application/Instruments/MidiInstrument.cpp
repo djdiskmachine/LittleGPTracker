@@ -163,7 +163,7 @@ void MidiInstrument::ProcessCommand(int channel,FourCC cc,ushort value) {
 			{
 				MidiMessage msg ;
 				msg.status_=MIDI_CC+mchannel ;
-				msg.data1_=7 ;
+				msg.data1_= 7;
 				msg.data2_ = floor(static_cast<float>(value / 2));
 				svc_->QueueMessage(msg) ;
 			} ;
