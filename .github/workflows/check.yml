@@ -10,13 +10,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       
-      - name: Install required libraries
+      - name: Install Miyoo Mini toolchain
         run: |
-            sudo dpkg --add-architecture i386 
-            sudo apt update
-            sudo apt install -y git make gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+          wget -O /tmp/miyoomini-toolchain.tar.xz https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.0.0/miyoomini-toolchain.tar.xz
+          mkdir /opt/miyoomini-toolchain
+          tar -xvf /tmp/miyoomini-toolchain.tar.xz -C /opt/miyoomini-toolchain  --strip-components=1
 
-      - name: Build DEB
+      - name: Build Miyoo Mini
+        working-directory: projects
         run: |
-          cd projects
-          make PLATFORM=DEB
+          make PLATFORM=MIYOO
