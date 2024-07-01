@@ -1,0 +1,178 @@
+name: Multi platform build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    if: false  # Disabled temporarily due to build issues
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download SDL 1.2
+        run: |
+          Invoke-WebRequest -Uri https://www.libsdl.org/release/SDL-1.2.15.zip -OutFile $env:GITHUB_WORKSPACE\SDL-1.2.15.zip
+          Expand-Archive -Path $env:GITHUB_WORKSPACE\SDL-1.2.15.zip -DestinationPath $env:GITHUB_WORKSPACE\SDL-1.2.15
+
+      - name: Set up SDL environment variables
+        run: |
+          $sdlPath = "$env:GITHUB_WORKSPACE\SDL-1.2.15"
+          [System.Environment]::SetEnvironmentVariable("SDL_INCLUDE_DIR", "$sdlPath\include", [System.EnvironmentVariableTarget]::Process)
+          [System.Environment]::SetEnvironmentVariable("SDL_LIB_DIR", "$sdlPath\lib", [System.EnvironmentVariableTarget]::Process)
+          $env:Path += ";$sdlPath\lib"
+          [System.Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+        
+      - name: Install DirectX SDK and Visual Studio 2019 Build Tools
+        run: choco install -y zip directx-sdk visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools"
+        shell: powershell
+  
+      - name: Set DirectX SDK environment variable
+        run: |
+          '[System.Environment]::SetEnvironmentVariable("DXSDK_DIR", "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)", [System.EnvironmentVariableTarget]::Machine)'
+        shell: powershell
+
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Build solution
+        working-directory: projects
+        run: |
+          & "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\VsDevCmd.bat" &&
+          msbuild lgpt-VCE2019.sln /p:Configuration=Debug /p:Platform=Win32 /p:AdditionalOptions="/D _CRT_NON_CONFORMING_SWPRINTFS /D _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES"
+      
+      - name: Package build
+        shell: bash
+        working-directory: projects
+        run: |
+          mv ./bin/lgpt.exe  projects/lgpt-W32.exe
+          ./resources/packaging/lgpt_package.sh
+
+      - name: Extract Git tag name
+        id: extract_tag
+        run: |
+          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Upload win release
+        uses: softprops/action-gh-release@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          files: ./projects/*.zip
+
+  build-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install required libraries
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install -y make gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+
+      - name: Build DEB
+        working-directory: projects
+        run: make PLATFORM=DEB
+
+      - name: Package build
+        working-directory: projects
+        run: ./resources/packaging/lgpt_package.sh
+
+      - name: Extract Git tag name
+        id: extract_tag
+        run: |
+          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Upload build release
+        uses: softprops/action-gh-release@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          files: ./projects/*.zip
+
+  build-psp:
+    runs-on: ubuntu-latest
+    env:
+      PSPDEV: ${{ github.workspace }}/pspdev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install required libraries
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake pkgconf libusb-0.1-4 libgpgme11 libarchive-tools fakeroot
+
+      - name: Set up PSP dev kit
+        run: |
+          echo "$PSPDEV/bin" >> $GITHUB_PATH 
+          git clone https://github.com/djdiskmachine/pspdev
+
+      - name: Build PSP
+        working-directory: projects
+        run: make PLATFORM=PSP
+
+      - name: Package build
+        working-directory: projects
+        run: ./resources/packaging/lgpt_package.sh
+
+      - name: Extract Git tag name
+        id: extract_tag
+        run: |
+          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Upload build release
+        uses: softprops/action-gh-release@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          files: ./projects/*.zip
+
+  build-miyoo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Miyoo Mini toolchain
+        run: |
+          wget -O /tmp/miyoomini-toolchain.tar.xz https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.0.0/miyoomini-toolchain.tar.xz
+          mkdir /opt/miyoomini-toolchain
+          tar -xvf /tmp/miyoomini-toolchain.tar.xz -C /opt/miyoomini-toolchain  --strip-components=1
+
+      - name: Build Miyoo Mini
+        working-directory: projects
+        run: |
+          make PLATFORM=MIYOO
+
+      - name: Package build
+        working-directory: projects
+        run: |
+            ./resources/packaging/lgpt_package.sh
+
+      - name: Extract Git tag name
+        id: extract_tag
+        run: |
+          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Upload build release
+        uses: softprops/action-gh-release@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          files: ./projects/*.zip
