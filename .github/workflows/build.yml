@@ -5,55 +5,49 @@ on:
 
 jobs:
   build-windows:
-    if: false  # Disabled temporarily due to build issues
     runs-on: windows-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download SDL 1.2
-        run: |
-          Invoke-WebRequest -Uri https://www.libsdl.org/release/SDL-1.2.15.zip -OutFile $env:GITHUB_WORKSPACE\SDL-1.2.15.zip
-          Expand-Archive -Path $env:GITHUB_WORKSPACE\SDL-1.2.15.zip -DestinationPath $env:GITHUB_WORKSPACE\SDL-1.2.15
-
-      - name: Set up SDL environment variables
-        run: |
-          $sdlPath = "$env:GITHUB_WORKSPACE\SDL-1.2.15"
-          [System.Environment]::SetEnvironmentVariable("SDL_INCLUDE_DIR", "$sdlPath\include", [System.EnvironmentVariableTarget]::Process)
-          [System.Environment]::SetEnvironmentVariable("SDL_LIB_DIR", "$sdlPath\lib", [System.EnvironmentVariableTarget]::Process)
-          $env:Path += ";$sdlPath\lib"
-          [System.Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
-        
-      - name: Install DirectX SDK and Visual Studio 2019 Build Tools
-        run: choco install -y zip directx-sdk visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools"
-        shell: powershell
-  
-      - name: Set DirectX SDK environment variable
-        run: |
-          '[System.Environment]::SetEnvironmentVariable("DXSDK_DIR", "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)", [System.EnvironmentVariableTarget]::Machine)'
+      - name: Install build deps
+        run: choco install -y directx-sdk zip --no-progress --yes
         shell: powershell
 
-      - name: Setup MSBuild path
-        uses: microsoft/setup-msbuild@v1
+      - name: Download and Extract VCE9 release
+        run: |
+          $url = "https://github.com/djdiskmachine/VCE9/releases/download/v1.0.0/Microsoft.Visual.Studio.9.0.zip"
+          $destination = "C:\Program Files (x86)\"
+          New-Item -ItemType Directory -Force -Path $destination | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\VCE9.zip"
+          Expand-Archive -Path "$env:TEMP\VCE9.zip" -DestinationPath $destination -Force
+        shell: pwsh
 
-      - name: Build solution
+      - name: Install Visual Studio 2008 Express
+        run: |
+          Invoke-WebRequest -Uri "http://download.microsoft.com/download/8/B/5/8B5804AD-4990-40D0-A6AA-CE894CBBB3DC/VS2008ExpressENUX1397868.iso" -OutFile "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso"
+          $mountResult = Mount-DiskImage -ImagePath "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso" -PassThru
+          $driveLetter = ($mountResult | Get-Volume).DriveLetter
+          Write-Host "ISO mounted to drive letter $driveLetter"
+          $driveLetter = (Get-DiskImage -ImagePath "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso" | Get-Volume).DriveLetter
+          Start-Process -FilePath "${driveLetter}:\VCExpress\setup.exe" -ArgumentList '/q', '/norestart' -Wait
+        shell: pwsh
+
+      - name: Build Solution
         working-directory: projects
         run: |
-          & "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\VsDevCmd.bat" &&
-          msbuild lgpt-VCE2019.sln /p:Configuration=Debug /p:Platform=Win32 /p:AdditionalOptions="/D _CRT_NON_CONFORMING_SWPRINTFS /D _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES"
+          & "C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\Tools\vsvars32.bat"
+          & "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcpackages\vcbuild.exe" "lgpt.sln" "Release|Win32"
+        shell: pwsh 
       
       - name: Package build
         shell: bash
         working-directory: projects
-        run: |
-          mv ./bin/lgpt.exe  projects/lgpt-W32.exe
-          ./resources/packaging/lgpt_package.sh
+        run: ./resources/packaging/lgpt_package.sh
 
       - name: Extract Git tag name
         id: extract_tag
-        run: |
-          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
         env:
           GITHUB_REF: ${{ github.ref }}
 
@@ -66,7 +60,6 @@ jobs:
 
   build-deb:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -87,8 +80,7 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: |
-          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
         env:
           GITHUB_REF: ${{ github.ref }}
 
@@ -103,7 +95,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PSPDEV: ${{ github.workspace }}/pspdev
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -128,8 +119,7 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: |
-          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
         env:
           GITHUB_REF: ${{ github.ref }}
 
@@ -142,7 +132,6 @@ jobs:
 
   build-miyoo:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -155,18 +144,15 @@ jobs:
 
       - name: Build Miyoo Mini
         working-directory: projects
-        run: |
-          make PLATFORM=MIYOO
+        run: make PLATFORM=MIYOO
 
       - name: Package build
         working-directory: projects
-        run: |
-            ./resources/packaging/lgpt_package.sh
+        run: ./resources/packaging/lgpt_package.sh
 
       - name: Extract Git tag name
         id: extract_tag
-        run: |
-          echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
         env:
           GITHUB_REF: ${{ github.ref }}
 

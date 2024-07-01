@@ -3218,7 +3218,7 @@ static const char* getAsioErrorString( ASIOError result )
 // - Auto-call CoInitialize for DSOUND and ASIO platforms.
 // Various revisions for RtAudio 4.0 by Gary Scavone, April 2007
 
-#include <dsound.h>
+#include <Externals/RTAudio/include/dsound.h>
 #include <assert.h>
 
 #if defined(__MINGW32__)

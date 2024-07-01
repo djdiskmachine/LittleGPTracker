@@ -1,9 +1,45 @@
 name: Check build viability
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
-  build:
+  check-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install build deps
+        run: choco install -y directx-sdk zip --no-progress --yes
+        shell: powershell
+
+      - name: Download and Extract VCE9 release
+        run: |
+          $url = "https://github.com/djdiskmachine/VCE9/releases/download/v1.0.0/Microsoft.Visual.Studio.9.0.zip"
+          $destination = "C:\Program Files (x86)\"
+          New-Item -ItemType Directory -Force -Path $destination | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\VCE9.zip"
+          Expand-Archive -Path "$env:TEMP\VCE9.zip" -DestinationPath $destination -Force
+        shell: pwsh
+
+      - name: Install Visual Studio 2008 Express
+        run: |
+          Invoke-WebRequest -Uri "http://download.microsoft.com/download/8/B/5/8B5804AD-4990-40D0-A6AA-CE894CBBB3DC/VS2008ExpressENUX1397868.iso" -OutFile "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso"
+          $mountResult = Mount-DiskImage -ImagePath "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso" -PassThru
+          $driveLetter = ($mountResult | Get-Volume).DriveLetter
+          Write-Host "ISO mounted to drive letter $driveLetter"
+          $driveLetter = (Get-DiskImage -ImagePath "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso" | Get-Volume).DriveLetter
+          Start-Process -FilePath "${driveLetter}:\VCExpress\setup.exe" -ArgumentList '/q', '/norestart' -Wait
+        shell: pwsh
+
+      - name: Build Solution
+        working-directory: projects
+        run: |
+          & "C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\Tools\vsvars32.bat"
+          & "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcpackages\vcbuild.exe" "lgpt.sln" "Release|Win32"
+        shell: pwsh 
+
+  check-miyoo:
     runs-on: ubuntu-latest
 
     steps:
