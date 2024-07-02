@@ -169,6 +169,18 @@ MIYOODIRS      :=    . \
 				../sources/Adapters/SDL/GUI \
 				../sources/Adapters/SDL/Timer
 
+RG35XXDIRS      :=    . \
+				../sources/Adapters/DINGOO/Main \
+				../sources/Adapters/Unix/FileSystem \
+				../sources/System/Process \
+				../sources/Adapters/Unix/Process \
+				../sources/Adapters/DINGOO/System \
+				../sources/Adapters/DINGOO/Midi \
+				../sources/Adapters/SDL/Audio \
+				../sources/Adapters/SDL/Process \
+				../sources/Adapters/SDL/GUI \
+				../sources/Adapters/SDL/Timer
+
 PSPDIRS	:=    . \
 				../sources/Adapters/PSP/Main \
 				../sources/Adapters/PSP/FileSystem \
@@ -301,6 +313,22 @@ MIYOOFILES    :=  GPSDLMain.o \
 					SDLEventManager.o \
 					DummyMidi.o \
 					SDLGUIWindowImp.o 
+
+RG35XXFILES    :=  GPSDLMain.o \
+					UnixFileSystem.o \
+					SDLAudio.o \
+					Process.o \
+					UnixProcess.o \
+					SDLAudioDriver.o \
+					MIYOOSystem.o \
+					DINGOOEventQueue.o \
+					SDLProcess.o \
+					SDLTimer.o \
+					GUIFactory.o \
+					SDLEventManager.o \
+					BITTBOYSerialMidiDevice.o \
+					BITTBOYMidiService.o \
+					SDLGUIWindowImp.o
 
 PSPFILES		:=	PSPmain.o  \
 					PSPFileSystem.o \
