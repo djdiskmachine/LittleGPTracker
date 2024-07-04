@@ -73,7 +73,6 @@ RASPIDIRS :=                      ../sources/Adapters/Unix/FileSystem \
                                 ../sources/Adapters/Jack/Audio\
                                 ../sources/Adapters/Jack/Midi\
                                 ../sources/Adapters/Jack/Client\
-                                ../sources/Adapters/Jack/Midi\
                                 ../sources/Adapters/RTAudio\
                                 ../sources/Adapters/RTMidi\
                                 ../sources/Adapters/SDL/Timer\
@@ -175,11 +174,12 @@ RG35XXDIRS      :=    . \
 				../sources/System/Process \
 				../sources/Adapters/Unix/Process \
 				../sources/Adapters/DINGOO/System \
-				../sources/Adapters/DINGOO/Midi \
 				../sources/Adapters/SDL/Audio \
 				../sources/Adapters/SDL/Process \
 				../sources/Adapters/SDL/GUI \
-				../sources/Adapters/SDL/Timer
+				../sources/Adapters/SDL/Timer\
+				../sources/Adapters/RTMidi \
+				../sources/Externals/RtMidi
 
 PSPDIRS	:=    . \
 				../sources/Adapters/PSP/Main \
@@ -326,8 +326,10 @@ RG35XXFILES    :=  GPSDLMain.o \
 					SDLTimer.o \
 					GUIFactory.o \
 					SDLEventManager.o \
-					BITTBOYSerialMidiDevice.o \
-					BITTBOYMidiService.o \
+					RtMidi.o \
+					RTMidiService.o \
+					RTMidiOutDevice.o \
+					RTMidiInDevice.o \
 					SDLGUIWindowImp.o
 
 PSPFILES		:=	PSPmain.o  \
