@@ -19,7 +19,7 @@ DEFINES = -DHAVE_STDINT_H -D_NDEBUG -D_NO_JACK_ -D__LINUX_ALSASEQ__ -I$(PWD)/../
 INCLUDES = -Iinclude $(SDL_CFLAGS)
 OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 
-TARGET = lgpt.elf
+TARGET = lgpt-rg35xx.elf
 
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	arm-linux-gnueabihf-

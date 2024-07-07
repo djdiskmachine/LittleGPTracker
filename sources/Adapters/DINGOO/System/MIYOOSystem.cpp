@@ -8,7 +8,7 @@
 #ifdef PLATFORM_MIYOO
 #include "Adapters/Dummy/Midi/DummyMidi.h"
 #elif defined(PLATFORM_RG35XX)
-#include "Adapters/DINGOO/Midi/DINGOOMidiService.h"
+#include "Adapters/RTMidi/RTMidiService.h"
 #endif
 #include "Externals/TinyXML/tinyxml.h"
 #include "Application/Model/Config.h"
@@ -79,7 +79,7 @@ void GPSDLSystem::Boot(int argc,char **argv) {
 #ifdef PLATFORM_MIYOO
     MidiService::Install(new DummyMidi());
 #elif defined(PLATFORM_RG35XX)
-    MidiService::Install(new DINGOOMidiService());
+    MidiService::Install(new RTMidiService());
 #endif
 
 

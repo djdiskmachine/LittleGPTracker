@@ -634,4 +634,5 @@ deploy:
 	./resources/packaging/build_and_copy_from_chip.sh
 #	make PLATFORM=BITTBOY
 #	make PLATFORM=RS97
+#	make PLATFORM=RG35XX
 	./resources/packaging/lgpt_package.sh
