@@ -854,7 +854,7 @@ void TableView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
 	Table *playbackTable=tpb.GetTable() ;
 	// Table we're viewing
 	Table &viewTable=th->GetTable(viewData_->currentTable_) ;
-	if (playbackTable==&viewTable) {
+	if (playbackTable==&viewTable && viewData_->playMode_ != PM_AUDITION) {
 
 
 		lastPosition_[0]=tpb.GetPlaybackPosition(0) ;

@@ -9,7 +9,8 @@ enum PlayMode {
 	PM_SONG,
 	PM_CHAIN,
 	PM_PHRASE,
-	PM_LIVE
+	PM_LIVE,
+	PM_AUDITION
 } ;
 
 
@@ -81,5 +82,6 @@ public:
 	int chainPlayPos_[SONG_CHANNEL_COUNT] ;                   // .Play position in chain for each channel
 	unsigned char currentPlayPhrase_[SONG_CHANNEL_COUNT] ;   // .Current played phrase for each channel
 	int phrasePlayPos_[SONG_CHANNEL_COUNT]    ;               // .Play position in phrase for each channel
+	int phraseCurPos_;                      				// current UI cursor row position
 } ; 
 #endif

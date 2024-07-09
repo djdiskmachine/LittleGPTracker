@@ -995,7 +995,8 @@ void SongView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
     // Clear all current positions
 
 		int y=lastPlayedPosition_[i]-viewData_->songOffset_ ;
-		if (y>=0 && y<View::songRowCount_) {
+		if (y>=0 && y<View::songRowCount_ &&
+			viewData_->playMode_ != PM_AUDITION) {
 			pos._y=anchor._y+y ;
 			DrawString(pos._x,pos._y," ",props) ;
 		}

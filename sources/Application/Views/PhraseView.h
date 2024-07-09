@@ -20,6 +20,7 @@ public:
 	virtual void OnFocus() ;
 protected:
 	void updateCursor(int dx,int dy) ;
+	void stopAudition();
 	void updateCursorValue(ViewUpdateDirection offset,int xOffset=0,int yOffset=0) ;
 	void updateSelectionValue(ViewUpdateDirection direction) ;
 	void warpToNeighbour(int offset) ;

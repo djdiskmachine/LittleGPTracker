@@ -717,7 +717,8 @@ void ChainView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
 
 		for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
             if (player->IsChannelPlaying(i)) {
-    			if (viewData_->currentPlayChain_[i]==viewData_->currentChain_) {
+    			if (viewData_->currentPlayChain_[i]==viewData_->currentChain_ &&
+		            viewData_->playMode_ != PM_AUDITION) {
     				pos._y=anchor._y+viewData_->chainPlayPos_[i] ;
     				if (!player->IsChannelMuted(i)) {
 						SetColor(CD_CURSOR) ;
