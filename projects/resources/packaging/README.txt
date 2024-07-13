@@ -15,8 +15,8 @@ projects but make sure to backup your old cherished work
 just to be safe <3
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Changelog Jul 2 2024
-1.4.0-b2
+Changelog Jul 13 2024
+1.4.0
     Adds:
         Automated build for bittboy, Win32, PSP, Miyoo, Deb32, RG35XX
         Shoutout to xquader for the initial RG35XX port (https://boosty.to/xquader)
