@@ -74,6 +74,9 @@
 ##### RG35XX: Compile in edemirkans toolchain docker
 	clone:
 		https://github.com/edemirkan/rg35xx-toolchain
+	enter docker:
+		make shell
 	Build with:
+		apt install -y python3 python3-pillow
 		make PLATFORM=RG35XX
 

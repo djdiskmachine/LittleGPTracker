@@ -178,8 +178,9 @@ RG35XXDIRS      :=    . \
 				../sources/Adapters/SDL/Process \
 				../sources/Adapters/SDL/GUI \
 				../sources/Adapters/SDL/Timer\
-				../sources/Adapters/RTMidi \
-				../sources/Externals/RtMidi
+				../sources/Adapters/Dummy/Midi
+# ../sources/Adapters/RTMidi \ # Disabled for now
+# ../sources/Externals/RtMidi
 
 PSPDIRS	:=    . \
 				../sources/Adapters/PSP/Main \
@@ -326,11 +327,12 @@ RG35XXFILES    :=  GPSDLMain.o \
 					SDLTimer.o \
 					GUIFactory.o \
 					SDLEventManager.o \
-					RtMidi.o \
-					RTMidiService.o \
-					RTMidiOutDevice.o \
-					RTMidiInDevice.o \
+					DummyMidi.o \
 					SDLGUIWindowImp.o
+# RtMidi.o \	#Disabled for now
+# RTMidiService.o \
+# RTMidiOutDevice.o \
+# RTMidiInDevice.o \
 
 PSPFILES		:=	PSPmain.o  \
 					PSPFileSystem.o \

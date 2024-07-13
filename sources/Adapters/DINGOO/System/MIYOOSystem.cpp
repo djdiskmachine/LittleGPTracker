@@ -8,7 +8,7 @@
 #ifdef PLATFORM_MIYOO
 #include "Adapters/Dummy/Midi/DummyMidi.h"
 #elif defined(PLATFORM_RG35XX)
-#include "Adapters/RTMidi/RTMidiService.h"
+#include "Adapters/Dummy/Midi/DummyMidi.h" // Re-enable at some point RTMidi/RTMidiService.h"
 #endif
 #include "Externals/TinyXML/tinyxml.h"
 #include "Application/Model/Config.h"
