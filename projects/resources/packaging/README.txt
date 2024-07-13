@@ -16,9 +16,10 @@ just to be safe <3
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Changelog Jul 2 2024
-1.4.0
+1.4.0-b2
     Adds:
-        Automated build for bittboy, Win32, PSP, Miyoo, Deb32
+        Automated build for bittboy, Win32, PSP, Miyoo, Deb32, RG35XX
+        Shoutout to xquader for the initial RG35XX port (https://boosty.to/xquader)
         License changed from CC-BY-SA-NC to GPL-3
 
     * MVEL cmd    

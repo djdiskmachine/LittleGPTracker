@@ -73,7 +73,6 @@ RASPIDIRS :=                      ../sources/Adapters/Unix/FileSystem \
                                 ../sources/Adapters/Jack/Audio\
                                 ../sources/Adapters/Jack/Midi\
                                 ../sources/Adapters/Jack/Client\
-                                ../sources/Adapters/Jack/Midi\
                                 ../sources/Adapters/RTAudio\
                                 ../sources/Adapters/RTMidi\
                                 ../sources/Adapters/SDL/Timer\
@@ -168,6 +167,20 @@ MIYOODIRS      :=    . \
 				../sources/Adapters/SDL/Process \
 				../sources/Adapters/SDL/GUI \
 				../sources/Adapters/SDL/Timer
+
+RG35XXDIRS      :=    . \
+				../sources/Adapters/DINGOO/Main \
+				../sources/Adapters/Unix/FileSystem \
+				../sources/System/Process \
+				../sources/Adapters/Unix/Process \
+				../sources/Adapters/DINGOO/System \
+				../sources/Adapters/SDL/Audio \
+				../sources/Adapters/SDL/Process \
+				../sources/Adapters/SDL/GUI \
+				../sources/Adapters/SDL/Timer\
+				../sources/Adapters/Dummy/Midi
+# ../sources/Adapters/RTMidi \ # Disabled for now
+# ../sources/Externals/RtMidi
 
 PSPDIRS	:=    . \
 				../sources/Adapters/PSP/Main \
@@ -301,6 +314,25 @@ MIYOOFILES    :=  GPSDLMain.o \
 					SDLEventManager.o \
 					DummyMidi.o \
 					SDLGUIWindowImp.o 
+
+RG35XXFILES    :=  GPSDLMain.o \
+					UnixFileSystem.o \
+					SDLAudio.o \
+					Process.o \
+					UnixProcess.o \
+					SDLAudioDriver.o \
+					MIYOOSystem.o \
+					DINGOOEventQueue.o \
+					SDLProcess.o \
+					SDLTimer.o \
+					GUIFactory.o \
+					SDLEventManager.o \
+					DummyMidi.o \
+					SDLGUIWindowImp.o
+# RtMidi.o \	#Disabled for now
+# RTMidiService.o \
+# RTMidiOutDevice.o \
+# RTMidiInDevice.o \
 
 PSPFILES		:=	PSPmain.o  \
 					PSPFileSystem.o \
@@ -604,4 +636,5 @@ deploy:
 	./resources/packaging/build_and_copy_from_chip.sh
 #	make PLATFORM=BITTBOY
 #	make PLATFORM=RS97
+#	make PLATFORM=RG35XX
 	./resources/packaging/lgpt_package.sh

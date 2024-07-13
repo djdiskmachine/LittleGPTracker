@@ -5,7 +5,11 @@
 #include "Adapters/SDL/GUI/SDLEventManager.h"
 #include "Adapters/SDL/Process/SDLProcess.h"
 #include "Adapters/SDL/Audio/SDLAudio.h"
+#ifdef PLATFORM_MIYOO
 #include "Adapters/Dummy/Midi/DummyMidi.h"
+#elif defined(PLATFORM_RG35XX)
+#include "Adapters/Dummy/Midi/DummyMidi.h" // Re-enable at some point RTMidi/RTMidiService.h"
+#endif
 #include "Externals/TinyXML/tinyxml.h"
 #include "Application/Model/Config.h"
 #include "Application/Controllers/ControlRoom.h"
@@ -72,7 +76,12 @@ void GPSDLSystem::Boot(int argc,char **argv) {
     Audio::Install(new SDLAudio(hint));
 
     // Install Midi
+#ifdef PLATFORM_MIYOO
     MidiService::Install(new DummyMidi());
+#elif defined(PLATFORM_RG35XX)
+    MidiService::Install(new RTMidiService());
+#endif
+
 
     // Install Threads
     SysProcessFactory::Install(new SDLProcessFactory());
