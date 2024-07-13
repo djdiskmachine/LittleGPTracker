@@ -5,7 +5,7 @@ author m-.-n aka Marc Nostromo. The original work and
 releasing the source code has laid the foundation for
 everything included in this package.
 
-This build can be considered beta and has thus been tested
+This build can be considered stable and has thus been tested
 extensively. Please report any issues you could find
 via Github:
     https://github.com/djdiskmachine/LittleGPTracker/issues
