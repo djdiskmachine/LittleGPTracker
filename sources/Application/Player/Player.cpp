@@ -93,19 +93,9 @@ void Player::Start(PlayMode mode,bool forceSongMode) {
  
 	viewData_->playMode_=(forceSongMode?PM_SONG:mode) ;
 
-  // See if we start from current song position
-  // or from last stored
-
+  // Always set position, allows for playing song with chain offset
   unsigned playPos=viewData_->songY_+viewData_->songOffset_ ;
-
-	if (forceSongMode==false)
-  {
-    lastSongPos_=playPos ;
-  } 
-  else 
-  {
-    playPos=lastSongPos_ ;
-  }
+  lastSongPos_ = playPos;
 
   // Clear all channel based data
 
@@ -143,7 +133,7 @@ void Player::Start(PlayMode mode,bool forceSongMode) {
       for (int i=0;i<8;i++)
       {
         mixer_->StartChannel(i) ;
-        updateSongPos(playPos,i) ;
+        updateSongPos(playPos, i, viewData_->chainRow_);
       }
     }
     break ;

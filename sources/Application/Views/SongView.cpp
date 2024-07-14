@@ -733,6 +733,8 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 	    			if (mask&EPBM_RIGHT) updateCursor(1,0) ;
 
 	          		if (mask&EPBM_START) {
+					   // Always play with zero offset in chains when in songview
+					   viewData_->chainRow_ = 0;
 					   onStart() ;
 	    			}
 				}
