@@ -79,7 +79,7 @@ void GPSDLSystem::Boot(int argc,char **argv) {
 #ifdef PLATFORM_MIYOO
     MidiService::Install(new DummyMidi());
 #elif defined(PLATFORM_RG35XX)
-    MidiService::Install(new RTMidiService());
+    MidiService::Install(new DummyMidi()); // Re-enable at some point RTMidiService());
 #endif
 
 
