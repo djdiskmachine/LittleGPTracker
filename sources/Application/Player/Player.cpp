@@ -143,7 +143,7 @@ void Player::Start(PlayMode mode,bool forceSongMode) {
       for (int i=0;i<8;i++)
       {
         mixer_->StartChannel(i) ;
-        updateSongPos(playPos,i) ;
+        updateSongPos(playPos, i, viewData_->chainRow_);
       }
     }
     break ;
