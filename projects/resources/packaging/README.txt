@@ -15,7 +15,13 @@ projects but make sure to backup your old cherished work
 just to be safe <3
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Changelog Jul 14 2024
+Changelog Jul 31 2024
+1.4.1-1
+    Fixes:
+        Boot crash for Miyoo, RG35XX
+    Update:
+        Install instructions for Miyoo, RG35XX
+
 1.4.1
     Adds:
         Play chain offset

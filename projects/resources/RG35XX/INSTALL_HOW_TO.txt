@@ -1,7 +1,7 @@
 Installation:
-1. Copy lgpt-rg35xx.elf, j2k.so, config.xml, samplelib, lgpt_BETA to SdCard:/Roms/APPS/lgpt/
-2. Copy LittleGPTracker.png to SdCard:/Roms/Imgs/
-3. Copy LittleGPTracker.sh to SdCard:/Roms/
+1. Copy lgpt-rg35xx.elf, j2k.so, config.xml, samplelib, lgpt_BETA to /SdCard/Roms/APPS/lgpt/
+2. Copy LittleGPTracker.png to /SdCard/Roms/Imgs/
+3. Copy LittleGPTracker.sh to /SdCard/Roms/
 
 Usage:
 In "Garlic OS" open "Consoles -> Apps -> LittleGPTracker".
