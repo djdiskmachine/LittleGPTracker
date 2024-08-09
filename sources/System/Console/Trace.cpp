@@ -38,16 +38,19 @@ Trace::Logger *Trace::SetLogger(Trace::Logger& logger)
 
 //------------------------------------------------------------------------------
 
+#ifdef _64BIT
+void Trace::VLog(const char* category,  const char *fmt, va_list& args) 
+#else
 void Trace::VLog(const char* category,  const char *fmt, const va_list& args) 
+#endif
 {
   char buffer[4096] ;
   sprintf(buffer, "[%s] ",category);
   
   char *ptr = buffer+strlen(buffer);
   
-  vsprintf(ptr,fmt,args ); 
+  vsprintf(ptr, fmt, args);
   GetInstance()->AddLine(buffer) ;
-  
 }
 
 //------------------------------------------------------------------------------

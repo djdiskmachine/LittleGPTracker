@@ -202,7 +202,11 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 		return ;
 	}
 
+# ifdef _64BIT
+	int fourcc=*((int*)data);
+#else
 	int fourcc=(unsigned int)data ;
+#endif
 
 	UIField *focus=GetFocus() ;
 	if (fourcc!=ACTION_TEMPO_CHANGED) {

@@ -6,8 +6,8 @@
 RTMidiOutDevice::RTMidiOutDevice(RtMidiOut &out,int index,const char *name):
 	MidiOutDevice(name),
 	rtMidiOut_(out),
-	running_(false),
-	index_(index)
+	index_(index),
+	running_(false)
 {
 } ;
 

@@ -2,6 +2,10 @@
 #include "System/System/System.h"
 #include "System/FileSystem/FileSystem.h"
 
+#ifdef _64BIT
+#include <stdint.h>
+#endif
+
 SoundFontManager::SoundFontManager() {
 } ;
 
@@ -62,7 +66,11 @@ sfBankID SoundFontManager::LoadBank(const char *path) {
 		current.dwEnd=(current.dwEnd-current.dwStart) ;
 		current.dwStartloop=(current.dwStartloop-current.dwStart) ;
 		current.dwEndloop=(current.dwEndloop-current.dwStart) ;
+#ifdef _64BIT
+		current.dwStart=(intptr_t)buffer ;
+#else
 		current.dwStart=(DWORD)buffer ;
+#endif
 
 		sampleData_.push_back(buffer) ;
 	}

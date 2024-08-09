@@ -1,0 +1,33 @@
+-include $(PWD)/rules_base
+
+# config
+DEFINES := \
+        -D_64BIT \
+	-DCPP_MEMORY \
+	-D__LINUX_ALSA__ \
+	-D__LINUX_ALSASEQ__ \
+        -DSDL2 \
+        -DSDLAUDIO \
+        -DDUMMYMIDI
+
+ALSA_CFLAGS := $(shell pkg-config alsa --cflags)
+ALSA_LIBS := $(shell pkg-config alsa --libs)
+JACK_CFLAGS := $(shell pkg-config jack --cflags)
+JACK_LIBS := $(shell pkg-config jack --libs)
+SDL_CFLAGS := $(shell pkg-config sdl2 --cflags)
+SDL_LIBS := $(shell pkg-config sdl2 --libs)
+
+# optimization
+OPT_FLAGS := -O3
+#For debugging
+OPT_FLAGS := -g
+INCLUDES := $(ALSA_CFLAGS) $(JACK_CFLAGS) $(SDL_CFLAGS) -I$(PWD)/../sources
+CFLAGS := $(OPT_FLAGS) $(DEFINES) $(INCLUDES) -Wall
+CXXFLAGS := $(CFLAGS) -std=gnu++03
+LIBS := $(ALSA_LIBS) $(JACK_LIBS) $(SDL_LIBS)
+OUTPUT := ../lgpt
+EXTENSION := x64
+
+# build rule
+%.x64: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)

@@ -1,15 +1,30 @@
 -include $(PWD)/rules_base
+
+# config
+DEFINES := \
+	-DCPP_MEMORY \
+	-D_DEBUG \
+	-D__LINUX_ALSA__ \
+	-D__LINUX_ALSASEQ__
+
+ALSA_CFLAGS := $(shell pkg-config alsa --cflags)
+ALSA_LIBS := $(shell pkg-config alsa --libs)
+JACK_CFLAGS := $(shell pkg-config jack --cflags)
+JACK_LIBS := $(shell pkg-config jack --libs)
+SDL_CFLAGS := $(shell pkg-config sdl --cflags)
+SDL_LIBS := $(shell pkg-config sdl --libs)
+
+# optimization
+OPT_FLAGS := -O3 -m32
+#For debugging
+# OPT_FLAGS := -g -m32
+INCLUDES := -I/usr/local/include $(ALSA_CFLAGS) $(JACK_CFLAGS) $(SDL_CFLAGS) -I$(PWD)/../sources
+CFLAGS	:= $(OPT_FLAGS) $(DEFINES) $(INCLUDES) -Wall
+CXXFLAGS:= $(CFLAGS)
+LIBS	:=  -O3 -L/local/lib -Wl,-rpath,/usr/local/lib $(ALSA_LIBS) $(JACK_LIBS) $(SDL_LIBS)
 LDFLAGS := -m32
+
+EXTENSION:= deb-exe
 
 %.deb-exe: $(OFILES)
 	$(CXX) $(LDFLAGS) $@ $(OFILES) $(LIBS)
-
-CFLAGS	:= -m32 -O3 -DCPP_MEMORY -Wall -I/usr/local/include -I$(PWD)/../sources -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -D_DEBUG
-LIBS	:=  -O3 -L/local/lib -Wl,-rpath,/usr/local/lib -lasound -lSDL -ljack -lpthread
-
-#For debugging
-#LIBS	:=  -g -L/local/lib -Wl,-rpath,/usr/local/lib -lasound -lSDL -ljack -lpthread
-#CFLAGS	:= -g -m32 -DCPP_MEMORY -Wall -I/usr/local/include -I$(PWD)/../sources -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__
-
-CXXFLAGS:= $(CFLAGS)
-EXTENSION:= deb-exe

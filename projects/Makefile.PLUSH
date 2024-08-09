@@ -1,0 +1,33 @@
+-include $(PWD)/rules_base
+STRIP = $(CROSS_COMPILE)strip
+
+%.arm7hf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@
+
+DEVKIT = /opt/arm-buildroot-linux-gnueabihf_sdk-buildroot/
+CROSS_COMPILE = $(DEVKIT)bin/arm-buildroot-linux-gnueabihf-
+
+CC = $(CROSS_COMPILE)gcc
+CXX = $(CROSS_COMPILE)g++
+SYSROOT := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
+SDL_CFLAGS := -I/opt/arm-buildroot-linux-gnueabihf_sdk-buildroot/arm-buildroot-linux-gnueabihf/sysroot/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
+SDL_LIBS := -L/opt/arm-buildroot-linux-gnueabihf_sdk-buildroot/arm-buildroot-linux-gnueabihf/sysroot/usr/lib -lSDL
+
+DEFINES = -DHAVE_STDINT_H -D_NDEBUG -D_NO_JACK_ -I$(PWD)/../sources -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DBUFFERED
+INCLUDES = -Iinclude $(SDL_CFLAGS)
+OPT_FLAGS = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a53
+
+OUTPUT = ../lgpt-rg35xxplush24
+
+TOOLPATH = $(DEVKIT)/usr/bin
+PREFIX := arm-linux-gnueabihf-
+
+CFLAGS := $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall
+CXXFLAGS := $(CFLAGS) -std=gnu++03
+
+EXTENSION := arm7hf
+
+LIBS :=  -lSDL -lSDL_mixer -lpthread 
+LIBDIRS := $(DEKVIT)/usr/lib
+LIBDIRS += $(DEKVIT)/usr/include

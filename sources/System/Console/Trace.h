@@ -32,7 +32,11 @@ public:
   Trace::Logger *SetLogger(Trace::Logger&);
 
 protected:
+#ifdef _64BIT
+  static void VLog(const char* category, const char *fmt, va_list& args); 
+#else
   static void VLog(const char* category, const char *fmt, const va_list& args); 
+#endif
 private:
   Trace::Logger* logger_;
 } ;

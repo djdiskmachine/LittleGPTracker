@@ -31,7 +31,11 @@ void UIActionField::Draw(GUIWindow &w, int offset) {
 
 void UIActionField::OnClick() {
 	SetChanged() ;
+#ifdef _64BIT
+	NotifyObservers((I_ObservableData *) &fourcc_);
+#else
 	NotifyObservers((I_ObservableData *)fourcc_) ;
+#endif
 } ;
 
 const char *UIActionField::GetString() {

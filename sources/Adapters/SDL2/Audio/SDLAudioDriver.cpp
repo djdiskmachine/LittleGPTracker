@@ -1,8 +1,8 @@
 #include "SDLAudioDriver.h"
-#include "System/Console/Trace.h"
-#include "Services/Time/TimeService.h"
-#include "System/System/System.h"
 #include "Services/Midi/MidiService.h"
+#include "Services/Time/TimeService.h"
+#include "System/Console/Trace.h"
+#include "System/System/System.h"
 
 void sdl_callback(void *userdata, Uint8 *stream, int len) {
 	SDLAudioDriver *sound=(SDLAudioDriver *)userdata ;
@@ -65,13 +65,16 @@ bool SDLAudioDriver::InitDriver() {
   input.samples=settings_.bufferSize_ ;
   input.userdata=this ;
 
-  if (SDL_OpenAudio(&input,&returned) < 0 )
+  // On my machine this wasn't working.
+  // SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL,0,&input,&returned,0);
+  // The above may return 0 meaning an error or success.
+  int ret = SDL_OpenAudio(&input,&returned);
+  if ( ret != 0 )
   {
-  	Trace::Error("Couldn't open sdl audio: %s\n", SDL_GetError());
+    Trace::Error("Couldn't open sdl audio: %s\n", SDL_GetError());
   	return false ;
   } 
-  char bufferName[256] ;
-  SDL_AudioDriverName(bufferName,256) ;
+  const char * driverName = SDL_GetCurrentAudioDriver() ;
 
   fragSize_=returned.size ;
   // Allocates a rotating sound buffer
@@ -83,7 +86,7 @@ bool SDLAudioDriver::InitDriver() {
   mainBuffer_=(char *)((((int)unalignedMain_)+1)&(0xFFFFFFFC)) ;
 #endif
 
-  Trace::Log("AUDIO","%s successfully opened with %d samples",bufferName,fragSize_/4 ) ;
+  Trace::Log("AUDIO","%s successfully opened with %d samples",driverName,fragSize_/4 ) ;
 
   // Create mini blank buffer in case of underruns
 

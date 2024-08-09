@@ -4,7 +4,11 @@
 #include <string.h>
 #include <stdarg.h>
 #include <unistd.h>
+#ifdef _64BIT
+#include <dirent.h>
+#else
 #include <sys/dir.h>
+#endif
 #include <sys/stat.h>
 #include <ctype.h>
 #include <errno.h>
@@ -133,7 +137,9 @@ long UnixFile::Tell() {
 } ;
 void UnixFile::Close() {
 	fflush(file_) ;
+#ifndef _64BIT
 	fsync(fileno(file_)) ;
+#endif
 	fclose(file_) ;
 } ;
 
