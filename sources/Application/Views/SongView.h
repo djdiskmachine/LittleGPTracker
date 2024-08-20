@@ -3,6 +3,7 @@
 #define _SONG_VIEW_H_
 
 #include "BaseClasses/View.h"
+#include <SDL/SDL.h>
 
 class SongView ;
 
@@ -81,6 +82,7 @@ private:
 	bool invertBatt_ ;
 	bool needClear_ ;
 	bool canDeepClone_;
+	uint32_t deepCloneTime;
 } ;
 
 #endif

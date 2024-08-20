@@ -592,6 +592,7 @@ void SongView::ProcessButtonMask(unsigned short mask,bool pressed) {
 		deepClonePosition();
 		mask&=(0xFFFF-(EPBM_A|EPBM_L));
 		canDeepClone_ = false;
+		deepCloneTime = SDL_GetTicks();
 	}
 	if (clipboard_.active_) {
 		viewMode_=VM_SELECTION ;
@@ -872,6 +873,11 @@ void SongView::DrawView() {
 	std::string buffer(os.str());
 
 	DrawString(pos._x,pos._y,buffer.c_str(),props) ;
+
+	uint32_t elapsedTime = (SDL_GetTicks() - deepCloneTime);
+	if(elapsedTime<=1000){
+		DrawString(pos._x+10,pos._y+2,"Deep clone",props) ;
+	}
 // Compute song grid location
 
 	GUIPoint anchor=GetAnchor() ;
