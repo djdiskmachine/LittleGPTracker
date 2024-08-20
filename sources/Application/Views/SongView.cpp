@@ -875,8 +875,8 @@ void SongView::DrawView() {
 	DrawString(pos._x,pos._y,buffer.c_str(),props) ;
 
 	uint32_t elapsedTime = (SDL_GetTicks() - deepCloneTime);
-	if(elapsedTime<=1000){
-		DrawString(pos._x+10,pos._y+2,"Deep clone",props) ;
+	if(elapsedTime <= 1000) {
+		DrawString(pos._x+10, pos._y+2, "Deep clone", props);
 	}
 // Compute song grid location
 
