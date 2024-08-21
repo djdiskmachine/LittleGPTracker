@@ -369,7 +369,7 @@ void PhraseView::warpToNeighbour(int offset) {
 				viewData_->songX_-=offset ;
 			}
 		} else { // restore song
-			viewData_->songX_-=offset ;
+			warpToNeighbour(offset);
 		}
 	}
 }

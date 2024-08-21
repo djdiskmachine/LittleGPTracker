@@ -96,9 +96,7 @@ void ChainView::warpInColumn(int offset) {
 		viewData_->currentChain_=*data ;
 		isDirty_=true ;
 	} else {
-		// restore old position
-		viewData_->songY_=saveY ;
-		viewData_->songOffset_=saveOffset ;
+		warpInColumn(offset);
 	}
 
 } ;
@@ -114,7 +112,7 @@ void ChainView::warpToNeighbour(int offset) {
 			viewData_->currentChain_=*c ;
 			isDirty_=true ;
 		} else {
-			viewData_->songX_-=offset ;
+			warpToNeighbour(offset);
 		}
 	}
 
