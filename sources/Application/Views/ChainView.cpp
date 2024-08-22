@@ -82,40 +82,44 @@ void ChainView::updateSelectionValue(int offset) { // HERE
 }
 
 void ChainView::warpInColumn(int offset) {
-
 	// save current data
-
-	int saveY=viewData_->songY_ ;
-	int saveOffset=viewData_->songOffset_ ;
+	int saveY = viewData_->songY_ ;
+	int saveOffset = viewData_->songOffset_ ;
 
 	// move and check we're on valid chain
-
-	viewData_->UpdateSongCursor(0,offset) ;
-	unsigned char *data=viewData_->GetCurrentSongPointer() ;
-	if (*data!=0xFF) {
-		viewData_->currentChain_=*data ;
-		isDirty_=true ;
-	} else {
-		warpInColumn(offset);
+	while (viewData_->songY_ > 0 && viewData_->songY_ < 232) {
+		viewData_->UpdateSongCursor(0,offset) ;
+		unsigned char *data=viewData_->GetCurrentSongPointer() ;
+		if (*data!=0xFF) {
+			viewData_->currentChain_=*data ;
+			isDirty_=true ;
+			return;
+		}
 	}
-
+	// restore old position
+	viewData_->songY_ = saveY;
+	viewData_->songOffset_ = saveOffset;
 } ;
 
 void ChainView::warpToNeighbour(int offset) {
+	// save current data
+	int saveX = viewData_->songX_;
+	int saveOffset = viewData_->songOffset_;
+	int newPos = saveX + offset;
 
-	int newPos=viewData_->songX_+offset ;
-	if ((newPos>-1)&&
-	    (newPos<SONG_CHANNEL_COUNT)) {
+	while ((newPos > -1) && (newPos<SONG_CHANNEL_COUNT)) {
 		viewData_->songX_=newPos ;
 		unsigned char *c=viewData_->GetCurrentSongPointer() ;
 		if (*c!=0xFF) {
 			viewData_->currentChain_=*c ;
 			isDirty_=true ;
+			return;
 		} else {
-			warpToNeighbour(offset);
+			newPos += offset;
 		}
 	}
-
+	viewData_->songX_ = saveX;
+	viewData_->songOffset_ = saveOffset;
 } ;
 
 void ChainView::clonePosition() {
