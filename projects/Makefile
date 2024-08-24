@@ -4,7 +4,7 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
-PLATFORM:=  RASPI
+PLATFORM:=  DEB
 FONT := original.bmp
 include $(PWD)/Makefile.$(PLATFORM)
 

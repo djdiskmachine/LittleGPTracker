@@ -48,6 +48,24 @@ int gp2xAnchorY=90 ;
 unsigned short appWidth=320 ;
 unsigned short appHeight=240 ;
 
+#define FONT_WIDTH 1024
+#define FONT_COUNT 127
+static unsigned char font[]= {
+	#include "Resources/font.h"
+};
+#define FONT_TYPE_COUNT 3
+static const unsigned char embeddedFontBank[FONT_TYPE_COUNT][8*8*128]= {
+	{//0 original
+		#include "Resources/original.txt"
+	},
+	{//1 digital
+		#include "Resources/digital.txt"
+	},
+	{//2 monster
+		#include "Resources/monster.txt"
+	}
+};
+
 SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p) 
 {
 
@@ -165,7 +183,17 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 	backgroundColor_=0 ;
 	SDL_ShowCursor(SDL_DISABLE);
 
-	
+	const char *fontType=Config::GetInstance()->GetValue("FONTTYPE") ;
+	if (fontType)
+	{
+		if(0 <= atoi(fontType) && atoi(fontType) < FONT_TYPE_COUNT){
+			for(int i=0;i<8*8*(FONT_COUNT+1);i++)
+			{
+				font[i]=embeddedFontBank[atoi(fontType)][i];
+			}
+		}
+	}
+
 	if (cacheFonts_)
   {
     Trace::Log("DISPLAY","Preparing fonts") ;
@@ -282,11 +310,6 @@ void SDLGUIWindowImp::prepareBitmaps() {
 }
 #endif
 
-#define FONT_WIDTH 1024
-#define FONT_COUNT 127
-static const unsigned char font[]= {
-	#include "Resources/font.h"
-};
 
 static SDL_Surface *fonts[FONT_COUNT] ;
 
