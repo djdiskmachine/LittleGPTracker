@@ -1,5 +1,5 @@
 <CONFIG>
-<!-- FULLSCREEN value = 'YES' /-->
 <SCREENMULT value = '3' /> 
-<FONTTYPE value = '0' /> <!-- 0:original; 1:digital 2:monster-->
+<FONTTYPE value = 'CUSTOM' /> 
+<!-- '0':original '1':digital '2':monster 'CUSTOM': load custom_font.xml-->
 </CONFIG> 
