@@ -3,6 +3,7 @@
 #include "System/System/System.h"
 #include "System/io/Trace.h"
 #include <string.h>
+#include "Application/Model/Config.h"
 
 #define NYI(s) n_assert("NYI: ##s##")
 
@@ -35,19 +36,13 @@ DEBGUIWindowImp::DEBGUIWindowImp(GUICreateWindowParams &p) {
 	instance_=this ;
 	currentColor_=0;
 	backgroundColor_=0 ;
+	FontConfig();
 //	prepareFonts() ;
 } ;
 
 DEBGUIWindowImp::~DEBGUIWindowImp() {
 
 }
-
-
-#define FONT_WIDTH 1024
-#define FONT_COUNT 127
-static const unsigned char font[]= {
-	#include "Resources/font.h"
-};
 
 static SDL_Surface *fonts[FONT_COUNT] ;
 

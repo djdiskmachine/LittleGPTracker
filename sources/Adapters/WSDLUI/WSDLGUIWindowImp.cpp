@@ -4,6 +4,7 @@
 #include "UIFramework/SimpleBaseClasses/GUIWindow.h"
 #include "System/IO/Trace.h"
 #include <string.h>
+#include "Application/Model/Config.h"
 #include <windows.h>
 
 #define NYI(s) n_assert("NYI: ##s##")
@@ -35,19 +36,13 @@ WSDLGUIWindowImp::WSDLGUIWindowImp(GUICreateWindowParams &p) {
 	instance_=this ;
 	currentColor_=0;
 	backgroundColor_=0 ;
+	FontConfig();
 //	prepareFonts() ;
 } ;
 
 WSDLGUIWindowImp::~WSDLGUIWindowImp() {
 
 }
-
-
-#define FONT_WIDTH 1024
-#define FONT_COUNT 127
-static const unsigned char font[]= {
-	#include "Resources/font.h"
-};
 
 static SDL_Surface *fonts[FONT_COUNT] ;
 

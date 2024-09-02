@@ -7,6 +7,7 @@
 #include <string.h>
 #define NYI(s) n_assert("NYI: ##s##")
 #include "Application/Model/Config.h"
+#include "Application/Model/FontConfig.h"
 #include "Application/Utils/char.h"
 
 DINGOOGUIWindowImp *instance_ ;
@@ -47,20 +48,12 @@ DINGOOGUIWindowImp::DINGOOGUIWindowImp(GUICreateWindowParams &p) {
 	lastMod_=KMOD_NONE ;
 	instance_=this ;
 	currentColor_=0;
+	FontConfig();
 	prepareFonts() ;
 } ;
 
 DINGOOGUIWindowImp::~DINGOOGUIWindowImp() {
 }
-
-
-#define FONT_WIDTH 1024
-#define FONT_COUNT 127
-static const unsigned char font[]= {
-	#include "Resources/font.h"
-};
-
-
 
 static SDL_Surface *fonts[FONT_COUNT] ;
 

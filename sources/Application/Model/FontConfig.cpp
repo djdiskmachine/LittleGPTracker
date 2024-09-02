@@ -19,39 +19,27 @@ const unsigned char embeddedFontBank[FONT_TYPE_COUNT][8*8*128]= {
 	}
 };
 
-
-
 void FontConfig(){
-
-const char *fontType=Config::GetInstance()->GetValue("FONTTYPE") ;
-
-Trace::Log("CUSTOM_FONT","187") ;
+    const char *fontType=Config::GetInstance()->GetValue("FONTTYPE") ;
 	if (fontType)
 	{
-		Trace::Log("CUSTOM_FONT","190") ;
 		if(strcmp(fontType, "CUSTOM") == 0 || strcmp(fontType, "custom") == 0){
-			Trace::Log("CUSTOM_FONT","192") ;
 			Path path("bin:custom_font.xml") ;
 			TiXmlDocument document(path.GetPath());
-			Trace::Log("CUSTOM_FONT","195") ;
 			bool loadOkay = document.LoadFile();
-			Trace::Log("CUSTOM_FONT","197") ;
 			if (!loadOkay) {
 				Trace::Log("CUSTOM_FONT","No (bad?) custom_font file") ;
 			}
 			else{
-				Trace::Log("CUSTOM_FONT","202") ;
 				TiXmlNode* rootnode = 0;
 				rootnode = document.FirstChild( "FONT" );
 				if (!rootnode)  {
 					Trace::Error("No master node for custom_font") ;
 				}
 				else{
-					Trace::Log("CUSTOM_FONT","209") ;
 					TiXmlElement *rootelement = rootnode->ToElement();
 					TiXmlNode *node = rootelement->FirstChildElement() ;
 					if (node) {
-						Trace::Log("CUSTOM_FONT","213") ;
 						TiXmlElement *element = node->ToElement();
 						while (element) {
 							const char *elem=element->Value() ; // sould be DATA but we don't really care
@@ -74,13 +62,10 @@ Trace::Log("CUSTOM_FONT","187") ;
 			}
 		}
 		else if(0 <= atoi(fontType) && atoi(fontType) < FONT_TYPE_COUNT){
-            Trace::Log("CUSTOM_FONT","60") ;
-            
 			for(int i=0;i<8*8*(FONT_COUNT+1);i++)
 			{
 				font[i]=embeddedFontBank[atoi(fontType)][i];
 			}
-            Trace::Log("CUSTOM_FONT","213-%d",font[11]) ;
 		}
 	}
 }

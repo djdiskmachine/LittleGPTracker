@@ -168,7 +168,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 	SDL_ShowCursor(SDL_DISABLE);
 
 	FontConfig();
-	Trace::Log("CUSTOM_FONT","171-%d",font[11]) ;
+	
 	if (cacheFonts_)
   {
     Trace::Log("DISPLAY","Preparing fonts") ;
@@ -304,7 +304,7 @@ void SDLGUIWindowImp::prepareFullFonts()
   bmask = 0x00ff0000;
   amask = 0xff000000;
 #endif
-	Trace::Log("CUSTOM_FONT","307-%d",font[11]) ;
+
 	for (int i=0;i<FONT_COUNT;i++)
   {
     
