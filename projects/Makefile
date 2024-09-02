@@ -469,7 +469,7 @@ CAANOOFILES		:=	CAANOOSDLMain.o \
 					SDLTimer.o \
 					GUIFactory.o SDLEventManager.o SDLGUIWindowImp.o 
 
-COMMONFILES		:=	Logger.o Trace.o Result.o Status.o Config.o \
+COMMONFILES		:=	Logger.o Trace.o Result.o Status.o Config.o FontConfig.o\
 					Timer.o FileSystem.o \
 					SysMutex.o TimeService.o \
 					MidiOutDevice.o MidiInDevice.o MidiService.o Groove.o \
