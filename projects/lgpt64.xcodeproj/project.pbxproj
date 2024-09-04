@@ -1681,6 +1681,7 @@
 				PRODUCT_NAME = LittleGPTracker;
 				SDKROOT = macosx;
 				SYMROOT = ../bin;
+				VALID_ARCHS = "arm64 arm64e i386 x86_64";
 			};
 			name = Release;
 		};
