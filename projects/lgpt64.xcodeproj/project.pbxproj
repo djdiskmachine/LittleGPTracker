@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,17 +13,12 @@
 		73292F9B0DBE79FB007363BD /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73292F980DBE79FB007363BD /* CoreAudio.framework */; };
 		73292F9C0DBE79FB007363BD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73292F990DBE79FB007363BD /* CoreFoundation.framework */; };
 		73292F9D0DBE79FB007363BD /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73292F9A0DBE79FB007363BD /* CoreMIDI.framework */; };
-		7329F0D50BF46109009A5BD5 /* OSXmain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7329F0D20BF46109009A5BD5 /* OSXmain.cpp */; };
-		7329F0D60BF46109009A5BD5 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 7329F0D40BF46109009A5BD5 /* SDLMain.m */; };
 		734B75CB151D2F9900CC5A14 /* revision.txt in Resources */ = {isa = PBXBuildFile; fileRef = 734B75CA151D2F9900CC5A14 /* revision.txt */; };
 		734FFEF7166DF384003FD4C3 /* Result.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734FFEF5166DF384003FD4C3 /* Result.cpp */; };
 		734FFEFD166DF393003FD4C3 /* n_assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734FFEF9166DF393003FD4C3 /* n_assert.cpp */; };
 		734FFEFE166DF393003FD4C3 /* Trace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734FFEFB166DF393003FD4C3 /* Trace.cpp */; };
 		7351008B150BCB030078BAFC /* SysMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7351008A150BCB030078BAFC /* SysMutex.cpp */; };
 		735DFE4F1670907100BD5F4D /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 735DFE4D1670907100BD5F4D /* Logger.cpp */; };
-		737CD6F30D619F72007CF7F0 /* GUIFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737CD6ED0D619F72007CF7F0 /* GUIFactory.cpp */; };
-		737CD6F50D619F72007CF7F0 /* SDLEventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737CD6EF0D619F72007CF7F0 /* SDLEventManager.cpp */; };
-		737CD6F70D619F72007CF7F0 /* SDLGUIWindowImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737CD6F10D619F72007CF7F0 /* SDLGUIWindowImp.cpp */; };
 		737CD7080D619FB8007CF7F0 /* DummyAudioOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737CD7060D619FB8007CF7F0 /* DummyAudioOut.cpp */; };
 		737CD71A0D61A095007CF7F0 /* MidiService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737CD7160D61A095007CF7F0 /* MidiService.cpp */; };
 		737CD71E0D61A0A4007CF7F0 /* AudioOutDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737CD71C0D61A0A4007CF7F0 /* AudioOutDriver.cpp */; };
@@ -91,8 +86,7 @@
 		737D12AB0BCE66F000099CB3 /* GUIRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737D124C0BCE66F000099CB3 /* GUIRect.cpp */; };
 		737D12AD0BCE66F000099CB3 /* I_GUIWindowImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737D12560BCE66F000099CB3 /* I_GUIWindowImp.cpp */; };
 		737D12AE0BCE66F000099CB3 /* GUIWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737D12590BCE66F000099CB3 /* GUIWindow.cpp */; };
-		737D12DC0BCE695D00099CB3 /* OSXSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737D12D50BCE695D00099CB3 /* OSXSystem.cpp */; };
-		737D12E80BCE69CA00099CB3 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 737D12E70BCE69CA00099CB3 /* SDL.framework */; };
+		737D12E80BCE69CA00099CB3 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 737D12E70BCE69CA00099CB3 /* SDL2.framework */; };
 		737D130C0BCE6AA400099CB3 /* Tiny2NosStub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737D13040BCE6AA400099CB3 /* Tiny2NosStub.cpp */; };
 		737D130D0BCE6AA400099CB3 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737D13060BCE6AA400099CB3 /* tinystr.cpp */; };
 		737D130E0BCE6AA400099CB3 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 737D13080BCE6AA400099CB3 /* tinyxml.cpp */; };
@@ -147,7 +141,7 @@
 		73A88FB910E8929D006BF857 /* SoundSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73A88FB410E8929D006BF857 /* SoundSource.cpp */; };
 		73A9D0A9145314D100338D0D /* HatControllerSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73A9D0A7145314D100338D0D /* HatControllerSource.cpp */; };
 		73DB397B0DEAE21500066A89 /* piggy.icns in Resources */ = {isa = PBXBuildFile; fileRef = 73DB397A0DEAE21500066A89 /* piggy.icns */; };
-		73F02D410C7B080B00768042 /* SDL.framework in Resources */ = {isa = PBXBuildFile; fileRef = 737D12E70BCE69CA00099CB3 /* SDL.framework */; };
+		73F02D410C7B080B00768042 /* SDL2.framework in Resources */ = {isa = PBXBuildFile; fileRef = 737D12E70BCE69CA00099CB3 /* SDL2.framework */; };
 		73F8437816FF66480061161B /* MidiChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437116FF66480061161B /* MidiChannel.cpp */; };
 		73F8437916FF66480061161B /* MidiEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437316FF66480061161B /* MidiEvent.cpp */; };
 		73F8437A16FF66480061161B /* MidiInMerger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437516FF66480061161B /* MidiInMerger.cpp */; };
@@ -159,7 +153,6 @@
 		87CA0E8F0F7E1052001D6BD0 /* MixerService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E8C0F7E1052001D6BD0 /* MixerService.cpp */; };
 		87CA0E930F7E1085001D6BD0 /* UITempoField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E910F7E1085001D6BD0 /* UITempoField.cpp */; };
 		87CA0E970F7E10C8001D6BD0 /* ApplicationCommandDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E950F7E10C8001D6BD0 /* ApplicationCommandDispatcher.cpp */; };
-		87CA0E9C0F7E10F3001D6BD0 /* SDLTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E9A0F7E10F3001D6BD0 /* SDLTimer.cpp */; };
 		87CA0E9F0F7E110D001D6BD0 /* MixerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E9D0F7E110D001D6BD0 /* MixerView.cpp */; };
 		87CA0EA40F7E1122001D6BD0 /* MidiInDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0EA00F7E1122001D6BD0 /* MidiInDevice.cpp */; };
 		87CA0EA50F7E1122001D6BD0 /* MidiOutDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0EA20F7E1122001D6BD0 /* MidiOutDevice.cpp */; };
@@ -167,6 +160,12 @@
 		8D0C4E8D0486CD37000505A6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */; };
 		8D0C4E8E0486CD37000505A6 /* main.nib in Resources */ = {isa = PBXBuildFile; fileRef = 02345980000FD03B11CA0E72 /* main.nib */; };
 		8D0C4E920486CD37000505A6 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20286C33FDCF999611CA2CEA /* Carbon.framework */; };
+		A95153F82C88A4D40060FA44 /* SDLEventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95153F22C88A4D30060FA44 /* SDLEventManager.cpp */; };
+		A95153F92C88A4D40060FA44 /* SDLGUIWindowImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95153F32C88A4D30060FA44 /* SDLGUIWindowImp.cpp */; };
+		A95153FA2C88A4D40060FA44 /* GUIFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95153F62C88A4D40060FA44 /* GUIFactory.cpp */; };
+		A95153FD2C88A4E70060FA44 /* SDLTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95153FB2C88A4E60060FA44 /* SDLTimer.cpp */; };
+		A95154012C88A6670060FA44 /* MacOSmain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95153FE2C88A6670060FA44 /* MacOSmain.cpp */; };
+		A95154052C88A6720060FA44 /* MacOSSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95154042C88A6720060FA44 /* MacOSSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -187,9 +186,6 @@
 		73292F980DBE79FB007363BD /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		73292F990DBE79FB007363BD /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		73292F9A0DBE79FB007363BD /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = /System/Library/Frameworks/CoreMIDI.framework; sourceTree = "<absolute>"; };
-		7329F0D20BF46109009A5BD5 /* OSXmain.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = OSXmain.cpp; path = OSXMain/OSXmain.cpp; sourceTree = "<group>"; };
-		7329F0D30BF46109009A5BD5 /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SDLMain.h; path = OSXMain/SDLMain.h; sourceTree = "<group>"; };
-		7329F0D40BF46109009A5BD5 /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SDLMain.m; path = OSXMain/SDLMain.m; sourceTree = "<group>"; };
 		734B75CA151D2F9900CC5A14 /* revision.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = revision.txt; path = ../../LittleGPTracker/docs/revision.txt; sourceTree = SOURCE_ROOT; };
 		734C2827151E1E190072494B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		734FFEF5166DF384003FD4C3 /* Result.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Result.cpp; sourceTree = "<group>"; };
@@ -202,12 +198,6 @@
 		7351008A150BCB030078BAFC /* SysMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SysMutex.cpp; sourceTree = "<group>"; };
 		735DFE4D1670907100BD5F4D /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
 		735DFE4E1670907100BD5F4D /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
-		737CD6ED0D619F72007CF7F0 /* GUIFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = GUIFactory.cpp; sourceTree = "<group>"; };
-		737CD6EE0D619F72007CF7F0 /* GUIFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GUIFactory.h; sourceTree = "<group>"; };
-		737CD6EF0D619F72007CF7F0 /* SDLEventManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = SDLEventManager.cpp; sourceTree = "<group>"; };
-		737CD6F00D619F72007CF7F0 /* SDLEventManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SDLEventManager.h; sourceTree = "<group>"; };
-		737CD6F10D619F72007CF7F0 /* SDLGUIWindowImp.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = SDLGUIWindowImp.cpp; sourceTree = "<group>"; };
-		737CD6F20D619F72007CF7F0 /* SDLGUIWindowImp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SDLGUIWindowImp.h; sourceTree = "<group>"; };
 		737CD7060D619FB8007CF7F0 /* DummyAudioOut.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = DummyAudioOut.cpp; path = ../../../Application/Audio/DummyAudioOut.cpp; sourceTree = "<group>"; };
 		737CD7070D619FB8007CF7F0 /* DummyAudioOut.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DummyAudioOut.h; path = ../../../Application/Audio/DummyAudioOut.h; sourceTree = "<group>"; };
 		737CD7160D61A095007CF7F0 /* MidiService.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = MidiService.cpp; sourceTree = "<group>"; };
@@ -364,9 +354,7 @@
 		737D12570BCE66F000099CB3 /* I_GUIWindowImp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = I_GUIWindowImp.h; sourceTree = "<group>"; };
 		737D12590BCE66F000099CB3 /* GUIWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = GUIWindow.cpp; sourceTree = "<group>"; };
 		737D125A0BCE66F000099CB3 /* GUIWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GUIWindow.h; sourceTree = "<group>"; };
-		737D12D50BCE695D00099CB3 /* OSXSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSXSystem.cpp; sourceTree = "<group>"; };
-		737D12D60BCE695D00099CB3 /* OSXSystem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSXSystem.h; sourceTree = "<group>"; };
-		737D12E70BCE69CA00099CB3 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = /Library/Frameworks/SDL.framework; sourceTree = "<absolute>"; };
+		737D12E70BCE69CA00099CB3 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = /Library/Frameworks/SDL2.framework; sourceTree = "<absolute>"; };
 		737D13040BCE6AA400099CB3 /* Tiny2NosStub.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Tiny2NosStub.cpp; sourceTree = "<group>"; };
 		737D13050BCE6AA400099CB3 /* Tiny2NosStub.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Tiny2NosStub.h; sourceTree = "<group>"; };
 		737D13060BCE6AA400099CB3 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
@@ -381,7 +369,7 @@
 		737D13200BCE6B1C00099CB3 /* UnixFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UnixFileSystem.h; sourceTree = "<group>"; };
 		737D13220BCE6B1C00099CB3 /* UnixProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = UnixProcess.cpp; sourceTree = "<group>"; };
 		737D13230BCE6B1C00099CB3 /* UnixProcess.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UnixProcess.h; sourceTree = "<group>"; };
-		737D14DB0BCE713200099CB3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		737D14DB0BCE713200099CB3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		73929F57150D0C36004BA2BA /* RtAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RtAudio.cpp; path = ../../LittleGPTracker/sources/Externals/RTAudio/RtAudio.cpp; sourceTree = SOURCE_ROOT; };
 		73929F58150D0C36004BA2BA /* RtAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RtAudio.h; path = ../../LittleGPTracker/sources/Externals/RTAudio/RtAudio.h; sourceTree = SOURCE_ROOT; };
 		73929F59150D0C36004BA2BA /* RtError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RtError.h; path = ../../LittleGPTracker/sources/Externals/RTAudio/RtError.h; sourceTree = SOURCE_ROOT; };
@@ -501,8 +489,6 @@
 		87CA0E920F7E1085001D6BD0 /* UITempoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITempoField.h; path = ../sources/Application/Views/BaseClasses/UITempoField.h; sourceTree = SOURCE_ROOT; };
 		87CA0E950F7E10C8001D6BD0 /* ApplicationCommandDispatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApplicationCommandDispatcher.cpp; sourceTree = "<group>"; };
 		87CA0E960F7E10C8001D6BD0 /* ApplicationCommandDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationCommandDispatcher.h; sourceTree = "<group>"; };
-		87CA0E9A0F7E10F3001D6BD0 /* SDLTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLTimer.cpp; path = ../sources/Adapters/SDL/Timer/SDLTimer.cpp; sourceTree = SOURCE_ROOT; };
-		87CA0E9B0F7E10F3001D6BD0 /* SDLTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLTimer.h; path = ../sources/Adapters/SDL/Timer/SDLTimer.h; sourceTree = SOURCE_ROOT; };
 		87CA0E9D0F7E110D001D6BD0 /* MixerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MixerView.cpp; path = ../sources/Application/Views/MixerView.cpp; sourceTree = SOURCE_ROOT; };
 		87CA0E9E0F7E110D001D6BD0 /* MixerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MixerView.h; path = ../sources/Application/Views/MixerView.h; sourceTree = SOURCE_ROOT; };
 		87CA0EA00F7E1122001D6BD0 /* MidiInDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MidiInDevice.cpp; sourceTree = "<group>"; };
@@ -512,6 +498,17 @@
 		87CA0EA80F7E1160001D6BD0 /* Mixer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mixer.cpp; sourceTree = "<group>"; };
 		87CA0EA90F7E1160001D6BD0 /* Mixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer.h; sourceTree = "<group>"; };
 		8D0C4E960486CD37000505A6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A95153F22C88A4D30060FA44 /* SDLEventManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLEventManager.cpp; path = ../../SDL2/GUI/SDLEventManager.cpp; sourceTree = "<group>"; };
+		A95153F32C88A4D30060FA44 /* SDLGUIWindowImp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLGUIWindowImp.cpp; path = ../../SDL2/GUI/SDLGUIWindowImp.cpp; sourceTree = "<group>"; };
+		A95153F42C88A4D40060FA44 /* SDLGUIWindowImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLGUIWindowImp.h; path = ../../SDL2/GUI/SDLGUIWindowImp.h; sourceTree = "<group>"; };
+		A95153F52C88A4D40060FA44 /* SDLEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLEventManager.h; path = ../../SDL2/GUI/SDLEventManager.h; sourceTree = "<group>"; };
+		A95153F62C88A4D40060FA44 /* GUIFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIFactory.cpp; path = ../../SDL2/GUI/GUIFactory.cpp; sourceTree = "<group>"; };
+		A95153F72C88A4D40060FA44 /* GUIFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIFactory.h; path = ../../SDL2/GUI/GUIFactory.h; sourceTree = "<group>"; };
+		A95153FB2C88A4E60060FA44 /* SDLTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLTimer.cpp; path = ../sources/Adapters/SDL2/Timer/SDLTimer.cpp; sourceTree = "<group>"; };
+		A95153FC2C88A4E60060FA44 /* SDLTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLTimer.h; path = ../sources/Adapters/SDL2/Timer/SDLTimer.h; sourceTree = "<group>"; };
+		A95153FE2C88A6670060FA44 /* MacOSmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MacOSmain.cpp; path = ../MacOS/MacOSMain/MacOSmain.cpp; sourceTree = "<group>"; };
+		A95154032C88A6720060FA44 /* MacOSSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MacOSSystem.h; path = ../../MacOS/MacOSSystem/MacOSSystem.h; sourceTree = "<group>"; };
+		A95154042C88A6720060FA44 /* MacOSSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MacOSSystem.cpp; path = ../../MacOS/MacOSSystem/MacOSSystem.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -521,7 +518,7 @@
 			files = (
 				737D14DC0BCE713200099CB3 /* Cocoa.framework in Frameworks */,
 				8D0C4E920486CD37000505A6 /* Carbon.framework in Frameworks */,
-				737D12E80BCE69CA00099CB3 /* SDL.framework in Frameworks */,
+				737D12E80BCE69CA00099CB3 /* SDL2.framework in Frameworks */,
 				73292F9B0DBE79FB007363BD /* CoreAudio.framework in Frameworks */,
 				73292F9C0DBE79FB007363BD /* CoreFoundation.framework in Frameworks */,
 				73292F9D0DBE79FB007363BD /* CoreMIDI.framework in Frameworks */,
@@ -580,7 +577,7 @@
 		20286C32FDCF999611CA2CEA /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				737D12E70BCE69CA00099CB3 /* SDL.framework */,
+				737D12E70BCE69CA00099CB3 /* SDL2.framework */,
 				734C2827151E1E190072494B /* AppKit.framework */,
 				4A9504C8FFE6A3BC11CA0CBA /* ApplicationServices.framework */,
 				73292F980DBE79FB007363BD /* CoreAudio.framework */,
@@ -647,7 +644,12 @@
 		737CD6EC0D619F72007CF7F0 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
-				739BFB85151D12AE0065D2D5 /* SDL */,
+				A95153F62C88A4D40060FA44 /* GUIFactory.cpp */,
+				A95153F72C88A4D40060FA44 /* GUIFactory.h */,
+				A95153F22C88A4D30060FA44 /* SDLEventManager.cpp */,
+				A95153F52C88A4D40060FA44 /* SDLEventManager.h */,
+				A95153F32C88A4D30060FA44 /* SDLGUIWindowImp.cpp */,
+				A95153F42C88A4D40060FA44 /* SDLGUIWindowImp.h */,
 			);
 			name = GUI;
 			path = ../sources/Adapters/SDL/GUI;
@@ -1088,9 +1090,7 @@
 		737D12D30BCE695D00099CB3 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				7329F0D20BF46109009A5BD5 /* OSXmain.cpp */,
-				7329F0D30BF46109009A5BD5 /* SDLMain.h */,
-				7329F0D40BF46109009A5BD5 /* SDLMain.m */,
+				A95153FE2C88A6670060FA44 /* MacOSmain.cpp */,
 			);
 			name = Main;
 			path = ../sources/Adapters/OSX;
@@ -1099,8 +1099,8 @@
 		737D12D40BCE695D00099CB3 /* System */ = {
 			isa = PBXGroup;
 			children = (
-				737D12D50BCE695D00099CB3 /* OSXSystem.cpp */,
-				737D12D60BCE695D00099CB3 /* OSXSystem.h */,
+				A95154042C88A6720060FA44 /* MacOSSystem.cpp */,
+				A95154032C88A6720060FA44 /* MacOSSystem.h */,
 			);
 			name = System;
 			path = ../sources/Adapters/OSX/OSXSystem;
@@ -1193,19 +1193,6 @@
 				73084563150CE70D004E451D /* RTMidiService.h */,
 			);
 			name = Midi;
-			sourceTree = "<group>";
-		};
-		739BFB85151D12AE0065D2D5 /* SDL */ = {
-			isa = PBXGroup;
-			children = (
-				737CD6ED0D619F72007CF7F0 /* GUIFactory.cpp */,
-				737CD6EE0D619F72007CF7F0 /* GUIFactory.h */,
-				737CD6EF0D619F72007CF7F0 /* SDLEventManager.cpp */,
-				737CD6F00D619F72007CF7F0 /* SDLEventManager.h */,
-				737CD6F10D619F72007CF7F0 /* SDLGUIWindowImp.cpp */,
-				737CD6F20D619F72007CF7F0 /* SDLGUIWindowImp.h */,
-			);
-			name = SDL;
 			sourceTree = "<group>";
 		};
 		73A4F11B0DAB7511006B1114 /* Commands */ = {
@@ -1365,8 +1352,8 @@
 		87CA0E990F7E10DD001D6BD0 /* Timers */ = {
 			isa = PBXGroup;
 			children = (
-				87CA0E9A0F7E10F3001D6BD0 /* SDLTimer.cpp */,
-				87CA0E9B0F7E10F3001D6BD0 /* SDLTimer.h */,
+				A95153FB2C88A4E60060FA44 /* SDLTimer.cpp */,
+				A95153FC2C88A4E60060FA44 /* SDLTimer.h */,
 			);
 			name = Timers;
 			sourceTree = "<group>";
@@ -1398,7 +1385,9 @@
 /* Begin PBXProject section */
 		20286C28FDCF999611CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = C0E91AC908A95435008D54AB /* Build configuration list for PBXProject "lgpt" */;
+			attributes = {
+			};
+			buildConfigurationList = C0E91AC908A95435008D54AB /* Build configuration list for PBXProject "lgpt64" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -1422,7 +1411,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73F02D410C7B080B00768042 /* SDL.framework in Resources */,
+				73F02D410C7B080B00768042 /* SDL2.framework in Resources */,
 				8D0C4E8D0486CD37000505A6 /* InfoPlist.strings in Resources */,
 				8D0C4E8E0486CD37000505A6 /* main.nib in Resources */,
 				73DB397B0DEAE21500066A89 /* piggy.icns in Resources */,
@@ -1435,6 +1424,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		73F02D440C7B085300768042 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1444,7 +1434,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "DEST_FILE=\"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\nCONTENT_DIR=\"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents\"\nrm -rf $CONTENT_DIR/Frameworks\nmkdir $CONTENT_DIR/Frameworks\nmv $CONTENT_DIR/Resources/SDL.framework $CONTENT_DIR/Frameworks\ninstall_name_tool -change /Library/Frameworks/SDL.framework/SDL @executable_path/../Frameworks/SDL.framework/SDL \"$DEST_FILE\"";
+			shellScript = "DEST_FILE=\"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\nCONTENT_DIR=\"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents\"\nrm -rf $CONTENT_DIR/Frameworks\nmkdir $CONTENT_DIR/Frameworks\nmv $CONTENT_DIR/Resources/SDL2.framework $CONTENT_DIR/Frameworks\ninstall_name_tool -change /Library/Frameworks/SDL2.framework/SDL2 @executable_path/../Frameworks/SDL2.framework/SDL2 \"$DEST_FILE\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1457,6 +1447,7 @@
 				737D125C0BCE66F000099CB3 /* AppWindow.cpp in Sources */,
 				737D125E0BCE66F000099CB3 /* CommandList.cpp in Sources */,
 				737D125F0BCE66F000099CB3 /* Filters.cpp in Sources */,
+				A95154052C88A6720060FA44 /* MacOSSystem.cpp in Sources */,
 				737D12600BCE66F000099CB3 /* InstrumentBank.cpp in Sources */,
 				737D12610BCE66F000099CB3 /* MidiInstrument.cpp in Sources */,
 				737D12620BCE66F000099CB3 /* SampleInstrument.cpp in Sources */,
@@ -1514,29 +1505,25 @@
 				737D12AB0BCE66F000099CB3 /* GUIRect.cpp in Sources */,
 				737D12AD0BCE66F000099CB3 /* I_GUIWindowImp.cpp in Sources */,
 				737D12AE0BCE66F000099CB3 /* GUIWindow.cpp in Sources */,
-				737D12DC0BCE695D00099CB3 /* OSXSystem.cpp in Sources */,
 				737D130C0BCE6AA400099CB3 /* Tiny2NosStub.cpp in Sources */,
 				737D130D0BCE6AA400099CB3 /* tinystr.cpp in Sources */,
 				737D130E0BCE6AA400099CB3 /* tinyxml.cpp in Sources */,
 				737D130F0BCE6AA400099CB3 /* tinyxmlerror.cpp in Sources */,
+				A95154012C88A6670060FA44 /* MacOSmain.cpp in Sources */,
 				737D13100BCE6AA400099CB3 /* tinyxmlparser.cpp in Sources */,
 				737D131B0BCE6AEC00099CB3 /* lz.c in Sources */,
 				737D13240BCE6B1C00099CB3 /* UnixFileSystem.cpp in Sources */,
 				737D13250BCE6B1C00099CB3 /* UnixProcess.cpp in Sources */,
-				7329F0D50BF46109009A5BD5 /* OSXmain.cpp in Sources */,
-				7329F0D60BF46109009A5BD5 /* SDLMain.m in Sources */,
 				73A6400D0D3CF8D300F43955 /* Audio.cpp in Sources */,
 				73A6400F0D3CF8D300F43955 /* AudioDriver.cpp in Sources */,
 				73A640110D3CF8D300F43955 /* AudioMixer.cpp in Sources */,
 				73A6401B0D3CF90A00F43955 /* Groove.cpp in Sources */,
+				A95153FD2C88A4E70060FA44 /* SDLTimer.cpp in Sources */,
 				73A640250D3CF91D00F43955 /* AudioFileStreamer.cpp in Sources */,
 				73A640290D3CF94000F43955 /* FileSystem.cpp in Sources */,
 				73A6402F0D3CF95F00F43955 /* GrooveView.cpp in Sources */,
 				73A640360D3CF9CB00F43955 /* SampleVariable.cpp in Sources */,
 				73A6403B0D3CF9E100F43955 /* UIStaticField.cpp in Sources */,
-				737CD6F30D619F72007CF7F0 /* GUIFactory.cpp in Sources */,
-				737CD6F50D619F72007CF7F0 /* SDLEventManager.cpp in Sources */,
-				737CD6F70D619F72007CF7F0 /* SDLGUIWindowImp.cpp in Sources */,
 				737CD7080D619FB8007CF7F0 /* DummyAudioOut.cpp in Sources */,
 				737CD71A0D61A095007CF7F0 /* MidiService.cpp in Sources */,
 				737CD71E0D61A0A4007CF7F0 /* AudioOutDriver.cpp in Sources */,
@@ -1558,9 +1545,11 @@
 				73A4F1550DAB7591006B1114 /* ControlNode.cpp in Sources */,
 				73A4F1570DAB7591006B1114 /* JoystickControllerSource.cpp in Sources */,
 				73A4F1590DAB7591006B1114 /* KeyboardControllerSource.cpp in Sources */,
+				A95153F92C88A4D40060FA44 /* SDLGUIWindowImp.cpp in Sources */,
 				73A4F15B0DAB7591006B1114 /* MultiChannelAdapter.cpp in Sources */,
 				73A4F1780DAB75BA006B1114 /* TimeService.cpp in Sources */,
 				73292F2D0DBE77C9007363BD /* RtMidi.cpp in Sources */,
+				A95153FA2C88A4D40060FA44 /* GUIFactory.cpp in Sources */,
 				87CA0E830F7E0FC4001D6BD0 /* PlayerChannel.cpp in Sources */,
 				87CA0E840F7E0FC4001D6BD0 /* PlayerMixer.cpp in Sources */,
 				87CA0E880F7E102B001D6BD0 /* AudioOut.cpp in Sources */,
@@ -1568,11 +1557,11 @@
 				87CA0E8F0F7E1052001D6BD0 /* MixerService.cpp in Sources */,
 				87CA0E930F7E1085001D6BD0 /* UITempoField.cpp in Sources */,
 				87CA0E970F7E10C8001D6BD0 /* ApplicationCommandDispatcher.cpp in Sources */,
-				87CA0E9C0F7E10F3001D6BD0 /* SDLTimer.cpp in Sources */,
 				87CA0E9F0F7E110D001D6BD0 /* MixerView.cpp in Sources */,
 				87CA0EA40F7E1122001D6BD0 /* MidiInDevice.cpp in Sources */,
 				87CA0EA50F7E1122001D6BD0 /* MidiOutDevice.cpp in Sources */,
 				87CA0EAA0F7E1160001D6BD0 /* Mixer.cpp in Sources */,
+				A95153F82C88A4D40060FA44 /* SDLEventManager.cpp in Sources */,
 				73A88F9C10E89070006BF857 /* ENAB.CPP in Sources */,
 				73A88F9E10E89070006BF857 /* HYDRA.CPP in Sources */,
 				73A88F9F10E89070006BF857 /* OMEGA.CPP in Sources */,
@@ -1631,6 +1620,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5048396D09E3307300765E4B /* lgptProj.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
 				CONFIGURATION_TEMP_DIR = "";
 				COPY_PHASE_STRIP = NO;
@@ -1640,14 +1631,19 @@
 					CPP_MEMORY,
 					__MACOSX_CORE__,
 					_DEBUG,
+					SDL2,
+					_64BIT,
 				);
-				HEADER_SEARCH_PATHS = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "../libs/SDL-1.2-main/include";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				OBJROOT = ../build;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = LittleGPTracker_d;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				SYMROOT = ../bin;
+				USER_HEADER_SEARCH_PATHS = ../sources;
 			};
 			name = Debug;
 		};
@@ -1655,6 +1651,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5048396E09E3307300765E4B /* lgptTarget.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = ../bin;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
@@ -1664,18 +1662,24 @@
 					CPP_MEMORY,
 					__MACOSX_CORE__,
 					NDEBUG,
+					SDL2,
+					_64BIT,
 				);
+				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/SDL.framework/Headers,
 					../sources/,
+					"../libs/SDL-1.2-main/include/**",
+					/Library/Frameworks/SDL2.framework/Headers,
 				);
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				OBJROOT = ../build;
 				OTHER_LDFLAGS = "";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = LittleGPTracker;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				SYMROOT = ../bin;
 			};
 			name = Release;
@@ -1684,7 +1688,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5048396D09E3307300765E4B /* lgptProj.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1693,9 +1697,12 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				OBJROOT = ../build;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 				SYMROOT = ../bin;
-				USER_HEADER_SEARCH_PATHS = "/Library/Frameworks/SDL.framework/Headers ../sources/";
+				USER_HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/SDL.framework/Headers,
+					../sources/,
+				);
 				ZERO_LINK = NO;
 			};
 			name = Debug;
@@ -1704,7 +1711,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5048396D09E3307300765E4B /* lgptProj.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = ../bin;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = "";
@@ -1713,7 +1720,7 @@
 				GCC_VERSION = "";
 				OBJROOT = ../build;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 				SEPARATE_STRIP = YES;
 				SYMROOT = ../bin;
 				VALID_ARCHS = i386;
@@ -1732,7 +1739,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C0E91AC908A95435008D54AB /* Build configuration list for PBXProject "lgpt" */ = {
+		C0E91AC908A95435008D54AB /* Build configuration list for PBXProject "lgpt64" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0E91ACA08A95435008D54AB /* Debug */,
