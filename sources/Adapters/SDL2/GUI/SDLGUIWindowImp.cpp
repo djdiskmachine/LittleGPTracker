@@ -30,8 +30,14 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   SDL_DisplayMode displayMode;
 
   // SDL Prioritises screens so just take the first for now.
+  
   int displayModeRet = SDL_GetDisplayMode(0, 0, &displayMode);
-  NAssert(displayModeRet != 0);
+    
+  if (displayModeRet < 0) {
+    Trace::Error("DISPLAY","No display mode found.  Error Code: %d.", displayModeRet);
+  }
+    
+  NAssert(displayModeRet >= 0);
  
  #if defined(PLATFORM_PSP)
   int screenWidth = 480; 
