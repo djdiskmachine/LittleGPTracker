@@ -23,7 +23,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
     zip -9 $PACKAGE bin/* && rm -r bin/
   fi
   cd ./resources/packaging 
-  CONTENTS="README.txt samplelib/ lgpt_BETA/"
+  CONTENTS="../../../README.md ../../../CHANGELOG ../../../LICENSE samplelib/ lgpt_BETA/"
   zip -9 -r ../../$PACKAGE $CONTENTS
   CONTENTS="../../../docs/wiki/What-is-LittleGPTracker.md"
   CONTENTS+=" ../../../docs/wiki/config_xml.md"
