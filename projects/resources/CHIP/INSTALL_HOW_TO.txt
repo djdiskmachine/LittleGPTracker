@@ -1,0 +1,25 @@
+Prerequisites:
+sudo apt install pulseaudio -y
+
+Recommended:
+A lighter pocketchip battery monitor and ubihealthd service (prevents audio stutters):
+    https://github.com/aleh/pocketchip-batt
+
+Use external storage for projects due to risk of NAND rot:
+    https://byteporter.com/mmc-overlay-for-ntc-kernel/
+    https://byteporter.com/ntc-chip-micro-sd-slot/
+
+Install under:
+    /home/chip/Documents/
+    echo "/home/chip/Documents/LGPT/bin/lgpt.rpi-exe" > ~/lgpt.sh
+
+pocket-home icon:
+add lgpt-pockethip.png to /usr/share/pocket-home/appIcons/
+    Replace one of "items" under /usr/share/pocket-home/config.json
+        {
+          "name": "Little Piggy Tracker",
+          "icon": "/home/chip/Documents/LGPT/lgpt-pocketchip.png",
+          "shell": "/home/chip/lgpt.sh"
+         },
+
+Reboot & enjoy!
