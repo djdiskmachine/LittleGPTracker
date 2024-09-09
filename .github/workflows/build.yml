@@ -434,7 +434,7 @@ jobs:
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
-  build-macos:
+  macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -442,7 +442,7 @@ jobs:
 
       - name: Install required libraries
         run: |
-          brew install sdl sdl_image sdl_mixer sdl_ttf pkg-config pillow
+          brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf pkg-config pillow
 
       - name: Build Xcode project
         run: |
