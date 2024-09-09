@@ -1712,6 +1712,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5048396D09E3307300765E4B /* lgptProj.xcconfig */;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = ../bin;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1720,7 +1721,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_VERSION = "";
 				OBJROOT = ../build;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				SEPARATE_STRIP = YES;
 				SYMROOT = ../bin;
