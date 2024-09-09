@@ -77,3 +77,19 @@ jobs:
         working-directory: projects
         run: |
           make PLATFORM=X64
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install required libraries
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install Pillow
+          brew install sdl sdl_image sdl_mixer sdl_ttf pkg-config
+
+      - name: Build Xcode project
+        run: |
+          xcodebuild -project projects/lgpt64.xcodeproj -scheme lgpt64 -configuration Release build
