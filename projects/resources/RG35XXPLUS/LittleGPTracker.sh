@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 progdir=$(dirname "$0")/lgpt
 cd $progdir
 HOME=$progdir
