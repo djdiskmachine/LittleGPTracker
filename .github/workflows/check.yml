@@ -90,4 +90,4 @@ jobs:
 
       - name: Build Xcode project
         run: |
-          xcodebuild -project projects/lgpt64.xcodeproj -scheme lgpt64 -configuration Release build
+          xcodebuild -project projects/lgpt64.xcodeproj -configuration Release build
