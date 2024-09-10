@@ -12,7 +12,7 @@ fi
 VERSION="${PROJECT_NUMBER}.${PROJECT_RELEASE}.${BUILD_COUNT}"
 
 collect_resources() { #1PLATFORM #2lgpt.*-exe
-  if [[ -n $(find -name "$2") ]]; then
+  if [[ -n $(find . -name "$2") ]]; then
     echo "Build for $2!" # Found it
   else
     echo "-->file $2 not found<---"
