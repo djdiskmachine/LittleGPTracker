@@ -435,7 +435,7 @@ jobs:
           files: ./projects/*.zip
 
   macos:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -451,10 +451,10 @@ jobs:
         run: |
           python3 sources/Resources/mkfont.py sources/Resources/original.bmp sources/Resources/font.h
           xcodebuild -project projects/lgpt64.xcodeproj -scheme LittleGPTracker -configuration Release build
-          mkdir -p ./resources/packaging/MacOS
-          cp -R bin/LittleGPTracker.app ./resources/packaging/MacOS/
+          cp -R bin/LittleGPTracker.app ./resources/packaging/MACOS/
 
       - name: Package build
+        shell: bash
         working-directory: projects
         run: |
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
