@@ -449,7 +449,7 @@ jobs:
       - name: Build Xcode project
         run: |
           xcodebuild -project projects/lgpt64.xcodeproj -scheme LittleGPTracker -configuration Release build
-          cp -R bin/LittleGPTracker.app ./resources/packaging/MACOS/
+          cp -R projects/bin/LittleGPTracker.app projects/resources/packaging/MACOS/
 
       - name: Package build
         working-directory: projects
