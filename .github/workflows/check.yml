@@ -92,7 +92,7 @@ jobs:
 
       - name: Build Xcode project
         run: |
-          xcodebuild -project projects/lgpt64.xcodeproj -scheme LittleGPTracker -configuration Release build
+          xcodebuild ONLY_ACTIVE_ARCH=NO -project projects/lgpt64.xcodeproj -scheme LittleGPTracker -configuration Release build
           cp -R bin/LittleGPTracker.app projects/
 
       - name: Package build
