@@ -96,7 +96,6 @@ jobs:
           cp -R bin/LittleGPTracker.app ./resources/packaging/MACOS/
 
       - name: Package build
-        shell: bash
         working-directory: projects
         run: |
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip

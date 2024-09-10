@@ -1,8 +1,14 @@
 #!/bin/bash
 cd "$(git rev-parse --show-toplevel)/projects/"
-PROJECT_NUMBER=$(grep -oP 'PROJECT_NUMBER "\K[^"]*' ../sources/Application/Model/Project.h)
-PROJECT_RELEASE=$(grep -oP 'PROJECT_RELEASE "\K[^"]*' ../sources/Application/Model/Project.h)
-BUILD_COUNT=$(grep -oP 'BUILD_COUNT "\K[^"]*' ../sources/Application/Model/Project.h)
+if [[ "$(uname)" == "Darwin" ]]; then #MacOS
+  PROJECT_NUMBER=$(perl -nle 'print $1 if /PROJECT_NUMBER "([^"]*)"/' ../sources/Application/Model/Project.h)
+  PROJECT_RELEASE=$(perl -nle 'print $1 if /PROJECT_RELEASE "([^"]*)"/' ../sources/Application/Model/Project.h)
+  BUILD_COUNT=$(perl -nle 'print $1 if /BUILD_COUNT "([^"]*)"/' ../sources/Application/Model/Project.h)
+else
+  PROJECT_NUMBER=$(grep -oP 'PROJECT_NUMBER "\K[^"]*' ../sources/Application/Model/Project.h)
+  PROJECT_RELEASE=$(grep -oP 'PROJECT_RELEASE "\K[^"]*' ../sources/Application/Model/Project.h)
+  BUILD_COUNT=$(grep -oP 'BUILD_COUNT "\K[^"]*' ../sources/Application/Model/Project.h)
+fi
 VERSION="${PROJECT_NUMBER}.${PROJECT_RELEASE}.${BUILD_COUNT}"
 
 collect_resources() { #1PLATFORM #2lgpt.*-exe
@@ -15,7 +21,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   PACKAGE=LGPT-$1-$VERSION.zip
   echo "-=-=Packaging $PACKAGE=-=-"
   CONTENTS="./resources/$1/*"
-  CONTENTS+=" $(find -iname $2)"
+  CONTENTS+=" $(find . -iname $2)"
   if [ "$1" == "PSP" ] ||
   [ "$1" == "GARLIC" ] ||
   [ "$1" == "RG35XXPLUS" ] ||
