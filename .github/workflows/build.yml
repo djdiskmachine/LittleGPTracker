@@ -433,3 +433,42 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
+
+  macos:
+    runs-on: macos-13
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install required libraries
+        run: |
+          wget https://www.libsdl.org/release/SDL2-2.0.14.dmg
+          hdiutil attach SDL2-2.0.14.dmg
+          sudo cp -R /Volumes/SDL2/SDL2.framework /Library/Frameworks/
+
+      - name: Build Xcode project
+        run: |
+          xcodebuild ONLY_ACTIVE_ARCH=NO -project projects/lgpt64.xcodeproj -scheme LittleGPTracker -configuration Release build
+          cp -R bin/LittleGPTracker.app projects/
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+      - name: Extract Git tag name
+        id: extract_tag
+        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Upload build release
+        uses: softprops/action-gh-release@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          files: projects/*.zip
