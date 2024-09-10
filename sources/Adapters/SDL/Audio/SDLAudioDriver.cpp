@@ -77,7 +77,11 @@ bool SDLAudioDriver::InitDriver() {
   // Allocates a rotating sound buffer
   unalignedMain_=(char *)SYS_MALLOC(fragSize_+SOUND_BUFFER_MAX) ;
   // Make sure the buffer is aligned
+#ifdef _64BIT
+  mainBuffer_=(char *)unalignedMain_;
+#else
   mainBuffer_=(char *)((((int)unalignedMain_)+1)&(0xFFFFFFFC)) ;
+#endif
 
   Trace::Log("AUDIO","%s successfully opened with %d samples",bufferName,fragSize_/4 ) ;
 
@@ -115,6 +119,7 @@ bool SDLAudioDriver::StartDriver() {
 
 	for (int i=0;i<settings_.preBufferCount_;i++) {
 		AddBuffer((short *)miniBlank_,fragSize_/4) ;
+		MidiService::GetInstance()->AdvancePlayQueue();
 	}
 	if (settings_.preBufferCount_==0) {
 		thread_->Notify() ;
@@ -160,6 +165,7 @@ void SDLAudioDriver::OnChunkDone(Uint8 *stream,int len) {
 
 			memcpy(mainBuffer_+bufferSize_-bufferPos_, pool_[poolPlayPosition_].buffer_,pool_[poolPlayPosition_].size_);
     
+            MidiService::GetInstance()->Flush() ;
              // Adapt buffer variables
     
     	     bufferSize_=bufferSize_-bufferPos_+pool_[poolPlayPosition_].size_ ;

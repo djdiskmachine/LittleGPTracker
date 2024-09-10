@@ -1,21 +1,22 @@
 -include $(PWD)/rules_base
 
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DCPP_MEMORY \
+	-DNDEBUG \
+	-D__LINUX_OSS__
+
+DEVKITARM=/home/nostromo/caanoodev/gcc-4.2.4-glibc-2.7-eabi/
+PREFIX		:=	arm-gph-linux-gnueabi-
 STRIP = arm-gph-linux-gnueabi-strip
+
+CFLAGS	:= -O3  -Wall $(DEFINES) -I$(PWD)/../sources  
+CXXFLAGS:=	$(CFLAGS)
+LIBS	:=  -L/c/GPH_SDK/tools/cross-eabi/arm-gph-linux-gnueabi/sys-root/ -L/c/GPH_SDK/tools/cross-eabi/arm-gph-linux-gnueabi/sys-root/lib -L/c/GPH_SDK/tools/cross-eabi/arm-gph-linux-gnueabi/sys-root/usr/lib -lSDL 
+LIBDIRS	:=	$(DEKVITARM)/lib
+EXTENSION:= gpe
 
 %.gpe: $(OFILES)
 	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
 	@$(STRIP) $@
 
-DEVKITARM=/home/nostromo/caanoodev/gcc-4.2.4-glibc-2.7-eabi/
-
-PREFIX		:=	arm-gph-linux-gnueabi-
-
-CFLAGS	:= -O3 -DNDEBUG -Wall -DCPP_MEMORY -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources -D__LINUX_OSS__ 
-
-CXXFLAGS:=	$(CFLAGS)
-
-EXTENSION:= gpe
-
-LIBS	:=  -L/c/GPH_SDK/tools/cross-eabi/arm-gph-linux-gnueabi/sys-root/ -L/c/GPH_SDK/tools/cross-eabi/arm-gph-linux-gnueabi/sys-root/lib -L/c/GPH_SDK/tools/cross-eabi/arm-gph-linux-gnueabi/sys-root/usr/lib -lSDL 
-
-LIBDIRS	:=	$(DEKVITARM)/lib

@@ -368,6 +368,12 @@ void PhraseView::warpToNeighbour(int offset) {
 				updateCursor(0,0) ;
 				isDirty_=true ;
 				return;
+			} else {
+				viewData_->currentPhrase_ = 0xFE;
+				viewData_->currentChain_ = *c;
+				updateCursor(0,0);
+				isDirty_ = true;
+				return;
 			}
 		} else {
 			// no chain, to neighbour song channel

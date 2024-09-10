@@ -1,7 +1,11 @@
 -include $(PWD)/rules_base
 
-%.beagle-exe: $(OFILES)
-	$(CXX) $(LDFLAGS) $@ $(OFILES) $(LIBS)
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DCPP_MEMORY \
+	-DDEBUG \
+	-D__LINUX_ALSA__ \
+	-D_NO_JACK_  
 
 DEVKIT=/usr/local/angstrom/arm
 
@@ -9,11 +13,11 @@ TOOLPATH=$(DEVKIT)/bin
 PREFIX		:=	arm-angstrom-linux-gnueabi-
 
 SDLBASE:= /home/nostromo/devtree/syntharchitecture/Libs/Beagleboard/SDL/
-CFLAGS	:= -I$(SDLBASE)/include	 -DDEBUG -O3 -Wall -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources -D__LINUX_ALSA__  -DCPP_MEMORY -D_NO_JACK_
-
+CFLAGS	:= -I$(SDLBASE)/include	$(DEFINES) -O3 -Wall -I$(PWD)/../sources
 CXXFLAGS:=	$(CFLAGS)
-
-EXTENSION:= beagle-exe
-
 LIBS	:=  -L$(SDLBASE)/lib -L/opt/mipsel-linux-uclibc/usr/lib -lSDL -ldirectfb -lasound -lpthread -ldl -lts
 LIBDIRS	:=	$(DEKVIT)/usr/lib
+EXTENSION:= beagle-exe
+
+%.beagle-exe: $(OFILES)
+	$(CXX) $(LDFLAGS) $@ $(OFILES) $(LIBS)

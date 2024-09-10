@@ -809,7 +809,11 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
         {
 	        if (useDirtyDownsampling_)
 	        {
+#ifdef _64BIT
+	          i1 =(short *)(((long)input)&dsMask);
+#else
 	          i1 =(short *)(((unsigned int)input)&dsMask);
+#endif
 	        }
           else
 	        {

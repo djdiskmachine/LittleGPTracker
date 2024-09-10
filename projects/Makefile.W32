@@ -1,14 +1,15 @@
-
-WTOOLPATH=C:\MinGW\bin
-
-PREFIX := 
-
 include $(PWD)/rules_base
 
-CFLAGS	:= -mthreads -g -Wall $(INCLUDES) -D_DEBUG -DDEBUG -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-D_DEBUG \
+	-DDEBUG
 
+WTOOLPATH=C:\MinGW\bin
+PREFIX := 
+
+CFLAGS	:= -mthreads -g -Wall $(INCLUDES) $(DEFINES) -I$(PWD)/../sources
 CXXFLAGS:= $(CFLAGS)
 LDFLAGS := -L../libs/Wsdl-mingw
 LIBS     :=  -lmingw32 -lSDL -lSDLmain -mwindows -luser32 -lgdi32 -lwinmm -ldxguid
-
 EXTENSION:= exe

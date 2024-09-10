@@ -1,0 +1,12 @@
+<MAPPINGS>
+	<MAP src="hat:0:0:0" dst="/event/up" />
+	<MAP src="hat:0:0:2" dst="/event/down" />
+	<MAP src="hat:0:0:3" dst="/event/left" />
+	<MAP src="hat:0:0:1" dst="/event/right" />
+	<MAP src="but:0:3" dst="/event/a" />
+	<MAP src="but:0:4" dst="/event/b" />
+	<MAP src="but:0:8" dst="/event/rshoulder" />
+	<MAP src="but:0:7" dst="/event/lshoulder" />
+	<MAP src="but:0:10" dst="/event/start" />
+</MAPPINGS>
+

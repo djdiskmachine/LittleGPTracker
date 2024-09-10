@@ -39,6 +39,214 @@ jobs:
           & "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcpackages\vcbuild.exe" "lgpt.sln" "Release|Win32"
         shell: pwsh 
 
+      - name: Package build
+        shell: bash
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+  deb:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install required libraries
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+
+      - name: Build DEB
+        working-directory: projects
+        run: make PLATFORM=DEB
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+  x86:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install required libraries
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+
+      - name: Build X86
+        working-directory: projects
+        run: make PLATFORM=X86
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+        
+  psp:
+    runs-on: ubuntu-latest
+    env:
+      PSPDEV: ${{ github.workspace }}/pspdev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install required libraries
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+          sudo apt update
+          sudo apt install -y build-essential cmake pkgconf libusb-0.1-4 libgpgme11 libarchive-tools fakeroot
+
+      - name: Set up PSP dev kit
+        run: |
+          echo "$PSPDEV/bin" >> $GITHUB_PATH 
+          git clone https://github.com/djdiskmachine/pspdev
+
+      - name: Build PSP
+        working-directory: projects
+        run: make PLATFORM=PSP
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+        
+  bittboy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Bittboy toolchain
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+          wget -O /tmp/arm-buildroot-linux-musleabi_sdk-buildroot.tar.xz https://github.com/djdiskmachine/MiyooMini-toolchain/releases/download/toolchain/miyoo-toolchain-v2.0.0-arm-buildroot-linux-musleabi_sdk-buildroot.tar.gz
+          mkdir /opt/arm-buildroot-linux-musleabi_sdk-buildroot
+          tar -xvf /tmp/arm-buildroot-linux-musleabi_sdk-buildroot.tar.xz -C /opt/arm-buildroot-linux-musleabi_sdk-buildroot  --strip-components=1
+
+      - name: Build Bittboy
+        working-directory: projects
+        run: make PLATFORM=BITTBOY
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+  garlic:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Clone and build LGPT
+        run: |
+          ln -s /home/runner/work/LittleGPTracker/LittleGPTracker workspace
+          docker run -d --name rg35xx-container -v "$(pwd)/workspace:/root/workspace" aveferrum/rg35xx-toolchain sleep infinity
+          docker exec rg35xx-container bash -c "
+            apt update && apt install -y python3 python3-pillow
+            cd projects
+            make PLATFORM=GARLIC
+          "
+          sudo chmod -R 777 ./workspace/projects
+          sudo chown -R root:root ./workspace/projects
+
+      - name: Package build
+        working-directory: ./workspace/projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+  garlicplus:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Garlic Plus toolchain
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+          wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/simotek/union-rg35xxplus-toolchain/releases/download/20240830/rg35xxplus-toolchain.tar.xz
+          mkdir /opt/rg35xxplus-toolchain
+          tar -xvf /tmp/rg35xxplus-toolchain.tar.xz -C /opt/rg35xxplus-toolchain  --strip-components=1
+
+      - name: Build Garlic Plus
+        working-directory: projects
+        run: make PLATFORM=GARLICPLUS
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+        
+  rg35xxplus:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install rg35xx Stock Toolchain
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+          wget -O /tmp/rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz https://github.com/simotek/rg35xx-plus-aarch64-SDL2-SDK/releases/download/0.1.0/rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz
+          mkdir /opt/rg35xx-plus-aarch64-SDL2-SDK-0.1.0
+          tar -xvf /tmp/rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz -C /opt/rg35xx-plus-aarch64-SDL2-SDK-0.1.0  --strip-components=1
+
+      - name: Build rg35xx Stock
+        working-directory: projects
+        run: make PLATFORM=RG35XXPLUS
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh   
+
   miyoo:
     runs-on: ubuntu-latest
 
@@ -58,3 +266,57 @@ jobs:
         working-directory: projects
         run: |
           make PLATFORM=MIYOO
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+  x64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install required libraries
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+          sudo apt update
+          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev
+
+      - name: Build X64
+        working-directory: projects
+        run: |
+          make PLATFORM=X64
+
+  macos:
+    runs-on: macos-13
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install required libraries
+        run: |
+          wget https://www.libsdl.org/release/SDL2-2.0.14.dmg
+          hdiutil attach SDL2-2.0.14.dmg
+          sudo cp -R /Volumes/SDL2/SDL2.framework /Library/Frameworks/
+
+      - name: Build Xcode project
+        run: |
+          xcodebuild ONLY_ACTIVE_ARCH=NO -project projects/lgpt64.xcodeproj -scheme LittleGPTracker -configuration Release build
+          cp -R bin/LittleGPTracker.app projects/
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh

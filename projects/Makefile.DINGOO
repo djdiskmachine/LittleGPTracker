@@ -1,21 +1,24 @@
 -include $(PWD)/rules_base
-STRIP = ls
 
-%.dge: $(OFILES)
-	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
-	@$(STRIP) $@
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DCPP_MEMORY \
+	-D_DEBUG \
+	-D__LINUX_ALSA__  
 
 DEVKIT=/opt/mipsel-linux-uclibc
 
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	mipsel-linux-
+STRIP = ls
 SDL_BASE = /opt/mipsel-linux-uclibc/usr/bin/
 
-CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 -D_DEBUG -Wall -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources -D__LINUX_ALSA__  -DCPP_MEMORY
-
+CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 -Wall $(DEFINES) -I$(PWD)/../sources 
 CXXFLAGS:=	$(CFLAGS)
-
-EXTENSION:= dge
-
 LIBS	:=  -L/opt/mipsel-linux-uclibc/usr/lib -lSDL -lpthread 
 LIBDIRS	:=	$(DEKVIT)/usr/lib
+EXTENSION:= dge
+
+%.dge: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@

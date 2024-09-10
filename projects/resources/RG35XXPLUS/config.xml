@@ -1,0 +1,15 @@
+<CONFIG>
+	<AUDIOBUFFERSIZE value='512'/>
+	<SCREENMULT value='2'/>
+	<KEY_A value="but:0:0" />
+	<KEY_B value="but:0:1" />
+	<KEY_LEFT value="hat:0:0:3" />
+	<KEY_RIGHT value="hat:0:0:1" />
+	<KEY_DOWN value="hat:0:0:2" />
+	<KEY_UP value="hat:0:0:0" />
+	<KEY_LSHOULDER value="but:0:5" />
+	<KEY_RSHOULDER value="but:0:4" />
+	<KEY_START value="but:0:7" />
+	<KEYDELAY value="200"/>
+	<KEYREPEAT value="100" />
+</CONFIG>

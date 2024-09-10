@@ -103,7 +103,9 @@ void GPSDLSystem::Boot(int argc,char **argv) {
 		return;
 	}
 
+#ifndef SDL2
 	SDL_EnableUNICODE(1);
+#endif
 
 	atexit(SDL_Quit);
 

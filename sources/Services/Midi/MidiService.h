@@ -6,6 +6,7 @@
 #include "Foundation/T_Factory.h"
 #include "Foundation/Observable.h"
 #include "System/Timer/Timer.h"
+#include "System/Process/SysMutex.h"
 #include "MidiOutDevice.h"
 #include "MidiInDevice.h"
 #include "MidiInDevice.h"
@@ -84,5 +85,6 @@ private:
 	int midiDelay_ ;
   int tickToFlush_ ;
 	bool sendSync_ ;
+    SysMutex queueMutex_ ;    
 } ;
 #endif

@@ -1,0 +1,17 @@
+<CONFIG>
+        <ROOTFOLDER value="/mnt/mmc/MUOS/application/.lgpt/"/>
+        <SAMPLELIB value="/mnt/mmc/MUOS/application/.lgpt/samplelib/"/>
+        <SCREENMULT value='2'/>
+        <KEY_A value="key:0:a" />
+        <KEY_B value="key:0:b" />
+        <KEY_LEFT value="key:0:q" />
+        <KEY_RIGHT value="key:0:d" />
+        <KEY_DOWN value="key:0:s" />
+        <KEY_UP value="key:0:w" />
+        <KEY_LSHOULDER value="key:0:h" />
+        <KEY_RSHOULDER value="key:0:l" />
+        <KEY_START value="key:0:m" />
+        <KEYDELAY value="200"/>
+        <KEYREPEAT value="100" />
+        <DUMPEVENT value="NO" />
+</CONFIG>

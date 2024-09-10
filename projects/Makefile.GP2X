@@ -1,25 +1,24 @@
 -include $(PWD)/rules_base
-STRIP = arm-linux-strip
 
-%.gpe: $(OFILES)
-	$(CXX) -static $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
-	@$(STRIP) $@
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DCPP_MEMORY \
+	-DNDEBUG \
+	-D__LINUX_OSS__
 
 DEVKITARM=/c/devkitGP2X
-
 DEVKITPRO=$(DEVKITARM)/..
-
+STRIP = arm-linux-strip
 TOOLPATH=$(DEVKITARM)/bin
 PREFIX		:=	arm-linux-
 SDL_BASE = C:/devkitGP2X/bin/arm-linux-
 
-CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -DNDEBUG -O2 -Wall -DCPP_MEMORY -DPLATFORM_$(PLATFORM) -I$(PWD)/../sources -D__LINUX_OSS__ 
-
+CFLAGS	:=	$(DEFINES) `$(SDL_BASE)sdl-config --cflags` -O2 -Wall -I$(PWD)/../sources 
 CXXFLAGS:=	$(CFLAGS)
-
+LIBS	:=  -L$(PWD)/../libs/GP2XSDL/ -lSDL -lpthread 
+LIBDIRS	:=	$(DEKVITPRO)/lib
 EXTENSION:= gpe
 
-LIBS	:=  -L$(PWD)/../libs/GP2XSDL/ -lSDL -lpthread 
-
-
-LIBDIRS	:=	$(DEKVITPRO)/lib
+%.gpe: $(OFILES)
+	$(CXX) -static $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@

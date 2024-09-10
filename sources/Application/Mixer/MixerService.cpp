@@ -32,66 +32,63 @@ MixerService::MixerService():
 MixerService::~MixerService() {
 } ;
 
+/*
+ * initializes the mixer service, config changes depending if we're in sequencer or render mode
+ */
 bool MixerService::Init() {
-
-	out_=0 ;
-
-    // Create the output depending on rendering mode
-
+	// create the output depending on rendering mode
+	out_ = 0;
 	switch (mode_) {
 		case MSM_FILE:
 		case MSM_FILESPLIT:
-			out_=new DummyAudioOut() ;
+			out_ = new DummyAudioOut();
 			break;
 		default:
-			Audio *audio=Audio::GetInstance() ;
-			out_=audio->GetFirst() ;
-			break ;
+			Audio *audio = Audio::GetInstance();
+			out_ = audio->GetFirst();
+			break;
 	}
-
-	bool result=false ;
 
 	for (int i=0;i<MAX_BUS_COUNT;i++) {
-		master_.Insert(bus_[i]) ;
+		master_.Insert(bus_[i]);
 	}
 
+	bool result = false;
 	if (out_) {
+		result = out_->Init();
+		if (result) {
+			out_->Insert(master_);
+		}
 
-    result=out_->Init() ;
-	   if (result) {
-			out_->Insert(master_) ;
-	   }
-
-	   switch(mode_) {
-		   case MSM_AUDIO:
+		switch(mode_) {
+			case MSM_AUDIO:
 				break ;
-		   case MSM_FILERT:
-		   case MSM_FILE:
-			   out_->SetFileRenderer("project:mixdown.wav") ;
-				break ;
-		   case MSM_FILESPLITRT:
-		   case MSM_FILESPLIT:
-			   for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-				    char buffer[1024] ;
-					sprintf(buffer,"project:channel%d.wav",i) ;
-					bus_[i].SetFileRenderer(buffer) ;
-			   }
-			   break ;
-	   }
-    out_->AddObserver(*MidiService::GetInstance());
+			case MSM_FILERT:
+			case MSM_FILE:
+				out_->SetFileRenderer("project:mixdown.wav");
+				break;
+			case MSM_FILESPLITRT:
+			case MSM_FILESPLIT:
+				for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
+					char buffer[1024] ;
+					sprintf(buffer,"project:channel%d.wav",i);
+					bus_[i].SetFileRenderer(buffer);
+				}
+				break;
+		}
+		out_->AddObserver(*MidiService::GetInstance());
 	}
 
-	sync_=SDL_CreateMutex() ;
-	NAssert(sync_) ;
+	sync_=SDL_CreateMutex();
+	NAssert(sync_);
 
-	if (result) 
-  {
-       Trace::Debug("Out initialized") ;
-  } else {
-       Trace::Debug("Failed to get output") ;
-  }
-	return (result) ;
-} ;
+	if (result) {
+		Trace::Log("MixerService", "output initialized");
+	} else {
+		Trace::Log("MixerService", "failed to initialize output");
+	}
+	return (result);
+};
 
 void MixerService::Close() {
 	if (out_) {

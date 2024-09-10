@@ -1,5 +1,10 @@
 -include $(PWD)/rules_base
 
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DCPP_MEMORY \
+	-DNDEBUG
+
 TARGET=lgpt
 
 export OBJS:=$(OFILES)
@@ -14,11 +19,8 @@ PSP_EBOOT_PIC1 = $(PWD)/psp_bg.png
 PSPSDK=$(shell $(PSPDEV)/bin/psp-config --pspsdk-path)
 PSPBIN = $(PSPSDK)/../bin
 
-CFLAGS	:=	-O3 -G0 -Wall -DPLATFORM_$(PLATFORM) -DNDEBUG -DCPP_MEMORY -I$(PWD)/../sources -I$(PSPSDK)/include
-
+CFLAGS	:=	-O3 -G0 -Wall $(DEFINES) -I$(PWD)/../sources -I$(PSPSDK)/include
 CXXFLAGS:=	$(CFLAGS) -fexceptions -fno-rtti
-
-EXTENSION:= elf
-
 LIBS = -L$(PSPDEV)/psp/lib -lSDL_image -lpng -lz -lstdc++ -lSDL -lGL -lGLU -lglut -lm -lc -ljpeg
 LIBS += -lpspvfpu -lpspgu -lpsphprm -lpsprtc -lpspaudio -lpspirkeyb -lpsppower
+EXTENSION:= elf

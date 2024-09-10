@@ -1,0 +1,6 @@
+{
+  "label": "LittleGPTracker",
+  "icon": "lgpt.png",
+  "launch": "launch.sh",
+  "description": "16bit sample-based tracker"
+}
