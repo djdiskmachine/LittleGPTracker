@@ -1,0 +1,24 @@
+<!--
+Bittboy config
+Re-assigned layout since no shoulder buttons
+-->
+<CONFIG>
+  <!--
+  <ROOTFOLDER value="/mnt/SDCARD/Tracks"/>
+  <SAMPLELIB value="/mnt/SDCARD/Samples"/>
+-->
+  <!-- uncomment to dump events to stdout 
+  <DUMPEVENT value="YES"/>
+-->
+        <KEY_A value="left shift" /><!--T2-->
+        <KEY_B value="left alt" /><!--A-->
+        <KEY_LSHOULDER value="escape" /><!--select-->
+        <KEY_START value="space" /><!--T1-->
+        <KEY_RSHOULDER value="return" /><!--start-->
+
+  <!-- uncomment to render -->
+  <!--
+  <RENDER value="FILE"/>
+  -->
+
+</CONFIG>
