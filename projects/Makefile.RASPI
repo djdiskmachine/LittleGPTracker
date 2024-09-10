@@ -1,15 +1,17 @@
 -include $(PWD)/rules_base
 
-%.rpi-exe: $(OFILES)
-	$(CXX) -o $(LDFLAGS) $@ $(OFILES) $(LIBS)
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DCPP_MEMORY \
+	-D_NDEBUG \
+	-D_NO_JACK_ \
+	-D__LINUX_ALSA__ \
+	-D__LINUX_ALSASEQ__
 
-CFLAGS := -O3 -DCPP_MEMORY -Wall -I/usr/local/include -I$(PWD)/../sources -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -D_NO_JACK_ -D_NDEBUG
-#CFLAGS	:= -g -DCPP_MEMORY -Wall -I/usr/local/include -I$(PWD)/../sources -D__LINUX_ALSA__ -D__LINUX_ALSASEQ__ -D_NO_JACK_
- 
-
+CFLAGS := -O3  -Wall $(DEFINES) -I/usr/local/include -I$(PWD)/../sources
 CXXFLAGS:= $(CFLAGS)
-
+LIBS	:= -lasound -lSDL -lpthread
 EXTENSION:= rpi-exe
 
-LIBS	:= -lasound -lSDL -lpthread
-
+%.rpi-exe: $(OFILES)
+	$(CXX) -o $(LDFLAGS) $@ $(OFILES) $(LIBS)

@@ -1,24 +1,28 @@
 -include $(PWD)/rules_base
 
-STRIP = ls
-
-%.dge: $(OFILES)
-	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
-	@$(STRIP) $@
+DEFINES := \
+	-DPLATFORM_DINGOO \
+	-DCPP_MEMORY \
+	-D_NDEBUG \
+	-D_NO_JACK_ \
+	-D__LINUX_OSS__ \
+	-DRS97 \
+	-DUSB_TTY
 
 DEVKIT=/opt/mipsel-rg350-linux-uclibc_sdk-buildroot
 
-TARGET = lgpt.dge
-
+STRIP = ls
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	mipsel-linux-
 SDL_BASE = /opt/mipsel-rg350-linux-uclibc_sdk-buildroot/usr/mipsel-rg350-linux-uclibc/sysroot/usr/bin/
 
-CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 -D_NDEBUG -D_NO_JACK_ -Wall -DPLATFORM_DINGOO -I$(PWD)/../sources -D__LINUX_OSS__  -DCPP_MEMORY -DRS97 -DUSB_TTY
-
+CFLAGS	:=	`$(SDL_BASE)sdl-config --cflags` -O3 $(DEFINES) -Wall -I$(PWD)/../sources
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03
-
-EXTENSION:= dge
-
 LIBS	:=  -lSDL -lpthread 
 LIBDIRS	:=	$(DEKVIT)/usr/lib
+TARGET = lgpt.dge
+EXTENSION:= dge
+
+%.dge: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@

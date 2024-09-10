@@ -2,6 +2,7 @@
 
 # config
 DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
 	-D_64BIT \
 	-DBUFFERED \
 	-DCPP_MEMORY \

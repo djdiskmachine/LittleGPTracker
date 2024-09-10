@@ -2,6 +2,7 @@
 
 # config
 DEFINES := \
+        -DPLATFORM_$(PLATFORM) \
         -D_64BIT \
 	-DCPP_MEMORY \
 	-D__LINUX_ALSA__ \

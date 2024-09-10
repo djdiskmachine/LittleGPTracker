@@ -1,33 +1,38 @@
 -include $(PWD)/rules_base
-STRIP = $(CROSS_COMPILE)strip
 
-%.elf: $(OFILES)
-	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
-	@$(STRIP) $@
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-D_NDEBUG \
+	-D_NO_JACK_ 
 
 DEVKIT = /opt/miyoomini-toolchain/
 CROSS_COMPILE=$(DEVKIT)bin/arm-linux-gnueabihf-
 
 CC = $(CROSS_COMPILE)gcc
 CXX = $(CROSS_COMPILE)g++
+STRIP = $(CROSS_COMPILE)strip
 SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
-DEFINES = -DHAVE_STDINT_H -D_NDEBUG -D_NO_JACK_ -I$(PWD)/../sources -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DBUFFERED
-INCLUDES = -Iinclude $(SDL_CFLAGS)
+INCLUDES = -Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources
 OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7ve+simd
 
-OUTPUT = ../lgpt-miyoo
 
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	arm-linux-gnueabihf-
 
-CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
+CFLAGS	:=	$(DEFINES) $(INCLUDES) $(SDL_CFLAGS) $(OPT_FLAGS) -Wall  
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
-
-EXTENSION:= elf
-
-LIBS	:=  -lSDL -lSDL_mixer -lpthread 
+LIBS	:=  -lSDL -lSDL_mixer -lpthread $(SDL_LIBS)
 LIBDIRS	:=	$(DEKVIT)/usr/lib
 LIBDIRS	+=	$(DEKVIT)/usr/include
+OUTPUT = ../lgpt-miyoo
+EXTENSION:= elf
+
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@

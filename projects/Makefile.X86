@@ -2,6 +2,7 @@
 
 # config
 DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
 	-DCPP_MEMORY \
 	-D__LINUX_ALSA__ \
 	-D__LINUX_ALSASEQ__ \

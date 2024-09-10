@@ -1,7 +1,7 @@
 -include $(PWD)/rules_base
-STRIP = $(CROSS_COMPILE)strip
 
 DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
 	-DBUFFERED \
 	-DCPP_MEMORY \
 	-D_NDEBUG \
@@ -10,6 +10,7 @@ DEFINES := \
 
 DEVKIT = /opt/miyoo/
 CROSS_COMPILE=$(DEVKIT)bin/arm-miyoo-linux-uclibcgnueabi-
+STRIP = $(CROSS_COMPILE)strip
 CC = $(CROSS_COMPILE)gcc
 CXX = $(CROSS_COMPILE)g++
 TOOLPATH=$(DEVKIT)/usr/bin

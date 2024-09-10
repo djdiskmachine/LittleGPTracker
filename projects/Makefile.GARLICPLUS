@@ -4,6 +4,7 @@ STRIP = $(CROSS_COMPILE)strip
 export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/opt/rg35xxplus-toolchain/usr/lib
 
 DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
 	-DBUFFERED \
 	-DCPP_MEMORY \
 	-D_NDEBUG \

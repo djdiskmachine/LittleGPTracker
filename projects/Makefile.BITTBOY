@@ -1,34 +1,36 @@
 -include $(PWD)/rules_base
 STRIP = $(CROSS_COMPILE)strip
 
-%.elf: $(OFILES)
-	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
-	@$(STRIP) $@
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-D_NDEBUG \
+	-D__LINUX_ALSA__ \
+	-D_NO_JACK_
 
 DEVKIT=/opt/arm-buildroot-linux-musleabi_sdk-buildroot
 CROSS_COMPILE=$(DEVKIT)/bin/arm-buildroot-linux-musleabi-
-
 CC = $(CROSS_COMPILE)gcc
 CXX = $(CROSS_COMPILE)g++
 SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
-
-DEFINES = -DHAVE_STDINT_H -D_NDEBUG -D_NO_JACK_ -I$(PWD)/../sources -D__LINUX_ALSA__ -DCPP_MEMORY $(SDL_CFLAGS) $(SDL_LIBS) -DBUFFERED
-INCLUDES = -Iinclude $(SDL_CFLAGS)
-OPT_FLAGS  = -O3 -Ofast
-
-OUTPUT = ../lgpt-bittboy
+SDL_BASE = $(DEVKIT)/arm-buildroot-linux-musleabi/sysroot/usr/bin/
 
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	arm-linux-
-SDL_BASE = $(DEVKIT)/arm-buildroot-linux-musleabi/sysroot/usr/bin/
 
-CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall -DRS97
-
+OPT_FLAGS  = -O3 -Ofast
+INCLUDES = -I$(PWD)/../sources -Iinclude $(SDL_CFLAGS)
+CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) $(SDL_CFLAGS) -Wall -DRS97
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03
-
+LIBS	:=	$(SDL_LIBS) -lSDL -lSDL_mixer -lasound -lpthread
+LIBDIRS	:=	$(DEKVIT)/usr/lib
+OUTPUT = ../lgpt-bittboy
 EXTENSION:= elf
 
-LIBS	:=  -lSDL -lSDL_mixer -lasound -lpthread
-LIBDIRS	:=	$(DEKVIT)/usr/lib
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@
