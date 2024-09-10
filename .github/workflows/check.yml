@@ -79,7 +79,7 @@ jobs:
           make PLATFORM=X64
 
   macos:
-    runs-on: macos-11
+    runs-on: macos-13
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
