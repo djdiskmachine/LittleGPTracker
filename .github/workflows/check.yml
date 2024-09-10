@@ -86,12 +86,23 @@ jobs:
 
       - name: Install required libraries
         run: |
-          brew install pkg-config pillow
+          brew install pillow
           wget https://www.libsdl.org/release/SDL2-2.0.14.dmg
           hdiutil attach SDL2-2.0.14.dmg
           sudo cp -R /Volumes/SDL2/SDL2.framework /Library/Frameworks/
 
       - name: Build Xcode project
         run: |
-          rm -rf bin/LittleGPTracker.app
+          python3 sources/Resources/mkfont.py sources/Resources/original.bmp sources/Resources/font.h
           xcodebuild -project projects/lgpt64.xcodeproj -scheme LittleGPTracker -configuration Release build
+          mkdir -p ./resources/packaging/MacOS
+          cp -R bin/LittleGPTracker.app ./resources/packaging/MacOS/
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
