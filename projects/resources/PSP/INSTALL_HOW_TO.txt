@@ -1,0 +1,14 @@
+Install contents of zip in a folder of your memory stick or PPSSPP folder
+
+IMPORTANT!
+If using PPSSPP, Little Piggy Tracker will start up with a black screen
+Workaround:
+        Before starting the app:
+        Enable software rendering (might be slow)
+    Or
+        After starting the app:
+        Go to settings and change screen resolution
+        Then, save state
+        Load your save state when picking up Piggy the next time
+
+Enjoy!
