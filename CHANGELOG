@@ -3,6 +3,7 @@
     koisignal
         Config option feature for loading embedded and custom fonts (#107)
         * Possibility to select font in config.xml
+        * "digital" font by Nine-H (CC-BY-SA)
     clsource
         MacOS 64 Build (#108)
     Simotek
