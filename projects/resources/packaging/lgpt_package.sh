@@ -21,6 +21,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   PACKAGE=LGPT-$1-$VERSION.zip
   echo "-=-=Packaging $PACKAGE=-=-"
   CONTENTS="./resources/$1/*"
+  CONTENTS+="./custom_font.xml"
   CONTENTS+=" $(find . -iname $2)"
   if [ "$1" == "PSP" ] ||
   [ "$1" == "GARLIC" ] ||

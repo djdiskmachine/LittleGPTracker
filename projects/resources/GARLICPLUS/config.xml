@@ -14,4 +14,5 @@
         <KEYDELAY value="200"/>
         <KEYREPEAT value="100" />
         <DUMPEVENT value="NO" />
+        <FONTTYPE value = '0' />    <!-- '0':original '1':digital '2':monster 'CUSTOM': load custom_font.xml-->
 </CONFIG>

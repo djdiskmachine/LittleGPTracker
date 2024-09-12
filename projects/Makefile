@@ -54,7 +54,7 @@ COMMONDIRS := \
 	../sources/Externals/Compression \
 	../sources/Externals/Soundfont \
 	../sources/Externals/TinyXML
-				
+
 #---------------------------------------------------------------------------------
 # Linux
 #---------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ SDL2DIRS := \
 
 SDLAUDIODIRS := \
 	../sources/Adapters/SDL/Audio
-	
+
 SDL2AUDIODIRS := \
 	../sources/Adapters/SDL2/Audio
 
@@ -125,7 +125,7 @@ CAANOODIRS := \
 	../sources/Adapters/CAANOO/Midi \
 	../sources/Adapters/CAANOO/Audio \
 	../sources/Adapters/SDL/GUI\
-	../sources/Adapters/SDL/Timer 
+	../sources/Adapters/SDL/Timer
 
 DINGUXDIRS := \
 	. \
@@ -144,7 +144,7 @@ DINGUXDIRS := \
 DINGUXAUDIODIRS := \
 	../sources/Adapters/DINGOO/Midi \
 	../sources/Adapters/DINGOO/Audio
-				
+
 DUMMYMIDIDIRS := \
 	../sources/Adapters/Dummy/Midi
 
@@ -223,7 +223,7 @@ W32DIRS     :=  .\
 
 COMMONFILES := \
 	Logger.o Trace.o Result.o Status.o Config.o \
-	Timer.o FileSystem.o \
+	Timer.o FileSystem.o FontConfig.o \
 	SysMutex.o TimeService.o \
 	MidiOutDevice.o MidiInDevice.o MidiService.o Groove.o \
 	MidiChannel.o MidiInMerger.o \
@@ -287,7 +287,7 @@ LINUXFILES := \
 	Process.o \
 	UnixProcess.o \
 	SDLTimer.o
-	
+
 DBFILES := \
 	UnixFileSystem.o \
 	DEBmain.o \
@@ -321,7 +321,7 @@ JACKFILES := \
 SDLAUDIOFILES := \
 					SDLAudioDriver.o \
 	SDLAudio.o
-					
+
 DEBFILES := $(DBFILES) $(RTAUDIOFILES) $(RTMIDIFILES) $(JACKFILES)
 BEAGLEBOARDFILES := $(LINUXFILES) $(DUMMYMIDIFILES)
 RASPIFILES := $(LINUXFILES) $(RTAUDIOFILES) $(RTMIDIFILES) $(JACKFILES)
@@ -540,7 +540,7 @@ all: $(OUTPUT).$(EXTENSION)
 $(OUTPUT).exe   :   $(OFILES)
 	@echo "linking result.."
 	@$(LD) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
-	
+
 $(OUTPUT).fxe	:	$(OUTPUT).gxb
 
 $(OUTPUT).gxb	:	$(OUTPUT).elf
