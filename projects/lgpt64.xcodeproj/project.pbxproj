@@ -146,6 +146,7 @@
 		73F8437916FF66480061161B /* MidiEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437316FF66480061161B /* MidiEvent.cpp */; };
 		73F8437A16FF66480061161B /* MidiInMerger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437516FF66480061161B /* MidiInMerger.cpp */; };
 		73F8437E16FF666A0061161B /* RTMidiInDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437C16FF666A0061161B /* RTMidiInDevice.cpp */; };
+		7FBF05162C932165009B5828 /* FontConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FBF05142C932165009B5828 /* FontConfig.cpp */; };
 		87CA0E830F7E0FC4001D6BD0 /* PlayerChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E7F0F7E0FC4001D6BD0 /* PlayerChannel.cpp */; };
 		87CA0E840F7E0FC4001D6BD0 /* PlayerMixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E810F7E0FC4001D6BD0 /* PlayerMixer.cpp */; };
 		87CA0E880F7E102B001D6BD0 /* AudioOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E860F7E102B001D6BD0 /* AudioOut.cpp */; };
@@ -475,6 +476,8 @@
 		73F8437716FF66480061161B /* MidiMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MidiMessage.h; path = ../../LittleGPTracker/sources/Services/Midi/MidiMessage.h; sourceTree = SOURCE_ROOT; };
 		73F8437C16FF666A0061161B /* RTMidiInDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RTMidiInDevice.cpp; path = ../../LittleGPTracker/sources/Adapters/RTMidi/RTMidiInDevice.cpp; sourceTree = SOURCE_ROOT; };
 		73F8437D16FF666A0061161B /* RTMidiInDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RTMidiInDevice.h; path = ../../LittleGPTracker/sources/Adapters/RTMidi/RTMidiInDevice.h; sourceTree = SOURCE_ROOT; };
+		7FBF05142C932165009B5828 /* FontConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontConfig.cpp; sourceTree = "<group>"; };
+		7FBF05152C932165009B5828 /* FontConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontConfig.h; sourceTree = "<group>"; };
 		87CA0E7F0F7E0FC4001D6BD0 /* PlayerChannel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerChannel.cpp; sourceTree = "<group>"; };
 		87CA0E800F7E0FC4001D6BD0 /* PlayerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerChannel.h; sourceTree = "<group>"; };
 		87CA0E810F7E0FC4001D6BD0 /* PlayerMixer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerMixer.cpp; sourceTree = "<group>"; };
@@ -1030,6 +1033,8 @@
 		737D12450BCE66F000099CB3 /* BasicDatas */ = {
 			isa = PBXGroup;
 			children = (
+				7FBF05142C932165009B5828 /* FontConfig.cpp */,
+				7FBF05152C932165009B5828 /* FontConfig.h */,
 				737D12480BCE66F000099CB3 /* GUICreateWindowParams.h */,
 				737D12490BCE66F000099CB3 /* GUIEvent.cpp */,
 				737D124A0BCE66F000099CB3 /* GUIEvent.h */,
@@ -1518,6 +1523,7 @@
 				73A6400F0D3CF8D300F43955 /* AudioDriver.cpp in Sources */,
 				73A640110D3CF8D300F43955 /* AudioMixer.cpp in Sources */,
 				73A6401B0D3CF90A00F43955 /* Groove.cpp in Sources */,
+				7FBF05162C932165009B5828 /* FontConfig.cpp in Sources */,
 				A95153FD2C88A4E70060FA44 /* SDLTimer.cpp in Sources */,
 				73A640250D3CF91D00F43955 /* AudioFileStreamer.cpp in Sources */,
 				73A640290D3CF94000F43955 /* FileSystem.cpp in Sources */,
