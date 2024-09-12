@@ -3,7 +3,7 @@
 #include "System/System/System.h"
 #include "System/io/Trace.h"
 #include <string.h>
-#include "Application/Model/Config.h"
+#include "UIFramework/BasicDatas/FontConfig.h"
 
 #define NYI(s) n_assert("NYI: ##s##")
 

@@ -796,6 +796,14 @@
 						RelativePath="..\sources\Application\Model\Table.h"
 						>
 					</File>
+					<File
+						RelativePath="..\sources\UIFramework\BasicDatas\FontConfig.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\sources\UIFramework\BasicDatas\FontConfig.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Views"

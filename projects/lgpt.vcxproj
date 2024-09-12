@@ -266,7 +266,7 @@
     <ClCompile Include="..\sources\Application\Model\Project.cpp" />
     <ClCompile Include="..\sources\Application\Model\Song.cpp" />
     <ClCompile Include="..\sources\Application\Model\Table.cpp" />
-    <ClCompile Include="..\sources\Application\Model\FontConfig.cpp" />
+    <ClCompile Include="..\sources\UIFramework\BasicDatas\FontConfig.cpp" />
     <ClCompile Include="..\sources\Application\views\ChainView.cpp" />
     <ClCompile Include="..\sources\Application\views\ConsoleView.cpp" />
     <ClCompile Include="..\sources\Application\views\GrooveView.cpp" />
@@ -408,7 +408,7 @@
     <ClInclude Include="..\sources\Application\Model\Project.h" />
     <ClInclude Include="..\sources\Application\Model\Song.h" />
     <ClInclude Include="..\sources\Application\Model\Table.h" />
-    <ClInclude Include="..\sources\Application\Model\FontConfig.h" />
+    <ClCompile Include="..\sources\UIFramework\BasicDatas\FontConfig.h" />
     <ClInclude Include="..\sources\Application\views\ChainView.h" />
     <ClInclude Include="..\sources\Application\views\ConsoleView.h" />
     <ClInclude Include="..\sources\Application\views\GrooveView.h" />

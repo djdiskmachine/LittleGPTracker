@@ -4,7 +4,7 @@
 #include "UIFramework/SimpleBaseClasses/GUIWindow.h"
 #include "System/IO/Trace.h"
 #include <string.h>
-#include "Application/Model/Config.h"
+#include "UIFramework/BasicDatas/FontConfig.h"
 #include <windows.h>
 
 #define NYI(s) n_assert("NYI: ##s##")
@@ -37,7 +37,6 @@ WSDLGUIWindowImp::WSDLGUIWindowImp(GUICreateWindowParams &p) {
 	currentColor_=0;
 	backgroundColor_=0 ;
 	FontConfig();
-//	prepareFonts() ;
 } ;
 
 WSDLGUIWindowImp::~WSDLGUIWindowImp() {

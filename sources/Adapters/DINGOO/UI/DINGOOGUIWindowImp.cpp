@@ -7,7 +7,7 @@
 #include <string.h>
 #define NYI(s) n_assert("NYI: ##s##")
 #include "Application/Model/Config.h"
-#include "Application/Model/FontConfig.h"
+#include "UIFramework/BasicDatas/FontConfig.h"
 #include "Application/Utils/char.h"
 
 DINGOOGUIWindowImp *instance_ ;

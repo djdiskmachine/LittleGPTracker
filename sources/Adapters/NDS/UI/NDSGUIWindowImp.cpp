@@ -5,6 +5,7 @@
 #include "System/System/System.h"
 #include <string.h>
 #include "Application/Model/Config.h"
+#include "UIFramework/BasicDatas/FontConfig.h"
 #include <nds.h>
 
 NDSGUIWindowImp *instance_ ;

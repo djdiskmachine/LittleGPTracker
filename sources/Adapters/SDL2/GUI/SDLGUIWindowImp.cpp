@@ -8,6 +8,7 @@
 #include "System/System/System.h"
 #include "UIFramework/BasicDatas/GUIEvent.h"
 #include "UIFramework/SimpleBaseClasses/GUIWindow.h"
+#include "UIFramework/BasicDatas/FontConfig.h"
 
 SDLGUIWindowImp *instance_ ;
 
@@ -138,6 +139,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 	currentColor_=0;
 	backgroundColor_=0 ;
 	SDL_ShowCursor(SDL_DISABLE);
+	FontConfig();
 
 	
 	if (cacheFonts_)
@@ -151,12 +153,6 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 SDLGUIWindowImp::~SDLGUIWindowImp() {
 
 }
-
-#define FONT_WIDTH 1024
-#define FONT_COUNT 127
-static const unsigned char font[]= {
-	#include "Resources/font.h"
-};
 
 static SDL_Surface *fonts[FONT_COUNT] ;
 
