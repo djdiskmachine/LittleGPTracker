@@ -146,7 +146,7 @@ void UnixFile::Close() {
 UnixFileSystem::UnixFileSystem() {
 }
 
-I_File *UnixFileSystem::Open(const char *path,char *mode) {
+I_File *UnixFileSystem::Open(const char *path, const char *mode) {
 	char *rmode ;
 	switch(*mode) {
         case 'r':

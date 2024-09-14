@@ -66,7 +66,7 @@ WavFile *WavFile::Open(const char *path) {
     // open file
 
 	FileSystem *fs=FileSystem::GetInstance() ;
-	I_File *file=fs->Open(path,"r") ;
+	I_File *file=fs->Open(path, "r");
 	
 	if (!file) return 0 ;
 

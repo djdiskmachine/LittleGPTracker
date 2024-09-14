@@ -99,7 +99,7 @@ protected:
 
 class FileSystem: public T_Factory<FileSystem> {
 public:
-	virtual I_File *Open(const char *path,char *mode)=0 ;
+	virtual I_File *Open(const char *path, const char *mode)=0 ;
 	virtual I_Dir *Open(const char *path)=0 ;
 	virtual Result MakeDir(const char *path)=0 ;
 	virtual void Delete(const char *)=0 ;

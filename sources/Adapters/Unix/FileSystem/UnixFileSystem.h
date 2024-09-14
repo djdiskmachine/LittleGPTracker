@@ -29,7 +29,7 @@ public:
 class UnixFileSystem: public FileSystem {
 public:
     UnixFileSystem() ;
-	virtual I_File *Open(const char *path,char *mode);
+	virtual I_File *Open(const char *path, const char *mode);
 	virtual I_Dir *Open(const char *path) ;
 	virtual Result MakeDir(const char *path) ;	
 	virtual void Delete(const char *path) ;

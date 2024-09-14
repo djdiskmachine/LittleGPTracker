@@ -9,9 +9,9 @@
 #include "Application/Persistency/PersistencyService.h"
 #include "Filters.h"
 
-char *InstrumentTypeData[IT_LAST]= {
-	"Sample",
-	"Midi"
+char *InstrumentTypeData[IT_LAST] = {
+	(char*)("Sample"),
+    (char*)("Midi")
 } ;
 
 
@@ -28,7 +28,7 @@ InstrumentBank::InstrumentBank():Persistent("INSTRUMENTBANK") {
         s->SetChannel(i) ;
         instrument_[MAX_SAMPLEINSTRUMENT_COUNT+i]=s ;
     }
-    Status::Set("All instrument loaded") ;
+    Status::Set((char*)("All instrument loaded"));
 } ;
 
 //
@@ -132,6 +132,8 @@ void InstrumentBank::RestoreContent(TiXmlElement *element) {
 						case IT_MIDI:
 							instr=new MidiInstrument() ;
 							break ;
+                        case IT_LAST:
+                            break ;
 					}
 					instrument_[id]=instr ;
 				} ;

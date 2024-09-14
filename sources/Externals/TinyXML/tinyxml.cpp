@@ -101,7 +101,7 @@ void TiXmlBase::PutString( const TIXML_STRING& str, TIXML_STRING* outString )
 			// Easy pass at non-alpha/numeric/symbol
 			// Below 32 is symbolic.
 			char buf[ 32 ];
-			sprintf( buf, "&#x%02X;", (unsigned) ( c & 0xff ) );
+			sprintf( buf, (char*)"&#x%02X;", (unsigned) ( c & 0xff ) );
 			//*ME:	warning C4267: convert 'size_t' to 'int'
 			//*ME:	Int-Cast to make compiler happy ...
 			outString->append( buf, (int)strlen( buf ) );
@@ -716,7 +716,7 @@ int TiXmlElement::QueryDoubleAttribute( const char* name, double* dval ) const
 void TiXmlElement::SetAttribute( const char * name, int val )
 {	
 	char buf[64];
-	sprintf( buf, "%d", val );
+	sprintf( buf, (char*)"%d", val );
 	SetAttribute( name, buf );
 }
 
@@ -724,7 +724,7 @@ void TiXmlElement::SetAttribute( const char * name, int val )
 void TiXmlElement::SetDoubleAttribute( const char * name, double val )
 {	
 	char buf[256];
-	sprintf( buf, "%f", val );
+	sprintf( buf, (char*)"%f", val );
 	SetAttribute( name, buf );
 }
 
@@ -755,15 +755,15 @@ void TiXmlElement::Print( FILE* cfile, int depth ) const
 	int i;
 	for ( i=0; i<depth; i++ )
 	{
-		fprintf( cfile, "    " );
+		fprintf( cfile, (char*)"    " );
 	}
 
-	fprintf( cfile, "<%s", value.c_str() );
+	fprintf( cfile, (char*)"<%s", value.c_str() );
 
 	const TiXmlAttribute* attrib;
 	for ( attrib = attributeSet.First(); attrib; attrib = attrib->Next() )
 	{
-		fprintf( cfile, " " );
+		fprintf( cfile, (char*)" " );
 		attrib->Print( cfile, depth );
 	}
 
@@ -774,30 +774,30 @@ void TiXmlElement::Print( FILE* cfile, int depth ) const
 	TiXmlNode* node;
 	if ( !firstChild )
 	{
-		fprintf( cfile, " />" );
+		fprintf( cfile, (char*)" />" );
 	}
 	else if ( firstChild == lastChild && firstChild->ToText() )
 	{
-		fprintf( cfile, ">" );
+		fprintf( cfile, (char*)">" );
 		firstChild->Print( cfile, depth + 1 );
-		fprintf( cfile, "</%s>", value.c_str() );
+		fprintf( cfile, (char*)"</%s>", value.c_str() );
 	}
 	else
 	{
-		fprintf( cfile, ">" );
+		fprintf( cfile, (char*)">" );
 
 		for ( node = firstChild; node; node=node->NextSibling() )
 		{
 			if ( !node->ToText() )
 			{
-				fprintf( cfile, "\n" );
+				fprintf( cfile, (char*)"\n" );
 			}
 			node->Print( cfile, depth+1 );
 		}
-		fprintf( cfile, "\n" );
+		fprintf( cfile, (char*)"\n" );
 		for( i=0; i<depth; ++i )
-		fprintf( cfile, "    " );
-		fprintf( cfile, "</%s>", value.c_str() );
+		fprintf( cfile, (char*)"    " );
+		fprintf( cfile, (char*)"</%s>", value.c_str() );
 	}
 }
 
@@ -942,7 +942,7 @@ bool TiXmlDocument::LoadFile( const char* filename, TiXmlEncoding encoding )
 	// Fixed with the StringToBuffer class.
 	value = filename;
 
-	FILE* file = fopen( value.c_str (), "r" );
+	FILE* file = fopen( value.c_str (), (char*)"r" );
 
 	if ( file )
 	{
@@ -995,7 +995,7 @@ bool TiXmlDocument::LoadFile( const char* filename, TiXmlEncoding encoding )
 bool TiXmlDocument::SaveFile( const char * filename ) const
 {
 	// The old c stuff lives on...
-	FILE* fp = fopen( filename, "w" );
+	FILE* fp = fopen( filename, (char*)"w" );
 	if ( fp )
 	{
 		Print( fp, 0 );
@@ -1038,7 +1038,7 @@ void TiXmlDocument::Print( FILE* cfile, int depth ) const
 	for ( node=FirstChild(); node; node=node->NextSibling() )
 	{
 		node->Print( cfile, depth );
-		fprintf( cfile, "\n" );
+		fprintf( cfile, (char*)"\n" );
 	}
 }
 
@@ -1102,9 +1102,9 @@ void TiXmlAttribute::Print( FILE* cfile, int /*depth*/ ) const
 	PutString( value, &v );
 
 	if (value.find ('\"') == TIXML_STRING::npos)
-		fprintf (cfile, "%s=\"%s\"", n.c_str(), v.c_str() );
+		fprintf (cfile, (char*)"%s=\"%s\"", n.c_str(), v.c_str() );
 	else
-		fprintf (cfile, "%s='%s'", n.c_str(), v.c_str() );
+		fprintf (cfile, (char*)"%s='%s'", n.c_str(), v.c_str() );
 }
 
 
@@ -1128,14 +1128,14 @@ void TiXmlAttribute::StreamOut( TIXML_OSTREAM * stream ) const
 
 int TiXmlAttribute::QueryIntValue( int* ival ) const
 {
-	if ( sscanf( value.c_str(), "%d", ival ) == 1 )
+	if ( sscanf( value.c_str(), (char*)"%d", ival ) == 1 )
 		return TIXML_SUCCESS;
 	return TIXML_WRONG_TYPE;
 }
 
 int TiXmlAttribute::QueryDoubleValue( double* dval ) const
 {
-	if ( sscanf( value.c_str(), "%lf", dval ) == 1 )
+	if ( sscanf( value.c_str(), (char*)"%lf", dval ) == 1 )
 		return TIXML_SUCCESS;
 	return TIXML_WRONG_TYPE;
 }
@@ -1143,14 +1143,14 @@ int TiXmlAttribute::QueryDoubleValue( double* dval ) const
 void TiXmlAttribute::SetIntValue( int _value )
 {
 	char buf [64];
-	sprintf (buf, "%d", _value);
+	sprintf (buf, (char*)"%d", _value);
 	SetValue (buf);
 }
 
 void TiXmlAttribute::SetDoubleValue( double _value )
 {
 	char buf [256];
-	sprintf (buf, "%lf", _value);
+	sprintf (buf, (char*)"%lf", _value);
 	SetValue (buf);
 }
 
@@ -1184,7 +1184,7 @@ void TiXmlComment::Print( FILE* cfile, int depth ) const
 	{
 		fputs( "    ", cfile );
 	}
-	fprintf( cfile, "<!--%s-->", value.c_str() );
+	fprintf( cfile, (char*)"<!--%s-->", value.c_str() );
 }
 
 void TiXmlComment::StreamOut( TIXML_OSTREAM * stream ) const
@@ -1218,7 +1218,7 @@ void TiXmlText::Print( FILE* cfile, int /*depth*/ ) const
 {
 	TIXML_STRING buffer;
 	PutString( value, &buffer );
-	fprintf( cfile, "%s", buffer.c_str() );
+	fprintf( cfile, (char*)"%s", buffer.c_str() );
 }
 
 
@@ -1287,15 +1287,15 @@ void TiXmlDeclaration::operator=( const TiXmlDeclaration& copy )
 
 void TiXmlDeclaration::Print( FILE* cfile, int /*depth*/ ) const
 {
-	fprintf (cfile, "<?xml ");
+	fprintf (cfile, (char*)"<?xml ");
 
 	if ( !version.empty() )
-		fprintf (cfile, "version=\"%s\" ", version.c_str ());
+		fprintf (cfile, (char*)"version=\"%s\" ", version.c_str ());
 	if ( !encoding.empty() )
-		fprintf (cfile, "encoding=\"%s\" ", encoding.c_str ());
+		fprintf (cfile, (char*)"encoding=\"%s\" ", encoding.c_str ());
 	if ( !standalone.empty() )
-		fprintf (cfile, "standalone=\"%s\" ", standalone.c_str ());
-	fprintf (cfile, "?>");
+		fprintf (cfile, (char*)"standalone=\"%s\" ", standalone.c_str ());
+	fprintf (cfile, (char*)"?>");
 }
 
 void TiXmlDeclaration::StreamOut( TIXML_OSTREAM * stream ) const
@@ -1349,8 +1349,8 @@ TiXmlNode* TiXmlDeclaration::Clone() const
 void TiXmlUnknown::Print( FILE* cfile, int depth ) const
 {
 	for ( int i=0; i<depth; i++ )
-		fprintf( cfile, "    " );
-	fprintf( cfile, "<%s>", value.c_str() );
+		fprintf( cfile, (char*)"    " );
+	fprintf( cfile, (char*)"<%s>", value.c_str() );
 }
 
 
