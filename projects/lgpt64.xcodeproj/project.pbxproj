@@ -168,6 +168,7 @@
 		A95153FD2C88A4E70060FA44 /* SDLTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95153FB2C88A4E60060FA44 /* SDLTimer.cpp */; };
 		A95154012C88A6670060FA44 /* MacOSmain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95153FE2C88A6670060FA44 /* MacOSmain.cpp */; };
 		A95154052C88A6720060FA44 /* MacOSSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A95154042C88A6720060FA44 /* MacOSSystem.cpp */; };
+		A9A67DC42C9629AF00E923CD /* Scale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A67DC32C9629AF00E923CD /* Scale.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -515,6 +516,8 @@
 		A95153FE2C88A6670060FA44 /* MacOSmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MacOSmain.cpp; path = ../MacOS/MacOSMain/MacOSmain.cpp; sourceTree = "<group>"; };
 		A95154032C88A6720060FA44 /* MacOSSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MacOSSystem.h; path = ../../MacOS/MacOSSystem/MacOSSystem.h; sourceTree = "<group>"; };
 		A95154042C88A6720060FA44 /* MacOSSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MacOSSystem.cpp; path = ../../MacOS/MacOSSystem/MacOSSystem.cpp; sourceTree = "<group>"; };
+		A9A67DC22C9629AF00E923CD /* Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scale.h; sourceTree = "<group>"; };
+		A9A67DC32C9629AF00E923CD /* Scale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scale.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -762,6 +765,8 @@
 		737D11A20BCE66F000099CB3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A9A67DC32C9629AF00E923CD /* Scale.cpp */,
+				A9A67DC22C9629AF00E923CD /* Scale.h */,
 				87CA0EA80F7E1160001D6BD0 /* Mixer.cpp */,
 				87CA0EA90F7E1160001D6BD0 /* Mixer.h */,
 				73A640190D3CF90A00F43955 /* Groove.cpp */,
@@ -1509,6 +1514,7 @@
 				737D128D0BCE66F000099CB3 /* UIController.cpp in Sources */,
 				737D128E0BCE66F000099CB3 /* ViewData.cpp in Sources */,
 				737D12900BCE66F000099CB3 /* Observable.cpp in Sources */,
+				A9A67DC42C9629AF00E923CD /* Scale.cpp in Sources */,
 				737D12940BCE66F000099CB3 /* Service.cpp in Sources */,
 				737D12950BCE66F000099CB3 /* ServiceRegistry.cpp in Sources */,
 				737D12960BCE66F000099CB3 /* SubService.cpp in Sources */,

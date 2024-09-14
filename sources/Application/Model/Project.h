@@ -16,6 +16,7 @@
 #define VAR_TRANSPOSE   MAKE_FOURCC('T','R','S','P')
 #define VAR_SOFTCLIP MAKE_FOURCC('S', 'F', 'T', 'C')
 #define VAR_CLIP_ATTENUATION MAKE_FOURCC('C', 'A', 'T', 'N')
+#define VAR_SCALE       MAKE_FOURCC('S', 'C', 'A', 'L')
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "4"
@@ -36,6 +37,7 @@ public:
 	bool Wrap() ;
 	void OnTempoTap();
 	void NudgeTempo(int value) ;
+	int GetScale();
 	int GetTempo() ; // Takes nudging into account
 	int GetTranspose() ;
     int GetSoftclip();

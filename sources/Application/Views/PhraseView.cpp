@@ -1,5 +1,7 @@
 #include "PhraseView.h"
 #include "Application/Instruments/CommandList.h"
+#include "UIController.h"
+#include "Application/Model/Scale.h"
 #include "Application/Model/Table.h"
 #include "Application/Utils/HelpLegend.h"
 #include "Application/Utils/char.h"
@@ -147,7 +149,6 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
         lastCmd_ = *cc;
         // Set legend
         break;
-
     case 3:
         switch (direction) {
         case VUD_RIGHT:
@@ -207,7 +208,11 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
     }
     if ((c) && (*c != 0xFF)) {
         int offset = offsets_[col_ + xOffset][direction];
-
+		// Add/remove from offset to match selected scale
+		int scale = viewData_->project_->GetScale();
+		while (!scaleSteps[scale][(*c + offset) % 12]) {
+			offset > 0 ? offset++ : offset--;
+		}
         updateData(c, offset, limit, wrap);
         switch (col_ + xOffset) {
         case 0:
