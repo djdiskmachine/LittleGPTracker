@@ -14,6 +14,7 @@
 #define VAR_WRAP        MAKE_FOURCC('W','R','A','P')
 #define VAR_MIDIDEVICE  MAKE_FOURCC('M','I','D','I')
 #define VAR_TRANSPOSE   MAKE_FOURCC('T','R','S','P')
+#define VAR_SCALE       MAKE_FOURCC('S', 'C', 'A', 'L')
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "4"
@@ -35,6 +36,7 @@ public:
 	bool Wrap() ;
 	void OnTempoTap();
 	void NudgeTempo(int value) ;
+	int GetScale();
 	int GetTempo() ; // Takes nudging into account
 	int GetTranspose() ;
 

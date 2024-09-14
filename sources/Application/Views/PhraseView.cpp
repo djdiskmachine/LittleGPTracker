@@ -3,6 +3,7 @@
 #include "Application/Utils/char.h"
 #include "Application/Instruments/CommandList.h"
 #include "UIController.h"
+#include "Application/Model/Scale.h"
 #include "Application/Model/Table.h"
 #include "Application/Utils/HelpLegend.h"
 #include <string.h>
@@ -206,6 +207,12 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction,int xOffset,int
 	}
 	if ((c)&&(*c!=0xFF)) {
 		int offset=offsets_[col_+xOffset][direction] ;
+		// from: https://github.com/xiphonics/picoTracker/blob/master/sources/Application/Views/PhraseView.cpp
+		// Add/remove from offset to match selected scale
+		int scale = viewData_->project_->GetScale();
+		while (!scaleSteps[scale][(*c + offset) % 12]) {
+			offset > 0 ? offset++ : offset--;
+		}
 
     updateData(c,offset,limit,wrap) ;
 		switch(col_+xOffset) {
@@ -1010,6 +1017,22 @@ void PhraseView::DrawView() {
 	SetColor(CD_NORMAL) ;
 	sprintf(title,"Phrase %2.2x",viewData_->currentPhrase_) ;
 	DrawString(pos._x,pos._y,title,props) ;
+    
+    
+    // Draw Current Scale
+    int scale = viewData_->project_->GetScale();
+    char scale_notes_title[25];
+    std::string scale_notes = "";
+    
+    for(int i = 0; i < scaleNoteCount; i++) {
+        if (scaleSteps[scale][i] == true) {
+            scale_notes = scale_notes + scaleNotes[i];
+        };
+    }
+    
+    sprintf(scale_notes_title, "Scale: %s", scale_notes.c_str());
+    DrawString(pos._x, pos._y + 2, scale_notes_title, props);
+
 
 // Compute song grid location
 
