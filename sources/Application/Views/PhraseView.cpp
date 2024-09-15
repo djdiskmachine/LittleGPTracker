@@ -1019,19 +1019,22 @@ void PhraseView::DrawView() {
 	DrawString(pos._x,pos._y,title,props) ;
     
     
-    // Draw Current Scale
+// Draw Current Scale
     int scale = viewData_->project_->GetScale();
-    char scale_notes_title[25];
-    std::string scale_notes = "";
-    
-    for(int i = 0; i < scaleNoteCount; i++) {
-        if (scaleSteps[scale][i] == true) {
-            scale_notes = scale_notes + scaleNotes[i];
-        };
-    }
-    
-    sprintf(scale_notes_title, "Scale: %s", scale_notes.c_str());
-    DrawString(pos._x, pos._y + 2, scale_notes_title, props);
+	if (scale > 0) {
+		// Only Draw Scales different from default (chromatic)
+		char scale_notes_title[25];
+		std::string scale_notes = "";
+		
+		for(int i = 0; i < scaleNoteCount; i++) {
+			if (scaleSteps[scale][i] == true) {
+				scale_notes = scale_notes + scaleNotes[i];
+			};
+		}
+		
+		sprintf(scale_notes_title, "Scale: %s", scale_notes.c_str());
+		DrawString(pos._x, pos._y + 2, scale_notes_title, props);
+	}
 
 
 // Compute song grid location
