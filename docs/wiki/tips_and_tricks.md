@@ -131,3 +131,46 @@ You make a song with a groove of 4/4. This groove will play 8 times in one patte
 The project screen says the BPM is 100.
 
 `(96*100)/64 = 150` is the perceived BPM
+
+# Better Samples
+
+Super short samples are going to play weird and the solution is to make them longer. 
+You can go for 1 or 2 second long samples for best results.
+
+**Example**
+
+For "oscillators" double the length and subtract one octave, for instance.
+
+**Export Options**
+
+Use these options when exporting:
+
+- WAV.
+- 44100 Hz.
+- Signed 16-bit PCM.
+
+## Naming Samples
+
+Piggy will order your samples alphabetically and assign them to instruments automatically.
+The recommendation is using three numbers to prefix your sample name.
+
+**Example** 
+
+- Use `000_piano_mid.wav` and it will show as the first instrument.
+
+## Loop Points
+
+Loop points are in `Hex` values. So you can use your favourite calculator to convert
+from decimal to hex.
+
+## There's a click as each new note fires?
+
+It's zero crossings, piggy does not respect your desire for modern DAW functionality 😅.
+Don't worry piggy is all about working around the limitations ✌️🫠.
+
+You have these options:
+
+1. Adjust one sample a time until it stops popping. 
+2. Get down and dirty in the code and patch it.
+3. Be like me, be lazy and choose to see it as a feature ☺️.
+4. Add a `volm 0100` on the step before the next note triggers.
