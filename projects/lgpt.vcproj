@@ -789,6 +789,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\sources\Application\Model\Scale.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\sources\Application\Model\Scale.h"
+						>
+					</File>
+					<File
 						RelativePath="..\sources\Application\Model\Table.cpp"
 						>
 					</File>
