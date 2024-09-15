@@ -258,7 +258,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140419022_project_1.1f.png)
 
-- **Tempo:**: Can be set between 60bpm [0x3c] and 400bpm [0x190]. Resolution aligned to LSDJ.
+- **Tempo:**: Can be set between 60bpm [0x3c] and 400bpm [0x190]. Resolution aligned to LSDJ. (nudge with b + left / right)
 - **Master:** Main volume goes from 10% to 200%. Piggy is loud now!
 - **Transpose:** Live transposition of every triggered instruments.
 - **Compact Sequencer:** Free all unused chain/phrases.
@@ -282,6 +282,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 - Make a big selection by pressing LT+B, then DPAD around to highlight.
 - Press LT+A to paste.
 - You can jump the cursor to the next/previous chain in a column by pressing LT+DOWN/UP
+- When playing live with multiple devices, you can nudge dragging/rushing devices by pressing LT+LEFT/RIGHT
 
 ## Chain Screen
 

@@ -4,6 +4,7 @@
 #include "Application/Utils/char.h"
 #include "Application/Player/Player.h"
 #include "UIController.h" 
+#include "Application/Commands/ApplicationCommandDispatcher.h"
 #include <stdlib.h>
 #include <string>
 #include <iostream>
@@ -724,6 +725,8 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 					if (mask&EPBM_DOWN) jumpToNextSection(1) ;
 					if (mask&EPBM_UP) jumpToNextSection(-1) ;
 					if (mask&EPBM_START) startCurrentRow() ;
+					if (mask&EPBM_LEFT) nudgeTempo(-1);
+					if (mask&EPBM_RIGHT) nudgeTempo(1);
 				} else {
 
 	    			// No modifier
@@ -1106,4 +1109,18 @@ void SongView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {
 	}
 	drawNotes() ;
 } ;
+
+
+void SongView::nudgeTempo(int direction) {
+	ApplicationCommandDispatcher *dispatcher=ApplicationCommandDispatcher::GetInstance();
+	switch(direction) {
+		case -1:
+			dispatcher->OnNudgeDown();
+			break;
+		case 1:
+			dispatcher->OnNudgeUp();
+			break;
+	}
+}
+
 

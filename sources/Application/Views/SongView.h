@@ -87,6 +87,7 @@ private:
 	bool needClear_ ;
 	bool canDeepClone_;
 	uint32_t deepCloneTime;
+	void nudgeTempo(int direction) ;
 } ;
 
 #endif
