@@ -70,7 +70,6 @@ Project::~Project() {
 	delete instrumentBank_ ;
 } ;
 
-// from: https://github.com/xiphonics/picoTracker/blob/master/sources/Application/Model/Project.cpp
 int Project::GetScale() {
   Variable *v = FindVariable(VAR_SCALE);
   NAssert(v);
