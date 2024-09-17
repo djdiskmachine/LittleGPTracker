@@ -1017,24 +1017,6 @@ void PhraseView::DrawView() {
 	SetColor(CD_NORMAL) ;
 	sprintf(title,"Phrase %2.2x",viewData_->currentPhrase_) ;
 	DrawString(pos._x,pos._y,title,props) ;
-    
-    
-// Draw Current Scale
-    int scale = viewData_->project_->GetScale();
-	if (scale > 0) {
-		// Only Draw Scales different from default (chromatic)
-		char scale_notes_title[25];
-		std::string scale_notes = "";
-		
-		for(int i = 0; i < scaleNoteCount; i++) {
-			if (scaleSteps[scale][i] == true) {
-				scale_notes = scale_notes + scaleNotes[i];
-			};
-		}
-		
-		sprintf(scale_notes_title, "Scale: %s", scale_notes.c_str());
-		DrawString(pos._x, pos._y + 2, scale_notes_title, props);
-	}
 
 
 // Compute song grid location
@@ -1204,6 +1186,24 @@ void PhraseView::DrawView() {
 
     drawMap() ;
    	drawNotes() ;
+
+	// Draw Current Scale
+    int scale = viewData_->project_->GetScale();
+	if (scale > 0) {
+		// Only Draw Scales different from default (chromatic)
+		char scale_notes_title[25];
+		std::string scale_notes = "";
+		
+		for(int i = 0; i < scaleNoteCount; i++) {
+			if (scaleSteps[scale][i] == true) {
+				scale_notes = scale_notes + scaleNotes[i];
+			};
+		}
+		
+		SetColor(CD_NORMAL);
+		sprintf(scale_notes_title, "Scale: %s", scale_notes.c_str());
+		DrawString(0, pos._y + 4, scale_notes_title, props);
+	}
  
 	Player *player=Player::GetInstance() ;
 	if (player->IsRunning()) {
