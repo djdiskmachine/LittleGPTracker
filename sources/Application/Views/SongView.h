@@ -87,7 +87,8 @@ private:
 	bool needClear_ ;
 	bool canDeepClone_;
 	uint32_t deepCloneTime;
-	void nudgeTempo(int direction) ;
+	void nudgeTempo(int direction);
+	uint8_t jumpLength_ = 0x10; // B-jump 16 rows like LSDJ
 } ;
 
 #endif

@@ -9,7 +9,7 @@
 bool View::initPrivate_=false ;
 
 int View::margin_=0 ;
-int View::songRowCount_ ;//=21 ;
+int View::songRowCount_; //=21 sets screen height among other things
 bool View::miniLayout_=false ;
 int View::altRowNumber_ = 4;
 
@@ -24,7 +24,7 @@ View::View(GUIWindow &w,ViewData *viewData):
 	   GUIRect rect=w.GetRect() ;
      miniLayout_=(rect.Width()<320);
 	   View::margin_=0 ;
-	   songRowCount_=miniLayout_?16:22 ;
+		songRowCount_ = miniLayout_ ? 16:22; // 22 is row display count among other things
 
 		const char *altRowStr = Config::GetInstance()->GetValue("ALTROWNUMBER");
 		if (altRowStr) {

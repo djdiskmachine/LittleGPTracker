@@ -632,8 +632,8 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 
 	if (mask&EPBM_B) {
 
-		if (mask&EPBM_DOWN) updateSongOffset(View::songRowCount_) ;
-		if (mask&EPBM_UP) updateSongOffset(-View::songRowCount_);
+		if (mask&EPBM_DOWN) updateSongOffset(SongView::jumpLength_) ;
+		if (mask&EPBM_UP) updateSongOffset(-SongView::jumpLength_);
 		if (mask&(EPBM_RIGHT|EPBM_LEFT)) {
 		   Player *player=Player::GetInstance() ;
            switch(player->GetSequencerMode()) {
