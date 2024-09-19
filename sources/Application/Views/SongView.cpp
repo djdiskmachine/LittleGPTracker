@@ -28,6 +28,7 @@ SongView::SongView(GUIWindow &w,ViewData *viewData,const char *song):View(w,view
 	clipboard_.data_=0 ;
 	invertBatt_=false ;
 	canDeepClone_ = false;
+	jumpLength_ = 0x10; // B-jump 16 rows like LSDJ
 }
 
 /****************
