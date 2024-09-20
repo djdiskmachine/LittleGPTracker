@@ -1188,6 +1188,8 @@ void PhraseView::DrawView() {
    	drawNotes() ;
 
 	// Draw Current Scale
+	// Uncomment if you want to display the current scale in phrase view
+	/*
     int scale = viewData_->project_->GetScale();
 	if (scale > 0) {
 		// Only Draw Scales different from default (chromatic)
@@ -1204,6 +1206,7 @@ void PhraseView::DrawView() {
 		sprintf(scale_notes_title, "Scale: %s", scale_notes.c_str());
 		DrawString(0, pos._y + 4, scale_notes_title, props);
 	}
+	*/
  
 	Player *player=Player::GetInstance() ;
 	if (player->IsRunning()) {
