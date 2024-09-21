@@ -69,8 +69,8 @@ void SongView::setChain(unsigned char value) {
 
 /******************************************************
  updateSongOffset:
-        modify top of the page row in song view by
-        adding offset parameter
+        Jump from the current position up or down
+	by [offset] rows
  ******************************************************/
  
 void SongView::updateSongOffset(int offset) {
