@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
 
       - name: Install build deps
         run: choco install -y directx-sdk zip --no-progress --yes
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
       
       - name: Install required libraries
         run: |
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
       
       - name: Install required libraries
         run: |
@@ -109,7 +109,7 @@ jobs:
       PSPDEV: ${{ github.workspace }}/pspdev
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
 
       - name: Install required libraries
         run: |
@@ -140,7 +140,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
 
       - name: Install Bittboy toolchain
         run: |
@@ -252,7 +252,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
       
       - name: Install Miyoo Mini toolchain
         run: |
@@ -281,7 +281,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
       
       - name: Install required libraries
         run: |
@@ -299,7 +299,7 @@ jobs:
     runs-on: macos-13
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
 
       - name: Install required libraries
         run: |
