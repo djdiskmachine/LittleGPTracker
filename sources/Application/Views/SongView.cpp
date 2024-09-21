@@ -52,6 +52,7 @@ void SongView::updateChain(int offset) {
 	updateX_=viewData_->songX_ ;
 	updateY_=viewData_->songY_ ;
 	isDirty_=true ;
+	canDeepClone_ = false;
 }
 
 
@@ -75,6 +76,7 @@ void SongView::setChain(unsigned char value) {
 void SongView::updateSongOffset(int offset) {
 	viewData_->UpdateSongOffset(offset) ;
 	isDirty_=true ;
+	canDeepClone_ = false;
 }
 
 /******************************************************
@@ -86,6 +88,7 @@ void SongView::updateSongOffset(int offset) {
 void SongView::updateCursor(int dx,int dy) {
 	viewData_->UpdateSongCursor(dx,dy) ;
 	isDirty_=true ;
+	canDeepClone_ = false;
 }
 
 /******************************************************
