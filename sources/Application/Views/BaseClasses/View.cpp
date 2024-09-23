@@ -37,6 +37,8 @@ View::View(GUIWindow &w,ViewData *viewData):
 	viewMode_=VM_NORMAL ;
 	locked_=false ;
 	viewData_=viewData;
+	NOTIFICATION_TIMEOUT = 1000;
+	displayNotification_ = "";
 } ;
 
 GUIPoint View::GetAnchor() {
@@ -233,4 +235,26 @@ void View::DrawString(int x,int y,const char *txt,GUITextProperties &props) {
 	GUIPoint pos(x,y) ;
 	w_.DrawString(txt,pos,props) ;
 } ;
+
+/*
+	Displays the saved notification for 1 second
+*/
+void View::Notify() {
+	if ((SDL_GetTicks() - notificationTime_) <= NOTIFICATION_TIMEOUT)
+	{
+		SetColor(CD_NORMAL);
+		GUITextProperties props;
+		DrawString(10, 1, displayNotification_, props);
+	} else {
+		displayNotification_ = "";
+	}
+}
+
+/*
+	Set displayed notification and save the current time
+*/
+void View::DoNotify(const char *notification) {
+	notificationTime_ = SDL_GetTicks();
+	displayNotification_ = (char*) notification;
+}
 

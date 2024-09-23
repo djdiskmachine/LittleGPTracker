@@ -10,6 +10,7 @@
 #include "Foundation/T_SimpleList.h"
 #include "Application/Model/Config.h"
 #include "I_Action.h"
+#include "stdint.h"
 
 enum GUIEventPadButtonMasks {
 EPBM_LEFT=1,
@@ -116,6 +117,8 @@ public:
 
 	void DoModal(ModalView *view,ModalViewCallback cb=0) ;
 
+	void DoNotify(const char *notification);
+	void Notify();
 
 protected: 
 
@@ -151,6 +154,9 @@ protected:
 private:
 	unsigned short mask_ ;	
 	bool locked_ ;
+	uint32_t notificationTime_;
+	uint16_t NOTIFICATION_TIMEOUT;
+	char* displayNotification_;
 	static bool initPrivate_ ;
 	ModalView *modalView_ ;
 	ModalViewCallback modalViewCallback_ ;

@@ -30,7 +30,7 @@
 		
 ##### X64: Compile under Linux
 	Required libs:
-	    sudo apt install -y git make libsdl2 libasound2-plugins libjack-dev python3 python3-pillow
+	    sudo apt install -y git make libsdl2-dev libasound2-plugins libjack-dev python3 python3-pillow
 
 	Build with:
 		make PLATFORM=X64
