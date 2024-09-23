@@ -10,7 +10,7 @@
 #include "Foundation/T_SimpleList.h"
 #include "Application/Model/Config.h"
 #include "I_Action.h"
-#include "stdint.h"
+#include <stdint.h>
 
 enum GUIEventPadButtonMasks {
 EPBM_LEFT=1,
