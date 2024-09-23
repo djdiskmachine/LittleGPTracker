@@ -121,8 +121,8 @@ public:
 
 	void DoModal(ModalView *view,ModalViewCallback cb=0) ;
 
-	void DoNotify(const char *notification);
-	void Notify();
+	void EnableNotification();
+	void SetNotification(const char *notification);
 
 protected: 
 

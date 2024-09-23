@@ -239,12 +239,13 @@ void View::DrawString(int x,int y,const char *txt,GUITextProperties &props) {
 /*
 	Displays the saved notification for 1 second
 */
-void View::Notify() {
+void View::EnableNotification() {
 	if ((SDL_GetTicks() - notificationTime_) <= NOTIFICATION_TIMEOUT)
 	{
 		SetColor(CD_NORMAL);
 		GUITextProperties props;
-		DrawString(10, 1, displayNotification_, props);
+		DrawString(10, 2, displayNotification_, props);
+		isDirty_ = true;
 	} else {
 		displayNotification_ = "";
 	}
@@ -253,7 +254,7 @@ void View::Notify() {
 /*
 	Set displayed notification and save the current time
 */
-void View::DoNotify(const char *notification) {
+void View::SetNotification(const char *notification) {
 	notificationTime_ = SDL_GetTicks();
 	displayNotification_ = (char*) notification;
 }

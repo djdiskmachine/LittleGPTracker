@@ -175,7 +175,7 @@ void SongView::deepClonePosition() {
 	unsigned char curChainNum = *pos;
 
 	if (curChainNum == CHAIN_COUNT){
-		View::DoNotify("no more chains!");
+		View::SetNotification("no more chains!");
 		return;
 	}
 
@@ -213,7 +213,7 @@ void SongView::deepClonePosition() {
 		{
 			newPhraseNum = ph->GetNext();
 			if (newPhraseNum == NO_MORE_PHRASE) {
-				View::DoNotify("no more phrases!");
+				View::SetNotification("no more phrases!");
 				return;
 			}
 			for (int k = 0; k < 16; k++) {
@@ -237,10 +237,9 @@ void SongView::deepClonePosition() {
 		srcChain++;
 		dstChain++;
 	}
-	View::DoNotify("deep clone");
+	View::SetNotification("deep clone");
 
 	setChain((unsigned char) curChainNum);
-	isDirty_ = true;
 }
 
 void SongView::extendSelection() {
@@ -882,7 +881,7 @@ void SongView::DrawView() {
 
 	DrawString(pos._x,pos._y,buffer.c_str(),props) ;
 
-    View::Notify();
+    View::EnableNotification();
 	// Compute song grid location
 
 	GUIPoint anchor=GetAnchor() ;
