@@ -10,7 +10,11 @@
 #include "Foundation/T_SimpleList.h"
 #include "Application/Model/Config.h"
 #include "I_Action.h"
-#include <stdint.h>
+#ifdef SDL2
+#include <SDL2/SDL.h>
+#else
+#include <SDL/SDL.h>
+#endif
 
 enum GUIEventPadButtonMasks {
 EPBM_LEFT=1,
