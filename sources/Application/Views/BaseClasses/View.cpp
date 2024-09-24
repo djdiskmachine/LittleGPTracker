@@ -245,7 +245,6 @@ void View::EnableNotification() {
 		SetColor(CD_NORMAL);
 		GUITextProperties props;
 		DrawString(10, 2, displayNotification_, props);
-		isDirty_ = true;
 	} else {
 		displayNotification_ = "";
 	}
@@ -257,5 +256,6 @@ void View::EnableNotification() {
 void View::SetNotification(const char *notification) {
 	notificationTime_ = SDL_GetTicks();
 	displayNotification_ = (char*) notification;
+	isDirty_ = true;
 }
 

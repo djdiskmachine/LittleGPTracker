@@ -264,7 +264,7 @@ void ChainView::copySelection() {
     viewData_->chainRow_=saveRow_ ; 
     viewData_->chainCol_=saveCol_ ;
 
-    isDirty_=true ; 
+	View::SetNotification("copied selection");
 } ;
 
 /******************************************************
@@ -617,6 +617,7 @@ void ChainView::setTextProps(GUITextProperties &props,int row,int col,bool resto
 void ChainView::DrawView() {
 
 	Clear() ;
+	View::EnableNotification();
 
 	GUITextProperties props ;
 	GUIPoint pos=GetTitlePosition() ;
@@ -690,6 +691,7 @@ void ChainView::DrawView() {
 	if (player->IsRunning()) {
 		OnPlayerUpdate(PET_UPDATE) ;
 	} ;
+
 } ;
 
 void ChainView::OnPlayerUpdate(PlayerEventType eventType,unsigned int tick) {

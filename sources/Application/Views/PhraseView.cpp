@@ -37,6 +37,7 @@ PhraseView::PhraseView(GUIWindow &w,ViewData *viewData):
 		clipboard_.note_[i]=0xFF ;
 		clipboard_.instr_[i]=0 ;
 	} ;
+	View::EnableNotification();
 }
 
 PhraseView::~PhraseView() {
@@ -508,7 +509,7 @@ void PhraseView::copySelection() {
     row_=saveRow_ ;
     col_=saveCol_ ;
     
-    isDirty_=true ; 
+	View::SetNotification("copied selection");
 };
 
 /******************************************************
@@ -723,6 +724,8 @@ void PhraseView::ProcessButtonMask(unsigned short mask,bool pressed) {
 						*c=(unsigned char)next ;
 						lastInstr_=next ;
 						isDirty_=true ;
+					} else {
+						View::SetNotification("No more instruments");
 					}
 				}
 			}else {
@@ -736,6 +739,8 @@ void PhraseView::ProcessButtonMask(unsigned short mask,bool pressed) {
 							*c=next ;
 							isDirty_=true ;
 							cmdEdit_.SetInt(next) ;
+						} else {
+							View::SetNotification("No more tables");
 						}
 					}
 				}
@@ -747,6 +752,8 @@ void PhraseView::ProcessButtonMask(unsigned short mask,bool pressed) {
 						*c=next ;
 						isDirty_=true ;
 						cmdEdit_.SetInt(next) ;
+					} else {
+						View::SetNotification("No more tables");
 					}
 				}
 			} ;
@@ -999,6 +1006,7 @@ void PhraseView::setTextProps(GUITextProperties & props, int row,int col,bool re
 void PhraseView::DrawView() {
 
 	Clear() ;
+	View::EnableNotification();
 
 	GUITextProperties props ;
 	GUIPoint pos=GetTitlePosition() ;

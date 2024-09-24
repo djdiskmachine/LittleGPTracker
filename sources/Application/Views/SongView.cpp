@@ -330,7 +330,7 @@ void SongView::copySelection() {
     viewData_->songX_=saveX_ ;
     viewData_->songY_=saveY_ ;
     viewData_->songOffset_=saveOffset_ ;
-    isDirty_=true ;     
+	View::SetNotification("copied selection");
 }
 
 /******************************************************
@@ -852,6 +852,7 @@ void SongView::processSelectionButtonMask(unsigned int mask) {
 void SongView::DrawView() {
 
 	Clear() ;
+	View::EnableNotification();
 
 	GUITextProperties props ;
 	GUIPoint pos=GetTitlePosition() ;
@@ -881,7 +882,6 @@ void SongView::DrawView() {
 
 	DrawString(pos._x,pos._y,buffer.c_str(),props) ;
 
-    View::EnableNotification();
 	// Compute song grid location
 
 	GUIPoint anchor=GetAnchor() ;
