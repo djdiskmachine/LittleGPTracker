@@ -174,7 +174,7 @@ void SongView::deepClonePosition() {
 	unsigned char *pos = viewData_->GetCurrentSongPointer();
 	unsigned char curChainNum = *pos;
 
-	if (curChainNum == CHAIN_COUNT){
+	if (curChainNum == CHAIN_COUNT) {
 		View::SetNotification("no more chains!");
 		return;
 	}

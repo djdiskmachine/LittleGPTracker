@@ -240,8 +240,7 @@ void View::DrawString(int x,int y,const char *txt,GUITextProperties &props) {
 	Displays the saved notification for 1 second
 */
 void View::EnableNotification() {
-	if ((SDL_GetTicks() - notificationTime_) <= NOTIFICATION_TIMEOUT)
-	{
+	if ((SDL_GetTicks() - notificationTime_) <= NOTIFICATION_TIMEOUT) {
 		SetColor(CD_NORMAL);
 		GUITextProperties props;
 		DrawString(10, 2, displayNotification_, props);
