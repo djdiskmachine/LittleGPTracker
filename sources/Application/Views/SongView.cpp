@@ -28,6 +28,7 @@ SongView::SongView(GUIWindow &w,ViewData *viewData,const char *song):View(w,view
 	clipboard_.data_=0 ;
 	invertBatt_=false ;
 	canDeepClone_ = false;
+	jumpLength_ = 0x10; // B-jump 16 rows like LSDJ
 }
 
 /****************
@@ -52,6 +53,7 @@ void SongView::updateChain(int offset) {
 	updateX_=viewData_->songX_ ;
 	updateY_=viewData_->songY_ ;
 	isDirty_=true ;
+	canDeepClone_ = false;
 }
 
 
@@ -68,13 +70,14 @@ void SongView::setChain(unsigned char value) {
 
 /******************************************************
  updateSongOffset:
-        modify top of the page row in song view by
-        adding offset parameter
+        Jump from the current position up or down
+	by [offset] rows
  ******************************************************/
  
 void SongView::updateSongOffset(int offset) {
 	viewData_->UpdateSongOffset(offset) ;
 	isDirty_=true ;
+	canDeepClone_ = false;
 }
 
 /******************************************************
@@ -86,6 +89,7 @@ void SongView::updateSongOffset(int offset) {
 void SongView::updateCursor(int dx,int dy) {
 	viewData_->UpdateSongCursor(dx,dy) ;
 	isDirty_=true ;
+	canDeepClone_ = false;
 }
 
 /******************************************************
@@ -636,8 +640,8 @@ void SongView::processNormalButtonMask(unsigned int mask) {
 
 	if (mask&EPBM_B) {
 
-		if (mask&EPBM_DOWN) updateSongOffset(View::songRowCount_) ;
-		if (mask&EPBM_UP) updateSongOffset(-View::songRowCount_);
+		if (mask&EPBM_DOWN) updateSongOffset(SongView::jumpLength_) ;
+		if (mask&EPBM_UP) updateSongOffset(-SongView::jumpLength_);
 		if (mask&(EPBM_RIGHT|EPBM_LEFT)) {
 		   Player *player=Player::GetInstance() ;
            switch(player->GetSequencerMode()) {

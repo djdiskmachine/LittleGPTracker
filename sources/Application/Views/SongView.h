@@ -81,7 +81,8 @@ private:
 	bool invertBatt_ ;
 	bool needClear_ ;
 	bool canDeepClone_;
-	void nudgeTempo(int direction) ;
+	void nudgeTempo(int direction);
+	uint8_t jumpLength_;		  // When jumping columns with B
 } ;
 
 #endif
