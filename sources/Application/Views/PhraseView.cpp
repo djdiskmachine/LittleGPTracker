@@ -509,7 +509,7 @@ void PhraseView::copySelection() {
     row_=saveRow_ ;
     col_=saveCol_ ;
     
-	View::SetNotification("copied selection");
+	View::SetNotification("Copied selection");
 };
 
 /******************************************************
@@ -595,34 +595,48 @@ void PhraseView::pasteClipboard() {
     uint *src5=clipboard_.cmd2_ ;
     ushort *dst6=viewData_->song_->phrase_->param2_+16*viewData_->currentPhrase_ ;
     ushort *src6=clipboard_.param2_ ;
-    
+
+	uint* noCmd = (uint*) -1;
+	ushort* noPrm = (ushort*) -1;
+	uint* srcCmd[5] = {noCmd, noCmd, src3, noCmd, src5};
+	ushort* srcPrm[6] = {noPrm, noPrm, noPrm, src4, noPrm, src6};
+	uint* dstCmd[5] = {noCmd, noCmd, dst3, noCmd, dst5};
+	ushort* dstPrm[6] = {noPrm, noPrm, noPrm, dst4, noPrm, dst6};
+
+	bool wasUpdated = false;
+
     for (int i=0;i<clipboard_.width_;i++) {
         for (int j=0;j<height;j++) {
             switch(i+clipboard_.col_) {
                 case 0:
                     dst1[(j+row_)%16]=src1[j] ;
+					wasUpdated = true;
                     break ;
                 case 1:
                     dst2[(j+row_)%16]=src2[j] ;
+					wasUpdated = true;
                     break ;
                 case 2:
-                    dst3[(j+row_)%16]=src3[j] ;
-                    break ;
-                case 3:
-                    dst4[(j+row_)%16]=src4[j] ;
-                    break ;
                 case 4:
-                    dst5[(j+row_)%16]=src5[j] ;
-                    break ;
+					if ((col_ + i) == 2 || (col_ + i) == 4) { // Don't allow commands in notes, etc
+						dstCmd[col_ + i][(row_ + j)%16] = srcCmd[clipboard_.col_ + i][j];
+						wasUpdated = true;
+					}
+                    break;
+                case 3:
                 case 5:
-                    dst6[(j+row_)%16]=src6[j] ;
-                    break ;
+					if ((col_ + i) == 3 || (col_ + i) == 5) {
+						dstPrm[col_ + i][(row_ + j)%16] = srcPrm[clipboard_.col_ + i][j];
+						wasUpdated = true;
+					}
+                    break;
             }
         }
     }
-    int offset=(row_+height)%16-row_ ;
-	updateCursor(0x00,offset) ;
-	isDirty_=true ;
+	if (wasUpdated) {
+		updateCursor(0x00, ((row_ + height)%16 - row_));
+		isDirty_ = true;
+	}
 } ;
 
 void PhraseView::unMuteAll() {
