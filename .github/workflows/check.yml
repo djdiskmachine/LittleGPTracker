@@ -52,6 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
 
@@ -85,6 +86,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
   
@@ -118,6 +120,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
   
@@ -157,6 +160,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
           
@@ -190,6 +194,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
 
@@ -224,6 +229,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
           
@@ -258,6 +264,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
 
@@ -292,6 +299,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
 
@@ -327,6 +335,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
 
@@ -361,6 +370,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
   
@@ -393,5 +403,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
