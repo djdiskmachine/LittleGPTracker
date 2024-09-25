@@ -307,7 +307,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 - The top of the phrase screen displays the .wav file loaded into the instrument under your cursor. The left of the phrase screen is the play-time visualizer.
 - The seven columns of the phrase screen, from left to right: (red) row counter, note trigger, instrument selector, effect one, parameters for effect one, effect two, parameters for effect two.
 - You can clone instruments and tables in the phrase screen: LT+(B,A) as usual. You can get a new table or instrument: A,A.
-- If you copy/cut anything in the phrase screen, pasting will always put the data back in the same column (regardless if you've moved the cursor to another column). so effects in column one are always pasted back there, and you can't accidentally paste a note into the effect column, etc.
+- If you copy/cut anything in the phrase screen, pasting will put the data in the column where you are currently located. Pasting incompatible data like a note into the effect column etc does nothing.
 - you can clone a MIDI instrument in the phrase screen by pressing L_TRIGGER+(B,A) on instrument number in phrase screen. Properly saved & restored. You can't delete them once cloned (can't revert them to sample type).
 - If no instrument is set when triggering a new note, tables are not stopped, running commands are not stopped and phase of oscillator instrument is not reset (allowing for clickless transition)
 
@@ -381,7 +381,8 @@ A midi instrument has the following settings:
 ## Table Screen
 
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140549562_table_1.1f.png)
-
+- The seven columns of the phrase screen, from left to right: (red) row counter, effect one, parameters for effect one, effect two, parameters for effect two, effect three, parameters for effect three.
+- If you copy/cut anything in the table screen, pasting will put the data in the column where you are currently located. Pasting incompatible data like parameters into the effect columns and vice versa does nothing.
 - Hopping to self in table holds the step for x ticks. For example
 
 05 HOP 1005
