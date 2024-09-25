@@ -49,6 +49,12 @@ jobs:
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+
   deb:
     runs-on: ubuntu-latest
     steps:
@@ -76,6 +82,12 @@ jobs:
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+  
   x86:
     runs-on: ubuntu-latest
     steps:
@@ -102,7 +114,13 @@ jobs:
           mv lgpt-resources-1.0/*/ ./resources/packaging
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
-        
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+  
   psp:
     runs-on: ubuntu-latest
     env:
@@ -135,7 +153,13 @@ jobs:
           mv lgpt-resources-1.0/*/ ./resources/packaging
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
-        
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+          
   bittboy:
     runs-on: ubuntu-latest
     steps:
@@ -162,6 +186,12 @@ jobs:
           mv lgpt-resources-1.0/*/ ./resources/packaging
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
 
   garlic:
     runs-on: ubuntu-latest
@@ -191,6 +221,12 @@ jobs:
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+          
   garlicplus:
     runs-on: ubuntu-latest
 
@@ -218,7 +254,13 @@ jobs:
           mv lgpt-resources-1.0/*/ ./resources/packaging
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
-        
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+
   rg35xxplus:
     runs-on: ubuntu-latest
 
@@ -245,7 +287,13 @@ jobs:
           unzip lgpt-resources.zip
           mv lgpt-resources-1.0/*/ ./resources/packaging
           rm -rf lgpt-resources*
-          ./resources/packaging/lgpt_package.sh   
+          ./resources/packaging/lgpt_package.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
 
   miyoo:
     runs-on: ubuntu-latest
@@ -276,6 +324,12 @@ jobs:
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+
   x64:
     runs-on: ubuntu-latest
 
@@ -295,6 +349,21 @@ jobs:
         run: |
           make PLATFORM=X64
 
+      - name: Package build
+        working-directory: projects
+        run: |
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/1.0.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-1.0/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
+  
   macos:
     runs-on: macos-13
     steps:
@@ -320,3 +389,9 @@ jobs:
           mv lgpt-resources-1.0/*/ ./resources/packaging
           rm -rf lgpt-resources*
           ./resources/packaging/lgpt_package.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: projects/*.zip
+          if-no-files-found: error
