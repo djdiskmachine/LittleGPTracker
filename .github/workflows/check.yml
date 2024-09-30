@@ -3,6 +3,55 @@ name: Check build viability
 on: [pull_request]
 
 jobs:
+
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check formatting
+        run: |
+          # Get the list of changed files
+          CHANGED_FILES=$(git diff --name-only origin/main..HEAD --diff-filter=ACM | grep -E '\.(cpp|h|c|hpp)$')
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No C/C++ files changed."
+            exit 0
+          fi
+
+          # Flag to track if any file needs formatting
+          NEEDS_FORMATTING=0
+
+          for FILE in $CHANGED_FILES; do
+            # Get the changed lines in the file
+            CHANGED_LINES=$(git diff -U0 origin/main..HEAD -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+
+            for LINE in $CHANGED_LINES; do
+                LINE_START=$(echo $LINE | cut -d'+' -f2)
+                if [ -z "$LINE_START" ]; then
+                    continue
+                fi
+
+                # Check formatting for the specific lines
+                clang-format --lines=$LINE_START:$LINE_START $FILE > formatted_file
+                if ! diff -q $FILE formatted_file > /dev/null; then
+                    echo "File $FILE needs formatting at line $LINE_START"
+                    echo "Formatted line:"
+                    sed -n "${LINE_START}p" formatted_file
+                    NEEDS_FORMATTING=1
+                fi
+                rm formatted_file
+            done
+          done
+
+          if [ $NEEDS_FORMATTING -eq 1 ]; then
+            echo "Some files need formatting. Please review the output above."
+            exit 1
+          else
+            echo "All files are properly formatted."
+          fi
+    
   win32:
     runs-on: windows-latest
     steps:
