@@ -36,7 +36,7 @@ jobs:
               if [ -z "$LINE_START" ]; then
                 continue
               fi
-          
+
               # Check formatting for the specific lines
               clang-format --lines=$LINE_START:$LINE_START $FILE > formatted_file
           
@@ -59,7 +59,6 @@ jobs:
                   NEEDS_FORMATTING=1
               fi
               rm formatted_file
-            done
           done
 
           if [ $NEEDS_FORMATTING -eq 1 ]; then
