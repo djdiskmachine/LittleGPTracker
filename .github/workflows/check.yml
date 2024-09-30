@@ -29,26 +29,34 @@ jobs:
           # Flag to track if any file needs formatting
           NEEDS_FORMATTING=0
 
-          for FILE in $CHANGED_FILES; do
-            # Get the changed lines in the file
-            CHANGED_LINES=$(git diff -U0 master -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+          for LINE in $CHANGED_LINES; do
+              LINE_START=$(echo $LINE | cut -d'+' -f2)
+              if [ -z "$LINE_START" ]; then
+                continue
+              fi
+          
+              # Check formatting for the specific lines
+              clang-format --lines=$LINE_START:$LINE_START $FILE > formatted_file
+          
+              # Compare the original and formatted files
+              if ! diff -q $FILE formatted_file > /dev/null; then
+                  if [ $FILE_NEEDS_FORMATTING -eq 0 ]; then
+                  echo "File $FILE needs formatting at line $LINE_START"
+                  FILE_NEEDS_FORMATTING=1
+                  fi
 
-            for LINE in $CHANGED_LINES; do
-                LINE_START=$(echo $LINE | cut -d'+' -f2)
-                if [ -z "$LINE_START" ]; then
-                    continue
-                fi
+                  # Calculate the next line number
+                  NEXT_LINE=$((LINE_START + 1))
 
-                # Check formatting for the specific lines
-                clang-format --lines=$LINE_START:$LINE_START $FILE > formatted_file
-                if ! diff -q $FILE formatted_file > /dev/null; then
-                    NEXT_LINE=$((LINE_START + 1))
-                    echo "File $FILE needs formatting at line $LINE_START"
-                    echo "Formatted line(s):"
-                    sed -n "${LINE_START}p; ${NEXT_LINE}p" formatted_file
-                    NEEDS_FORMATTING=1
-                fi
-                rm formatted_file
+                  echo "Original line:"
+                  sed -n "${LINE_START}p; ${NEXT_LINE}p" $FILE
+
+                  echo "Formatted line:"
+                  sed -n "${LINE_START}p; ${NEXT_LINE}p" formatted_file
+
+                  NEEDS_FORMATTING=1
+              fi
+              rm formatted_file
             done
           done
 
