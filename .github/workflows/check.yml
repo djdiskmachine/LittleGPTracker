@@ -13,7 +13,7 @@ jobs:
       - name: Check formatting
         run: |
           # Get the list of changed files
-          CHANGED_FILES=$(git diff --name-only origin/main..HEAD --diff-filter=ACM | grep -E '\.(cpp|h|c|hpp)$')
+          CHANGED_FILES=$(git diff --name-only master --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
 
           if [ -z "$CHANGED_FILES" ]; then
             echo "No C/C++ files changed."
