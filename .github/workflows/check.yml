@@ -12,6 +12,8 @@ jobs:
 
       - name: Check formatting
         run: |
+          git fetch
+
           # Get the name of the destination branch
           BASE_BRANCH=${{ github.event.pull_request.base.ref }}
 
