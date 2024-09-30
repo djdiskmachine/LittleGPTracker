@@ -1,0 +1,36 @@
+#!/bin/sh
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
+
+if [ -z "$STAGED_FILES" ]; then
+  exit 0
+fi
+
+NEEDS_FORMATTING=0
+
+# Run clang-format on the changed lines of each staged file
+for FILE in $STAGED_FILES; do
+  # Get the changed lines in the file
+  CHANGED_LINES=$(git diff --cached -U0 -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+
+  # Format each changed line in the file
+  for LINE in $CHANGED_LINES; do
+    LINE_START=$(echo $LINE | cut -d'+' -f2)
+    if [ -z "$LINE_START" ]; then
+      continue
+    fi
+    clang-format -i --lines=$LINE_START:$LINE_START $FILE
+  done
+
+  if ! git diff --quiet $FILE; then
+    NEEDS_FORMATTING=1
+    echo $FILE
+  fi
+done
+
+if [ $NEEDS_FORMATTING -eq 1 ]; then
+  echo "The above files were formatted. Please review and stage the changes before committing."
+  exit 1
+fi
+
+exit 0
