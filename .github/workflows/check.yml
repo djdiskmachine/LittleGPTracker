@@ -42,11 +42,10 @@ jobs:
                 # Check formatting for the specific lines
                 clang-format --lines=$LINE_START:$LINE_START $FILE > formatted_file
                 if ! diff -q $FILE formatted_file > /dev/null; then
+                    NEXT_LINE=$((LINE_START + 1))
                     echo "File $FILE needs formatting at line $LINE_START"
                     echo "Formatted line(s):"
-                    sed -n "${LINE_START}p" formatted_file
-                    sed -n "${LINE_START+1}p" formatted_file
-                    sed -n "${LINE_START+2}p" formatted_file
+                    sed -n "${LINE_START}p; ${NEXT_LINE}p" formatted_file
                     NEEDS_FORMATTING=1
                 fi
                 rm formatted_file
