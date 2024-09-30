@@ -31,7 +31,7 @@ jobs:
 
           for FILE in $CHANGED_FILES; do
             # Get the changed lines in the file
-            CHANGED_LINES=$(git diff -U0 origin/main..HEAD -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+            CHANGED_LINES=$(git diff -U0 master -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
 
             for LINE in $CHANGED_LINES; do
                 LINE_START=$(echo $LINE | cut -d'+' -f2)
