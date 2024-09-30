@@ -10,15 +10,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Fetch all branches
+        run: git fetch
+
       - name: Check formatting
         run: |
-          git fetch
-
-          # Get the name of the destination branch
-          BASE_BRANCH=${{ github.event.pull_request.base.ref }}
+          # Ensure the master branch is fetched
+          git fetch origin master:master
 
           # Get the list of changed files
-          CHANGED_FILES=$(git diff --name-only $BASE_BRANCH --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
+          CHANGED_FILES=$(git diff --name-only master --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
 
           if [ -z "$CHANGED_FILES" ]; then
             echo "No C/C++ files changed."
