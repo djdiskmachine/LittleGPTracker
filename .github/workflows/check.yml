@@ -48,7 +48,7 @@ jobs:
                     # Compare the original and formatted files
                     if ! diff -q $FILE formatted_file > /dev/null; then
                     if [ $FILE_NEEDS_FORMATTING -eq 0 ]; then
-                        echo "File $FILE needs formatting at line $LINE_START"
+                        echo "File $FILE needs formatting"
                         FILE_NEEDS_FORMATTING=1
                     fi
 
@@ -58,8 +58,7 @@ jobs:
                     # Calculate the next line number
                     NEXT_LINE=$((LINE_START + 1))
                     echo "Formatted line:"
-                    sed -n "${LINE_START}p; ${NEXT_LINE}p" formatted_file
-
+                    echo $LINE
                     NEEDS_FORMATTING=1
                     fi
                     rm formatted_file
