@@ -28,6 +28,8 @@ jobs:
 
           # Flag to track if any file needs formatting
           NEEDS_FORMATTING=0
+          # Flag to track if the message has been printed for the current file
+          FILE_NEEDS_FORMATTING=0
 
           for LINE in $CHANGED_LINES; do
               LINE_START=$(echo $LINE | cut -d'+' -f2)
@@ -41,8 +43,8 @@ jobs:
               # Compare the original and formatted files
               if ! diff -q $FILE formatted_file > /dev/null; then
                   if [ $FILE_NEEDS_FORMATTING -eq 0 ]; then
-                  echo "File $FILE needs formatting at line $LINE_START"
-                  FILE_NEEDS_FORMATTING=1
+                    echo "File $FILE needs formatting at line $LINE_START"
+                    FILE_NEEDS_FORMATTING=1
                   fi
 
                   # Calculate the next line number
