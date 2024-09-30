@@ -18,14 +18,14 @@ Variable::Variable(const char *name,FourCC id,int value) {
 	name_=name ;
 	id_=id ;
 	value_.int_=value ;
-	defaultValue_.int_=value ;
+	defaultValue_.int_= value ;
 	type_=INT ;
 } ;
 
 Variable::Variable(const char *name,FourCC id,bool value) {
 	name_=name ;
 	id_=id ;
-	value_.bool_=value ;
+	value_.bool_= value ;
 	defaultValue_.bool_=value ;
 	type_=BOOL ;
 } ;
