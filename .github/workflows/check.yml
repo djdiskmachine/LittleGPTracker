@@ -15,58 +15,63 @@ jobs:
 
       - name: Check formatting
         run: |
-          # Ensure the master branch is fetched
-          git fetch origin master:master
+            # Ensure the master branch is fetched
+            git fetch origin master:master
 
-          # Get the list of changed files
-          CHANGED_FILES=$(git diff --name-only master --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
+            # Get the list of changed files
+            CHANGED_FILES=$(git diff --name-only master --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
 
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No C/C++ files changed."
-            exit 0
-          fi
+            if [ -z "$CHANGED_FILES" ]; then
+                echo "No C/C++ files changed."
+                exit 0
+            fi
 
-          # Flag to track if any file needs formatting
-          NEEDS_FORMATTING=0
-          # Flag to track if the message has been printed for the current file
-          FILE_NEEDS_FORMATTING=0
+            # Flag to track if any file needs formatting
+            NEEDS_FORMATTING=0
 
-          for LINE in $CHANGED_LINES; do
-              LINE_START=$(echo $LINE | cut -d'+' -f2)
-              if [ -z "$LINE_START" ]; then
-                continue
-              fi
+            for FILE in $CHANGED_FILES; do
+                # Flag to track if the message has been printed for the current file
+                FILE_NEEDS_FORMATTING=0
 
-              # Check formatting for the specific lines
-              clang-format --lines=$LINE_START:$LINE_START $FILE > formatted_file
-          
-              # Compare the original and formatted files
-              if ! diff -q $FILE formatted_file > /dev/null; then
-                  if [ $FILE_NEEDS_FORMATTING -eq 0 ]; then
-                    echo "File $FILE needs formatting at line $LINE_START"
-                    FILE_NEEDS_FORMATTING=1
-                  fi
+                # Get the changed lines in the file
+                CHANGED_LINES=$(git diff -U0 master -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
 
-                  # Calculate the next line number
-                  NEXT_LINE=$((LINE_START + 1))
+                for LINE in $CHANGED_LINES; do
+                    LINE_START=$(echo $LINE | cut -d'+' -f2)
+                    if [ -z "$LINE_START" ]; then
+                    continue
+                    fi
 
-                  echo "Original line:"
-                  sed -n "${LINE_START}p; ${NEXT_LINE}p" $FILE
+                    # Check formatting for the specific lines
+                    clang-format --lines=$LINE_START:$LINE_START $FILE > formatted_file
 
-                  echo "Formatted line:"
-                  sed -n "${LINE_START}p; ${NEXT_LINE}p" formatted_file
+                    # Compare the original and formatted files
+                    if ! diff -q $FILE formatted_file > /dev/null; then
+                    if [ $FILE_NEEDS_FORMATTING -eq 0 ]; then
+                        echo "File $FILE needs formatting at line $LINE_START"
+                        FILE_NEEDS_FORMATTING=1
+                    fi
 
-                  NEEDS_FORMATTING=1
-              fi
-              rm formatted_file
-          done
+                    echo "Original line:"
+                    sed -n "${LINE_START}p" $FILE
 
-          if [ $NEEDS_FORMATTING -eq 1 ]; then
-            echo "Some files need formatting. Please review the output above."
-            exit 1
-          else
-            echo "All files are properly formatted."
-          fi
+                    # Calculate the next line number
+                    NEXT_LINE=$((LINE_START + 1))
+                    echo "Formatted line:"
+                    sed -n "${LINE_START}p; ${NEXT_LINE}p" formatted_file
+
+                    NEEDS_FORMATTING=1
+                    fi
+                    rm formatted_file
+                done
+            done
+
+            if [ $NEEDS_FORMATTING -eq 1 ]; then
+                echo "Some files need formatting. Please review the output above."
+                exit 1
+            else
+                echo "All files are properly formatted."
+            fi
     
   win32:
     runs-on: windows-latest
