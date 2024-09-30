@@ -25,8 +25,8 @@ Variable::Variable(const char *name,FourCC id,int value) {
 Variable::Variable(const char *name,FourCC id,bool value) {
 	name_=name ;
 	id_=id ;
-	value_.bool_= value ;
-	defaultValue_.bool_=value ;
+    value_.bool_ = value;
+    defaultValue_.bool_=value ;
 	type_=BOOL ;
 } ;
 
