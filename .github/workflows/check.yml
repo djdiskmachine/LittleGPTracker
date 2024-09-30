@@ -28,7 +28,7 @@ jobs:
             # Run clang-format on the changed lines of each staged file
             for FILE in $CHANGED_FILES; do
                 # Get the changed lines in the file
-                CHANGED_LINES=$(git diff --cached -U0 -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+                CHANGED_LINES=$(git diff -U0 master -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
 
                 # Format each changed line in the file
                 for LINE in $CHANGED_LINES; do
