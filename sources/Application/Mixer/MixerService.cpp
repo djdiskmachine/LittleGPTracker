@@ -161,8 +161,6 @@ bool MixerService::Clipped() {
 } ;
 
 void MixerService::SetMasterVolume(int vol) {
-  Mixer *mixer=Mixer::GetInstance();
-  
   fixed masterVolume = fp_mul(i2fp(vol),fl2fp(0.01f));
   
   for (int i=0;i<SONG_CHANNEL_COUNT;i++)
@@ -170,6 +168,10 @@ void MixerService::SetMasterVolume(int vol) {
     bus_[i].SetVolume(masterVolume);
   }
 } ;
+
+void MixerService::SetSoftclip(int clip) {
+  out_->SetSoftclip(clip);
+};
 
 int MixerService::GetPlayedBufferPercentage() {
 	return out_->GetPlayedBufferPercentage() ;

@@ -21,7 +21,7 @@
 
         <MAP src="key:0:a" dst="/event/b" />
         <MAP src="key:0:s" dst="/event/a" />
-        <MAP src="key:0:space" dst="/event/space" />
+        <MAP src="key:0:space" dst="/event/start" />
 <!--
     EXAMPLE
     maps the button "8" to left shoulder

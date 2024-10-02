@@ -1,0 +1,4 @@
+char *softclipStates[] = {
+	"off",
+	"on "
+} ;

@@ -1,5 +1,3 @@
-
-
 #include "PlayerMixer.h"
 #include "SyncMaster.h"
 #include "System/Console/Trace.h"
@@ -102,21 +100,19 @@ bool PlayerMixer::Clipped() {
 void PlayerMixer::Update(Observable &o,I_ObservableData *d) {
 
   // Notifies the player so that pattern data is processed
-
-     SetChanged() ;
-     NotifyObservers() ;
+  SetChanged() ;
+  NotifyObservers() ;
 
   // Transfer the mixer data
+  Mixer *mixer=Mixer::GetInstance() ;
 
-	Mixer *mixer=Mixer::GetInstance() ;
-
-	for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-		channel_[i]->SetMixBus(mixer->GetBus(i)) ;
-	}
-//     out_->SetMasterVolume(project_->GetMasterVolume()) ;
-	 MixerService *ms=MixerService::GetInstance() ;
-     ms->SetMasterVolume(project_->GetMasterVolume()) ;
-     clipped_=ms->Clipped() ;
+  for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
+    channel_[i]->SetMixBus(mixer->GetBus(i));
+  }
+  MixerService *ms=MixerService::GetInstance();
+  ms->SetMasterVolume(project_->GetMasterVolume());
+  ms->SetSoftclip(project_->GetSoftclip());
+  clipped_=ms->Clipped();
 } ;
 
 

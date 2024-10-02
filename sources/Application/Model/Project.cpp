@@ -12,6 +12,7 @@
 #include "Application/Instruments/SampleInstrument.h"
 
 #include <math.h>
+#include "ProjectDatas.h"
 
 Project::Project()
 :Persistent("PROJECT")
@@ -27,6 +28,9 @@ tempoNudge_(0)
 	this->Insert(wrap) ;
 	Variable *transpose=new Variable("transpose",VAR_TRANSPOSE,0) ;
 	this->Insert(transpose) ;
+	Variable *softclip=new Variable("softclip",VAR_SOFTCLIP,softclipStates,2,0) ;
+	this->Insert(softclip) ;
+
 
 // Reload the midi device list
 
@@ -67,10 +71,16 @@ int Project::GetTempo() {
 } ;
 
 int Project::GetMasterVolume() {
-	Variable *v=FindVariable(VAR_MASTERVOL) ;
-	NAssert(v) ;
-	return v->GetInt() ;
+	Variable *v=FindVariable(VAR_MASTERVOL);
+	NAssert(v);
+	return v->GetInt();
 } ;
+
+int Project::GetSoftclip() {
+	Variable *v=FindVariable(VAR_SOFTCLIP);
+	NAssert(v);
+	return v->GetInt();
+}
 
 void Project::NudgeTempo(int value) {
 	if((GetTempo() + tempoNudge_) > 0)

@@ -53,6 +53,10 @@ void DummyAudioOut::Stop() {
 	SAFE_DELETE(thread_) ;
 } ;
 
+void DummyAudioOut::SetSoftclip(int clip) {
+  
+}
+
 void DummyAudioOut::SendPulse()
 {
   SetChanged() ;

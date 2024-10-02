@@ -20,6 +20,7 @@ public:
        virtual void Stop() ;
  
        virtual void Trigger() ;
+       virtual void SetSoftclip(int clip);
 
        virtual bool Clipped() ;
 
@@ -46,6 +47,7 @@ private:
         AudioDriver *driver_ ;
        	bool clipped_ ;
        	bool hasSound_ ;
+        bool softclip_ ;
 
 	    fixed *primarySoundBuffer_ ;
 	    short *mixBuffer_ ;

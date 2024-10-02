@@ -25,7 +25,7 @@ public:
     virtual void Close() ;
     virtual bool Start() ;
     virtual void Stop() ;
- 
+
 	virtual void Trigger()  ;
 
 	virtual bool Clipped() { return false ; } ;
@@ -40,6 +40,7 @@ public:
 	virtual int GetAudioRequestedBufferSize() ;
 	virtual int GetAudioPreBufferCount() ;
 	virtual double GetStreamTime() ;
+  virtual void SetSoftclip(int);
 
 private:
 	DummyOutThread *thread_ ;

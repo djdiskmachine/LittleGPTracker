@@ -2,9 +2,11 @@
 #include "AudioOutDriver.h"
 #include "System/System/System.h"
 #include "AudioDriver.h"
+#include "Application/Model/Project.h"
 #include "Application/Player/SyncMaster.h" // Should be installable
 #include "System/Console/Trace.h"
 #include "Services/Time/TimeService.h"
+#include <math.h> 
 
 AudioOutDriver::AudioOutDriver(AudioDriver &driver) {
     driver_=&driver ;
@@ -66,6 +68,14 @@ void AudioOutDriver::prepareMixBuffers() {
 	clipped_=false ;   
 } ;
 
+void AudioOutDriver::SetSoftclip(int clip) {
+  if (clip == 1) {
+    softclip_ = true;
+  } else {
+    softclip_ = false;
+  }
+}
+
 void AudioOutDriver::clipToMix() {
 
 	bool interlaced=driver_->Interlaced()  ;
@@ -80,34 +90,91 @@ void AudioOutDriver::clipToMix() {
 		fixed *p=primarySoundBuffer_ ;
         
 		fixed v;
-		fixed f_32767=i2fp(32767) ;
-		fixed f_m32768=i2fp(-32768) ;
+		fixed f_32767=i2fp(32767);
+		fixed f_m32768=i2fp(-32768);
+		fixed fl_32767=fp2fl(f_32767);
+		fixed fl_m32768=fp2fl(f_m32768);
+
+    float x;
+    float alpha=1;
+    float twoThirds=2.0/3.0;
+    float gainCompensation=1.0/(alpha*twoThirds)-0.05;
 
 		for (int i=0;i<sampleCount_;i++) {
-            // Left
-			v=*p++ ;
-			if (v>f_32767) {
-				v=f_32767 ;
-				clipped_=true ;
-			} else if (v<f_m32768) {
-				v=f_m32768 ;
-				clipped_=true ;
-			}
-			*s1=short(fp2i(v)) ;
-			s1+=offset ;
 
-            // Right
-			v=*p++ ;
-			if (v>f_32767) {
-				v=f_32767 ;
-				clipped_=true ;
-			} else if (v<f_m32768) {
-				v=f_m32768 ;
-				clipped_=true ;
-			}
-			*s2=short(fp2i(v)) ;
-			s2+=offset;
-		} ;
+      if (softclip_ == 0) {
+        // Left
+        v=*p++ ;
+        if (v>f_32767) {
+          v=f_32767;
+        } else if (v<f_m32768) {
+          v=f_m32768;
+        }
+        *s1=short(fp2i(v));
+        s1+=offset;
+
+        // Right
+        v=*p++ ;
+        if (v>f_32767) {
+          v=f_32767;
+          clipped_=true;
+        } else if (v<f_m32768) {
+          v=f_m32768;
+          clipped_=true;
+        }
+
+        *s2=short(fp2i(v));
+        s2+=offset;
+
+      } else {
+        // Left
+        v=*p++;
+        if (v>0) {
+          x=(1/alpha)*(fp2fl(v)/fl_32767);
+          if (x>=1) {
+            v=fl_32767*(alpha*(twoThirds));
+            clipped_=true;
+          } else {
+            v=fl_32767*(alpha*(x-(pow(x, 3)/3.0)));
+          }
+        }
+        else if (v<0) {
+          x=-((1/alpha)*(fp2fl(v)/fl_m32768));
+          if (x<=-1) {
+            v=fl_m32768*(alpha*(twoThirds));
+            clipped_=true;
+          } else {
+            v=fl_m32768*-(alpha*(x-(pow(x, 3)/3.0)));
+          }
+        }
+        *s1=short(fp2i(fl2fp(v*gainCompensation)));
+        s1+=offset;
+
+        // Right
+        v=*p++;
+        if (v>0) {
+          x=(1/alpha)*(fp2fl(v)/fl_32767);
+          if (x>=1) {
+            v=fl_32767*(alpha*(twoThirds));
+            clipped_=true;
+          } else {
+            v=fl_32767*(alpha*(x-(pow(x, 3)/3.0)));
+          }
+        }
+        else if (v<0) {
+          x=-((1/alpha)*(fp2fl(v)/fl_m32768));
+          if (x<=-1) {
+            v=fl_m32768*(alpha*(twoThirds));
+            clipped_=true;
+          } else {
+            v=fl_m32768*-(alpha*(x-(pow(x, 3)/3.0)));
+          }
+        }
+        *s2=short(fp2i(fl2fp(v*gainCompensation)));
+        s2+=offset;
+
+      }
+    } ;
 	}     
 } ;
 
