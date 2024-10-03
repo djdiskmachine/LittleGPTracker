@@ -28,8 +28,9 @@ tempoNudge_(0)
 	this->Insert(wrap) ;
 	Variable *transpose=new Variable("transpose",VAR_TRANSPOSE,0) ;
 	this->Insert(transpose) ;
-	Variable *softclip=new Variable("softclip",VAR_SOFTCLIP,softclipStates,2,0) ;
-	this->Insert(softclip) ;
+    Variable *softclip =
+        new Variable("softclip", VAR_SOFTCLIP, softclipStates, 5, 0);
+    this->Insert(softclip) ;
 
 
 // Reload the midi device list

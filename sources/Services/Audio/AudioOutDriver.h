@@ -10,47 +10,51 @@ class AudioDriver ;
 #define MIX_BUFFER_SIZE 40000
 
 class AudioOutDriver: public AudioOut,protected I_Observer {
-public:
-       AudioOutDriver(AudioDriver &) ;
-       virtual ~AudioOutDriver() ;
- 
-       virtual bool Init() ;
-       virtual void Close() ;
-       virtual bool Start() ;
-       virtual void Stop() ;
- 
-       virtual void Trigger() ;
-       virtual void SetSoftclip(int clip);
+  public:
+    AudioOutDriver(AudioDriver &) ;
+    virtual ~AudioOutDriver() ;
 
-       virtual bool Clipped() ;
+    virtual bool Init() ;
+    virtual void Close() ;
+    virtual bool Start() ;
+    virtual void Stop() ;
 
-	   virtual int GetPlayedBufferPercentage() ;
+    virtual void Trigger() ;
+    virtual void SetSoftclip(int clip);
 
-       AudioDriver *GetDriver() ;
+    virtual bool Clipped() ;
 
-		virtual std::string GetAudioAPI() ;
-		virtual std::string GetAudioDevice() ;
-		virtual int GetAudioBufferSize() ;
-		virtual int GetAudioRequestedBufferSize() ;
-		virtual int GetAudioPreBufferCount() ;
-		virtual double GetStreamTime() ;
+    virtual int GetPlayedBufferPercentage() ;
 
-protected:
+    AudioDriver *GetDriver() ;
 
-		virtual void Update(Observable &o,I_ObservableData *d) ;
- 
-       void prepareMixBuffers() ;
-       void mixToPrimary() ;
-	   void clipToMix() ;
+    virtual std::string GetAudioAPI() ;
+    virtual std::string GetAudioDevice() ;
+    virtual int GetAudioBufferSize() ;
+    virtual int GetAudioRequestedBufferSize() ;
+    virtual int GetAudioPreBufferCount() ;
+    virtual double GetStreamTime() ;
 
-private:
-        AudioDriver *driver_ ;
-       	bool clipped_ ;
-       	bool hasSound_ ;
-        bool softclip_ ;
+  protected:
 
-	    fixed *primarySoundBuffer_ ;
-	    short *mixBuffer_ ;
-	    int sampleCount_ ;       
+    virtual void Update(Observable &o,I_ObservableData *d) ;
+
+    void prepareMixBuffers() ;
+    void mixToPrimary() ;
+    void clipToMix() ;
+    fixed hardClip(fixed sample);
+    fixed softClip(fixed sample);
+
+  private:
+    AudioDriver *driver_ ;
+    bool clipped_ ;
+    bool hasSound_ ;
+    int softclip_ ;
+    fixed maxPositiveFixed_;
+    fixed maxNegativeFixed_;
+
+    fixed *primarySoundBuffer_ ;
+    short *mixBuffer_ ;
+    int sampleCount_ ;       
 } ;
 #endif

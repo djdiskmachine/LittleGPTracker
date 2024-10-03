@@ -118,44 +118,48 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
 	v=project_->FindVariable(VAR_SOFTCLIP) ;
   position._y+=1 ;
-	UIIntVarField *f3=new UIIntVarField(position,*v,"soft clip: %s", 0, 1, 1, 1) ;
-	T_SimpleList<UIField>::Insert(f3) ;
+  UIIntVarField *f3 =
+      new UIIntVarField(position, *v, "soft clip: %s", 0, 4, 1, 1);
+  T_SimpleList<UIField>::Insert(f3);
 
-	position._y+=2 ;
-	UIActionField *a1=new UIActionField("Compact Sequencer",ACTION_PURGE,position) ;
-	a1->AddObserver(*this) ;
-	T_SimpleList<UIField>::Insert(a1) ;
+  position._y += 2;
+  UIActionField *a1 =
+      new UIActionField("Compact Sequencer", ACTION_PURGE, position);
+  a1->AddObserver(*this);
+  T_SimpleList<UIField>::Insert(a1);
 
-	position._y+=1 ;
-	a1=new UIActionField("Compact Instruments",ACTION_PURGE_INSTRUMENT,position) ;
-	a1->AddObserver(*this) ;
-	T_SimpleList<UIField>::Insert(a1) ;
+  position._y += 1;
+  a1 = new UIActionField("Compact Instruments", ACTION_PURGE_INSTRUMENT,
+                         position);
+  a1->AddObserver(*this);
+  T_SimpleList<UIField>::Insert(a1);
 
-	position._y+=2 ;
-	a1=new UIActionField("Load Song",ACTION_LOAD,position) ;
-	a1->AddObserver(*this) ;
-	T_SimpleList<UIField>::Insert(a1) ;
+  position._y += 2;
+  a1 = new UIActionField("Load Song", ACTION_LOAD, position);
+  a1->AddObserver(*this);
+  T_SimpleList<UIField>::Insert(a1);
 
-	position._y+=1 ;
-	a1=new UIActionField("Save Song",ACTION_SAVE,position) ;
-	a1->AddObserver(*this) ;
-	T_SimpleList<UIField>::Insert(a1) ;
+  position._y += 1;
+  a1 = new UIActionField("Save Song", ACTION_SAVE, position);
+  a1->AddObserver(*this);
+  T_SimpleList<UIField>::Insert(a1);
 
-	position._y+=1 ;
-	a1=new UIActionField("Save Song As",ACTION_SAVE_AS,position) ;
-	a1->AddObserver(*this) ;
-	T_SimpleList<UIField>::Insert(a1) ;
+  position._y += 1;
+  a1 = new UIActionField("Save Song As", ACTION_SAVE_AS, position);
+  a1->AddObserver(*this);
+  T_SimpleList<UIField>::Insert(a1);
 
-	v=project_->FindVariable(VAR_MIDIDEVICE) ;
-	NAssert(v) ;
-	position._y+=2 ;
-	UIIntVarField *f4=new UIIntVarField(position,*v,"MIDI: %s",0,MidiService::GetInstance()->Size(),1,1) ;
-	T_SimpleList<UIField>::Insert(f4) ;
+  v = project_->FindVariable(VAR_MIDIDEVICE);
+  NAssert(v);
+  position._y += 2;
+  UIIntVarField *f4 = new UIIntVarField(
+      position, *v, "MIDI: %s", 0, MidiService::GetInstance()->Size(), 1, 1);
+  T_SimpleList<UIField>::Insert(f4);
 
-	position._y+=2 ;
-	a1=new UIActionField("Exit",ACTION_QUIT,position) ;
-	a1->AddObserver(*this) ;
-	T_SimpleList<UIField>::Insert(a1) ;
+  position._y += 2;
+  a1 = new UIActionField("Exit", ACTION_QUIT, position);
+  a1->AddObserver(*this);
+  T_SimpleList<UIField>::Insert(a1);
 
 }
 

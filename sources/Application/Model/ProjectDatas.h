@@ -1,4 +1,1 @@
-char *softclipStates[] = {
-	"off",
-	"on "
-} ;
+char *softclipStates[] = {"off", "subtle", "medium", "heavy", "insane"};

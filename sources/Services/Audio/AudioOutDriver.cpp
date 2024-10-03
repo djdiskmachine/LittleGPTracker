@@ -9,58 +9,58 @@
 #include <math.h> 
 
 AudioOutDriver::AudioOutDriver(AudioDriver &driver) {
-    driver_=&driver ;
-    driver.AddObserver(*this) ;
+    maxPositiveFixed_ = i2fp(32767);
+    maxNegativeFixed_=i2fp(-32768);
+	driver_=&driver ;
+	driver.AddObserver(*this) ;
 	primarySoundBuffer_=0 ;
-	mixBuffer_=0 ;        
-    SetOwnership(false) ;                       
+    mixBuffer_ = 0;
+    SetOwnership(false);
 }
 
 AudioOutDriver::~AudioOutDriver() {
-    driver_->RemoveObserver(*this) ;
+    driver_->RemoveObserver(*this);
     delete driver_ ;
 };
 
 bool AudioOutDriver::Init() {
 	primarySoundBuffer_=(fixed *)SYS_MALLOC(MIX_BUFFER_SIZE*sizeof(fixed)/2) ;
 	mixBuffer_=(short *)SYS_MALLOC(MIX_BUFFER_SIZE) ;
-    return driver_->Init() ;     
+    return driver_->Init();
 } ;
 
 void AudioOutDriver::Close() {
-     driver_->Close() ;
-	SAFE_FREE(primarySoundBuffer_) ;
+    driver_->Close();
+    SAFE_FREE(primarySoundBuffer_) ;
 	SAFE_FREE(mixBuffer_) ;     
 }
 
 bool AudioOutDriver::Start() {
-     clipped_=false ;
-     sampleCount_=0 ;
-     return driver_->Start() ;
+    clipped_ = false;
+    sampleCount_=0 ;
+	return driver_->Start() ;
 }
 
 void AudioOutDriver::Stop() {
 	driver_->Stop() ;
 }
 
-bool AudioOutDriver::Clipped() {
-     return clipped_ ;
-} ;
+bool AudioOutDriver::Clipped() { return clipped_; };
 
 void AudioOutDriver::Trigger() {
 
 	TimeService *ts=TimeService::GetInstance() ;
 
-  prepareMixBuffers() ;
-  hasSound_=AudioMixer::Render(primarySoundBuffer_,sampleCount_) ;
-  clipToMix() ;
-  driver_->AddBuffer(mixBuffer_,sampleCount_) ;
+    prepareMixBuffers();
+    hasSound_=AudioMixer::Render(primarySoundBuffer_,sampleCount_) ;
+    clipToMix();
+    driver_->AddBuffer(mixBuffer_,sampleCount_) ;
 }
 
 void AudioOutDriver::Update(Observable &o,I_ObservableData *d) 
 {
-  SetChanged() ;
-  NotifyObservers(d) ;    
+    SetChanged();
+    NotifyObservers(d) ;
 }
 
 void AudioOutDriver::prepareMixBuffers() {
@@ -68,12 +68,80 @@ void AudioOutDriver::prepareMixBuffers() {
 	clipped_=false ;   
 } ;
 
-void AudioOutDriver::SetSoftclip(int clip) {
-  if (clip == 1) {
-    softclip_ = true;
-  } else {
-    softclip_ = false;
-  }
+void AudioOutDriver::SetSoftclip(int clip) { softclip_ = clip; }
+
+fixed AudioOutDriver::hardClip(fixed sample) {
+	fixed clippedSample=sample;
+
+	if (sample>maxPositiveFixed_) {
+		clippedSample=maxPositiveFixed_;
+		clipped_=true;
+	} else if (sample<maxNegativeFixed_) {
+		clippedSample=maxNegativeFixed_;
+		clipped_=true;
+	}
+
+	return clippedSample;
+}
+
+/* Implements standard cubic algorithm
+ * https://wiki.analog.com/resources/tools-software/sigmastudio/toolbox/nonlinearprocessors/standardcubic
+ */
+fixed AudioOutDriver::softClip(fixed sample) {
+
+	if (softclip_ == 0 || sample == 0) return sample;
+
+	float sampleFloat=fp2fl(sample);
+	fixed maxPositiveFloat=fp2fl(maxPositiveFixed_);
+	fixed maxNegativeFloat=fp2fl(maxNegativeFixed_);
+	float maxFloat;
+
+	if (sampleFloat>0) {
+		maxFloat=maxPositiveFloat;
+	}
+	else {
+		maxFloat=maxNegativeFloat;
+	}
+
+	float x;
+	float alpha;		// hardness
+
+	switch (softclip_) {
+		case 1:
+			alpha=1.45; // -1.5db (approx.)
+			break;
+		case 2:
+			alpha=1.07; // -3db (approx.)
+			break;
+		case 3:
+			alpha=0.75; // -6db (approx.)
+			break;
+		case 4:
+			alpha=0.53; // -9db (approx.)
+			break;
+		default:
+			alpha=1.45;
+	}
+
+	float twoThirds=2.0/3.0;
+	float alphaTwoThirds=alpha*twoThirds;
+	float invertedAlpha=1.0/alpha;
+
+	x=invertedAlpha*(sampleFloat/maxFloat);
+	if (x>-1.0 && x<1.0) {
+		sampleFloat=maxFloat*(alpha*(x-(pow(x, 3)/3.0)));
+	} else {
+		sampleFloat=maxFloat*alphaTwoThirds;
+	}
+
+	float gainCompensation;
+	if (alpha > 1.0) {
+		gainCompensation=1.0/(alpha*(invertedAlpha-pow(invertedAlpha, 3)/3.0));
+	} else {
+		gainCompensation=1.0/alphaTwoThirds;
+	}
+
+	return fl2fp(sampleFloat*gainCompensation);
 }
 
 void AudioOutDriver::clipToMix() {
@@ -88,93 +156,20 @@ void AudioOutDriver::clipToMix() {
 		int offset=(interlaced)?2:1 ;
 
 		fixed *p=primarySoundBuffer_ ;
-        
-		fixed v;
-		fixed f_32767=i2fp(32767);
-		fixed f_m32768=i2fp(-32768);
-		fixed fl_32767=fp2fl(f_32767);
-		fixed fl_m32768=fp2fl(f_m32768);
 
-    float x;
-    float alpha=1;
-    float twoThirds=2.0/3.0;
-    float gainCompensation=1.0/(alpha*twoThirds)-0.05;
+        fixed leftSample;
+        fixed rightSample;
 
-		for (int i=0;i<sampleCount_;i++) {
+        for (int i=0;i<sampleCount_;i++) {
 
-      if (softclip_ == 0) {
-        // Left
-        v=*p++ ;
-        if (v>f_32767) {
-          v=f_32767;
-        } else if (v<f_m32768) {
-          v=f_m32768;
-        }
-        *s1=short(fp2i(v));
-        s1+=offset;
+			leftSample=hardClip(softClip(*p++));
+			rightSample=hardClip(softClip(*p++));
 
-        // Right
-        v=*p++ ;
-        if (v>f_32767) {
-          v=f_32767;
-          clipped_=true;
-        } else if (v<f_m32768) {
-          v=f_m32768;
-          clipped_=true;
-        }
-
-        *s2=short(fp2i(v));
-        s2+=offset;
-
-      } else {
-        // Left
-        v=*p++;
-        if (v>0) {
-          x=(1/alpha)*(fp2fl(v)/fl_32767);
-          if (x>=1) {
-            v=fl_32767*(alpha*(twoThirds));
-            clipped_=true;
-          } else {
-            v=fl_32767*(alpha*(x-(pow(x, 3)/3.0)));
-          }
-        }
-        else if (v<0) {
-          x=-((1/alpha)*(fp2fl(v)/fl_m32768));
-          if (x<=-1) {
-            v=fl_m32768*(alpha*(twoThirds));
-            clipped_=true;
-          } else {
-            v=fl_m32768*-(alpha*(x-(pow(x, 3)/3.0)));
-          }
-        }
-        *s1=short(fp2i(fl2fp(v*gainCompensation)));
-        s1+=offset;
-
-        // Right
-        v=*p++;
-        if (v>0) {
-          x=(1/alpha)*(fp2fl(v)/fl_32767);
-          if (x>=1) {
-            v=fl_32767*(alpha*(twoThirds));
-            clipped_=true;
-          } else {
-            v=fl_32767*(alpha*(x-(pow(x, 3)/3.0)));
-          }
-        }
-        else if (v<0) {
-          x=-((1/alpha)*(fp2fl(v)/fl_m32768));
-          if (x<=-1) {
-            v=fl_m32768*(alpha*(twoThirds));
-            clipped_=true;
-          } else {
-            v=fl_m32768*-(alpha*(x-(pow(x, 3)/3.0)));
-          }
-        }
-        *s2=short(fp2i(fl2fp(v*gainCompensation)));
-        s2+=offset;
-
-      }
-    } ;
+            *s1=short(fp2i(leftSample));
+			s1+=offset;
+			*s2=short(fp2i(rightSample));
+			s2+=offset;
+		} ;
 	}     
 } ;
 
@@ -182,9 +177,7 @@ int AudioOutDriver::GetPlayedBufferPercentage() {
 	return driver_->GetPlayedBufferPercentage() ;
 } ;
 
-AudioDriver *AudioOutDriver::GetDriver() {
-    return driver_ ;
-} ;
+AudioDriver *AudioOutDriver::GetDriver() { return driver_; };
 
 std::string AudioOutDriver::GetAudioAPI() {
 	AudioSettings as=driver_->GetAudioSettings() ;

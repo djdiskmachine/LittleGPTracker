@@ -161,11 +161,12 @@ bool MixerService::Clipped() {
 } ;
 
 void MixerService::SetMasterVolume(int vol) {
-  fixed masterVolume = fp_mul(i2fp(vol),fl2fp(0.01f));
-  
-  for (int i=0;i<SONG_CHANNEL_COUNT;i++)
-  {
-    bus_[i].SetVolume(masterVolume);
+    Mixer *mixer = Mixer::GetInstance();
+
+    fixed masterVolume = fp_mul(i2fp(vol), fl2fp(0.01f));
+
+    for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+        bus_[i].SetVolume(masterVolume);
   }
 } ;
 
