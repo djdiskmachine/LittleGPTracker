@@ -8,6 +8,7 @@
 #include "Application/Views/ModalDialogs/MessageBox.h"
 #include "Application/Views/ModalDialogs/NewProjectDialog.h"
 #include "Application/Views/ModalDialogs/SelectProjectDialog.h"
+#include "Application/Model/Scale.h"
 
 #define ACTION_PURGE            MAKE_FOURCC('P','U','R','G')
 #define ACTION_SAVE             MAKE_FOURCC('S','A','V','E')
@@ -114,6 +115,17 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	position._y+=1 ;
 	UIIntVarField *f2=new UIIntVarField(position,*v,"transpose: %3.2d",-48,48,0x1,0xC) ;
 	T_SimpleList<UIField>::Insert(f2) ;
+	
+	// from: https://github.com/xiphonics/picoTracker/blob/master/sources/Application/Views/ProjectView.cpp
+	v = project_->FindVariable(VAR_SCALE);
+	// if scale name is not found, set the default chromatic scale
+	if (v->GetInt() < 0) {
+		v->SetInt(0);
+	}
+	position._y += 1;
+	UIIntVarField *f3 =
+		new UIIntVarField(position, *v, "scale: %s", 0, scaleCount - 1, 1, 10);
+	T_SimpleList<UIField>::Insert(f3);
 
 	position._y+=2 ;
 	UIActionField *a1=new UIActionField("Compact Sequencer",ACTION_PURGE,position) ;
@@ -143,8 +155,8 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	v=project_->FindVariable(VAR_MIDIDEVICE) ;
 	NAssert(v) ;
 	position._y+=2 ;
-	UIIntVarField *f3=new UIIntVarField(position,*v,"MIDI: %s",0,MidiService::GetInstance()->Size(),1,1) ;
-	T_SimpleList<UIField>::Insert(f3) ;
+	UIIntVarField *f4=new UIIntVarField(position,*v,"MIDI: %s",0,MidiService::GetInstance()->Size(),1,1) ;
+	T_SimpleList<UIField>::Insert(f4) ;
 
 	position._y+=2 ;
 	a1=new UIActionField("Exit",ACTION_QUIT,position) ;

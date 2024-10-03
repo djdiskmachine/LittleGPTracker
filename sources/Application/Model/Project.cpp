@@ -5,6 +5,7 @@
 #include "System/io/Status.h"
 #include "Foundation/Variables/WatchedVariable.h"
 #include "Application/Player/SyncMaster.h"
+#include "Scale.h"
 #include "Table.h"
 #include "Groove.h"
 #include "Application/Persistency/PersistencyService.h"
@@ -27,6 +28,11 @@ tempoNudge_(0)
 	this->Insert(wrap) ;
 	Variable *transpose=new Variable("transpose",VAR_TRANSPOSE,0) ;
 	this->Insert(transpose) ;
+    
+    // from: https://github.com/xiphonics/picoTracker/blob/master/sources/Application/Model/Project.cpp
+	Variable *scale = new Variable("scale", VAR_SCALE, scaleNames, scaleCount, 0);
+    this->Insert(scale);
+    scale->SetInt(0);
 
 // Reload the midi device list
 
@@ -58,6 +64,13 @@ Project::~Project() {
 	delete song_ ;
 	delete instrumentBank_ ;
 } ;
+
+// from: https://github.com/xiphonics/picoTracker/blob/master/sources/Application/Model/Project.cpp
+int Project::GetScale() {
+  Variable *v = FindVariable(VAR_SCALE);
+  NAssert(v);
+  return v->GetInt();
+}
 
 int Project::GetTempo() {
 	Variable *v=FindVariable(VAR_TEMPO) ;
