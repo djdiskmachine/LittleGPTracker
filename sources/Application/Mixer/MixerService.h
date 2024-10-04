@@ -49,8 +49,8 @@ public:
 
 	bool Clipped() ;
 	void SetMasterVolume(int) ;
-  void SetSoftclip(int) ;
-	int GetPlayedBufferPercentage() ;
+    void SetSoftclip(int);
+    int GetPlayedBufferPercentage() ;
 	
 	virtual void Execute(FourCC id,float value) ;
 
@@ -58,7 +58,6 @@ public:
 
 	void Lock() ;
 	void Unlock() ;
-
 
 protected:
 	void toggleRendering(bool enable) ;

@@ -1,14 +1,14 @@
 #include "ProjectView.h"
-#include "BaseClasses/UIIntVarField.h"
-#include "BaseClasses/UIActionField.h"
-#include "BaseClasses/UIField.h"
-#include "BaseClasses/UITempoField.h"
 #include "Application/Persistency/PersistencyService.h"
-#include "System/System/System.h"
-#include "Services/Midi/MidiService.h"
 #include "Application/Views/ModalDialogs/MessageBox.h"
 #include "Application/Views/ModalDialogs/NewProjectDialog.h"
 #include "Application/Views/ModalDialogs/SelectProjectDialog.h"
+#include "BaseClasses/UIActionField.h"
+#include "BaseClasses/UIField.h"
+#include "BaseClasses/UIIntVarField.h"
+#include "BaseClasses/UITempoField.h"
+#include "Services/Midi/MidiService.h"
+#include "System/System/System.h"
 
 #define ACTION_PURGE            MAKE_FOURCC('P','U','R','G')
 #define ACTION_SAVE             MAKE_FOURCC('S','A','V','E')
@@ -116,50 +116,50 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	UIIntVarField *f2=new UIIntVarField(position,*v,"transpose: %3.2d",-48,48,0x1,0xC) ;
 	T_SimpleList<UIField>::Insert(f2) ;
 
-	v=project_->FindVariable(VAR_SOFTCLIP) ;
-  position._y+=1 ;
-  UIIntVarField *f3 =
-      new UIIntVarField(position, *v, "soft clip: %s", 0, 4, 1, 1);
-  T_SimpleList<UIField>::Insert(f3);
+    v = project_->FindVariable(VAR_SOFTCLIP);
+    position._y += 1;
+    UIIntVarField *f3 =
+        new UIIntVarField(position, *v, "soft clip: %s", 0, 4, 1, 1);
+    T_SimpleList<UIField>::Insert(f3);
 
-  position._y += 2;
-  UIActionField *a1 =
-      new UIActionField("Compact Sequencer", ACTION_PURGE, position);
-  a1->AddObserver(*this);
-  T_SimpleList<UIField>::Insert(a1);
+    position._y += 2;
+    UIActionField *a1 =
+        new UIActionField("Compact Sequencer", ACTION_PURGE, position);
+    a1->AddObserver(*this);
+    T_SimpleList<UIField>::Insert(a1);
 
-  position._y += 1;
-  a1 = new UIActionField("Compact Instruments", ACTION_PURGE_INSTRUMENT,
-                         position);
-  a1->AddObserver(*this);
-  T_SimpleList<UIField>::Insert(a1);
+    position._y += 1;
+    a1 = new UIActionField("Compact Instruments", ACTION_PURGE_INSTRUMENT,
+                           position);
+    a1->AddObserver(*this);
+    T_SimpleList<UIField>::Insert(a1);
 
-  position._y += 2;
-  a1 = new UIActionField("Load Song", ACTION_LOAD, position);
-  a1->AddObserver(*this);
-  T_SimpleList<UIField>::Insert(a1);
+    position._y += 2;
+    a1 = new UIActionField("Load Song", ACTION_LOAD, position);
+    a1->AddObserver(*this);
+    T_SimpleList<UIField>::Insert(a1);
 
-  position._y += 1;
-  a1 = new UIActionField("Save Song", ACTION_SAVE, position);
-  a1->AddObserver(*this);
-  T_SimpleList<UIField>::Insert(a1);
+    position._y += 1;
+    a1 = new UIActionField("Save Song", ACTION_SAVE, position);
+    a1->AddObserver(*this);
+    T_SimpleList<UIField>::Insert(a1);
 
-  position._y += 1;
-  a1 = new UIActionField("Save Song As", ACTION_SAVE_AS, position);
-  a1->AddObserver(*this);
-  T_SimpleList<UIField>::Insert(a1);
+    position._y += 1;
+    a1 = new UIActionField("Save Song As", ACTION_SAVE_AS, position);
+    a1->AddObserver(*this);
+    T_SimpleList<UIField>::Insert(a1);
 
-  v = project_->FindVariable(VAR_MIDIDEVICE);
-  NAssert(v);
-  position._y += 2;
-  UIIntVarField *f4 = new UIIntVarField(
-      position, *v, "MIDI: %s", 0, MidiService::GetInstance()->Size(), 1, 1);
-  T_SimpleList<UIField>::Insert(f4);
+    v = project_->FindVariable(VAR_MIDIDEVICE);
+    NAssert(v);
+    position._y += 2;
+    UIIntVarField *f4 = new UIIntVarField(
+        position, *v, "MIDI: %s", 0, MidiService::GetInstance()->Size(), 1, 1);
+    T_SimpleList<UIField>::Insert(f4);
 
-  position._y += 2;
-  a1 = new UIActionField("Exit", ACTION_QUIT, position);
-  a1->AddObserver(*this);
-  T_SimpleList<UIField>::Insert(a1);
+    position._y += 2;
+    a1 = new UIActionField("Exit", ACTION_QUIT, position);
+    a1->AddObserver(*this);
+    T_SimpleList<UIField>::Insert(a1);
 
 }
 
@@ -227,8 +227,8 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 	} else {
 		focus=tempoField_ ;
 	}
-	Player *player=Player::GetInstance() ;
-	switch (fourcc) {
+    Player *player = Player::GetInstance();
+    switch (fourcc) {
 		case ACTION_PURGE:
 			project_->Purge() ;
 			break ;

@@ -24,26 +24,26 @@ public:
     virtual bool Init()  ;
     virtual void Close() ;
     virtual bool Start() ;
-    virtual void Stop() ;
+    virtual void Stop();
 
-	virtual void Trigger()  ;
+    virtual void Trigger();
 
-	virtual bool Clipped() { return false ; } ;
+    virtual bool Clipped() { return false; };
 
-	virtual int GetPlayedBufferPercentage() { return 0; } ;
+    virtual int GetPlayedBufferPercentage() { return 0; };
 
-	void SendPulse() ;
+    void SendPulse();
 
-	virtual std::string GetAudioAPI() ;
-	virtual std::string GetAudioDevice() ;
+    virtual std::string GetAudioAPI();
+    virtual std::string GetAudioDevice() ;
 	virtual int GetAudioBufferSize() ;
 	virtual int GetAudioRequestedBufferSize() ;
 	virtual int GetAudioPreBufferCount() ;
 	virtual double GetStreamTime() ;
-  virtual void SetSoftclip(int);
+    virtual void SetSoftclip(int);
 
-private:
-	DummyOutThread *thread_ ;
+  private:
+    DummyOutThread *thread_ ;
     fixed *primarySoundBuffer_ ;
 
 } ;

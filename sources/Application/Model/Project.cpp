@@ -11,8 +11,8 @@
 #include "Application/Instruments/SamplePool.h"
 #include "Application/Instruments/SampleInstrument.h"
 
-#include <math.h>
 #include "ProjectDatas.h"
+#include <math.h>
 
 Project::Project()
 :Persistent("PROJECT")
@@ -72,14 +72,14 @@ int Project::GetTempo() {
 } ;
 
 int Project::GetMasterVolume() {
-	Variable *v=FindVariable(VAR_MASTERVOL);
-	NAssert(v);
+    Variable *v = FindVariable(VAR_MASTERVOL);
+    NAssert(v);
 	return v->GetInt();
 } ;
 
 int Project::GetSoftclip() {
-	Variable *v=FindVariable(VAR_SOFTCLIP);
-	NAssert(v);
+    Variable *v = FindVariable(VAR_SOFTCLIP);
+    NAssert(v);
 	return v->GetInt();
 }
 

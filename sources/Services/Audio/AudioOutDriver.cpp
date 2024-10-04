@@ -1,12 +1,12 @@
 
 #include "AudioOutDriver.h"
-#include "System/System/System.h"
-#include "AudioDriver.h"
 #include "Application/Model/Project.h"
 #include "Application/Player/SyncMaster.h" // Should be installable
-#include "System/Console/Trace.h"
+#include "AudioDriver.h"
 #include "Services/Time/TimeService.h"
-#include <math.h> 
+#include "System/Console/Trace.h"
+#include "System/System/System.h"
+#include <math.h>
 
 AudioOutDriver::AudioOutDriver(AudioDriver &driver) {
     maxPositiveFixed_ = i2fp(32767);
@@ -203,6 +203,4 @@ int AudioOutDriver::GetAudioPreBufferCount() {
 	AudioSettings as=driver_->GetAudioSettings() ;
 	return as.preBufferCount_ ;
 } ;
-double AudioOutDriver::GetStreamTime() {
-	return driver_->GetStreamTime() ;
-} ;
+double AudioOutDriver::GetStreamTime() { return driver_->GetStreamTime(); };

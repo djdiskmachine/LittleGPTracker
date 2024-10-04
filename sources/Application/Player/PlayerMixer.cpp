@@ -1,15 +1,14 @@
 #include "PlayerMixer.h"
+#include "Application/Mixer/MixerService.h"
+#include "Application/Model/Mixer.h"
+#include "Application/Utils/char.h"
+#include "Application/Utils/fixed.h"
+#include "Services/Midi/MidiService.h"
 #include "SyncMaster.h"
 #include "System/Console/Trace.h"
 #include "System/System/System.h"
-#include "Application/Utils/fixed.h"
-#include "Application/Utils/char.h"
-#include "Services/Midi/MidiService.h"
-#include "Application/Mixer/MixerService.h"
-#include "Application/Utils/char.h"
-#include "Application/Model/Mixer.h"
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
 
 PlayerMixer::PlayerMixer() {
 
@@ -100,11 +99,11 @@ bool PlayerMixer::Clipped() {
 void PlayerMixer::Update(Observable &o,I_ObservableData *d) {
 
   // Notifies the player so that pattern data is processed
-  SetChanged() ;
-  NotifyObservers() ;
+  SetChanged();
+  NotifyObservers();
 
   // Transfer the mixer data
-  Mixer *mixer=Mixer::GetInstance() ;
+  Mixer *mixer = Mixer::GetInstance();
 
   for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
     channel_[i]->SetMixBus(mixer->GetBus(i));
@@ -203,5 +202,4 @@ void PlayerMixer::Lock() {
 void PlayerMixer::Unlock() {
 	MixerService *ms=MixerService::GetInstance() ;
 	ms->Unlock() ;
-
-} ;
+};
