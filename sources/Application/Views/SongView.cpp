@@ -1021,8 +1021,6 @@ void SongView::DrawView() {
 void SongView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
     SyncMaster *sync = SyncMaster::GetInstance();
-    if ((eventType == PET_UPDATE) && (!sync->MajorSlice()))
-        return;
 
     Player *player = Player::GetInstance();
 
