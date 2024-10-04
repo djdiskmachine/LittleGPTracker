@@ -103,18 +103,24 @@ LittleGPTracker uses 4 colours to do all the drawing. If you want, you can redef
 -   `BACKGROUND`: color of the background
     
 -   `FOREGROUND`: color of the foreground
+
+-   `BORDER`: color of the border in the start screen / dialogs
     
 -   `HICOLOR1`: row count in song screen
     
 -   `HICOLOR2`: inverted color
 
--   `CURSORCOLOR` :  Cursor color
+-   `CURSORCOLOR`:  Cursor color
 
--   `ROWCOLOR1` :    Row count color 1
+-   `PLAYCOLOR`: play indicator color
 
--   `ROWCOLOR2` :    Row count color 2
+-   `MUTECOLOR`: mute indicator color
 
--   `ALTROWNUMBER` : How many rows before alternating between ROWCOLOR1/2
+-   `ROWCOLOR1`: row count color 1
+
+-   `ROWCOLOR2`: row count color 2
+
+-   `ALTROWNUMBER`: how many rows before alternating between ROWCOLOR1/2
 
 -   `MAJORBEAT`: color of "--" at row 00,04,08,0c in phrase screen
     

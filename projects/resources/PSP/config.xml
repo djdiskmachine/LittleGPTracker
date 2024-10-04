@@ -3,16 +3,19 @@
 	<SCREENMULT value="1"/> <!-- Does nothing on PSP -->
 
 <!-- Default colors below -->
-    <BACKGROUND   value = "1D0A1F"/> <!--Background color-->
-    <FOREGROUND   value = "F5EBFF"/> <!--Text color-->
-    <HICOLOR1     value = "B750D1"/> <!--Highlight color 1-->
-    <HICOLOR2     value = "DB33DB"/> <!--Highlight color 2-->
-    <CURSORCOLOR  value = "FF00DD"/> <!--Cursor color-->
+    <BACKGROUND   value = "1D0A1F" /> <!--Background color-->
+    <FOREGROUND   value = "F5EBFF" /> <!--Text color-->
+    <BORDER       value = "FF00DD" /> <!--Dialog border color-->    
+    <HICOLOR1     value = "B750D1" /> <!--Highlight color 1-->
+    <HICOLOR2     value = "DB33DB" /> <!--Highlight color 2-->
+    <CURSORCOLOR  value = "FF00DD" /> <!--Cursor color-->
+    <PLAYCOLOR    value = "FF00DD" /> <!--Play indicator color-->
+    <MUTECOLOR    value = "F5EBFF" /> <!--Mute indicator color-->    
     <SONGVIEW_FE  value = "A55B8F" /> <!--Alt chain color1-->
     <SONGVIEW_00  value = "853B6F" /> <!--Alt chain color2-->
-    <ROWCOLOR1    value = "BA28F9"/> <!--Row count color 1 -->
-    <ROWCOLOR2    value = "FF00FF"/> <!--Row count color 2-->
-    <ALTROWNUMBER value = "4"/>      <!--How many rows before alternating-->
-    <FONTTYPE     value = '0' />     <!-- '0':original '1':digital '2':monster 'CUSTOM': load custom_font.xml-->
+    <ROWCOLOR1    value = "BA28F9" /> <!--Row count color 1 -->
+    <ROWCOLOR2    value = "FF00FF" /> <!--Row count color 2-->
+    <ALTROWNUMBER value = "4"/>       <!--How many rows before alternating-->
+    <FONTTYPE     value = '0' />      <!-- '0':original '1':digital '2':monster 'CUSTOM': load custom_font.xml-->
 
 </CONFIG>

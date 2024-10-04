@@ -60,12 +60,15 @@ LittleGPTracker uses 6 colours to do all the drawing. If you want, you can redef
 
 -   `BACKGROUND`: color of the background
 -   `FOREGROUND`: color of the foreground
+-   `BORDER`: color of the border in the start screen / dialogs
 -   `HICOLOR1`: row count in song screen
 -   `HICOLOR2`: cursor color
+-   `PLAYCOLOR`: play indicator color
+-   `MUTECOLOR`: mute indicator color
 -   `SONGVIEW_FE`: color of the chain "FE" in song screen
 -   `SONGVIEW_00`: color of the chain "00" in song screen
--   `ROWCOLOR1`: Row count color 1
--   `ROWCOLOR2`: Row count color 2
+-   `ROWCOLOR1`: row count color 1
+-   `ROWCOLOR2`: row count color 2
 -   `ALTROWNUMBER`: How many rows for each rowcolor
 -   `MAJORBEAT`: color of "--" at row 00,04,08,0c in phrase screen
 
@@ -73,16 +76,19 @@ All colors are defined by a set of hexadecimal triplet for RGB. Here's an exampl
 
 ```
 <CONFIG>
-	<BACKGROUND value="505444" />
-	<FOREGROUND value="FFFFFF" /> <!-- text and cursor in cursor -->
-	<HICOLOR1 value="F41B38" /> <!-- Highlight color 1 -->
-	<HICOLOR2 value="FF0000" /> <!-- Highlight color 2 -->
-	<SONGVIEW_FE value="A55B8F" /> <!-- color of the chain "FE" in song screen-->
-	<SONGVIEW_00 value="853B6F" /> <!-- color of the chain "00" in song screen-->
-	<CURSORCOLOR value = "FF00DD"/> <!--Cursor color-->
-	<ROWCOLOR1 value = "BA28F9"/> <!--Row count color 1 -->
-	<ROWCOLOR2 value = "FF00FF"/> <!--Row count color 2-->
-	<ALTROWNUMBER value = "4"/>      <!--How many rows of each ROWCOLOR-->
+    <BACKGROUND   value = "505444" />
+    <FOREGROUND   value = "FFFFFF" /> <!-- Text and cursor in cursor -->
+    <BORDER       value = "FF00DD" /> <!--Dialog Border-->
+    <HICOLOR1     value = "F41B38" /> <!-- Highlight color 1 -->
+    <HICOLOR2     value = "FF0000" /> <!-- Highlight color 2 -->
+    <SONGVIEW_FE  value = "A55B8F" /> <!-- Color of the chain "FE" in song screen-->
+    <SONGVIEW_00  value = "853B6F" /> <!-- Color of the chain "00" in song screen-->
+    <CURSORCOLOR  value = "FF00DD" /> <!--Cursor color-->
+    <PLAYCOLOR    value = "FF00DD" /> <!--Cursor color-->
+    <MUTECOLOR    value = "FFFFFF" /> <!-- Text and cursor in cursor -->
+    <ROWCOLOR1    value = "BA28F9" /> <!--Row count color 1 -->
+    <ROWCOLOR2    value = "FF00FF" /> <!--Row count color 2-->
+    <ALTROWNUMBER value = "4"/>       <!--How many rows of each ROWCOLOR-->
 </CONFIG>
 ```
 
@@ -106,15 +112,15 @@ To connect the button to a keyboard key, it's pretty easy: simply put the key na
 
 ```
 <CONFIG>
-	<KEY_A value="f" />
-	<KEY_B value="d" />
-	<KEY_LEFT value="j" />
-	<KEY_RIGHT value="l" />
-	<KEY_UP value="i" />
-	<KEY_DOWN value="k" />
-	<KEY_LSHOULDER value="a" />
-	<KEY_RSHOULDER value=";" />
-	<KEY_START value="space" />
+    <KEY_A value="f" />
+    <KEY_B value="d" />
+    <KEY_LEFT value="j" />
+    <KEY_RIGHT value="l" />
+    <KEY_UP value="i" />
+    <KEY_DOWN value="k" />
+    <KEY_LSHOULDER value="a" />
+    <KEY_RSHOULDER value=";" />
+    <KEY_START value="space" />
 </CONFIG>
 ```
 
@@ -128,7 +134,7 @@ Here's an example that maps the start button to the X on PSP:
 
 ```
 <CONFIG>
-	<KEY_START value="but:0:11" />
+    <KEY_START value="but:0:11" />
 </CONFIG>
 ```
 
@@ -143,7 +149,7 @@ You can select one of the three fonts provided with this application.
 Set the value of FONTTYPE in the config file to '0', '1', or '2' to apply the corresponding font.
 ```
 <CONFIG>
-	<FONTTYPE value='1' />
+    <FONTTYPE value='1' />
 </CONFIG>
 ```
 
@@ -152,7 +158,7 @@ To use a custom font, set the value of the FONTTYPE key to 'CUSTOM'
 
 ```
 <CONFIG>
-	<FONTTYPE value='CUSTOM' />
+    <FONTTYPE value='CUSTOM' />
 </CONFIG>
 ```
 and place the custom_font.xml file in the same directory as the application.
@@ -179,8 +185,8 @@ You can tweak the timing used to repeat the arrows keys and other.
 
 ```
 <CONFIG>
-	<KEYDELAY value="185"/>
-	<KEYREPEAT value="40"/>
+    <KEYDELAY value="185"/>
+    <KEYREPEAT value="40"/>
 </CONFIG>
 ```
 ## Path
@@ -192,8 +198,8 @@ You can tweak two different path:
 
 ```
 <CONFIG>
-	<ROOTFOLDER value="c:/files/tracks/"/>
-	<SAMPLELIB value="root:"/>
+    <ROOTFOLDER value="c:/files/tracks/"/>
+    <SAMPLELIB value="root:"/>
 </CONFIG>
 ```
 
@@ -203,7 +209,7 @@ Additionally to playing the song, LittleGPTracker can be used to render the audi
 
 ```
 <CONFIG>
-<RENDER value='FILERT'/>
+    <RENDER value='FILERT'/>
 </CONFIG>
 ```
 
@@ -213,7 +219,7 @@ This setting is for GP2X and Dingoo only. It is used to set the volume of the ha
 
 ```
 <CONFIG>
-<VOLUME value='60'/>
+    <VOLUME value='60'/>
 </CONFIG>
 ```
 
@@ -228,8 +234,8 @@ These settings are used to control various options of the audio configuration. T
 
 ```
 <CONFIG>
-<AUDIODRIVER value='Real'/>
-<AUDIOBUFFERSIZE value='512'/>
+    <AUDIODRIVER value='Real'/>
+    <AUDIOBUFFERSIZE value='512'/>
 </CONFIG>
 ```
 
@@ -239,7 +245,7 @@ This setting is also W32 only. It can be use to delay the output of midi by a ce
 
 ```
 <CONFIG>
-  <MIDIDELAY value='1'/>
+    <MIDIDELAY value='1'/>
 </CONFIG>
 ```
 
@@ -251,6 +257,6 @@ Get piggy dumping a log on the terminal or to a .log file, useful for debugging 
 
 ```
 <CONFIG>
-  <DUMPEVENT value='YES'/>
+    <DUMPEVENT value='YES'/>
 </CONFIG>
 ```
