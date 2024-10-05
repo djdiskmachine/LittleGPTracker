@@ -1012,17 +1012,13 @@ void SongView::DrawView() {
 };
 
 /******************************************************
- OnPlayterUpdate:
+ OnPlayerUpdate:
         Called when positions in player change. Should
         provide visual feedback of currently played
         position
  ******************************************************/
 
 void SongView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
-
-    SyncMaster *sync = SyncMaster::GetInstance();
-    if ((eventType == PET_UPDATE) && (!sync->MajorSlice()))
-        return;
 
     Player *player = Player::GetInstance();
 
