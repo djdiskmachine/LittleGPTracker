@@ -24,12 +24,17 @@ sfBankID SoundFontManager::LoadBank(const char *path) {
 
 	sfBankID id=sfReadSFBFile((char *)path) ; 
 	if (id==-1) {
+        printf("SoundFont failed to load!\n");
+		Trace::Debug("SoundFontManager", "SoundFont failed to load!");
 		return -1 ;
 	} 
 	// open the file
 
 	I_File *fin=FileSystem::GetInstance()->Open(path,"r") ;
 	if (!fin) {
+        printf("SoundFont failed open file: %s\n", path);
+        
+        Trace::Debug("SoundFontManager", "SoundFont failed open file: %s", path);
 		return false;
 	}
 
@@ -43,7 +48,9 @@ sfBankID SoundFontManager::LoadBank(const char *path) {
 	SFSAMPLEHDRPTR  &headers=sfGetSampHdrs(id,&headerCount ); 
 
 	// Loop on every sample, load them and adapt the pointers
+    Trace::Debug("SoundFontManager", "Header count: %d", headerCount);
 
+    printf("Header count: %d\n", headerCount);
 	for (int i=0;i<headerCount;i++) {
 
 		sfSampleHdr &current=headers[i] ;

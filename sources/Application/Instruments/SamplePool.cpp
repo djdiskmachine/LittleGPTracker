@@ -228,8 +228,10 @@ void SamplePool::PurgeSample(int i) {
 
 bool SamplePool::loadSoundFont(const char *path) {
 
-	sfBankID  id=SoundFontManager::GetInstance()->LoadBank(path) ;
+	printf("SamplePool::loadSoundFont\n");
+    sfBankID  id=SoundFontManager::GetInstance()->LoadBank(path) ;
 	if (id==-1) {
+		Trace::Debug("SamplePool", "SoundFont failed to load!");
 		return false ;
 	} 
 
@@ -246,13 +248,13 @@ bool SamplePool::loadSoundFont(const char *path) {
 		if (count_<MAX_PIG_SAMPLES) {
 			sfPresetHdr current=pHeaders[i] ;
 			wav_[count_]=new SoundFontPreset(id,i) ;
-			const char *name=pHeaders[i].achPresetName ;
+			const char *name = pHeaders[i].achPresetName;
 			names_[count_]=(char*)SYS_MALLOC(strlen(name)+1) ;
 			strcpy(names_[count_],name) ;
 			count_++ ;
 		}
 	}
-/*
+
 	// Get Sample information
 
 	WORD headerCount=0 ;
@@ -270,5 +272,5 @@ bool SamplePool::loadSoundFont(const char *path) {
 			count_++ ;
 		}
 	}
-*/	return true ;
+	return true ;
 } ;
