@@ -117,20 +117,26 @@ SampleInstrument::SampleInstrument() {
      printFx_ = new Variable("print fx", SIP_PRINTFX, 0);
      Insert(printFx_);
 
- // Initalize instrument's voices update list
- 
-    for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-		renderParams *rp=renderParams_+i ;
-		rp->updaters_.push_back(&rp->volumeRamp_) ;
-		rp->updaters_.push_back(&rp->panner_) ;
-		rp->updaters_.push_back(&rp->cutRamp_) ;
-		rp->updaters_.push_back(&rp->resRamp_) ;
-		rp->updaters_.push_back(&rp->fbMixRamp_) ;
-		rp->updaters_.push_back(&rp->fbTunRamp_) ;
-		rp->updaters_.push_back(&rp->arp_) ;
-		rp->updaters_.push_back(&rp->speedRamp_) ;
-		rp->updaters_.push_back(&rp->legato_) ;
-		rp->updaters_.push_back(&rp->pfin_) ;
+     irDry_ = new Variable("ir dry", SIP_IR_DRY, 10);
+     Insert(irDry_);
+
+     irWet_ = new Variable("print fx", SIP_IR_WET, 10);
+     Insert(irWet_);
+
+     // Initalize instrument's voices update list
+
+     for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+         renderParams *rp = renderParams_ + i;
+         rp->updaters_.push_back(&rp->volumeRamp_);
+         rp->updaters_.push_back(&rp->panner_);
+         rp->updaters_.push_back(&rp->cutRamp_);
+         rp->updaters_.push_back(&rp->resRamp_);
+         rp->updaters_.push_back(&rp->fbMixRamp_);
+         rp->updaters_.push_back(&rp->fbTunRamp_);
+         rp->updaters_.push_back(&rp->arp_);
+         rp->updaters_.push_back(&rp->speedRamp_);
+         rp->updaters_.push_back(&rp->legato_);
+         rp->updaters_.push_back(&rp->pfin_);
 	} ;
 
  // Reset table state

@@ -88,11 +88,21 @@ void InstrumentView::fillSampleParameters() {
 
     position._y += 1;
     v=instrument->FindVariable(SIP_PRINTFX) ;
-	f1=new UIIntVarField(position,*v,"print FX: ir-%s",0,0,1,1) ;
-	T_SimpleList<UIField>::Insert(f1) ;
+    f1 = new UIIntVarField(position, *v, "apply IR", 0, 0, 1, 1);
+    T_SimpleList<UIField>::Insert(f1) ;
 
-	position._y+=2 ;
-	v=instrument->FindVariable(SIP_VOLUME) ;
+    position._x += 9;
+    v=instrument->FindVariable(SIP_IR_DRY) ;
+	f1=new UIIntVarField(position,*v,"dry:%d%%",1,10,1,5);
+	T_SimpleList<UIField>::Insert(f1) ;
+    position._x += 8;
+    v=instrument->FindVariable(SIP_IR_WET) ;
+	f1=new UIIntVarField(position,*v,"wet:%d%%",1,10,1,5);
+	T_SimpleList<UIField>::Insert(f1) ;
+    position._x -= 17;
+
+    position._y += 2;
+    v=instrument->FindVariable(SIP_VOLUME) ;
 	f1=new UIIntVarField(position,*v,"volume: %d [%2.2X]",0,255,1,10) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 	
@@ -311,27 +321,37 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
                      */
                 case SIP_PRINTFX:
 				 {
-                    std::string fi = "\"Angles Break.wav\"";
-                    std::string fo = "output_audio_with_ir_reverb.wav";
+                    int i = viewData_->currentInstrument_;
+                    InstrumentBank *bank=viewData_->project_->GetInstrumentBank() ;
+                    I_Instrument *instr=bank->GetInstrument(i) ;
+                    SampleInstrument *instrument=(SampleInstrument *)instr  ;
+                    int irDry = instrument->FindVariable(SIP_IR_DRY)->GetInt();
+                    int irWet = instrument->FindVariable(SIP_IR_WET)->GetInt();
+                    Path samples_dir("project:samples");
+                    std::string fi = "\"" + std::string(instrument->GetName()) + "\"";
+                    std::ostringstream fo;
+                    fo << fi.substr(0, fi.find_last_of('.')) << "_ir" << irDry;
+                    fo << "d" << irWet << "w.wav";
                     std::string ir = "jotarrl.wav";
-                  
-                    std::string command = "ffmpeg -i ";
-                    command += fi + " -i " + ir;
-                    command += " -filter_complex \"[0:a][1:a]afir=dry=10:wet=10\" ";
-                    command += fo;
-                    int result = system(command.c_str());
-                    MessageBox *mb;
-
+                    std::ostringstream command;
+                    command << "ffmpeg -y -i " << samples_dir.GetPath() << "/";
+                    command << fi << " -i " << samples_dir.GetPath() << "/" << ir;
+                    command << " -filter_complex \"[0:a][1:a]afir=dry=10:wet=10 [reverb];";
+                    command << "[0] [reverb] amix=inputs=2:weights=" << irDry;
+                    command << " " << irWet << ",volume=1.5\" ";
+                    command << samples_dir.GetPath() << '/' << fo.str().c_str() << "\"";
+                    Trace::Log("IV:PRINTFX", command.str().c_str());
+                    int result = system(command.str().c_str());
                     if (result == 0) {
-                        mb=new MessageBox(*this,"Reverb applied",MBBF_OK) ;
-                        Trace::Log("IV","Reverb applied OK");
+                        SamplePool *sp = SamplePool::GetInstance();
+                        sp->Load();
+                        Trace::Log("IV", "Reverb applied OK");
+                        isDirty_ = true;
                     } else {
-                        mb=new MessageBox(*this,"Reverb failed",MBBF_OK) ;
-                        Trace::Log("IV","Reverb application failed");
+                        Trace::Log("IV", "Reverb application failed");
                     }
-                    DoModal(mb) ;
-					break ;
-				 }
+                    break;
+                }
 				default:
 					break ;
 			}
