@@ -30,7 +30,10 @@ tempoNudge_(0)
 	this->Insert(transpose) ;
     Variable *softclip =
         new Variable("softclip", VAR_SOFTCLIP, softclipStates, 5, 0);
-    this->Insert(softclip) ;
+    this->Insert(softclip);
+    Variable *clipAttenuation =
+        new Variable("clipAttenuation", VAR_CLIP_ATTENUATION, 10);
+    this->Insert(clipAttenuation);
 
 
 // Reload the midi device list
@@ -79,6 +82,12 @@ int Project::GetMasterVolume() {
 
 int Project::GetSoftclip() {
     Variable *v = FindVariable(VAR_SOFTCLIP);
+    NAssert(v);
+	return v->GetInt();
+}
+
+int Project::GetAttenuation() {
+    Variable *v = FindVariable(VAR_CLIP_ATTENUATION);
     NAssert(v);
 	return v->GetInt();
 }

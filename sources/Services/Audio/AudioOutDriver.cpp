@@ -68,7 +68,10 @@ void AudioOutDriver::prepareMixBuffers() {
 	clipped_=false ;   
 } ;
 
-void AudioOutDriver::SetSoftclip(int clip) { softclip_ = clip; }
+void AudioOutDriver::SetSoftclip(int clip, int attn) {
+    softclip_ = clip;
+	attenuation_ = attn;
+}
 
 fixed AudioOutDriver::hardClip(fixed sample) {
 	fixed clippedSample=sample;
@@ -108,7 +111,8 @@ fixed AudioOutDriver::softClip(fixed sample) {
 
 	switch (softclip_) {
 		case 1:
-			alpha=1.45; // -1.5db (approx.)
+        default:
+            alpha=1.45; // -1.5db (approx.)
 			break;
 		case 2:
 			alpha=1.07; // -3db (approx.)
@@ -118,10 +122,8 @@ fixed AudioOutDriver::softClip(fixed sample) {
 			break;
 		case 4:
 			alpha=0.53; // -9db (approx.)
-			break;
-		default:
-			alpha=1.45;
-	}
+            break;
+    }
 
 	float twoThirds=2.0/3.0;
 	float alphaTwoThirds=alpha*twoThirds;
@@ -140,8 +142,8 @@ fixed AudioOutDriver::softClip(fixed sample) {
 	} else {
 		gainCompensation=1.0/alphaTwoThirds;
 	}
-
-	return fl2fp(sampleFloat*gainCompensation);
+    float damp = (float)attenuation_ / 100;
+    return fl2fp(sampleFloat*gainCompensation*damp);
 }
 
 void AudioOutDriver::clipToMix() {
