@@ -114,9 +114,6 @@ SampleInstrument::SampleInstrument() {
 	 fbMix_=new Variable("feedback mix",SIP_FBMIX,0x00) ;
 	 Insert(fbMix_) ;
 
-     printFx_ = new Variable("print fx", SIP_PRINTFX, 0);
-     Insert(printFx_);
-
  // Initalize instrument's voices update list
  
     for (int i=0;i<SONG_CHANNEL_COUNT;i++) {

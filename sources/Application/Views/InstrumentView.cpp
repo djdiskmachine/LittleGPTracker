@@ -1,17 +1,15 @@
 #include "InstrumentView.h"
-#include "Application/Instruments/MidiInstrument.h"
+#include "System/System/System.h"
 #include "Application/Instruments/SampleInstrument.h"
+#include "Application/Instruments/MidiInstrument.h"
 #include "Application/Instruments/SamplePool.h"
-#include "Application/Model/Config.h"
 #include "BaseClasses/UIBigHexVarField.h"
-#include "BaseClasses/UIIntVarOffField.h"
 #include "BaseClasses/UINoteVarField.h"
 #include "BaseClasses/UIStaticField.h"
-#include "ModalDialogs/ImportSampleDialog.h"
+#include "BaseClasses/UIIntVarOffField.h"
 #include "ModalDialogs/MessageBox.h"
-#include "System/System/System.h"
-#include <cstdlib>
-#include <string>
+#include "ModalDialogs/ImportSampleDialog.h"
+#include "Application/Model/Config.h"
 
 InstrumentView::InstrumentView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
@@ -86,11 +84,6 @@ void InstrumentView::fillSampleParameters() {
 	T_SimpleList<UIField>::Insert(f1) ;
 	f1->SetFocus() ;
 
-    position._y += 1;
-    v=instrument->FindVariable(SIP_PRINTFX) ;
-	f1=new UIIntVarField(position,*v,"print FX: ir-%s",0,0,1,1) ;
-	T_SimpleList<UIField>::Insert(f1) ;
-
 	position._y+=2 ;
 	v=instrument->FindVariable(SIP_VOLUME) ;
 	f1=new UIIntVarField(position,*v,"volume: %d [%2.2X]",0,255,1,10) ;
@@ -111,18 +104,19 @@ void InstrumentView::fillSampleParameters() {
 	f1=new UIIntVarField(position,*v,"detune: %2.2X",0,255,1,0x10) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
-    position._y += 2;
-    v=instrument->FindVariable(SIP_CRUSH) ;
+
+	position._y+=2 ;
+	v=instrument->FindVariable(SIP_CRUSHVOL) ;
+	f1=new UIIntVarField(position,*v,"drive: %2.2X",0,0xFF,1,0x10) ;
+	T_SimpleList<UIField>::Insert(f1) ;
+
+
+	position._y+=1 ;
+	v=instrument->FindVariable(SIP_CRUSH) ;
 	f1=new UIIntVarField(position,*v,"crush: %d",1,0x10,1,4) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
-    position._x += 9;
-    v=instrument->FindVariable(SIP_CRUSHVOL) ;
-	f1=new UIIntVarField(position,*v,"drive: %2.2X",0,0xFF,1,0x10) ;
-	T_SimpleList<UIField>::Insert(f1) ;
-	position._x -= 9;
-    
-    position._y += 1;
+	position._y+=1 ;
 	v=instrument->FindVariable(SIP_DOWNSMPL) ;
 	f1=new UIIntVarField(position,*v,"downsample: %d",0,8,1,4) ;
 	T_SimpleList<UIField>::Insert(f1) ;
@@ -301,37 +295,6 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
 					}
 					break ;
 				 }
-                     /*
-                        // Configure ffmpeg for platforms that don't have it
-                        ./configure  --disable-x86asm --disable-ffplay
-                        --disable-ffprobe  --disable-everything
-                        --disable-autodetect --disable-avdevice
-                        --disable-swresample --disable-swscale --disable-network
-                        --enable-filter=afir
-                     */
-                case SIP_PRINTFX:
-				 {
-                    std::string fi = "\"Angles Break.wav\"";
-                    std::string fo = "output_audio_with_ir_reverb.wav";
-                    std::string ir = "jotarrl.wav";
-                  
-                    std::string command = "ffmpeg -i ";
-                    command += fi + " -i " + ir;
-                    command += " -filter_complex \"[0:a][1:a]afir=dry=10:wet=10\" ";
-                    command += fo;
-                    int result = system(command.c_str());
-                    MessageBox *mb;
-
-                    if (result == 0) {
-                        mb=new MessageBox(*this,"Reverb applied",MBBF_OK) ;
-                        Trace::Log("IV","Reverb applied OK");
-                    } else {
-                        mb=new MessageBox(*this,"Reverb failed",MBBF_OK) ;
-                        Trace::Log("IV","Reverb application failed");
-                    }
-                    DoModal(mb) ;
-					break ;
-				 }
 				default:
 					break ;
 			}
@@ -399,20 +362,19 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
         } ;
 	} else {
 
-        // A modifier
+	  // A modifier
 
-        if (mask == EPBM_A) {
-            FourCC varID=((UIIntVarField *)GetFocus())->GetVariableID() ;
-            if ((varID == SIP_TABLE) || (varID == MIP_TABLE) ||
-                (varID == SIP_SAMPLE) || (varID == SIP_PRINTFX)) {
-                viewMode_=VM_NEW ;
-            };
-        } else {
+	  if (mask==EPBM_A) {
+			FourCC varID=((UIIntVarField *)GetFocus())->GetVariableID() ;
+			if ((varID==SIP_TABLE)||(varID==MIP_TABLE)||(varID==SIP_SAMPLE)) {
+				viewMode_=VM_NEW ;
+			} ;
+	  } else {
 
-            // R Modifier
+		  // R Modifier
 
-            if (mask & EPBM_R) {
-                if (mask&EPBM_LEFT) {
+          	if (mask&EPBM_R) {
+				if (mask&EPBM_LEFT) {
 					ViewType vt=VT_PHRASE;
 					ViewEvent ve(VET_SWITCH_VIEW,&vt) ;
 					SetChanged();
@@ -452,14 +414,15 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
         		if (mask&EPBM_START) {
 	   			    player->OnStartButton(PM_PHRASE,viewData_->songX_,true,viewData_->chainRow_) ;
         		}
-            } else {
+	    	} else {
                 // No modifier
     			if (mask&EPBM_START) {
 					player->OnStartButton(PM_PHRASE,viewData_->songX_,false,viewData_->chainRow_) ;
     			}
-            }
-        }
-    }
+		    }
+	  } 
+	    
+	}
 
 	UIIntVarField *field=(UIIntVarField *)GetFocus() ;
 	if (field) {
