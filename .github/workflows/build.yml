@@ -317,8 +317,8 @@ jobs:
             cd projects
             make PLATFORM=GARLIC
           "
-          chmod -R 777 ./workspace/projects
-          chown -R root:root ./workspace/projects
+          sudo chmod -R 777 ./workspace/projects
+          sudo chown -R root:root ./workspace/projects
 
       - name: Package build
         working-directory: ./workspace/projects
@@ -432,7 +432,7 @@ jobs:
         run: |
           wget https://www.libsdl.org/release/SDL2-2.0.14.dmg
           hdiutil attach SDL2-2.0.14.dmg
-          cp -R /Volumes/SDL2/SDL2.framework /Library/Frameworks/
+          sudo cp -R /Volumes/SDL2/SDL2.framework /Library/Frameworks/
 
       - name: Build Xcode project
         run: |
