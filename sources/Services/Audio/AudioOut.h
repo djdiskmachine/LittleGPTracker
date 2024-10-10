@@ -18,7 +18,7 @@ public:
    virtual bool Start()=0 ;
    virtual void Stop()=0 ;
 
-   virtual void SetSoftclip(int clip) = 0;
+   virtual void SetSoftclip(int clip, int attn) = 0;
 
    virtual void Trigger()=0 ;
 
