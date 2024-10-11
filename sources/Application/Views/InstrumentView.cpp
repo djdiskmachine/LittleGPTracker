@@ -7,6 +7,7 @@
 #include "BaseClasses/UIIntVarOffField.h"
 #include "BaseClasses/UINoteVarField.h"
 #include "BaseClasses/UIStaticField.h"
+#include "Foundation/Variables/Variable.h"
 #include "ModalDialogs/ImportSampleDialog.h"
 #include "ModalDialogs/MessageBox.h"
 #include "System/System/System.h"
@@ -93,13 +94,13 @@ void InstrumentView::fillSampleParameters() {
 
     position._x += 9;
     v=instrument->FindVariable(SIP_IR_DRY) ;
-	f1=new UIIntVarField(position,*v,"dry:%d%%",1,10,1,5);
-	T_SimpleList<UIField>::Insert(f1) ;
-    position._x += 8;
+    f1 = new UIIntVarField(position, *v, "dry:%d", 1, 10, 1, 5);
+    T_SimpleList<UIField>::Insert(f1) ;
+    position._x += 7;
     v=instrument->FindVariable(SIP_IR_WET) ;
-	f1=new UIIntVarField(position,*v,"wet:%d%%",1,10,1,5);
-	T_SimpleList<UIField>::Insert(f1) ;
-    position._x -= 17;
+    f1 = new UIIntVarField(position, *v, "wet:%d", 1, 10, 1, 5);
+    T_SimpleList<UIField>::Insert(f1) ;
+    position._x -= 16;
 
     position._y += 2;
     v=instrument->FindVariable(SIP_VOLUME) ;
@@ -328,23 +329,29 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
                     int irDry = instrument->FindVariable(SIP_IR_DRY)->GetInt();
                     int irWet = instrument->FindVariable(SIP_IR_WET)->GetInt();
                     Path samples_dir("project:samples");
-                    std::string fi = "\"" + std::string(instrument->GetName()) + "\"";
+                    Path impulse_dir("root:samplelib");
+                    std::string fi = std::string(instrument->GetName());
                     std::ostringstream fo;
-                    fo << fi.substr(0, fi.find_last_of('.')) << "_ir" << irDry;
-                    fo << "d" << irWet << "w.wav";
-                    std::string ir = "jotarrl.wav";
+                    fo << "\"" << samples_dir.GetPath() << '/';
+                    fo << fi.substr(0, fi.find_last_of('.'));
+                    fo << "_ir" << irDry << "d" << irWet << "w.wav\"";
+                    std::ostringstream foWav;
+                    foWav << fi.substr(0, fi.find_last_of('.'));
+                    foWav << "_ir" << irDry << "d" << irWet << "w.wav";
+                    std::string ir = impulse_dir.GetPath() + std::string("/IR-s/jotarrl.wav");
                     std::ostringstream command;
-                    command << "ffmpeg -y -i " << samples_dir.GetPath() << "/";
-                    command << fi << " -i " << samples_dir.GetPath() << "/" << ir;
+                    command << "ffmpeg -y -i "
+                            << "\"" << samples_dir.GetPath() << "/";
+                    command << fi << "\"" << " -i " << ir;
                     command << " -filter_complex \"[0:a][1:a]afir=dry=10:wet=10 [reverb];";
                     command << "[0] [reverb] amix=inputs=2:weights=" << irDry;
-                    command << " " << irWet << ",volume=1.5\" ";
-                    command << samples_dir.GetPath() << '/' << fo.str().c_str() << "\"";
+                    command << " " << irWet << ",volume=1.5\" "
+                            << fo.str().c_str();
                     Trace::Log("IV:PRINTFX", command.str().c_str());
-                    int result = system(command.str().c_str());
-                    if (result == 0) {
-                        SamplePool *sp = SamplePool::GetInstance();
-                        sp->Load();
+                    if (system(command.str().c_str()) == 0) {
+                        std::string foFile="samples:" + foWav.str() ;
+                        Path foPath(foFile);
+                        instrument->AssignSample(SamplePool::GetInstance()->ImportSample(foPath));
                         Trace::Log("IV", "Reverb applied OK");
                         isDirty_ = true;
                     } else {

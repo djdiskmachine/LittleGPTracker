@@ -59,8 +59,8 @@ void SamplePool::Load() {
 
 	for(it->Begin();!it->IsDone();it->Next()) {
 		Path &path=it->CurrentItem() ;
-//		Trace::Dump("Got sample name '%s'",name) ;
-		loadSample(path.GetPath().c_str()) ;
+        Trace::Log("LoadSample", "%s", path.GetCanonicalPath().c_str());
+        loadSample(path.GetPath().c_str()) ;
 		if (count_==MAX_PIG_SAMPLES) {
 		   Trace::Error("Warning maximum sample count reached") ;
 		   break ;
@@ -151,11 +151,12 @@ int SamplePool::ImportSample(Path &path) {
     // Opens files
 
 	I_File *fin=FileSystem::GetInstance()->Open(path.GetPath().c_str(),"r") ;
-	if (!fin) {
-		Trace::Error("Failed to open input file %s",path.GetPath().c_str()) ;
-		return -1;
-	} ;
-	fin->Seek(0,SEEK_END) ;
+    if (!fin) {
+        Trace::Error("Failed to open input file %s",
+                     path.GetCanonicalPath().c_str());
+        return -1;
+    };
+    fin->Seek(0,SEEK_END) ;
 	long size=fin->Tell() ;
 	fin->Seek(0,SEEK_SET) ;
 
@@ -184,6 +185,61 @@ int SamplePool::ImportSample(Path &path) {
 	// now load the sample
 
 	bool status=loadSample(dstPath.GetPath().c_str()) ;
+
+	SetChanged() ;
+	SamplePoolEvent ev ;
+	ev.index_=count_-1 ;
+	ev.type_=SPET_INSERT ;
+	NotifyObservers(&ev) ;
+	return status?(count_-1):-1 ;
+};
+
+int SamplePool::SwapWith(Path &path) {
+
+    if (count_==MAX_PIG_SAMPLES) return -1 ;
+
+	// construct target path
+
+	std::string dpath= path.GetCanonicalPath();
+	Path dstPath(dpath.c_str()) ;
+
+    // Opens files
+
+	I_File *fin=FileSystem::GetInstance()->Open(path.GetCanonicalPath().c_str(),"r") ;
+	if (!fin) {
+        Trace::Error("Failed to swap %s", path.GetCanonicalPath().c_str());
+        return -1;
+	} ;
+	fin->Seek(0,SEEK_END) ;
+	long size=fin->Tell() ;
+	fin->Seek(0,SEEK_SET) ;
+
+    I_File *fout = FileSystem::GetInstance()->Open(
+        dstPath.GetCanonicalPath().c_str(), "w");
+    if (!fout) {
+		fin->Close() ;
+		delete (fin) ;
+		return -1 ;
+	} ;
+
+	// copy file to current project
+
+	char buffer[IMPORT_CHUNK_SIZE] ;
+	while (size>0) {
+		int count=(size>IMPORT_CHUNK_SIZE)?IMPORT_CHUNK_SIZE:size ;
+		fin->Read(buffer,1,count) ;
+		fout->Write(buffer,1,count) ;
+		size-=count ;
+	} ;
+
+	fin->Close() ;
+	fout->Close() ;
+	delete(fin) ;
+	delete(fout) ;
+
+	// now load the sample
+
+    bool status=loadSample(dstPath.GetCanonicalPath().c_str()) ;
 
 	SetChanged() ;
 	SamplePoolEvent ev ;

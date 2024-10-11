@@ -29,7 +29,8 @@ public:
 	char **GetNameList() ;
 	int GetNameListSize();
 	int ImportSample(Path &path) ;
-	void PurgeSample(int i) ;
+    int SwapWith(Path &path);
+    void PurgeSample(int i) ;
 	const char *GetSampleLib() ;
 protected:
 	bool loadSample(const char * path) ;
