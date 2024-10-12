@@ -22,14 +22,14 @@ struct SamplePoolEvent: public I_ObservableData {
 class SamplePool: public T_Singleton<SamplePool>,public Observable {
 public:
 	void Load() ;
-	SamplePool() ;
+    void Sort();
+    SamplePool();
 	void Reset() ;
 	~SamplePool() ;
 	SoundSource *GetSource(int i) ;
 	char **GetNameList() ;
 	int GetNameListSize();
-	int ImportSample(Path &path) ;
-    int SwapWith(Path &path);
+    int ImportSample(Path &path);
     void PurgeSample(int i) ;
 	const char *GetSampleLib() ;
 protected:

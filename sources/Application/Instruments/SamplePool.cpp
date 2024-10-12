@@ -81,24 +81,27 @@ void SamplePool::Load() {
 	delete dir ;
 
 	// now sort the samples
-
-	int rest=count_ ;
-	while(rest>0) {
-		int index=0 ;
-		for (int i=1;i<rest;i++) {
-			if (strcmp(names_[i],names_[index])>0) {
-				index=i ;
-			};
-		} ;
-		SoundSource *tWav=wav_[index] ;
-		char *tName=names_[index] ;
-		wav_[index]=wav_[rest-1] ;
-		names_[index]=names_[rest-1] ;
-		wav_[rest-1]=tWav;
-		names_[rest-1]=tName ;
-		rest-- ;
-	} ;
+    Sort();
 } ;
+
+void SamplePool::Sort() {
+    int rest=count_;
+	while(rest>0) {
+        int index = 0;
+        for (int i=1;i<rest;i++) {
+			if (strcmp(names_[i],names_[index])>0) {
+                index = i;
+            }
+        }
+        SoundSource *tWav = wav_[index];
+		char *tName = names_[index];
+		wav_[index] = wav_[rest-1];
+		names_[index] = names_[rest-1];
+		wav_[rest-1] = tWav;
+        names_[rest - 1] = tName;
+        rest--;
+	}
+}
 
 SoundSource *SamplePool::GetSource(int i) {
 	return wav_[i] ;
@@ -118,9 +121,10 @@ bool SamplePool::loadSample(const char *path) {
 
 	Path sPath(path) ;
     Status::Set("Loading %s",sPath.GetName().c_str()) ;
+    Trace::Log("loadSample", "Loading %s", path);
 
-	Path wavPath(path) ;
-	WavFile *wave=WavFile::Open(path) ;
+    Path wavPath(path);
+    WavFile *wave=WavFile::Open(path) ;
 	if (wave) {
 		wav_[count_]=wave ;
 		const std::string name=wavPath.GetName() ;
@@ -185,61 +189,6 @@ int SamplePool::ImportSample(Path &path) {
 	// now load the sample
 
 	bool status=loadSample(dstPath.GetPath().c_str()) ;
-
-	SetChanged() ;
-	SamplePoolEvent ev ;
-	ev.index_=count_-1 ;
-	ev.type_=SPET_INSERT ;
-	NotifyObservers(&ev) ;
-	return status?(count_-1):-1 ;
-};
-
-int SamplePool::SwapWith(Path &path) {
-
-    if (count_==MAX_PIG_SAMPLES) return -1 ;
-
-	// construct target path
-
-	std::string dpath= path.GetCanonicalPath();
-	Path dstPath(dpath.c_str()) ;
-
-    // Opens files
-
-	I_File *fin=FileSystem::GetInstance()->Open(path.GetCanonicalPath().c_str(),"r") ;
-	if (!fin) {
-        Trace::Error("Failed to swap %s", path.GetCanonicalPath().c_str());
-        return -1;
-	} ;
-	fin->Seek(0,SEEK_END) ;
-	long size=fin->Tell() ;
-	fin->Seek(0,SEEK_SET) ;
-
-    I_File *fout = FileSystem::GetInstance()->Open(
-        dstPath.GetCanonicalPath().c_str(), "w");
-    if (!fout) {
-		fin->Close() ;
-		delete (fin) ;
-		return -1 ;
-	} ;
-
-	// copy file to current project
-
-	char buffer[IMPORT_CHUNK_SIZE] ;
-	while (size>0) {
-		int count=(size>IMPORT_CHUNK_SIZE)?IMPORT_CHUNK_SIZE:size ;
-		fin->Read(buffer,1,count) ;
-		fout->Write(buffer,1,count) ;
-		size-=count ;
-	} ;
-
-	fin->Close() ;
-	fout->Close() ;
-	delete(fin) ;
-	delete(fout) ;
-
-	// now load the sample
-
-    bool status=loadSample(dstPath.GetCanonicalPath().c_str()) ;
 
 	SetChanged() ;
 	SamplePoolEvent ev ;

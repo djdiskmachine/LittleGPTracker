@@ -114,13 +114,13 @@ SampleInstrument::SampleInstrument() {
 	 fbMix_=new Variable("feedback mix",SIP_FBMIX,0x00) ;
 	 Insert(fbMix_) ;
 
-     printFx_ = new Variable("print fx", SIP_PRINTFX, 0);
+     printFx_ = new Variable("print fx", SIP_PRINTFX, fxPresets, 4, 3);
      Insert(printFx_);
 
-     irDry_ = new Variable("ir dry", SIP_IR_DRY, 10);
-     Insert(irDry_);
+     irPad_ = new Variable("pad with silence", SIP_IR_PAD, 0);
+     Insert(irPad_);
 
-     irWet_ = new Variable("print fx", SIP_IR_WET, 10);
+     irWet_ = new Variable("effect amount", SIP_IR_WET, 10);
      Insert(irWet_);
 
      // Initalize instrument's voices update list

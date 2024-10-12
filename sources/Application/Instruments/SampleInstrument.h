@@ -49,7 +49,7 @@ enum SampleInstrumentLoopMode {
 #define SIP_FBTUNE			MAKE_FOURCC('F','B','T','U')
 #define SIP_FBMIX			MAKE_FOURCC('F','B','M','X')
 #define SIP_PRINTFX MAKE_FOURCC('P', 'R', 'F', 'X')
-#define SIP_IR_DRY MAKE_FOURCC('I', 'R', 'D', 'R')
+#define SIP_IR_PAD MAKE_FOURCC('I', 'R', 'P', 'D')
 #define SIP_IR_WET MAKE_FOURCC('I', 'R', 'W', 'T')
 
 #define FB_BUFFER_LENGTH 3500 // (in samples)
@@ -134,9 +134,10 @@ private:
 	   Variable *slices_ ;
 	   Variable *interpolation_ ;
        Variable *printFx_;
-       Variable *irDry_;
+       Variable *irPad_;
        Variable *irWet_;
 
        static bool useDirtyDownsampling_;
+       char *fxPresets[4] = {"room", "hall", "plate", "church"};
 } ;
 #endif
