@@ -89,7 +89,8 @@ public:
 	   int GetVolume() ;
 	   void SetVolume(int) ;
 	   int GetSampleSize(int channel=-1) ;
-	   virtual const char *GetName() ; // returns sample name until real
+       int GetLoopEnd();
+       virtual const char *GetName() ; // returns sample name until real
 	                                   // namer is implemented
  
   static void EnableDownsamplingLegacy();

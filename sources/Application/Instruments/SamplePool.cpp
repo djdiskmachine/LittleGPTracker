@@ -103,6 +103,15 @@ void SamplePool::Sort() {
 	}
 }
 
+int SamplePool::getIndexOf(const char *name) {
+    for (int i=0;i<count_;i++) {
+		if (strcmp(names_[i], name)==0) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 SoundSource *SamplePool::GetSource(int i) {
 	return wav_[i] ;
 } ;
@@ -121,7 +130,7 @@ bool SamplePool::loadSample(const char *path) {
 
 	Path sPath(path) ;
     Status::Set("Loading %s",sPath.GetName().c_str()) ;
-    Trace::Log("loadSample", "Loading %s", path);
+    Trace::Log("loadSample", "%s", path);
 
     Path wavPath(path);
     WavFile *wave=WavFile::Open(path) ;
@@ -197,6 +206,27 @@ int SamplePool::ImportSample(Path &path) {
 	NotifyObservers(&ev) ;
 	return status?(count_-1):-1 ;
 };
+
+int SamplePool::Reassign(std::string path) {
+    std::string dpath="samples:";
+	dpath+=path;
+	Path dstPath(dpath.c_str());
+    Path checkPath(dstPath.GetPath());
+    Trace::Log("Exists?", "%s", checkPath.Exists() ? "true" : "false");
+	if (checkPath.Exists()) return getIndexOf(path.c_str());
+	if (count_==MAX_PIG_SAMPLES) return -1;
+    if (loadSample(dstPath.GetCanonicalPath().c_str())) {
+        SetChanged();
+		SamplePoolEvent ev;
+		ev.index_=getIndexOf(path.c_str());
+		ev.type_=SPET_INSERT;
+		NotifyObservers(&ev);
+        Trace::Log("Exists2", "%s", checkPath.Exists() ? "true" : "false");
+        if (!checkPath.Exists()) count_++;
+		return ev.index_;
+    }
+    return -1;
+}
 
 void SamplePool::PurgeSample(int i) {
 

@@ -1027,6 +1027,8 @@ int SampleInstrument::GetSampleSize(int channel) {
 	return 0 ;
 } ;
 
+int SampleInstrument::GetLoopEnd() { return loopEnd_->GetInt(); }
+
 bool SampleInstrument::IsInitialized() {
     return (source_!=0) ;
 } ;

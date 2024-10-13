@@ -30,12 +30,14 @@ public:
 	char **GetNameList() ;
 	int GetNameListSize();
     int ImportSample(Path &path);
+    int Reassign(std::string path);
     void PurgeSample(int i) ;
 	const char *GetSampleLib() ;
 protected:
 	bool loadSample(const char * path) ;
 	bool loadSoundFont(const char *path);
-	int count_ ;
+    int getIndexOf(const char *path);
+    int count_ ;
 	char* names_[MAX_PIG_SAMPLES] ;
 	SoundSource *wav_[MAX_PIG_SAMPLES] ;
 } ;
