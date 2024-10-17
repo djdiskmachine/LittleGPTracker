@@ -117,13 +117,21 @@ WavFile *WavFile::Open(const char *path) {
 		return 0 ;
 	}
 
-// Read fmt or JUNK
+    // Read fmt or JUNK
 
-position += wav->readBlock(position, 4);
-memcpy(&chunk, wav->readBuffer_, 4);
-chunk = Swap32(chunk);
+    position += wav->readBlock(position, 4);
+    memcpy(&chunk, wav->readBuffer_, 4);
+    chunk = Swap32(chunk);
 
-// Read (possible) JUNK
+    // Read (possible) JUNK
+
+    // Read fmt or JUNK
+
+    position += wav->readBlock(position, 4);
+    memcpy(&chunk, wav->readBuffer_, 4);
+    chunk = Swap32(chunk);
+
+    // Read (possible) JUNK
 
     #ifndef NOSKIPJUNK
     if (chunk==0x4b4e554a) {
