@@ -49,7 +49,7 @@ public:
 
 	bool Clipped() ;
 	void SetMasterVolume(int) ;
-    void SetSoftclip(int);
+    void SetSoftclip(int, int);
     int GetPlayedBufferPercentage() ;
 	
 	virtual void Execute(FourCC id,float value) ;

@@ -110,7 +110,7 @@ void PlayerMixer::Update(Observable &o,I_ObservableData *d) {
   }
   MixerService *ms=MixerService::GetInstance();
   ms->SetMasterVolume(project_->GetMasterVolume());
-  ms->SetSoftclip(project_->GetSoftclip());
+  ms->SetSoftclip(project_->GetSoftclip(), project_->GetAttenuation());
   clipped_=ms->Clipped();
 } ;
 

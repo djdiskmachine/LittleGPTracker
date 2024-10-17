@@ -170,7 +170,9 @@ void MixerService::SetMasterVolume(int vol) {
   }
 } ;
 
-void MixerService::SetSoftclip(int clip) { out_->SetSoftclip(clip); };
+void MixerService::SetSoftclip(int clip, int attn) {
+    out_->SetSoftclip(clip, attn);
+}
 
 int MixerService::GetPlayedBufferPercentage() {
 	return out_->GetPlayedBufferPercentage() ;
