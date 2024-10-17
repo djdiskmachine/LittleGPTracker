@@ -7,6 +7,12 @@ FxPrinter::FxPrinter(ViewData* viewData)
     int curInstr = viewData_->currentInstrument_;
     InstrumentBank* bank = viewData_->project_->GetInstrumentBank();
     instrument_ = static_cast<SampleInstrument *>(bank->GetInstrument(curInstr));
+    notificationResult_ = "";
+    // Assume ffmpeg exists but swap for local ffmpig if it doesn't
+    ffmpeg_ = "ffmpeg";
+    Path pigPath("bin:ffmpig");
+    Path ffmpigPath(pigPath.GetPath().c_str());
+    if(ffmpigPath.Exists()) ffmpeg_ = pigPath.GetPath();
 }
 
 void FxPrinter::setParams() {
@@ -27,12 +33,12 @@ void FxPrinter::setPaths() {
 std::string FxPrinter::parseCommand() {
     std::string command;
     float padDur = static_cast<float>(irPad_) / 1000;
-    float smplLength = static_cast<float>(instrument_->GetLoopEnd()) / 44100;
+    float smplLength = static_cast<float>(instrument_->GetSampleSize()) / 44100;
 
     std::ostringstream cm1, cm2, cm3, cm4, cm5;
-    cm1 << "ffmpeg -y -i " << "\"" << samples_dir.GetPath()
-        << "/" << fi_ << "\"" << " -i " << ir_
-        << " -filter_complex ";
+    cm1 << ffmpeg_ << " -y -i "
+        << "\"" << samples_dir.GetPath() << "/" << fi_ << "\""
+        << " -i " << ir_ << " -filter_complex ";
     // bug in ffmpeg version 4.4.2
     // requires pad_dur to be over 0 or output will be infinitely long
     if (irPad_ > 0) {
@@ -40,9 +46,8 @@ std::string FxPrinter::parseCommand() {
     } else {
         cm2 << "\"[0:a]";
     }
-    cm3 << "[1:a]afir=dry=10:wet=10 [reverb];"
-        << "[0] [reverb] amix=inputs=2:weights=10 " << irWet_
-        << ",volume=1.5";
+    cm3 << "[1:a]afir=dry=10:wet=10[reverb];"
+        << "[0] [reverb] amix=inputs=2:weights=100 " << irWet_ << ",volume=1.5";
     if (irPad_ > 0) {
         cm4 << ",afade=out:st=" << smplLength << ":d=" << padDur;
     } else {
@@ -53,20 +58,24 @@ std::string FxPrinter::parseCommand() {
     return command;
 }
 
+char *FxPrinter::GetNotification() { return notificationResult_; }
+
 bool FxPrinter::Run() {
     setParams();
     setPaths();
-    // Need to check if sample already created here
+    // Are we overwriting an already imported sample?
+    bool imported = SamplePool::GetInstance()->IsImported(foWav_);
     std::string cmd = parseCommand();
-    Trace::Log("", cmd.c_str());
+    Trace::Log("Processed", cmd.c_str());
     if (system(cmd.c_str()) == 0) {
-        SamplePool::GetInstance()->Sort();
-        instrument_->AssignSample(
-            SamplePool::GetInstance()->Reassign(foWav_));
+        int newIndex = SamplePool::GetInstance()->Reassign(foWav_, imported);
+        instrument_->AssignSample(newIndex);
         Trace::Log("PRINTFX", "OK!");
+        notificationResult_ = "OK!";
         return true;
     } else {
         Trace::Log("PRINTFX", "Failed");
+        notificationResult_ = "Failed, check lgpt.log";
         return false;
     }
 }

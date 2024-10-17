@@ -1,5 +1,4 @@
 #include "InstrumentView.h"
-#include "Application/FX/FxPrinter.h"
 #include "Application/Instruments/MidiInstrument.h"
 #include "Application/Instruments/SampleInstrument.h"
 #include "Application/Instruments/SamplePool.h"
@@ -95,14 +94,14 @@ void InstrumentView::fillSampleParameters() {
 
     position._x += 8;
     v = instrument->FindVariable(SIP_IR_WET);
-    f1 = new UIIntVarField(position, *v, "wet:%d", 1, 10, 1, 5);
+    f1 = new UIIntVarField(position, *v, "wet:%d%%", 0, 100, 1, 10);
     T_SimpleList<UIField>::Insert(f1);
-    position._x += 7;
+    position._x += 8;
 
     v = instrument->FindVariable(SIP_IR_PAD);
-    f1 = new UIIntVarField(position, *v, "pad:%d", 0, 2000, 5, 100);
+    f1 = new UIIntVarField(position, *v, "pad:%dms", 0, 2000, 5, 100);
     T_SimpleList<UIField>::Insert(f1);
-    position._x -= 15;
+    position._x -= 16;
 
     position._y += 2;
     v=instrument->FindVariable(SIP_VOLUME) ;
@@ -315,8 +314,9 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
 					break ;
                 }
                 case SIP_PRINTFX: {
-                    FxPrinter processor(viewData_);
-                    isDirty_ = processor.Run();
+                    FxPrinter printer(viewData_);
+                    isDirty_ = printer.Run();
+                    View::SetNotification(printer.GetNotification());
                     break;
                 }
                 default:
@@ -458,9 +458,10 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
 void InstrumentView::DrawView() {
 
 	Clear() ;
+    View::EnableNotification();
 
-	GUITextProperties props ;
-	GUIPoint pos=GetTitlePosition() ;
+    GUITextProperties props;
+    GUIPoint pos=GetTitlePosition() ;
 
 // Draw title
 

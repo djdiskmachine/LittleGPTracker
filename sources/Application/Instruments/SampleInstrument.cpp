@@ -120,7 +120,7 @@ SampleInstrument::SampleInstrument() {
      irPad_ = new Variable("pad with silence", SIP_IR_PAD, 0);
      Insert(irPad_);
 
-     irWet_ = new Variable("effect amount", SIP_IR_WET, 10);
+     irWet_ = new Variable("effect amount", SIP_IR_WET, 45);
      Insert(irWet_);
 
      // Initalize instrument's voices update list

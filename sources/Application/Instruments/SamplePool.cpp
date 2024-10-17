@@ -207,23 +207,38 @@ int SamplePool::ImportSample(Path &path) {
 	return status?(count_-1):-1 ;
 };
 
-int SamplePool::Reassign(std::string path) {
+bool SamplePool::IsImported(std::string name) {
     std::string dpath="samples:";
-	dpath+=path;
-	Path dstPath(dpath.c_str());
+    dpath += name;
+    Path dstPath(dpath.c_str());
     Path checkPath(dstPath.GetPath());
-    Trace::Log("Exists?", "%s", checkPath.Exists() ? "true" : "false");
-	if (checkPath.Exists()) return getIndexOf(path.c_str());
-	if (count_==MAX_PIG_SAMPLES) return -1;
+    return checkPath.Exists();
+}
+
+/*
+    Unsorted reassign for now
+    Returns the index of the sample in the pool
+    count_-1 position if new
+    previous position if already imported
+*/
+int SamplePool::Reassign(std::string name, bool imported) {
+    int insertedIndex = getIndexOf(name.c_str());
+	if (imported) return insertedIndex;
+
+    std::string aliasPath="samples:";
+	aliasPath+=name;
+	Path dstPath(aliasPath.c_str());
+	
+    // Have to load the sample even though it's already imported?
+    // have to shift the higher samples too
+    if (count_==MAX_PIG_SAMPLES) return -1;
     if (loadSample(dstPath.GetCanonicalPath().c_str())) {
         SetChanged();
 		SamplePoolEvent ev;
-		ev.index_=getIndexOf(path.c_str());
-		ev.type_=SPET_INSERT;
-		NotifyObservers(&ev);
-        Trace::Log("Exists2", "%s", checkPath.Exists() ? "true" : "false");
-        if (!checkPath.Exists()) count_++;
-		return ev.index_;
+        ev.index_ = count_ - 1;
+        ev.type_=SPET_INSERT;
+        NotifyObservers(&ev);
+        return ev.index_;
     }
     return -1;
 }

@@ -30,7 +30,9 @@ public:
 	char **GetNameList() ;
 	int GetNameListSize();
     int ImportSample(Path &path);
-    int Reassign(std::string path);
+    bool IsImported(std::string name);
+    // int InsertSample(const std::string& sampleName, bool imported, std::string fi);
+    int Reassign(std::string name, bool imported);
     void PurgeSample(int i) ;
 	const char *GetSampleLib() ;
 protected:

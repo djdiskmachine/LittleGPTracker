@@ -1,8 +1,9 @@
 #ifndef _INSTRUMENT_VIEW_H_
 #define _INSTRUMENT_VIEW_H_
 
-#include "Foundation/Observable.h"
+#include "Application/FX/FxPrinter.h"
 #include "BaseClasses/FieldView.h"
+#include "Foundation/Observable.h"
 #include "ViewData.h"
 
 class InstrumentView: public FieldView, public I_Observer {

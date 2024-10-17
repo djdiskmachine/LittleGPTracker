@@ -13,8 +13,9 @@ class FxPrinter {
 public:
     FxPrinter(ViewData* viewData);
     bool Run();
+    char *GetNotification();
 
-private:
+  private:
     void setParams();
     void setPaths();
     std::string parseCommand();
@@ -28,6 +29,8 @@ private:
     std::string fo_;
     std::string ir_;
     std::string foWav_;
+    std::string ffmpeg_;
+    char* notificationResult_;
 };
 
 #endif // FxPrinter_H
