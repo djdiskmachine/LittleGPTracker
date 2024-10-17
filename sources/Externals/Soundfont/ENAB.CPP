@@ -24,6 +24,8 @@ PURPOSE.
 #include "SFDETECT.H"
 #include "ENAB.H"
 
+#define DEBUG_ENAB 1
+
 using namespace::std ;
 using namespace::soundfont ;
 
@@ -76,7 +78,7 @@ HydraClass *GetHydraPtr(int bankID) {
 	return bankNodes[bankID].pHydra; 
 }
 
-sfBankID sfReadSFBFile(char *bankFileName)
+sfBankID sfReadSFBFile(CHAR *bankFileName)
 //-****************************************************************************
 // 
 // Implementation Notes: 
@@ -137,9 +139,10 @@ WORD i;
      {
         bankNodes[i].pHydra = pHF;
      }
+     const char *bfn = (const char *)(bankFileName);
 
-     bankNodes[i].bankFileName = new CHAR[strlen(bankFileName)+1]; 
-     strcpy(bankNodes[i].bankFileName , bankFileName); 
+     bankNodes[i].bankFileName = new CHAR[strlen(bfn)+1]; 
+     strcpy(bankNodes[i].bankFileName , bfn); 
 
      riff.OpenRIFF(bankFileName);
      riff.FindCk("SMPL"); 

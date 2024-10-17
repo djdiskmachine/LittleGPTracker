@@ -175,14 +175,16 @@ HydraClass *sfReader::ReadSFBFile(CHAR* pFilename, CHAR * pchReqdWaveTable)
 
   if ((pathName = new CHAR[strlen(pFilename)+1]) == NULL)
   {
+    printf("Allocate error\n");
     SetError(EHC_ALLOCATE_PMEM_ERROR);
     return(NULL);
   }
 
   memset(pathName,0,strlen(pFilename) +1);
   strcpy(pathName,pFilename);
-	
+  printf("Filename %s\n", pFilename);
   if (tRIFF.OpenRIFF(pFilename) != SUCCESS) {
+      printf("Error: EHC_OPENFILEERROR\n");
     SetError(EHC_OPENFILEERROR);
     return (NULL);
   }
@@ -251,6 +253,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
 
   if ((hf = new HydraClass) == NULL)
   {
+    printf("ReadSFBData: EHC_ALLOCATE_PMEM_ERROR \n");
     SetError(EHC_ALLOCATE_PMEM_ERROR);
     return(NULL);
   }
@@ -261,11 +264,11 @@ ReadSFBData (CHAR * pchReqdWaveTable)
    * Verify SoundFont data format
    */
 
-  if ( (tRIFF.GetCkID() != MAKE_ID(tRIFF.GetRIFFToken(Riff) ) &&
-       (tRIFF.GetCkFormID() != MAKE_ID(tRIFF.GetRIFFToken(Sfbk)) )))  
+  if ( ((int)tRIFF.GetCkID() != (int)MAKE_ID(tRIFF.GetRIFFToken(Riff) ) &&
+       ((int)tRIFF.GetCkFormID() != (int)MAKE_ID(tRIFF.GetRIFFToken(Sfbk)) )))  
   {
 	
-       if(tRIFF.GetCkFormID() == MAKE_ID("SFBK")) /* all caps is a no no */
+       if((int)tRIFF.GetCkFormID() == (int)MAKE_ID("SFBK")) /* all caps is a no no */
        {                                          /* accept it anyway   */ 
 
       /* cout<<"%ReadSFBK-I-found upcase SFBK fixing..."<<endl; */
@@ -276,6 +279,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
          delete hf;
          tRIFF.CloseRIFF();
          bySFStorageStatus = SFR_CLOSED;
+         printf("ReadSFBData: EHC_RIFFERROR \n");
 	 SetError(EHC_RIFFERROR);
 	 return (NULL);
        }
@@ -284,12 +288,14 @@ ReadSFBData (CHAR * pchReqdWaveTable)
   storeInfoCks(); /* stores all present infoSub chunks in the array */ 
 		  /* infoCkValues...                                */
   
+  printf("fversion, %d %s\n",Ifil, infoCkValues[Ifil]);
   fversion = (sfVersion*)(infoCkValues[Ifil]);
 
   if(fversion == NULL) { 
    // can't set the version of our hydraClass object. ifil is a _manditory_ 
    // info sub-chunk. We looked for "ifil" and "IFIL" (the second is illegal,
    // but does exist in otherwise valid banks, so we accept it as well....
+   printf("ReadSFBData: fversion NULL \n");
    SetError(SF_INVALIDBANK);
    #ifdef DEBUG 
      cout<<"%ReadSFBFile()-E-Bad Format, ifil (file version)"
@@ -309,6 +315,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: SF_INVALIDBANK fversion %d \n", fversion->wMajor);
     SetError(SF_INVALIDBANK);
     return NULL;
   }
@@ -318,7 +325,8 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
-    SetError(EHC_ALLOCATE_PMEM_ERROR);                 
+    SetError(EHC_ALLOCATE_PMEM_ERROR);
+    printf("ReadSFBData: EHC_ALLOCATE_PMEM_ERROR 2 \n");
     return NULL;
   }
 
@@ -336,6 +344,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: EHC_RIFFERROR \n");
     SetError(EHC_RIFFERROR);
     return (NULL);
   }
@@ -351,6 +360,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: EHC_RIFFERROR 2\n");    
     SetError(EHC_RIFFERROR);
     return (NULL);
   }
@@ -364,6 +374,8 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: EHC_ALLOCATE_PMEM_ERROR 3 \n");
+    
     SetError(EHC_ALLOCATE_PMEM_ERROR);
     return(NULL);
   }
@@ -378,6 +390,8 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
     SetError(EHC_RIFFERROR );
+    printf("ReadSFBData: EHC_RIFFERROR 3\n");    
+    
     return (NULL);
   }
   hf->pPBag = (SFBAGNDXPTR)Allocate(prstBagNdx, sizeof(sfBagNdx),
@@ -388,6 +402,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: EHC_ALLOCATE_PMEM_ERROR 4 \n");
     SetError(EHC_ALLOCATE_PMEM_ERROR);
     return(NULL);
   }
@@ -401,6 +416,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: EHC_RIFFERROR 4\n"); 
     SetError(EHC_RIFFERROR);
     return (NULL);
   }
@@ -413,6 +429,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
     SetError(EHC_ALLOCATE_PMEM_ERROR);
+    printf("ReadSFBData: EHC_ALLOCATE_PMEM_ERROR 5 \n");
     return(NULL);
   }
 
@@ -425,6 +442,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: EHC_RIFFERROR 5\n"); 
     SetError(EHC_RIFFERROR);
     return (NULL);
   }
@@ -437,6 +455,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
     SetError(EHC_ALLOCATE_PMEM_ERROR);
+    printf("ReadSFBData: EHC_ALLOCATE_PMEM_ERROR 6 \n");    
     return(NULL);
   }
 
@@ -451,6 +470,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
     SetError(EHC_RIFFERROR);
+    printf("ReadSFBData: EHC_RIFFERROR 7\n");
     return (NULL);
   }
 
@@ -462,6 +482,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     delete hf;
     tRIFF.CloseRIFF();
     bySFStorageStatus = SFR_CLOSED;
+    printf("ReadSFBData: EHC_ALLOCATE_PMEM_ERROR 7 \n"); 
     SetError(EHC_ALLOCATE_PMEM_ERROR);
     return(NULL);
   }
@@ -578,6 +599,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
     #ifdef DEBUG
      cout<<"%ReadSFBFile-E-Error finding SMPL chunk in " << pathName <<endl;
     #endif
+     printf("ReadSFBFile-E-Error finding SMPL chunk\n");
     dwSampleSize = 0;
     dwSampleOffset = 0;
   }
@@ -698,6 +720,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
   if ((bROMSamples == TRUE) && (pchIROMChunk == NULL))
   {
     /* ROM samples in a bank with no IROM chunk. Illegal bank. */
+    printf("ReadSFBData: EHC_WRONGWAVETABLE \n"); 
     SetError(EHC_WRONGWAVETABLE);
     delete hf;
     return NULL;
@@ -725,6 +748,7 @@ ReadSFBData (CHAR * pchReqdWaveTable)
          Loaded SoundFont bank does contain samples expected to be
          in WaveTable ROM. This is an invalid bank for the current synth.
       */
+        printf("ReadSFBData: EHC_WRONGWAVETABLE 2\n"); 
       SetError(EHC_WRONGWAVETABLE);
       delete hf;
       return NULL;
@@ -934,14 +958,23 @@ sfVersion *ver;
 
    resetInfoCkValues();   /* Make sure we are playing with a clean slate */
 
+   
+    printf ("infoCkValues\n");
    for(curToken = Ifil; curToken <= Icmt; curToken++) { 
-
+    printf ("  %d, %d, %d\n", curToken, tRIFF.GetRIFFToken(curToken), tRIFF.FindCk(tRIFF.GetRIFFToken(curToken)));
        if( tRIFF.FindCk(tRIFF.GetRIFFToken(curToken)) == SUCCESS ) {
-
-	 infoCkValues[curToken ] = new CHAR[ tRIFF.GetCkSize() + 1];
-
+     printf("  new CHAR %d\n", tRIFF.GetCkSize());
+	 
+     // SL: IssueHere - This allocation fails, the test below ends up being NULL
+     infoCkValues[curToken ] = new CHAR[ (size_t)(tRIFF.GetCkSize() + 1)];
+     //infoCkValues[curToken ] = (CHAR*)malloc ((size_t)(tRIFF.GetCkSize() + 1)*sizeof(CHAR));
+     
+//     int * Crash = NULL;
+     
+//     int foo = *Crash;
 	 if (infoCkValues[curToken] == NULL)
 	 {
+         printf("Alloc Error\n");
 	   SetError(EHC_ALLOCATE_PMEM_ERROR);
 	   //resetInfoCkValues();
 	   return EHC_ALLOCATE_PMEM_ERROR;
@@ -954,6 +987,7 @@ sfVersion *ver;
 
 	 if ( (curToken == Ifil) || ( curToken == Iver )) { /*its a struct...*/
 
+         printf("Cur Token\n");
 	   ver = (sfVersion*)infoCkValues[curToken];
 	   tRIFF.SwapBytes(&ver->wMajor);
 	   tRIFF.SwapBytes(&ver->wMinor);
@@ -975,8 +1009,10 @@ sfVersion *ver;
      }//
      else { // we didn't find the current chunk, but wait! is it the ifil?
        if(curToken == Ifil) { // check if the uppercase equiv it present...
+           printf("ifil\n");
          if( tRIFF.FindCk("IFIL") == SUCCESS ) {
   	   infoCkValues[curToken ] = new CHAR[ tRIFF.GetCkSize() + 1];
+       printf("tRIFF.RIFFRead\n");
   	   stat = tRIFF.RIFFRead(infoCkValues[curToken], 
 			         1, (SHORT) tRIFF.GetCkSize());
 	   ver = (sfVersion*)infoCkValues[curToken];
@@ -1000,6 +1036,7 @@ sfVersion *ver;
        SetError(EHC_ALLOCATE_PMEM_ERROR);
        return EHC_ALLOCATE_PMEM_ERROR;
      } 
+     printf("SoundFont Bank\n");
      strcpy(infoCkValues[Inam],"SoundFont Bank");
   }
 
