@@ -319,6 +319,15 @@ To move from one screen to the other, press the RTrigger combined with the direc
 - **FX selector:** Select between 4 impulse responses to print to the currently selected sample
 - **Wet:** How much of the effect to print 0 = nothing, 10 = probably too much
 - **Pad** For short samples, add up to 2000 ms silence to the end of the sample to let the reverb tail ring out.
+FX section uses ffmpeg to process audio
+Reverbs created by using a convolution technique [Impulse response](https://en.wikipedia.org/wiki/Convolution)
+IR credits:
+    Room by [Uzbanur](https://freesound.org/people/Uzbazur/sounds/382907/)
+    Hall by [NoiseCollector](https://freesound.org/people/NoiseCollector/sounds/184127/)
+    Spring by [recordinghopkins](https://freesound.org/people/recordinghopkins/sounds/175302/)
+    Church by [jotarrl](https://freesound.org/people/jotarrl/sounds/725443/)
+
+
 - **volume:**
 - **pan:** pans the instrument left or right (0x7F is center)
 - **root note**

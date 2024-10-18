@@ -70,7 +70,6 @@ bool FxPrinter::Run() {
     if (system(cmd.c_str()) == 0) {
         int newIndex = SamplePool::GetInstance()->Reassign(foWav_, imported);
         instrument_->AssignSample(newIndex);
-        Trace::Log("PRINTFX", "OK!");
         notificationResult_ = "OK!";
         return true;
     } else {

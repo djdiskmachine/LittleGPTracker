@@ -59,7 +59,7 @@ void SamplePool::Load() {
 
 	for(it->Begin();!it->IsDone();it->Next()) {
 		Path &path=it->CurrentItem() ;
-        Trace::Log("LoadSample", "%s", path.GetCanonicalPath().c_str());
+        Trace::Log("Load", "%s", path.GetCanonicalPath().c_str());
         loadSample(path.GetPath().c_str()) ;
 		if (count_==MAX_PIG_SAMPLES) {
 		   Trace::Error("Warning maximum sample count reached") ;
@@ -222,20 +222,20 @@ bool SamplePool::IsImported(std::string name) {
     previous position if already imported
 */
 int SamplePool::Reassign(std::string name, bool imported) {
+    if (count_ == MAX_PIG_SAMPLES)
+        return -1;
     int insertedIndex = getIndexOf(name.c_str());
-	if (imported) return insertedIndex;
+    if (imported)
+        unload(insertedIndex);
 
-    std::string aliasPath="samples:";
-	aliasPath+=name;
-	Path dstPath(aliasPath.c_str());
-	
-    // Have to load the sample even though it's already imported?
-    // have to shift the higher samples too
-    if (count_==MAX_PIG_SAMPLES) return -1;
+    std::string aliasPath = "samples:";
+    aliasPath += name;
+    Path dstPath(aliasPath.c_str());
+
     if (loadSample(dstPath.GetCanonicalPath().c_str())) {
         SetChanged();
-		SamplePoolEvent ev;
-        ev.index_ = count_ - 1;
+        SamplePoolEvent ev;
+        ev.index_ = getIndexOf(name.c_str());;
         ev.type_=SPET_INSERT;
         NotifyObservers(&ev);
         return ev.index_;
@@ -275,6 +275,32 @@ void SamplePool::PurgeSample(int i) {
 	ev.type_=SPET_DELETE ;
 	NotifyObservers(&ev) ;
 } ;
+
+void SamplePool::unload(int i) {
+
+    // construct the path of the sample to delete
+
+	std::string wavPath="samples:" ;
+	wavPath+=names_[i] ;
+	Path path(wavPath.c_str()) ;
+
+	// shift all entries from deleted to end
+	for (int j=i;j<count_-1;j++) {
+		wav_[j]=wav_[j+1] ;
+		names_[j]=names_[j+1] ;
+	} ;
+	// decrease sample count
+	count_-- ;
+	wav_[count_]=0 ;
+	names_[count_]=0 ;
+
+	// now notify observers
+	SetChanged() ;
+	SamplePoolEvent ev ;
+	ev.index_=i ;
+	ev.type_=SPET_DELETE ;
+	NotifyObservers(&ev) ;
+}
 
 bool SamplePool::loadSoundFont(const char *path) {
 

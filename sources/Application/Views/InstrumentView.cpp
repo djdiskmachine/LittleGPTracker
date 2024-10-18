@@ -128,12 +128,12 @@ void InstrumentView::fillSampleParameters() {
 	f1=new UIIntVarField(position,*v,"crush: %d",1,0x10,1,4) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
-    position._x += 9;
+    position._x += 10;
     v=instrument->FindVariable(SIP_CRUSHVOL) ;
 	f1=new UIIntVarField(position,*v,"drive: %2.2X",0,0xFF,1,0x10) ;
 	T_SimpleList<UIField>::Insert(f1) ;
-	position._x -= 9;
-    
+    position._x -= 10;
+
     position._y += 1;
 	v=instrument->FindVariable(SIP_DOWNSMPL) ;
 	f1=new UIIntVarField(position,*v,"downsample: %d",0,8,1,4) ;

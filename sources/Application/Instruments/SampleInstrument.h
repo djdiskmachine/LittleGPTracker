@@ -139,6 +139,6 @@ private:
        Variable *irWet_;
 
        static bool useDirtyDownsampling_;
-       char *fxPresets[4] = {"room", "hall", "plate", "church"};
+       char *fxPresets[4] = {"room", "hall", "spring", "church"};
 } ;
 #endif
