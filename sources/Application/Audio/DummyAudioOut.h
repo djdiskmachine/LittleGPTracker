@@ -40,7 +40,7 @@ public:
 	virtual int GetAudioRequestedBufferSize() ;
 	virtual int GetAudioPreBufferCount() ;
 	virtual double GetStreamTime() ;
-    virtual void SetSoftclip(int);
+    virtual void SetSoftclip(int, int);
 
   private:
     DummyOutThread *thread_ ;

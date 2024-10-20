@@ -20,7 +20,7 @@ class AudioOutDriver: public AudioOut,protected I_Observer {
     virtual void Stop() ;
 
     virtual void Trigger() ;
-    virtual void SetSoftclip(int clip);
+    virtual void SetSoftclip(int clip, int attenuation);
 
     virtual bool Clipped() ;
 
@@ -50,6 +50,7 @@ class AudioOutDriver: public AudioOut,protected I_Observer {
     bool clipped_ ;
     bool hasSound_ ;
     int softclip_ ;
+    int attenuation_;
     fixed maxPositiveFixed_;
     fixed maxNegativeFixed_;
 

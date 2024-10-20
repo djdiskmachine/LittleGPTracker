@@ -15,6 +15,7 @@
 #define VAR_MIDIDEVICE  MAKE_FOURCC('M','I','D','I')
 #define VAR_TRANSPOSE   MAKE_FOURCC('T','R','S','P')
 #define VAR_SOFTCLIP MAKE_FOURCC('S', 'F', 'T', 'C')
+#define VAR_CLIP_ATTENUATION MAKE_FOURCC('C', 'A', 'T', 'N')
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "4"
@@ -38,6 +39,7 @@ public:
 	int GetTempo() ; // Takes nudging into account
 	int GetTranspose() ;
     int GetSoftclip();
+    int GetAttenuation();
 
     void Trigger();
 

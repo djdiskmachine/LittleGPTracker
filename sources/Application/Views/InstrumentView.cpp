@@ -11,8 +11,6 @@
 #include "ModalDialogs/ImportSampleDialog.h"
 #include "ModalDialogs/MessageBox.h"
 #include "System/System/System.h"
-#include <cstdlib>
-#include <string>
 
 InstrumentView::InstrumentView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
@@ -123,9 +121,9 @@ void InstrumentView::fillSampleParameters() {
 	f1=new UIIntVarField(position,*v,"detune: %2.2X",0,255,1,0x10) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
-    position._y += 2;
-    v=instrument->FindVariable(SIP_CRUSH) ;
-	f1=new UIIntVarField(position,*v,"crush: %d",1,0x10,1,4) ;
+    position._y += 1;
+    v = instrument->FindVariable(SIP_CRUSH);
+    f1=new UIIntVarField(position,*v,"crush: %d",1,0x10,1,4) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
     position._x += 10;
@@ -389,61 +387,62 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
         // A modifier
 
         if (mask == EPBM_A) {
-            FourCC varID=((UIIntVarField *)GetFocus())->GetVariableID() ;
+            FourCC varID = ((UIIntVarField *)GetFocus())->GetVariableID();
             if ((varID == SIP_TABLE) || (varID == MIP_TABLE) ||
-                (varID == SIP_SAMPLE) || (varID == SIP_PRINTFX)) {
-                viewMode_=VM_NEW ;
+                (varID == SIP_SAMPLE)) {
+                viewMode_ = VM_NEW;
             };
         } else {
 
             // R Modifier
 
             if (mask & EPBM_R) {
-                if (mask&EPBM_LEFT) {
-					ViewType vt=VT_PHRASE;
-					ViewEvent ve(VET_SWITCH_VIEW,&vt) ;
-					SetChanged();
-					NotifyObservers(&ve) ;
-				}
+                if (mask & EPBM_LEFT) {
+                    ViewType vt = VT_PHRASE;
+                    ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                    SetChanged();
+                    NotifyObservers(&ve);
+                }
 
-				if (mask&EPBM_DOWN) {
+                if (mask & EPBM_DOWN) {
 
-					// Go to table view
+                    // Go to table view
 
-						ViewType vt=VT_TABLE2 ;
+                    ViewType vt = VT_TABLE2;
 
-						int i=viewData_->currentInstrument_ ;
-						InstrumentBank *bank=viewData_->project_->GetInstrumentBank() ;
-						I_Instrument *instr=bank->GetInstrument(i) ;
-						int table=instr->GetTable() ;
-						if (table!=VAR_OFF) {
-								viewData_->currentTable_=table ;
-						}
-						ViewEvent ve(VET_SWITCH_VIEW,&vt) ;
-						SetChanged();
-						NotifyObservers(&ve) ;
-				}
+                    int i = viewData_->currentInstrument_;
+                    InstrumentBank *bank =
+                        viewData_->project_->GetInstrumentBank();
+                    I_Instrument *instr = bank->GetInstrument(i);
+                    int table = instr->GetTable();
+                    if (table != VAR_OFF) {
+                        viewData_->currentTable_ = table;
+                    }
+                    ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                    SetChanged();
+                    NotifyObservers(&ve);
+                }
 
+                // if (mask&EPBM_RIGHT) {
 
-				//if (mask&EPBM_RIGHT) {
+                //	// Go to import sample
 
-				//	// Go to import sample
+                //		ViewType vt=VT_IMPORT ;
+                //		ViewEvent ve(VET_SWITCH_VIEW,&vt) ;
+                //		SetChanged();
+                //		NotifyObservers(&ve) ;
+                //}
 
-				//		ViewType vt=VT_IMPORT ;
-				//		ViewEvent ve(VET_SWITCH_VIEW,&vt) ;
-				//		SetChanged();
-				//		NotifyObservers(&ve) ;
-				//}
-
-
-        		if (mask&EPBM_START) {
-	   			    player->OnStartButton(PM_PHRASE,viewData_->songX_,true,viewData_->chainRow_) ;
-        		}
+                if (mask & EPBM_START) {
+                    player->OnStartButton(PM_PHRASE, viewData_->songX_, true,
+                                          viewData_->chainRow_);
+                }
             } else {
                 // No modifier
-    			if (mask&EPBM_START) {
-					player->OnStartButton(PM_PHRASE,viewData_->songX_,false,viewData_->chainRow_) ;
-    			}
+                if (mask & EPBM_START) {
+                    player->OnStartButton(PM_PHRASE, viewData_->songX_, false,
+                                          viewData_->chainRow_);
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 **Piggy now supports .sf2 Soundfonts. You must add these by hand to your SAMPLES directory, use PROGRAM CHANGE commands to load different patches. Loop points are automatically loaded, but you'll need to make VOLM setting to adjust decay.**
 
 ## New project
-When creating a new project, a random name is selected for you. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down
+When creating a new project, use the regen button to generate a random name. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down
 
 ## Multiple Projects
 
@@ -261,6 +261,8 @@ To move from one screen to the other, press the RTrigger combined with the direc
 - **Tempo:**: Can be set between 60bpm [0x3c] and 400bpm [0x190]. Resolution aligned to LSDJ. (nudge with b + left / right)
 - **Master:** Main volume goes from 10% to 200%. Piggy is loud now!
 - **Transpose:** Live transposition of every triggered instruments.
+- **Soft clip:** Master channel with 5 preset levels of saturation.
+- **Post:** Master channel attenuation post saturation.
 - **Compact Sequencer:** Free all unused chain/phrases.
 - **Compact Instruments:** All unused instruments get their sample set to (null), old parameter settings stick. A dialog offers to remove unused samples.
 - **Load Song:** Brings you back to the Selector Screen.

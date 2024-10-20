@@ -114,11 +114,9 @@ jobs:
       
       - name: Install required libraries
         run: |
-          python -m pip install --upgrade pip
-          pip install Pillow
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow
 
       - name: Build DEB
         working-directory: projects
@@ -148,11 +146,9 @@ jobs:
       
       - name: Install required libraries
         run: |
-          python -m pip install --upgrade pip
-          pip install Pillow
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl2-dev:i386 libasound2-plugins:i386 libjack-dev:i386
+          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow
 
       - name: Build X86
         working-directory: projects
@@ -184,10 +180,8 @@ jobs:
 
       - name: Install required libraries
         run: |
-          python -m pip install --upgrade pip
-          pip install Pillow
           sudo apt update
-          sudo apt install -y build-essential cmake pkgconf libusb-0.1-4 libgpgme11 libarchive-tools fakeroot
+          sudo apt install -y build-essential cmake pkgconf libusb-0.1-4 libgpgme11 libarchive-tools fakeroot python3-pillow
 
       - name: Set up PSP dev kit
         run: |
@@ -222,8 +216,7 @@ jobs:
 
       - name: Install Bittboy toolchain
         run: |
-          python -m pip install --upgrade pip
-          pip install Pillow
+          sudo apt update && sudo apt install -y python3-pillow
           wget -O /tmp/arm-buildroot-linux-musleabi_sdk-buildroot.tar.xz https://github.com/djdiskmachine/MiyooMini-toolchain/releases/download/toolchain/miyoo-toolchain-v2.0.0-arm-buildroot-linux-musleabi_sdk-buildroot.tar.gz
           mkdir /opt/arm-buildroot-linux-musleabi_sdk-buildroot
           tar -xvf /tmp/arm-buildroot-linux-musleabi_sdk-buildroot.tar.xz -C /opt/arm-buildroot-linux-musleabi_sdk-buildroot  --strip-components=1
@@ -292,8 +285,7 @@ jobs:
 
       - name: Install Garlic Plus toolchain
         run: |
-          python -m pip install --upgrade pip
-          pip install Pillow
+          sudo apt update && sudo apt install -y python3-pillow
           wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/simotek/union-rg35xxplus-toolchain/releases/download/20240830/rg35xxplus-toolchain.tar.xz
           mkdir /opt/rg35xxplus-toolchain
           tar -xvf /tmp/rg35xxplus-toolchain.tar.xz -C /opt/rg35xxplus-toolchain  --strip-components=1
@@ -327,8 +319,7 @@ jobs:
 
       - name: Install rg35xx Stock Toolchain
         run: |
-          python -m pip install --upgrade pip
-          pip install Pillow
+          sudo apt update && sudo apt install -y python3-pillow
           wget -O /tmp/rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz https://github.com/simotek/rg35xx-plus-aarch64-SDL2-SDK/releases/download/0.1.0/rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz
           mkdir /opt/rg35xx-plus-aarch64-SDL2-SDK-0.1.0
           tar -xvf /tmp/rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz -C /opt/rg35xx-plus-aarch64-SDL2-SDK-0.1.0  --strip-components=1
@@ -362,11 +353,10 @@ jobs:
       
       - name: Install Miyoo Mini toolchain
         run: |
+          sudo apt update && sudo apt install -y python3-pillow
           wget -O /tmp/miyoomini-toolchain.tar.xz https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.0.0/miyoomini-toolchain.tar.xz
           mkdir /opt/miyoomini-toolchain
           tar -xvf /tmp/miyoomini-toolchain.tar.xz -C /opt/miyoomini-toolchain  --strip-components=1
-          python -m pip install --upgrade pip
-          pip install Pillow
 
       - name: Build Miyoo Mini
         working-directory: projects
@@ -398,10 +388,8 @@ jobs:
       
       - name: Install required libraries
         run: |
-          python -m pip install --upgrade pip
-          pip install Pillow
           sudo apt update
-          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev
+          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow
 
       - name: Build X64
         working-directory: projects
