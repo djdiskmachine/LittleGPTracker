@@ -99,7 +99,7 @@ void InstrumentView::fillSampleParameters() {
     position._x += 8;
 
     v = instrument->FindVariable(SIP_IR_PAD);
-    f1 = new UIIntVarField(position, *v, "pad:%dms", 0, 2000, 5, 100);
+    f1 = new UIIntVarField(position, *v, "pad:%dms", 0, 5000, 5, 100);
     T_SimpleList<UIField>::Insert(f1);
     position._x -= 16;
 
