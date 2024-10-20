@@ -318,6 +318,21 @@ To move from one screen to the other, press the RTrigger combined with the direc
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140478226_instrument_1.1f.png)
 
 - **sample:** selects the .wav file to associate with the instrument. you can select the same sample in more than one instrument. if you tap A,A here it will take you to the Sample Import Screen (which lets you load new .WAV into your project).
+- **FX selector:** Select between 4 impulse responses to print to the currently selected sample
+- **Wet:** How much of the effect to print 0 = nothing, 10 = probably too much
+- **Pad** For short samples, add up to 5000 ms silence to the end of the sample to let the reverb tail ring out.
+FX section uses ffmpeg to process audio
+Select which reverb you want by holding A+Left/Right. Apply it by double-tapping A
+Reverbs created by using ffmpegs convolution filter [Impulse response](https://en.wikipedia.org/wiki/Convolution)
+Convolution wraps the audio file from start to end. If the sample is very short, you can get
+a longer reverb tail by setting the pad parameter.
+If applied to the sample Kick.wav the audio file with reverb applied will be called Kick_.wav
+IR credits:
+    Room by [Uzbanur](https://freesound.org/people/Uzbazur/sounds/382907/)
+    Hall by [NoiseCollector](https://freesound.org/people/NoiseCollector/sounds/184127/)
+    Spring by [recordinghopkins](https://freesound.org/people/recordinghopkins/sounds/175302/)
+    Church by [jotarrl](https://freesound.org/people/jotarrl/sounds/725443/)
+
 - **volume:**
 - **pan:** pans the instrument left or right (0x7F is center)
 - **root note**

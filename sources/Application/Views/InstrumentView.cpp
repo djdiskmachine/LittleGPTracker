@@ -1,15 +1,16 @@
 #include "InstrumentView.h"
-#include "System/System/System.h"
-#include "Application/Instruments/SampleInstrument.h"
 #include "Application/Instruments/MidiInstrument.h"
+#include "Application/Instruments/SampleInstrument.h"
 #include "Application/Instruments/SamplePool.h"
+#include "Application/Model/Config.h"
 #include "BaseClasses/UIBigHexVarField.h"
+#include "BaseClasses/UIIntVarOffField.h"
 #include "BaseClasses/UINoteVarField.h"
 #include "BaseClasses/UIStaticField.h"
-#include "BaseClasses/UIIntVarOffField.h"
-#include "ModalDialogs/MessageBox.h"
+#include "Foundation/Variables/Variable.h"
 #include "ModalDialogs/ImportSampleDialog.h"
-#include "Application/Model/Config.h"
+#include "ModalDialogs/MessageBox.h"
+#include "System/System/System.h"
 
 InstrumentView::InstrumentView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
@@ -84,8 +85,24 @@ void InstrumentView::fillSampleParameters() {
 	T_SimpleList<UIField>::Insert(f1) ;
 	f1->SetFocus() ;
 
-	position._y+=2 ;
-	v=instrument->FindVariable(SIP_VOLUME) ;
+    position._y += 1;
+    v = instrument->FindVariable(SIP_PRINTFX);
+    f1 = new UIIntVarField(position, *v, "%s", 0, 3, 1, 2);
+    T_SimpleList<UIField>::Insert(f1) ;
+
+    position._x += 8;
+    v = instrument->FindVariable(SIP_IR_WET);
+    f1 = new UIIntVarField(position, *v, "wet:%d%%", 0, 100, 1, 10);
+    T_SimpleList<UIField>::Insert(f1);
+    position._x += 8;
+
+    v = instrument->FindVariable(SIP_IR_PAD);
+    f1 = new UIIntVarField(position, *v, "pad:%dms", 0, 5000, 5, 100);
+    T_SimpleList<UIField>::Insert(f1);
+    position._x -= 16;
+
+    position._y += 2;
+    v=instrument->FindVariable(SIP_VOLUME) ;
 	f1=new UIIntVarField(position,*v,"volume: %d [%2.2X]",0,255,1,10) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 	
@@ -116,7 +133,13 @@ void InstrumentView::fillSampleParameters() {
 	f1=new UIIntVarField(position,*v,"crush: %d",1,0x10,1,4) ;
 	T_SimpleList<UIField>::Insert(f1) ;
 
-	position._y+=1 ;
+    position._x += 10;
+    v = instrument->FindVariable(SIP_CRUSHVOL);
+    f1=new UIIntVarField(position,*v,"drive: %2.2X",0,0xFF,1,0x10) ;
+	T_SimpleList<UIField>::Insert(f1) ;
+    position._x -= 10;
+
+    position._y += 1;
 	v=instrument->FindVariable(SIP_DOWNSMPL) ;
 	f1=new UIIntVarField(position,*v,"downsample: %d",0,8,1,4) ;
 	T_SimpleList<UIField>::Insert(f1) ;
@@ -294,9 +317,15 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
 						isDirty_=true ;
 					}
 					break ;
-				 }
-				default:
-					break ;
+                }
+                case SIP_PRINTFX: {
+                    FxPrinter printer(viewData_);
+                    isDirty_ = printer.Run();
+                    View::SetNotification(printer.GetNotification());
+                    break;
+                }
+                default:
+                    break ;
 			}
 			mask&=(0xFFFF-EPBM_A) ;
 		}
@@ -434,14 +463,15 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
 void InstrumentView::DrawView() {
 
 	Clear() ;
+    View::EnableNotification();
 
-	GUITextProperties props ;
-	GUIPoint pos=GetTitlePosition() ;
+    GUITextProperties props;
+    GUIPoint pos = GetTitlePosition();
 
-// Draw title
+    // Draw title
 
-	char title[20] ;
-	SetColor(CD_NORMAL) ;
+    char title[20];
+    SetColor(CD_NORMAL) ;
 	sprintf(title,"Instrument %2.2X",viewData_->currentInstrument_) ;
 	DrawString(pos._x,pos._y,title,props) ;
 

@@ -33,11 +33,12 @@ struct renderParams {
 	int retrigLoop_ ;   // number of ticks before retrig
 	int retrigCount_ ;  // current tick countdown before retrig
 	int retrigOffset_ ; // offset in ticks after retrig
+    int printFx_;       // Impulse response-based printable reverb
 
-	bool finished_ ; // the instrument has cut off
+    bool finished_; // the instrument has cut off
 
-	fixed baseFCut_ ;
-	fixed baseFRes_ ;
+    fixed baseFCut_;
+    fixed baseFRes_ ;
 
 	fixed cutoff_ ; // filter cutoff
 	fixed reso_ ;   // filter reso

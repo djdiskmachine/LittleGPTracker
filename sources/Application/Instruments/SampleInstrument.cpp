@@ -114,20 +114,29 @@ SampleInstrument::SampleInstrument() {
 	 fbMix_=new Variable("feedback mix",SIP_FBMIX,0x00) ;
 	 Insert(fbMix_) ;
 
- // Initalize instrument's voices update list
- 
-    for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-		renderParams *rp=renderParams_+i ;
-		rp->updaters_.push_back(&rp->volumeRamp_) ;
-		rp->updaters_.push_back(&rp->panner_) ;
-		rp->updaters_.push_back(&rp->cutRamp_) ;
-		rp->updaters_.push_back(&rp->resRamp_) ;
-		rp->updaters_.push_back(&rp->fbMixRamp_) ;
-		rp->updaters_.push_back(&rp->fbTunRamp_) ;
-		rp->updaters_.push_back(&rp->arp_) ;
-		rp->updaters_.push_back(&rp->speedRamp_) ;
-		rp->updaters_.push_back(&rp->legato_) ;
-		rp->updaters_.push_back(&rp->pfin_) ;
+     printFx_ = new Variable("print fx", SIP_PRINTFX, fxPresets, 4, 3);
+     Insert(printFx_);
+
+     irPad_ = new Variable("pad with silence", SIP_IR_PAD, 0);
+     Insert(irPad_);
+
+     irWet_ = new Variable("effect amount", SIP_IR_WET, 45);
+     Insert(irWet_);
+
+     // Initalize instrument's voices update list
+
+     for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+         renderParams *rp = renderParams_ + i;
+         rp->updaters_.push_back(&rp->volumeRamp_);
+         rp->updaters_.push_back(&rp->panner_);
+         rp->updaters_.push_back(&rp->cutRamp_);
+         rp->updaters_.push_back(&rp->resRamp_);
+         rp->updaters_.push_back(&rp->fbMixRamp_);
+         rp->updaters_.push_back(&rp->fbTunRamp_);
+         rp->updaters_.push_back(&rp->arp_);
+         rp->updaters_.push_back(&rp->speedRamp_);
+         rp->updaters_.push_back(&rp->legato_);
+         rp->updaters_.push_back(&rp->pfin_);
 	} ;
 
  // Reset table state
@@ -1017,6 +1026,8 @@ int SampleInstrument::GetSampleSize(int channel) {
 	} ;
 	return 0 ;
 } ;
+
+int SampleInstrument::GetLoopEnd() { return loopEnd_->GetInt(); }
 
 bool SampleInstrument::IsInitialized() {
     return (source_!=0) ;

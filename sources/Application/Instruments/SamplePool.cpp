@@ -59,8 +59,8 @@ void SamplePool::Load() {
 
 	for(it->Begin();!it->IsDone();it->Next()) {
 		Path &path=it->CurrentItem() ;
-//		Trace::Dump("Got sample name '%s'",name) ;
-		loadSample(path.GetPath().c_str()) ;
+        Trace::Log("Load", "%s", path.GetCanonicalPath().c_str());
+        loadSample(path.GetPath().c_str()) ;
 		if (count_==MAX_PIG_SAMPLES) {
 		   Trace::Error("Warning maximum sample count reached") ;
 		   break ;
@@ -81,24 +81,36 @@ void SamplePool::Load() {
 	delete dir ;
 
 	// now sort the samples
-
-	int rest=count_ ;
-	while(rest>0) {
-		int index=0 ;
-		for (int i=1;i<rest;i++) {
-			if (strcmp(names_[i],names_[index])>0) {
-				index=i ;
-			};
-		} ;
-		SoundSource *tWav=wav_[index] ;
-		char *tName=names_[index] ;
-		wav_[index]=wav_[rest-1] ;
-		names_[index]=names_[rest-1] ;
-		wav_[rest-1]=tWav;
-		names_[rest-1]=tName ;
-		rest-- ;
-	} ;
+    Sort();
 } ;
+
+void SamplePool::Sort() {
+    int rest=count_;
+	while(rest>0) {
+        int index = 0;
+        for (int i=1;i<rest;i++) {
+			if (strcmp(names_[i],names_[index])>0) {
+                index = i;
+            }
+        }
+        SoundSource *tWav = wav_[index];
+		char *tName = names_[index];
+		wav_[index] = wav_[rest-1];
+		names_[index] = names_[rest-1];
+		wav_[rest-1] = tWav;
+        names_[rest - 1] = tName;
+        rest--;
+	}
+}
+
+int SamplePool::getIndexOf(const char *name) {
+    for (int i=0;i<count_;i++) {
+		if (strcmp(names_[i], name)==0) {
+			return i;
+		}
+	}
+	return -1;
+}
 
 SoundSource *SamplePool::GetSource(int i) {
 	return wav_[i] ;
@@ -118,9 +130,10 @@ bool SamplePool::loadSample(const char *path) {
 
 	Path sPath(path) ;
     Status::Set("Loading %s",sPath.GetName().c_str()) ;
+    Trace::Log("loadSample", "%s", path);
 
-	Path wavPath(path) ;
-	WavFile *wave=WavFile::Open(path) ;
+    Path wavPath(path);
+    WavFile *wave=WavFile::Open(path) ;
 	if (wave) {
 		wav_[count_]=wave ;
 		const std::string name=wavPath.GetName() ;
@@ -151,11 +164,12 @@ int SamplePool::ImportSample(Path &path) {
     // Opens files
 
 	I_File *fin=FileSystem::GetInstance()->Open(path.GetPath().c_str(),"r") ;
-	if (!fin) {
-		Trace::Error("Failed to open input file %s",path.GetPath().c_str()) ;
-		return -1;
-	} ;
-	fin->Seek(0,SEEK_END) ;
+    if (!fin) {
+        Trace::Error("Failed to open input file %s",
+                     path.GetCanonicalPath().c_str());
+        return -1;
+    };
+    fin->Seek(0,SEEK_END) ;
 	long size=fin->Tell() ;
 	fin->Seek(0,SEEK_SET) ;
 
@@ -193,6 +207,42 @@ int SamplePool::ImportSample(Path &path) {
 	return status?(count_-1):-1 ;
 };
 
+bool SamplePool::IsImported(std::string name) {
+    std::string dpath="samples:";
+    dpath += name;
+    Path dstPath(dpath.c_str());
+    Path checkPath(dstPath.GetPath());
+    return checkPath.Exists();
+}
+
+/*
+    Unsorted reassign for now
+    Returns the index of the sample in the pool
+    count_-1 position if new
+    previous position if already imported
+*/
+int SamplePool::Reassign(std::string name, bool imported) {
+    if (count_ == MAX_PIG_SAMPLES)
+        return -1;
+    int insertedIndex = getIndexOf(name.c_str());
+    if (imported)
+        unload(insertedIndex);
+
+    std::string aliasPath = "samples:";
+    aliasPath += name;
+    Path dstPath(aliasPath.c_str());
+
+    if (loadSample(dstPath.GetCanonicalPath().c_str())) {
+        SetChanged();
+        SamplePoolEvent ev;
+        ev.index_ = getIndexOf(name.c_str());;
+        ev.type_=SPET_INSERT;
+        NotifyObservers(&ev);
+        return ev.index_;
+    }
+    return -1;
+}
+
 void SamplePool::PurgeSample(int i) {
 
 	// construct the path of the sample to delete
@@ -225,6 +275,32 @@ void SamplePool::PurgeSample(int i) {
 	ev.type_=SPET_DELETE ;
 	NotifyObservers(&ev) ;
 } ;
+
+void SamplePool::unload(int i) {
+
+    // construct the path of the sample to delete
+
+	std::string wavPath="samples:" ;
+	wavPath+=names_[i] ;
+	Path path(wavPath.c_str()) ;
+
+	// shift all entries from deleted to end
+	for (int j=i;j<count_-1;j++) {
+		wav_[j]=wav_[j+1] ;
+		names_[j]=names_[j+1] ;
+	} ;
+	// decrease sample count
+	count_-- ;
+	wav_[count_]=0 ;
+	names_[count_]=0 ;
+
+	// now notify observers
+	SetChanged() ;
+	SamplePoolEvent ev ;
+	ev.index_=i ;
+	ev.type_=SPET_DELETE ;
+	NotifyObservers(&ev) ;
+}
 
 bool SamplePool::loadSoundFont(const char *path) {
 
