@@ -333,6 +333,7 @@
     <ClCompile Include="..\sources\Application\Controllers\ControlRoom.cpp" />
     <ClCompile Include="..\sources\Application\Mixer\MixBus.cpp" />
     <ClCompile Include="..\sources\Application\Mixer\MixerService.cpp" />
+    <ClCompile Include="..\sources\Application\FX\FxPrinter.cpp" />
     <ClCompile Include="..\sources\UIFramework\BasicDatas\GUIEvent.cpp" />
     <ClCompile Include="..\sources\UIFramework\BasicDatas\GUIRect.cpp" />
     <ClCompile Include="..\sources\UIFramework\Interfaces\I_GUIWindowImp.cpp" />
@@ -376,7 +377,6 @@
     <ClCompile Include="..\sources\Services\Controllers\KeyboardControllerSource.cpp" />
     <ClCompile Include="..\sources\Services\Controllers\MultiChannelAdapter.cpp" />
     <ClCompile Include="..\sources\Services\Time\TimeService.cpp" />
-    <ClCompile Include="..\sources\Services\FX\FxPrinter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\sources\Adapters\W32FileSystem\W32FileSystem.h" />
@@ -470,6 +470,7 @@
     <ClInclude Include="..\sources\Application\Controllers\ControlRoom.h" />
     <ClInclude Include="..\sources\Application\Mixer\MixBus.h" />
     <ClInclude Include="..\sources\Application\Mixer\MixerService.h" />
+    <ClInclude Include="..\sources\Application\FX\FxPrinter.h" />
     <ClInclude Include="..\sources\UIFramework\Interfaces\I_GUIGraphics.h" />
     <ClInclude Include="..\sources\UIFramework\SimpleBaseClasses\GUIWindow.h" />
     <ClInclude Include="..\sources\Externals\RTAudio\RtAudio.h" />
@@ -510,7 +511,6 @@
     <ClInclude Include="..\sources\Services\Controllers\MultiChannelAdapter.h" />
     <ClInclude Include="..\sources\Services\Time\TimeService.h" />
     <ClInclude Include="..\sources\Resources\resource.h" />
-    <ClCompile Include="..\sources\Services\FX\FxPrinter.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\sources\Resources\lgpt.rc" />

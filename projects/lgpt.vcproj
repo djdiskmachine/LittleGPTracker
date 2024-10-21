@@ -1074,6 +1074,18 @@
 					</File>
 				</Filter>
 				<Filter
+					Name="FX"
+					>
+					<File
+						RelativePath="..\sources\Application\FX\FxPrinter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\sources\Application\FX\FxPrinter.h"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="Player"
 					>
 					<File
