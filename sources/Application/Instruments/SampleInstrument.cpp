@@ -37,6 +37,10 @@ SampleInstrument::SampleInstrument() {
      source_=0 ;
      dirty_=false ;
      running_=false ;
+     fxPresets[0] = "room";
+     fxPresets[1] = "hall";
+     fxPresets[2] = "spring";
+     fxPresets[3] = "church";
 
 // Initialize exported variables
 
