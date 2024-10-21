@@ -376,6 +376,7 @@
     <ClCompile Include="..\sources\Services\Controllers\KeyboardControllerSource.cpp" />
     <ClCompile Include="..\sources\Services\Controllers\MultiChannelAdapter.cpp" />
     <ClCompile Include="..\sources\Services\Time\TimeService.cpp" />
+    <ClCompile Include="..\sources\Services\FX\FxPrinter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\sources\Adapters\W32FileSystem\W32FileSystem.h" />
@@ -509,6 +510,7 @@
     <ClInclude Include="..\sources\Services\Controllers\MultiChannelAdapter.h" />
     <ClInclude Include="..\sources\Services\Time\TimeService.h" />
     <ClInclude Include="..\sources\Resources\resource.h" />
+    <ClCompile Include="..\sources\Services\FX\FxPrinter.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\sources\Resources\lgpt.rc" />

@@ -146,6 +146,7 @@
 		73F8437916FF66480061161B /* MidiEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437316FF66480061161B /* MidiEvent.cpp */; };
 		73F8437A16FF66480061161B /* MidiInMerger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437516FF66480061161B /* MidiInMerger.cpp */; };
 		73F8437E16FF666A0061161B /* RTMidiInDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437C16FF666A0061161B /* RTMidiInDevice.cpp */; };
+		7F4C76E42CC62DD200C03703 /* FxPrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F4C76E32CC62DD200C03703 /* FxPrinter.cpp */; };
 		7FBF05162C932165009B5828 /* FontConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FBF05142C932165009B5828 /* FontConfig.cpp */; };
 		87CA0E830F7E0FC4001D6BD0 /* PlayerChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E7F0F7E0FC4001D6BD0 /* PlayerChannel.cpp */; };
 		87CA0E840F7E0FC4001D6BD0 /* PlayerMixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E810F7E0FC4001D6BD0 /* PlayerMixer.cpp */; };
@@ -476,6 +477,8 @@
 		73F8437716FF66480061161B /* MidiMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MidiMessage.h; path = ../../LittleGPTracker/sources/Services/Midi/MidiMessage.h; sourceTree = SOURCE_ROOT; };
 		73F8437C16FF666A0061161B /* RTMidiInDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RTMidiInDevice.cpp; path = ../../LittleGPTracker/sources/Adapters/RTMidi/RTMidiInDevice.cpp; sourceTree = SOURCE_ROOT; };
 		73F8437D16FF666A0061161B /* RTMidiInDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RTMidiInDevice.h; path = ../../LittleGPTracker/sources/Adapters/RTMidi/RTMidiInDevice.h; sourceTree = SOURCE_ROOT; };
+		7F4C76E22CC62DD200C03703 /* FxPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FxPrinter.h; sourceTree = "<group>"; };
+		7F4C76E32CC62DD200C03703 /* FxPrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FxPrinter.cpp; sourceTree = "<group>"; };
 		7FBF05142C932165009B5828 /* FontConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontConfig.cpp; sourceTree = "<group>"; };
 		7FBF05152C932165009B5828 /* FontConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontConfig.h; sourceTree = "<group>"; };
 		87CA0E7F0F7E0FC4001D6BD0 /* PlayerChannel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerChannel.cpp; sourceTree = "<group>"; };
@@ -697,6 +700,7 @@
 		737D11860BCE66F000099CB3 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				7F4C76E12CC62DD200C03703 /* FX */,
 				87CA0E890F7E1052001D6BD0 /* Mixer */,
 				73A4F1320DAB7539006B1114 /* Controllers */,
 				73A4F11B0DAB7511006B1114 /* Commands */,
@@ -1343,6 +1347,15 @@
 			path = ../sources/Externals/Soundfont;
 			sourceTree = SOURCE_ROOT;
 		};
+		7F4C76E12CC62DD200C03703 /* FX */ = {
+			isa = PBXGroup;
+			children = (
+				7F4C76E22CC62DD200C03703 /* FxPrinter.h */,
+				7F4C76E32CC62DD200C03703 /* FxPrinter.cpp */,
+			);
+			path = FX;
+			sourceTree = "<group>";
+		};
 		87CA0E890F7E1052001D6BD0 /* Mixer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1504,6 +1517,7 @@
 				737D12A10BCE66F000099CB3 /* VariableContainer.cpp in Sources */,
 				737D12A20BCE66F000099CB3 /* WatchedVariable.cpp in Sources */,
 				737D12A30BCE66F000099CB3 /* Status.cpp in Sources */,
+				7F4C76E42CC62DD200C03703 /* FxPrinter.cpp in Sources */,
 				737D12A70BCE66F000099CB3 /* Process.cpp in Sources */,
 				737D12A80BCE66F000099CB3 /* Timer.cpp in Sources */,
 				737D12AA0BCE66F000099CB3 /* GUIEvent.cpp in Sources */,
@@ -1660,7 +1674,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = ../bin;
-				DEAD_CODE_STRIPPING = YES;
+				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PREFIX_HEADER = "";
