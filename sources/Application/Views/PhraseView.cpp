@@ -207,7 +207,7 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
     }
     if ((c) && (*c != 0xFF)) {
         int offset = offsets_[col_ + xOffset][direction];
-		// Add/remove from offset to match selected scale
+        // Add/remove from offset to match selected scale
         int scale = viewData_->project_->GetScale();
         while (!scaleSteps[scale][(*c + offset) % 12]) {
 			offset > 0 ? offset++ : offset--;

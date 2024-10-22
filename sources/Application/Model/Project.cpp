@@ -72,9 +72,9 @@ Project::~Project() {
 } ;
 
 int Project::GetScale() {
-  Variable *v = FindVariable(VAR_SCALE);
-  NAssert(v);
-  return v->GetInt();
+    Variable *v = FindVariable(VAR_SCALE);
+    NAssert(v);
+    return v->GetInt();
 }
 
 int Project::GetTempo() {
