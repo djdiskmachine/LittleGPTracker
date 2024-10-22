@@ -48,7 +48,8 @@ Variable::Variable(const char *name,FourCC id,char **list,int size,int index) {
 	type_=CHAR_LIST ;
 } ;
 
-Variable::Variable(const char *name,FourCC id,const char *const *list,int size,int index) {
+Variable::Variable(const char *name, FourCC id, const char *const *list,
+                   int size, int index) {
     name_=name ;
     id_=id ;
     list_.char_=(char **)list ;
@@ -56,7 +57,7 @@ Variable::Variable(const char *name,FourCC id,const char *const *list,int size,i
     value_.index_=index ;
     defaultValue_.index_=index ;
     type_=CHAR_LIST ;
-} ;
+};
 
 Variable::~Variable() {
 } ;

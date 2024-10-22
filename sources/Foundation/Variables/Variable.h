@@ -24,12 +24,13 @@ public:
     Variable(const char *name, FourCC id, bool value = false);
     Variable(const char *name,FourCC id,const char *value=0) ;
 	Variable(const char *name,FourCC id,char **list,int size,int index=-1) ;
-    Variable(const char *name,FourCC id,const char *const *list,int size,int index=-1) ;
+    Variable(const char *name, FourCC id, const char *const *list, int size,
+             int index = -1);
 
-	virtual ~Variable() ;
+    virtual ~Variable();
 
-	FourCC GetID() ;
-	const char *GetName() ;
+    FourCC GetID();
+    const char *GetName();
 
 	Type GetType() ;
 	void SetInt(int value,bool notify=true) ;

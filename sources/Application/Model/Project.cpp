@@ -1,16 +1,16 @@
 #include "Project.h"
-#include "Services/Midi/MidiService.h"
-#include "System/FileSystem/FileSystem.h"
-#include "System/Console/Trace.h"
-#include "System/io/Status.h"
-#include "Foundation/Variables/WatchedVariable.h"
-#include "Application/Player/SyncMaster.h"
-#include "Scale.h"
-#include "Table.h"
-#include "Groove.h"
-#include "Application/Persistency/PersistencyService.h"
-#include "Application/Instruments/SamplePool.h"
 #include "Application/Instruments/SampleInstrument.h"
+#include "Application/Instruments/SamplePool.h"
+#include "Application/Persistency/PersistencyService.h"
+#include "Application/Player/SyncMaster.h"
+#include "Foundation/Variables/WatchedVariable.h"
+#include "Groove.h"
+#include "Scale.h"
+#include "Services/Midi/MidiService.h"
+#include "System/Console/Trace.h"
+#include "System/FileSystem/FileSystem.h"
+#include "System/io/Status.h"
+#include "Table.h"
 
 #include "ProjectDatas.h"
 #include <math.h>
@@ -35,7 +35,8 @@ tempoNudge_(0)
     Variable *clipAttenuation =
         new Variable("clipAttenuation", VAR_CLIP_ATTENUATION, 100);
     this->Insert(clipAttenuation);
-	Variable *scale = new Variable("scale", VAR_SCALE, scaleNames, scaleCount, 0);
+    Variable *scale =
+        new Variable("scale", VAR_SCALE, scaleNames, scaleCount, 0);
     this->Insert(scale);
     scale->SetInt(0);
 
