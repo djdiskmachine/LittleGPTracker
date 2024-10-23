@@ -1,6 +1,6 @@
 # Little Piggy Tracker
 
-![Piggy](https://github.com/user-attachments/assets/827fc87f-7751-48ae-9de1-60a5d9a3b5c2)
+![Piggy](https://avatars.githubusercontent.com/u/180156201?s=400&u=ebb53bdea61a025edce0c3782ac75b532dd65dd7&v=4)
 
 **Little Piggy Tracker** (f.k.a _'LittleGPTracker'_) is a music tracker optimised to run on portable game consoles. It is currently running on Windows, MacOS (intel/arm) & Linux, PSP, Miyoo Mini, and a collection of other retro gaming handhelds.
 
@@ -26,15 +26,6 @@ Latest releases from this fork here:
 
 - [Releases](https://github.com/djdiskmachine/LittleGPTracker/releases)
 
-### 2006 Builds
-
-Fetch archived OG builds here:
-
-- [Stable & Ghetto](https://github.com/NinjasCL-archive/LittleGPTracker/releases/tag/v1)
-
-## Community
-
-Join our [Discord server](https://discord.gg/e4N2VM7sz6)
 
 ## Documentation
 
@@ -49,22 +40,23 @@ Recommended reading to get you started:
 
 ## Features per platform
 
-| Platform    | MIDI_Possible | MIDI_enabled | Soundfonts | Note                                 |
-|-------------|---------------|--------------|------------|--------------------------------------|
-| PSP         | NO            | NO           | YES        | [See notes](projects/resources/PSP/INSTALL_HOW_TO.txt) |
-| DEB         | YES           | YES          | YES        |                                      |
-| X64         | YES           | YES          | NO         |                                      |
-| X86         | YES           | YES          | YES        |                                      |
-| MIYOO       | NO            | NO           | YES        | Port by [Nine-H](https://ninethehacker.xyz) |
-| W32         | YES           | YES          | YES        | Built in VS2008 with love            |
-| RASPI       | YES           | YES          | YES        | Versatile platform                   |
-| CHIP        | YES           | YES          | YES        | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
-| BITTBOY     | MAYBE         | NO           | YES        |                                      |
-| GARLIC      | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| GARLICPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| RG35XXPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| MACOS       | YES           | YES          | NO         | Port by [clsource](https://genserver.social/clsource) |
+| Platform    | MIDI_Possible | MIDI_enabled | Soundfonts | PrintFX | Note                                 |
+|-------------|---------------|--------------|------------|---------|-----------------------------|
+| PSP         | NO            | NO           | YES        | TBA                |[See notes](projects/resources/PSP/INSTALL_HOW_TO.txt) |
+| DEB         | YES           | YES          | YES        | Install ffmpeg     |                                      |
+| X64         | YES           | YES          | NO         | Install ffmpeg     |                                      |
+| X86         | YES           | YES          | YES        | Install ffmpeg     |                                      |
+| MIYOO       | NO            | NO           | YES        | YES?               | Port by [Nine-H](https://ninethehacker.xyz) |
+| W32         | YES           | YES          | YES        | Install ffmpeg     | Built in VS2008 with love            |
+| RASPI       | YES           | YES          | YES        | Install ffmpeg     | Versatile platform                   |
+| CHIP        | YES           | YES          | YES        | YES                | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
+| BITTBOY     | MAYBE         | NO           | YES        | YES?               |                                      |
+| GARLIC      | MAYBE         | NO           | YES        | YES?               | Port by [Simotek](http://simotek.net)|
+| GARLICPLUS  | MAYBE         | NO           | YES        | YES?               | Port by [Simotek](http://simotek.net)|
+| RG35XXPLUS  | MAYBE         | NO           | YES        | YES?               | Port by [Simotek](http://simotek.net)|
+| MACOS       | YES           | YES          | NO         | Install ffmpeg     | Port by [clsource](https://genserver.social/clsource) |
 
 
 * **Soundfont library is currently not ported for 64bit OS**
 * **MIDI functionality __greatly__ depends on kernel support, please feature request your favourite OS maintainer =)**
+* **Install ffmpeg by following install instructions for your platform [here](https://www.ffmpeg.org/download.html)**

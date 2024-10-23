@@ -33,7 +33,7 @@ tempoNudge_(0)
         new Variable("softclip", VAR_SOFTCLIP, softclipStates, 5, 0);
     this->Insert(softclip);
     Variable *clipAttenuation =
-        new Variable("clipAttenuation", VAR_CLIP_ATTENUATION, 100);
+        new Variable("clipAttenuation", VAR_CLIP_ATTN, 100);
     this->Insert(clipAttenuation);
     Variable *scale =
         new Variable("scale", VAR_SCALE, scaleNames, scaleCount, 0);
@@ -97,7 +97,7 @@ int Project::GetSoftclip() {
 }
 
 int Project::GetAttenuation() {
-    Variable *v = FindVariable(VAR_CLIP_ATTENUATION);
+    Variable *v = FindVariable(VAR_CLIP_ATTN);
     NAssert(v);
 	return v->GetInt();
 }
