@@ -118,7 +118,7 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     field = new UIIntVarField(position, *v, "soft clip: %s", 0, 4, 1, 3);
     T_SimpleList<UIField>::Insert(field);
 
-    v = project_->FindVariable(VAR_CLIP_ATTENUATION);
+    v = project_->FindVariable(VAR_CLIP_ATTN);
     position._x += 18;
     field = new UIIntVarField(position, *v, "post: %d", 1, 100, 1, 10);
     T_SimpleList<UIField>::Insert(field);

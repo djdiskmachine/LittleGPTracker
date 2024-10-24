@@ -387,10 +387,11 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
 	  // A modifier
 
 	  if (mask==EPBM_A) {
-			FourCC varID=((UIIntVarField *)GetFocus())->GetVariableID() ;
-			if ((varID==SIP_TABLE)||(varID==MIP_TABLE)||(varID==SIP_SAMPLE)) {
-				viewMode_=VM_NEW ;
-			} ;
+          FourCC varID = ((UIIntVarField *)GetFocus())->GetVariableID();
+          if ((varID == SIP_TABLE) || (varID == MIP_TABLE) ||
+              (varID == SIP_SAMPLE) || (varID == SIP_PRINTFX)) {
+              viewMode_ = VM_NEW;
+			}
 	  } else {
 
 		  // R Modifier
