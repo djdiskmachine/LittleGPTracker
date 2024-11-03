@@ -1,0 +1,5 @@
+Install vpk via vitashell
+
+Data/configs reside in ux0:/data/lgpt/
+
+Enjoy!

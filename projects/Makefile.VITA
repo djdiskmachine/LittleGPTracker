@@ -1,0 +1,62 @@
+-include $(PWD)/rules_base
+
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-DSDL2 \
+	-DNDEBUG
+
+
+DEVKIT = /usr/local/vitasdk/
+CROSS_COMPILE=$(DEVKIT)bin/arm-vita-eabi-
+
+CC = $(CROSS_COMPILE)gcc
+CXX = $(CROSS_COMPILE)g++
+STRIP = $(CROSS_COMPILE)strip
+SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
+SDL_CFLAGS  := $(shell $(SYSROOT)/bin/sdl2-config --cflags)
+SDL_LIBS    := $(shell $(SYSROOT)/bin/sdl2-config --libs)
+
+INCLUDES = -Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources
+OPT_FLAGS  = -O3 -g -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -ftree-vectorize -ffast-math -fsigned-char -fno-optimize-sibling-calls -fno-rtti
+
+TOOLPATH=$(DEVKIT)/bin
+PREFIX		:=	arm-bita-eabi-
+
+CFLAGS	:=	$(DEFINES) $(INCLUDES) $(SDL_CFLAGS) $(OPT_FLAGS)
+CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
+LIBS	:=  -lSDL_mixer $(SDL_LIBS)
+LDFLAGS := $(LDFLAGS) -Wl,-q -Wl,-z,nocopyreloc
+LIBDIRS	:=	$(DEKVIT)/lib
+LIBDIRS	+=	$(DEKVIT)/arm-vita-eabi/lib
+OUTPUT = ../lgpt-vita
+EXTENSION:= vpk
+
+#---------------------------------------------------------------------------------
+%.vpk: %.bin %.sfo
+	vita-make-fself $< $@
+	vita-pack-vpk -s ../lgpt-vita.sfo -b $< \
+		--add ../resources/VITA/sce_sys=sce_sys \
+		$@
+	@echo built ... $(notdir $@)
+
+#---------------------------------------------------------------------------------
+%.sfo:
+	vita-mksfoex -s TITLE_ID="LGPT00001" "Piggy Tracker" $@
+
+#---------------------------------------------------------------------------------
+%.bin: %.velf
+	vita-make-fself $< $@
+	@echo built ... $(notdir $@)
+
+#---------------------------------------------------------------------------------
+%.velf: %.elf
+	vita-elf-create -s $< $@
+	@echo built ... $(notdir $@)
+
+#---------------------------------------------------------------------------------
+
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
