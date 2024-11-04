@@ -1,5 +1,5 @@
-Install vpk via vitashell
+Install bin/lgpt-vita.vpk via vitashell
 
-Data/configs reside in ux0:/data/lgpt/
+Copy samplelib, and optionally demo track (lgpt_BETA) and bin/*.xml configs to ux0:/data/lgpt/
 
 Enjoy!
