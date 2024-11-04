@@ -95,8 +95,8 @@ fixed AudioOutDriver::softClip(fixed sample) {
 	if (softclip_ == 0 || sample == 0) return sample;
 
 	float sampleFloat=fp2fl(sample);
-	fixed maxPositiveFloat=fp2fl(maxPositiveFixed_);
-	fixed maxNegativeFloat=fp2fl(maxNegativeFixed_);
+    float maxPositiveFloat = fp2fl(maxPositiveFixed_);
+    float maxNegativeFloat=fp2fl(maxNegativeFixed_);
 	float maxFloat;
 
 	if (sampleFloat>0) {
@@ -112,36 +112,36 @@ fixed AudioOutDriver::softClip(fixed sample) {
 	switch (softclip_) {
 		case 1:
         default:
-            alpha=1.45; // -1.5db (approx.)
-			break;
+            alpha = 1.45f; // -1.5db (approx.)
+            break;
 		case 2:
-			alpha=1.07; // -3db (approx.)
-			break;
+            alpha = 1.07f; // -3db (approx.)
+            break;
 		case 3:
-			alpha=0.75; // -6db (approx.)
-			break;
+            alpha = 0.75f; // -6db (approx.)
+            break;
 		case 4:
-			alpha=0.53; // -9db (approx.)
+            alpha = 0.53f; // -9db (approx.)
             break;
     }
 
-	float twoThirds=2.0/3.0;
-	float alphaTwoThirds=alpha*twoThirds;
-	float invertedAlpha=1.0/alpha;
+    float twoThirds = 2.0f / 3.0f;
+    float alphaTwoThirds=alpha*twoThirds;
+    float invertedAlpha = 1.0f / alpha;
 
-	x=invertedAlpha*(sampleFloat/maxFloat);
-	if (x>-1.0 && x<1.0) {
-		sampleFloat=maxFloat*(alpha*(x-(pow(x, 3)/3.0)));
-	} else {
-		sampleFloat=maxFloat*alphaTwoThirds;
-	}
+    x = invertedAlpha * (sampleFloat / maxFloat);
+    if (x > -1.0f && x < 1.0f) {
+        sampleFloat=maxFloat*(alpha*(x-(pow(x, 3.0f)/3.0f)));
+    } else {
+        sampleFloat=maxFloat*alphaTwoThirds;
+    }
 
-	float gainCompensation;
-	if (alpha > 1.0) {
-		gainCompensation=1.0/(alpha*(invertedAlpha-pow(invertedAlpha, 3)/3.0));
-	} else {
-		gainCompensation=1.0/alphaTwoThirds;
-	}
+    float gainCompensation;
+    if (alpha > 1.0f) {
+        gainCompensation=1.0f/(alpha*(invertedAlpha-pow(invertedAlpha, 3.0f)/3.0f));
+    } else {
+        gainCompensation = 1.0f / alphaTwoThirds;
+    }
     float damp = (float)attenuation_ / 100;
     return fl2fp(sampleFloat*gainCompensation*damp);
 }
