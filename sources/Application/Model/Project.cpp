@@ -20,21 +20,23 @@ Project::Project()
 ,midiDeviceList_(0),
 tempoNudge_(0)
 {
-
-	WatchedVariable *tempo=new WatchedVariable("tempo",VAR_TEMPO,138) ;
-	this->Insert(tempo) ;
-	Variable *masterVolume=new Variable("master",VAR_MASTERVOL,100) ;
-	this->Insert(masterVolume) ;
-	Variable *wrap=new Variable("wrap",VAR_WRAP,false) ;
-	this->Insert(wrap) ;
-	Variable *transpose=new Variable("transpose",VAR_TRANSPOSE,0) ;
-	this->Insert(transpose) ;
+    WatchedVariable *tempo = new WatchedVariable("tempo", VAR_TEMPO, 138);
+    this->Insert(tempo);
+    Variable *pregain =
+        new Variable("pregain", VAR_PREGAIN, 100, 200);
+    this->Insert(pregain);
     Variable *softclip =
         new Variable("softclip", VAR_SOFTCLIP, softclipStates, 5, 0);
     this->Insert(softclip);
-    Variable *clipAttenuation =
-        new Variable("clipAttenuation", VAR_CLIP_ATTN, 100);
-    this->Insert(clipAttenuation);
+    Variable *softclipGain = new Variable("softclipGain", VAR_SOFTCLIP_GAIN,
+                                          softclipGainStates, 2, 0);
+    this->Insert(softclipGain);
+	Variable *masterVolume=new Variable("master", VAR_MASTERVOL, 100, 100);
+	this->Insert(masterVolume) ;
+	Variable *wrap=new Variable("wrap", VAR_WRAP, false);
+	this->Insert(wrap);
+	Variable *transpose=new Variable("transpose", VAR_TRANSPOSE, 0);
+	this->Insert(transpose);
     Variable *scale =
         new Variable("scale", VAR_SCALE, scaleNames, scaleCount, 0);
     this->Insert(scale);
@@ -96,8 +98,14 @@ int Project::GetSoftclip() {
 	return v->GetInt();
 }
 
-int Project::GetAttenuation() {
-    Variable *v = FindVariable(VAR_CLIP_ATTN);
+int Project::GetSoftclipGain() {
+    Variable *v = FindVariable(VAR_SOFTCLIP_GAIN);
+    NAssert(v);
+	return v->GetBool();
+}
+
+int Project::GetPregain() {
+    Variable *v = FindVariable(VAR_PREGAIN);
     NAssert(v);
 	return v->GetInt();
 }

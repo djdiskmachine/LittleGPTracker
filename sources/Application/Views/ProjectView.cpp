@@ -7,6 +7,7 @@
 #include "BaseClasses/UIActionField.h"
 #include "BaseClasses/UIField.h"
 #include "BaseClasses/UIIntVarField.h"
+#include "BaseClasses/UIStaticField.h"
 #include "BaseClasses/UITempoField.h"
 #include "Services/Midi/MidiService.h"
 #include "System/System/System.h"
@@ -102,31 +103,42 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	GUIPoint position=GetAnchor() ;
 	
 	Variable *v=project_->FindVariable(VAR_TEMPO) ;
-	UITempoField *f=new UITempoField(ACTION_TEMPO_CHANGED,position,*v,"tempo: %d [%2.2x]  ",60,400,1,10) ;
-	T_SimpleList<UIField>::Insert(f) ;
+    UITempoField *f = new UITempoField(ACTION_TEMPO_CHANGED, position, *v,
+                                       "Tempo: %d [%2.2x]  ", 60, 400, 1, 10);
+    T_SimpleList<UIField>::Insert(f) ;
 	f->AddObserver(*this) ;
 	tempoField_=f ;
 
-	v=project_->FindVariable(VAR_MASTERVOL) ;
-	position._y+=1 ;
+    v = project_->FindVariable(VAR_PREGAIN);
+    position._y+=2 ;
     UIIntVarField *field =
-        new UIIntVarField(position, *v, "master: %d", 10, 200, 1, 10);
-    T_SimpleList<UIField>::Insert(field) ;
+        new UIIntVarField(position, *v, "Pre-gain: %d", 10, 200, 1, 10);
+    T_SimpleList<UIField>::Insert(field);
+
+    position._y += 1;
+    UIStaticField *staticField = new UIStaticField(position, "Saturation:");
+    T_SimpleList<UIField>::Insert(staticField) ;
 
     v = project_->FindVariable(VAR_SOFTCLIP);
-    position._y += 1;
-    field = new UIIntVarField(position, *v, "soft clip: %s", 0, 4, 1, 3);
+    position._x += 12; 
+    field = new UIIntVarField(position, *v, "%s", 0, 4, 1, 4);
     T_SimpleList<UIField>::Insert(field);
+    position._x -= 12;
 
-    v = project_->FindVariable(VAR_CLIP_ATTN);
-    position._x += 18;
-    field = new UIIntVarField(position, *v, "post: %d", 1, 100, 1, 10);
+    v = project_->FindVariable(VAR_SOFTCLIP_GAIN);
+    position._x += 19;
+	field = new UIIntVarField(position, *v, "%s", 0, 1, 1, 1);
+	T_SimpleList<UIField>::Insert(field);
+	position._x -= 19;
+
+    v = project_->FindVariable(VAR_MASTERVOL);
+    position._y += 1;
+    field = new UIIntVarField(position, *v, "Master: %d", 0, 100, 1, 10);
     T_SimpleList<UIField>::Insert(field);
-    position._x -= 18;
 
     v = project_->FindVariable(VAR_TRANSPOSE);
-    position._y+=2 ;
-	UIIntVarField *f2=new UIIntVarField(position,*v,"transpose: %3.2d",-48,48,0x1,0xC) ;
+    position._y += 2;
+    UIIntVarField *f2=new UIIntVarField(position,*v,"Transpose: %3.2d",-48,48,0x1,0xC) ;
 	T_SimpleList<UIField>::Insert(f2) ;
 	
 	v = project_->FindVariable(VAR_SCALE);
@@ -136,7 +148,7 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     }
     position._y += 1;
     field =
-        new UIIntVarField(position, *v, "scale: %s", 0, scaleCount - 1, 1, 10);
+        new UIIntVarField(position, *v, "Scale: %s", 0, scaleCount - 1, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
     position._y += 2;

@@ -9,8 +9,28 @@
 #include <math.h>
 
 AudioOutDriver::AudioOutDriver(AudioDriver &driver) {
-    maxPositiveFixed_ = i2fp(32767);
-    maxNegativeFixed_=i2fp(-32768);
+    // Precalculate constant values for softclipping algorithm
+    softClipData_[0].alpha = 1.45f; // -1.5db (approx.)
+	softClipData_[1].alpha = 1.07f; // -3db (approx.)
+	softClipData_[2].alpha = 0.75f; // -6db (approx.)
+	softClipData_[3].alpha = 0.53f; // -9db (approx.)
+
+	for (int i = 0; i < 4; i++) {
+		softClipData_[i].alpha23 = softClipData_[i].alpha * (2.0f / 3.0f);
+		softClipData_[i].alphaInv = 1.0f / softClipData_[i].alpha;
+
+		if (softClipData_[i].alpha > 1.0f) {
+			/* calculates gain compensation differently for
+			 * modes with alpha > 1, so there's no drop in loudness
+			 * and we can still drive the hard clipper when the input
+			 * goes over 1.0
+			 */
+			softClipData_[i].gainCmp = 1.0f / (1.0f - (pow(softClipData_[i].alphaInv, 2.0f) / 3.0f));
+		} else {
+			softClipData_[i].gainCmp = 1.0f / softClipData_[i].alpha23;
+		}
+	}
+
 	driver_=&driver ;
 	driver.AddObserver(*this) ;
 	primarySoundBuffer_=0 ;
@@ -68,111 +88,79 @@ void AudioOutDriver::prepareMixBuffers() {
 	clipped_=false ;   
 } ;
 
-void AudioOutDriver::SetSoftclip(int clip, int attn) {
-    softclip_ = clip;
-	attenuation_ = attn;
+void AudioOutDriver::SetSoftclip(int clip, int gain) {
+    softclip_ = clip - 1;
+	softclipGain_ = gain;
+}
+
+void AudioOutDriver::SetMasterVolume(int volume) {
+	masterVolume_ = volume;
 }
 
 fixed AudioOutDriver::hardClip(fixed sample) {
-	fixed clippedSample=sample;
 
-	if (sample>maxPositiveFixed_) {
-		clippedSample=maxPositiveFixed_;
-		clipped_=true;
-	} else if (sample<maxNegativeFixed_) {
-		clippedSample=maxNegativeFixed_;
-		clipped_=true;
-	}
+    if (sample > MAX_POSITIVE_FIXED || sample < MAX_NEGATIVE_FIXED) {
+        clipped_ = true;
+		return sample > 0 ? MAX_POSITIVE_FIXED : MAX_NEGATIVE_FIXED;
+    }
 
-	return clippedSample;
+    return sample;
 }
 
 /* Implements standard cubic algorithm
  * https://wiki.analog.com/resources/tools-software/sigmastudio/toolbox/nonlinearprocessors/standardcubic
  */
 fixed AudioOutDriver::softClip(fixed sample) {
+    if (softclip_ == -1 || sample == 0)
+        return sample;
 
-	if (softclip_ == 0 || sample == 0) return sample;
+    float x;
+    float sampleFloat = fp2fl(sample);
+	float maxFloat = fp2fl(sampleFloat > 0 ? MAX_POSITIVE_FIXED : MAX_NEGATIVE_FIXED);
+	SoftClipData* data = &softClipData_[softclip_];
 
-	float sampleFloat=fp2fl(sample);
-    float maxPositiveFloat = fp2fl(maxPositiveFixed_);
-    float maxNegativeFloat=fp2fl(maxNegativeFixed_);
-	float maxFloat;
-
-	if (sampleFloat>0) {
-		maxFloat=maxPositiveFloat;
-	}
-	else {
-		maxFloat=maxNegativeFloat;
-	}
-
-	float x;
-	float alpha;		// hardness
-
-	switch (softclip_) {
-		case 1:
-        default:
-            alpha = 1.45f; // -1.5db (approx.)
-            break;
-		case 2:
-            alpha = 1.07f; // -3db (approx.)
-            break;
-		case 3:
-            alpha = 0.75f; // -6db (approx.)
-            break;
-		case 4:
-            alpha = 0.53f; // -9db (approx.)
-            break;
-    }
-
-    float twoThirds = 2.0f / 3.0f;
-    float alphaTwoThirds=alpha*twoThirds;
-    float invertedAlpha = 1.0f / alpha;
-
-    x = invertedAlpha * (sampleFloat / maxFloat);
+    x = data->alphaInv * (sampleFloat / maxFloat);
     if (x > -1.0f && x < 1.0f) {
-        sampleFloat=maxFloat*(alpha*(x-(pow(x, 3.0f)/3.0f)));
+        sampleFloat = maxFloat * (data->alpha * (x - (pow(x, 3.0f) / 3.0f)));
     } else {
-        sampleFloat=maxFloat*alphaTwoThirds;
+        sampleFloat = maxFloat * data->alpha23;
     }
 
-    float gainCompensation;
-    if (alpha > 1.0f) {
-        gainCompensation=1.0f/(alpha*(invertedAlpha-pow(invertedAlpha, 3.0f)/3.0f));
-    } else {
-        gainCompensation = 1.0f / alphaTwoThirds;
+    if (softclipGain_) {
+        sampleFloat = sampleFloat * data->gainCmp;
     }
-    float damp = (float)attenuation_ / 100;
-    return fl2fp(sampleFloat*gainCompensation*damp);
+
+    return fl2fp(sampleFloat);
 }
 
 void AudioOutDriver::clipToMix() {
 
-	bool interlaced=driver_->Interlaced()  ;
+    float damp = pow((float)masterVolume_ / 100, 4.0f);
+    bool interlaced = driver_->Interlaced();
 
-	if (!hasSound_) {
-		SYS_MEMSET(mixBuffer_,0,sampleCount_*2*sizeof(short)) ;
-	} else {
-		short *s1=mixBuffer_ ;
-		short *s2=(interlaced)?s1+1:s1+sampleCount_ ;
-		int offset=(interlaced)?2:1 ;
+    if (!hasSound_) {
+        SYS_MEMSET(mixBuffer_, 0, sampleCount_ * 2 * sizeof(short));
+    } else {
+        short *s1 = mixBuffer_;
+		short *s2 = (interlaced) ? s1 + 1 : s1 + sampleCount_;
+		int offset = (interlaced) ? 2 : 1;
 
-		fixed *p=primarySoundBuffer_ ;
+        fixed *p = primarySoundBuffer_;
 
         fixed leftSample;
         fixed rightSample;
 
-        for (int i=0;i<sampleCount_;i++) {
+        for (int i = 0; i < sampleCount_; i++) {
 
-			leftSample=hardClip(softClip(*p++));
-			rightSample=hardClip(softClip(*p++));
+            leftSample = damp * hardClip(softClip(*p++));
+            rightSample = damp * hardClip(softClip(*p++));
 
-            *s1=short(fp2i(leftSample));
-			s1+=offset;
-			*s2=short(fp2i(rightSample));
-			s2+=offset;
-		} ;
-	}     
+            *s1 = short(fp2i(leftSample));
+            s1 += offset;
+			*s2 = short(fp2i(rightSample));
+			s2 += offset;
+        };
+    }
 } ;
 
 int AudioOutDriver::GetPlayedBufferPercentage() {

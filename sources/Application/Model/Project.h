@@ -8,15 +8,15 @@
 #include "Foundation/Types/Types.h"
 #include "Foundation/Observable.h"
 
-
-#define VAR_TEMPO       MAKE_FOURCC('T','M','P','O')
-#define VAR_MASTERVOL   MAKE_FOURCC('M','S','T','R')
-#define VAR_WRAP        MAKE_FOURCC('W','R','A','P')
-#define VAR_MIDIDEVICE  MAKE_FOURCC('M','I','D','I')
-#define VAR_TRANSPOSE   MAKE_FOURCC('T','R','S','P')
-#define VAR_SOFTCLIP MAKE_FOURCC('S', 'F', 'T', 'C')
-#define VAR_CLIP_ATTN MAKE_FOURCC('C', 'A', 'T', 'N')
-#define VAR_SCALE       MAKE_FOURCC('S', 'C', 'A', 'L')
+#define VAR_TEMPO MAKE_FOURCC('T', 'M', 'P', 'O')
+#define VAR_MASTERVOL   	MAKE_FOURCC('M', 'S', 'T', 'R')
+#define VAR_WRAP        	MAKE_FOURCC('W', 'R', 'A', 'P')
+#define VAR_MIDIDEVICE  	MAKE_FOURCC('M', 'I', 'D', 'I')
+#define VAR_TRANSPOSE   	MAKE_FOURCC('T', 'R', 'S', 'P')
+#define VAR_SOFTCLIP 		MAKE_FOURCC('S', 'F', 'T', 'C')
+#define VAR_SOFTCLIP_GAIN 	MAKE_FOURCC('S', 'F', 'G', 'N')
+#define VAR_PREGAIN   		MAKE_FOURCC('P', 'R', 'G', 'N')
+#define VAR_SCALE 			MAKE_FOURCC('S', 'C', 'A', 'L')
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "4"
@@ -41,7 +41,8 @@ public:
     int GetTempo() ; // Takes nudging into account
 	int GetTranspose() ;
     int GetSoftclip();
-    int GetAttenuation();
+    int GetSoftclipGain();
+    int GetPregain();
 
     void Trigger();
 
