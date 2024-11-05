@@ -15,16 +15,15 @@ public: // System implementation
 	virtual void Sleep(int millisec);
 	virtual void *Malloc(unsigned size) ;
 	virtual void Free(void *) ;
-  virtual void Memset(void *addr,char val,int size) ;
-  virtual void *Memcpy(void *s1, const void *s2, int n)  ; 
-	virtual int GetBatteryLevel() { return -1 ; } ;
+	virtual void Memset(void *addr,char val,int size) ;
+	virtual void *Memcpy(void *s1, const void *s2, int n)  ; 
+	virtual int GetBatteryLevel() ;
 	virtual void PostQuitMessage() ;
 	virtual unsigned int GetMemoryUsage() ;
 	
 	static bool finished_ ;
 private:
-	static std::string eboot_ ;
-  static EventManager *eventManager_;
+	static EventManager *eventManager_;
 
 } ;
 #endif

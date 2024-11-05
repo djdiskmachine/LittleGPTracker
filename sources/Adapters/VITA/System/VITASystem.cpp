@@ -16,6 +16,8 @@
 #include <stdlib.h>
 
 #include <psp2/kernel/clib.h>
+#include <psp2/kernel/sysmem.h>
+#include <psp2/power.h>
 
 EventManager *VITASystem::eventManager_ = NULL ;
 
@@ -142,3 +144,11 @@ unsigned int VITASystem::GetMemoryUsage() {
 	struct mallinfo m=mallinfo();
 	return m.uordblks ;
 }
+
+int VITASystem::GetBatteryLevel() {
+	if (sceKernelGetModel() == SCE_KERNEL_MODEL_VITA)
+	{
+		return scePowerGetBatteryLifePercent() ;
+	}
+	return -1 ;
+} ;
