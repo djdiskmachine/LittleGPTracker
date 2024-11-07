@@ -35,8 +35,8 @@ void VITASystem::Boot(int argc,char **argv) {
 	FileSystem::Install(new VITAFileSystem()) ;
 	FileSystem::GetInstance()->MakeDir("ux0:/data/lgpt/");
 
-	Path::SetAlias("bin","ux0:/data/lgpt/") ;
-	Path::SetAlias("root","ux0:/data/lgpt/") ;
+	Path::SetAlias("bin","ux0:/data/lgpt") ;
+	Path::SetAlias("root","ux0:/data/lgpt") ;
 
 	Config::GetInstance()->ProcessArguments(argc,argv) ;
 

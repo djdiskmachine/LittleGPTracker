@@ -73,16 +73,27 @@ void VITADir::GetContent(char *mask) {
 
 	Empty() ;
 
-  SceIoDirent de;
-  memset(&de,0,sizeof(SceIoDirent));
+	SceIoDirent de;
+	memset(&de,0,sizeof(SceIoDirent));
 
-  SceUID fd=sceIoDopen(path_);
-  if(fd<0) {
-    Trace::Error("Failed to open %s",path_);
+	SceUID fd=sceIoDopen(path_);
+	if(fd<0) {
+		Trace::Error("Failed to open %s",path_);
 		return;
 	}
-	
-    SceUID v=sceIoDread(fd,&de);
+
+	if (!(strcmp(path_, "ux0:/data/lgpt") == 0 || strcmp(path_, "ux0:/data/lgpt/") == 0)) {
+		std::string fullpath=path_ ;
+		if (path_[strlen(path_)-1]!='/') {
+			fullpath+="/" ;
+		}
+		fullpath+=".." ;
+		
+		Path *path=new Path(fullpath.c_str()) ;
+		Insert(path) ;
+	}
+
+	SceUID v=sceIoDread(fd,&de);
 	char nameBuffer[256] ;
 	
     while(v!=0) {
@@ -93,7 +104,6 @@ void VITADir::GetContent(char *mask) {
 			nameBuffer[i]=tolower(de.d_name[i]) ;
 		}
 		nameBuffer[len]=0 ;
-		
 		if (wildcardfit(mask,nameBuffer)) {
 
 			std::string fullpath=path_ ;
@@ -106,7 +116,6 @@ void VITADir::GetContent(char *mask) {
 			Insert(path) ;
 
 		}
-//		sceIoClose(v) ;
         v=sceIoDread(fd,&de);
     }
 	
@@ -150,15 +159,6 @@ FileType VITAFileSystem::GetFileType(const char *path) {
 		if (attributes.st_mode&S_IFDIR) return FT_DIR ;
 		if (attributes.st_mode&S_IFREG) return FT_FILE ;
 	}
-	else
-	{
-		if (!strcmp("ux0:", path))
-		{
-			return FT_DIR;
-		}
-
-	}
-
 	return FT_UNKNOWN ;
 
 }
