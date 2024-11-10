@@ -14,13 +14,15 @@ Variable::Variable(const char *name,FourCC id,float value) {
 	type_=FLOAT ;
 } ;
 
-Variable::Variable(const char *name,FourCC id,int value) {
-	name_=name ;
-	id_=id ;
-	value_.int_=value ;
-    defaultValue_.int_ = value;
+Variable::Variable(const char *name, FourCC id, int value, int max) {
+    int result = max ? MIN(value, max) : value;
+	name_=name;
+	id_=id;
+	value_.int_= result;
+    defaultValue_.int_ = result;
+	maxValue_.int_ = max;
     type_=INT ;
-} ;
+};
 
 Variable::Variable(const char *name,FourCC id,bool value) {
 	name_=name ;
@@ -201,16 +203,17 @@ void Variable::SetString(const char *string,bool notify) {
 			value_.float_=float(atof(string));
 			break ;
 		case INT:
-			value_.int_=atoi(string);
-			break ;
+            value_.int_ = maxValue_.int_ ? MIN(atoi(string), maxValue_.int_)
+                                         : atoi(string);
+            break ;
 		case BOOL:
 			value_.bool_=(!strcmp("false",string)?false:true) ;
 			break ;
 		case STRING:
 			stringValue_=string ;
 			break ;
-		case CHAR_LIST:
-			value_.index_=-1 ;
+        case CHAR_LIST:
+            value_.index_=0 ;
 			for (int i=0;i<listSize_;i++) {
 				if (list_.char_[i]) {
                      const char *d=list_.char_[i] ;

@@ -8,6 +8,15 @@
 class AudioDriver ;
 
 #define MIX_BUFFER_SIZE 40000
+#define MAX_POSITIVE_FIXED i2fp(32767)
+#define MAX_NEGATIVE_FIXED i2fp(-32768)
+
+struct SoftClipData {
+	float alpha;
+	float alpha23;
+	float alphaInv;
+	float gainCmp;
+};
 
 class AudioOutDriver: public AudioOut,protected I_Observer {
   public:
@@ -20,7 +29,8 @@ class AudioOutDriver: public AudioOut,protected I_Observer {
     virtual void Stop() ;
 
     virtual void Trigger() ;
-    virtual void SetSoftclip(int clip, int attenuation);
+    virtual void SetSoftclip(int clip, int gain);
+    virtual void SetMasterVolume(int volume);
 
     virtual bool Clipped() ;
 
@@ -50,9 +60,10 @@ class AudioOutDriver: public AudioOut,protected I_Observer {
     bool clipped_ ;
     bool hasSound_ ;
     int softclip_ ;
-    int attenuation_;
-    fixed maxPositiveFixed_;
-    fixed maxNegativeFixed_;
+    int softclipGain_;
+    int masterVolume_;
+
+	SoftClipData softClipData_[4];
 
     fixed *primarySoundBuffer_ ;
     short *mixBuffer_ ;

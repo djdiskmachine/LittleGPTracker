@@ -48,8 +48,9 @@ public:
 	void OnPlayerStop() ;
 
 	bool Clipped() ;
-	void SetMasterVolume(int) ;
+    void SetPregain(int);
     void SetSoftclip(int, int);
+    void SetMasterVolume(int);
     int GetPlayedBufferPercentage() ;
 	
 	virtual void Execute(FourCC id,float value) ;
