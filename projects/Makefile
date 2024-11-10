@@ -198,6 +198,18 @@ PSPDIRS := \
 	../sources/Adapters/SDL/GUI \
 	../sources/Adapters/SDL/Timer
 
+VITADIRS := \
+	. \
+	../sources/Adapters/VITA/Main \
+	../sources/Adapters/VITA/FileSystem \
+	../sources/System/Process \
+	../sources/Adapters/VITA/System \
+	../sources/Adapters/Dummy/Midi \
+	../sources/Adapters/SDL2/Process \
+	../sources/Adapters/SDL2/Audio \
+	../sources/Adapters/SDL2/GUI \
+	../sources/Adapters/SDL2/Timer
+
 GP32DIRS	:=	.\
 				../sources/Adapters/GP32FileSystem \
 				../sources/Adapters/GP32Midi \
@@ -438,6 +450,20 @@ PSPFILES := \
 	SDLProcess.o \
 	SDLTimer.o \
 	PSPSystem.o
+
+VITAFILES := \
+	VITAmain.o \
+	VITAFileSystem.o \
+	Process.o \
+	DummyMidi.o \
+	GUIFactory.o \
+	SDLGUIWindowImp.o \
+	SDLEventManager.o \
+	SDLAudioDriver.o \
+	SDLAudio.o \
+	SDLProcess.o \
+	SDLTimer.o \
+	VITASystem.o
 
 #---------------------------------------------------------------------------------
 # Windows

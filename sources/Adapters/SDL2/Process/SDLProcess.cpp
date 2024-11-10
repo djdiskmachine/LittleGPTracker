@@ -9,7 +9,7 @@ int _SDLStartThread(void *argp) {
 }
 
 bool SDLProcessFactory::BeginThread(SysThread& thread) {
-	SDL_CreateThread(_SDLStartThread,&thread);
+	SDL_CreateThread(_SDLStartThread,"lgtp",&thread);
 	return true ;
 }
 

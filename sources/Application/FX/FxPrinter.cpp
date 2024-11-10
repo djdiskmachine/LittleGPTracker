@@ -67,6 +67,8 @@ bool FxPrinter::Run() {
     bool imported = SamplePool::GetInstance()->IsImported(foWav_);
     std::string cmd = parseCommand();
     Trace::Log("Processed", cmd.c_str());
+
+#if !defined(PLATFORM_VITA)
     if (system(cmd.c_str()) == 0) {
         int newIndex = SamplePool::GetInstance()->Reassign(foWav_, imported);
         instrument_->AssignSample(newIndex);
@@ -77,4 +79,7 @@ bool FxPrinter::Run() {
         notificationResult_ = "Failed, check lgpt.log";
         return false;
     }
+#else
+    return false;
+#endif
 }
