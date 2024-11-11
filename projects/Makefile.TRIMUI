@@ -1,0 +1,37 @@
+-include $(PWD)/rules_base
+
+# config
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-D_64BIT \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-D_NDEBUG \
+	-D_NO_JACK_ \
+	-DSDL2 \
+        -DSDLAUDIO \
+        -DDUMMYMIDI
+
+DEVKIT := /opt/aarch64-linux-gnu-7.5.0-linaro
+CROSS_COMPILE:=$(DEVKIT)/bin/aarch64-linux-gnu-
+TRIPLET:=aarch64-linux-gnu
+CC = $(CROSS_COMPILE)gcc
+CXX = $(CROSS_COMPILE)g++
+TOOLPATH=$(DEVKIT)/usr/bin
+SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
+
+SDL_CFLAGS  := -I$(SYSROOT)/../usr/include/ -I$(SYSROOT)/../usr/include/SDL2/ -D_REENTRANT
+SDL_LIBS    := -lSDL2
+
+OPT_FLAGS = -O3 -mlittle-endian -mabi=lp64 -march=armv8-a+crypto+crc -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-protector -dumpbase
+INCLUDES = -Iinclude -I$(DEVKIT)/$(TRIPLET)/include -I$(DEVKIT)/$(TRIPLET)/include/c++/11/ $(SDL_CFLAGS) -I$(PWD)/../sources
+CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
+CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
+LIBS	:= -Wl,-rpath-link,$(DEVKIT)/$(TRIPLET)/lib -Wl,-rpath-link,$(DEVKIT)/$(TRIPLET)/lib/pulseaudio $(SDL_LIBS) -lpthread
+OUTPUT = ../lgpt-trimui
+EXTENSION:= elf
+LDFLAGS := -L$(SYSROOT)/../usr/lib/
+
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
