@@ -63,6 +63,8 @@ Recommended reading to get you started:
 | GARLIC      | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
 | GARLICPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
 | RG35XXPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
+| TRIMUI      | MAYBE         | NO           | YES        | Port by [Calacuda](https://blog.eoghan-west.online/)|
+| KNULLI      | MAYBE         | NO           | YES        | Port by [Calacuda](https://blog.eoghan-west.online/)|
 | MACOS       | YES           | YES          | NO         | Port by [clsource](https://genserver.social/clsource) |
 
 
