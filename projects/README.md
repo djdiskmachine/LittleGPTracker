@@ -110,3 +110,27 @@ From repo root: cp pre-commit ./git/hooks
             tar -xf rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz
         Build with:
             make PLATFORM=RG35XXPLUS
+
+##### TRIMUI: Compile under Linux
+        For users of the Trimui Smart Pro running firmware version 1.0.4
+        download:
+            https://github.com/trimui/toolchain_sdk_smartpro/releases/download/20231018/aarch64-linux-gnu-7.5.0-linaro.tgz
+            https://github.com/trimui/toolchain_sdk_smartpro/releases/download/20231018/SDK_usr_tg5040_a133p.tgz
+        extract:
+            cd /opt
+            tar -xf aarch64-linux-gnu-7.5.0-linaro.tgz
+            cd /opt/aarch64-linux-gnu-7.5.0-linaro/aarch64-linux-gnu/
+            tar -xf SDK_usr_tg5040_a133p.tgz
+        Build with:
+            make PLATFORM=TRIMUI
+
+##### KNULLI: Compile under Linux
+        For users of the Trimui Smart Pro running the Knulli firmware.
+        download:
+            https://github.com/knulli-cfw/toolchains/releases/download/trimui-smart-pro-sdk-20240421/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz
+        extract:
+            cd /opt
+            tar -xf aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz
+        Build with:
+            make PLATFORM=KNULLI
+
