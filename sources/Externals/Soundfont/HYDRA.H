@@ -122,7 +122,7 @@ typedef union unGenAmtTag
 //// Standard list used in Phdr (Preset lists) ////
 typedef struct sfPresetHdrTag
 {
-  CHAR   achPresetName[PRESETNAMESIZE];      // Name of preset  
+  const CHAR   achPresetName[PRESETNAMESIZE];      // Name of preset  
   WORD   wPresetNum;                   // The number of the preset
   WORD   wPresetBank;                 // The preset bank number
   WORD   wBagNdx;                    // The index to sfPresetBag
