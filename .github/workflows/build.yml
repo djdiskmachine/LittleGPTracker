@@ -432,7 +432,8 @@ jobs:
       - name: Install Knulli Toolchain
         run: |
           sudo apt update && sudo apt install -y python3-pillow
-          wget -O /tmp/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz https://github.com/knulli-cfw/toolchains/releases/download/trimui-smart-pro-sdk-20240421/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz
+          wget --no-show-progress -O /tmp/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz https://github.com/knulli-cfw/toolchains/releases/download/trimui-smart-pro-sdk-20240421/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz
+          mkdir /opt/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz
           tar -xvf /tmp/aarch64-buildroot-linux-gnu_sdk-buildroot.tar.gz -C /opt/ --strip-components=1
 
       - name: Build KNULLI
@@ -471,8 +472,9 @@ jobs:
       - name: Install Trimui Smart Pro Stock Toolchain
         run: |
           sudo apt update && sudo apt install -y python3-pillow
-          wget -O /tmp/aarch64-linux-gnu-7.5.0-linaro.tgz https://github.com/trimui/toolchain_sdk_smartpro/releases/download/20231018/aarch64-linux-gnu-7.5.0-linaro.tgz
-          wget -O /tmp/SDK_usr_tg5040_a133p.tgz https://github.com/trimui/toolchain_sdk_smartpro/releases/download/20231018/SDK_usr_tg5040_a133p.tgz
+          wget --no-show-progress -O /tmp/aarch64-linux-gnu-7.5.0-linaro.tgz https://github.com/trimui/toolchain_sdk_smartpro/releases/download/20231018/aarch64-linux-gnu-7.5.0-linaro.tgz
+          wget --no-show-progress -O /tmp/SDK_usr_tg5040_a133p.tgz https://github.com/trimui/toolchain_sdk_smartpro/releases/download/20231018/SDK_usr_tg5040_a133p.tgz
+          mkdir /opt/aarch64-linux-gnu-7.5.0-linaro.tgz
           tar -xvf /tmp/aarch64-linux-gnu-7.5.0-linaro.tgz -C /opt/ --strip-components=1
           tar -xvf /tmp/SDK_usr_tg5040_a133p.tgz -C /opt/aarch64-linux-gnu-7.5.0-linaro/aarch64-linux-gnu/ --strip-components=1
 
