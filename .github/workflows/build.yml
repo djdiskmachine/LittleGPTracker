@@ -478,7 +478,7 @@ jobs:
           tar -xvf /tmp/aarch64-linux-gnu-7.5.0-linaro.tgz -C /opt/aarch64-linux-gnu-7.5.0-linaro --strip-components=1
           tar -xvf /tmp/SDK_usr_tg5040_a133p.tgz -C /opt/aarch64-linux-gnu-7.5.0-linaro/aarch64-linux-gnu/ --strip-components=1
 
-      - name: Build KNULLI
+      - name: Build TrimUI
         working-directory: projects
         run: make PLATFORM=TRIMUI
 
