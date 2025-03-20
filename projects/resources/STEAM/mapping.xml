@@ -30,15 +30,15 @@
 	<MAP src="but:0:0" dst="/event/lshoulder" />
 	<MAP src="but:0:2" dst="/event/rshoulder" />
 
-	<MAP src="but:0:0" dst="/event/up" />
-	<MAP src="but:0:2" dst="/event/down" />
-	<MAP src="but:0:3" dst="/event/left" />
-	<MAP src="but:0:1" dst="/event/right" />
+	<MAP src="but:0:11" dst="/event/up" />
+	<MAP src="but:0:12" dst="/event/down" />
+	<MAP src="but:0:13" dst="/event/left" />
+	<MAP src="but:0:14" dst="/event/right" />
 
 	<MAP src="but:0:0" dst="/event/a" />
-	<MAP src="but:0:1" dst="/event/b" />
+	<MAP src="but:0:2" dst="/event/b" />
 	<MAP src="but:0:4" dst="/event/start" />
-	<MAP src="but:0:4" dst="/event/start" />
+	<MAP src="but:0:6" dst="/event/start" />
 
 <!--
 Macro 1
