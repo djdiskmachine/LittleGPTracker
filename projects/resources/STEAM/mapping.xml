@@ -1,0 +1,62 @@
+<!--
+    MAPPING FOR KEYBOARDS
+    belongs in location of binary
+    -=-=These keys might not match your controller!=-=-
+    enable DUMPEVENT to help with mapping
+-->
+<MAPPINGS>
+
+<!--
+    EXAMPLE
+    maps the button "q" to left shoulder
+    maps the button "w" to right shoulder
+-->
+        <MAP src="key:0:q" dst="/event/lshoulder" />
+        <MAP src="key:0:w" dst="/event/rshoulder" />
+
+        <MAP src="key:0:up" dst="/event/up" />
+        <MAP src="key:0:down" dst="/event/down" />
+        <MAP src="key:0:left" dst="/event/left" />
+        <MAP src="key:0:right" dst="/event/right" />
+
+        <MAP src="key:0:a" dst="/event/b" />
+        <MAP src="key:0:s" dst="/event/a" />
+        <MAP src="key:0:space" dst="/event/start" />
+<!--
+    EXAMPLE
+    maps the button "8" to left shoulder
+    maps the button "6" to right shoulder
+-->
+	<MAP src="but:0:0" dst="/event/lshoulder" />
+	<MAP src="but:0:2" dst="/event/rshoulder" />
+
+	<MAP src="but:0:11" dst="/event/up" />
+	<MAP src="but:0:12" dst="/event/down" />
+	<MAP src="but:0:13" dst="/event/left" />
+	<MAP src="but:0:14" dst="/event/right" />
+
+	<MAP src="but:0:0" dst="/event/a" />
+	<MAP src="but:0:2" dst="/event/b" />
+	<MAP src="but:0:4" dst="/event/start" />
+	<MAP src="but:0:6" dst="/event/start" />
+
+<!--
+Macro 1
+        Stop Phrase (Selected phrase cue stop)
+        <MAP src="but:0:3" dst="/event/rshoulder" />
+        <MAP src="but:0:3" dst="/event/start" />
+-->
+<!--
+Macro 2
+        Queue Phrases (Current row Phrases cue play)
+        <MAP src="but:0:2" dst="/event/lshoulder" />
+        <MAP src="but:0:2" dst="/event/start" />
+-->
+<!--
+Macro 3
+        Solo phrase (hold to solo, release to unsolo)
+        Warning: will do weirdness if combined with other buttons! Use with caution ;)
+        <MAP src="but:0:5" dst="/event/a" />
+        <MAP src="but:0:5" dst="/event/rshoulder" />
+-->
+</MAPPINGS>

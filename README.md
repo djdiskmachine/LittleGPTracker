@@ -55,6 +55,7 @@ Recommended reading to get you started:
 | DEB         | YES           | YES          | YES        |                                      |
 | X64         | YES           | YES          | NO         |                                      |
 | X86         | YES           | YES          | YES        |                                      |
+| STEAM       | YES           | YES          | NO         |                                      |
 | MIYOO       | NO            | NO           | YES        | Port by [Nine-H](https://ninethehacker.xyz) |
 | W32         | YES           | YES          | YES        | Built in VS2008 with love            |
 | RASPI       | YES           | YES          | YES        | Versatile platform                   |
