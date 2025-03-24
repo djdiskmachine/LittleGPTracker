@@ -1,6 +1,6 @@
 # What is LittleGPTracker?
 [*LittleGPTracker*](https://www.littlegptracker.com/) *(a.k.a piggy tracker) is a sample based tracker originally programed for the gamepark handhelds and PSP but now also available for Microsoft Windows, ~~Mac OSX~~ and an assortment of more modern handheld devices. It implements a user interface similar to the refined track-by-joypad software* [*littlesounddj*](http://www.littlesounddj.com/)*. Piggy currently supports 8 monophonic 8Bit/16Bit/44.1Khz stereo channels as well as 16 channel midi output. Piggy is currently under development and the latest versions of the program (along with beta builds) can be found at* [*https://github.com/djdiskmachine/LittleGPTracker/releases/*](https://github.com/djdiskmachine/LittleGPTracker/releases/)*.*
-You are reading a reference manual for those who are comfortable with LSDj or trackers in general. An alternative introduction to LittleGPTracker is our very own [quick_start_guide](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:quick_start_guide). If you have a question this manual does not answer, please join the [Discord](https://discord.com/invite/NMQVbrFgr3) or in #hexawe on efnet. Don't forget to check out the advanced [tips_tricks](https://web.archive.org/web/20170310001122/wiki.littlegptracker.com/doku.php?id=lgpt:tips_tricks)
+You are reading a reference manual for those who are comfortable with LSDj or trackers in general. An alternative introduction to LittleGPTracker is our very own [quick_start_guide](quick_start_guide.md). If you have a question this manual does not answer, please join the [Discord](https://discord.com/invite/NMQVbrFgr3) or in #hexawe on efnet. Don't forget to check out the advanced [tips_and_tricks](tips_and_tricks.md)
 If you want to grab some sounds to get off the ground quickly, or want to hear and see what other people have been doing with piggy tracker, download some of the .zip archives from [http://hexawe.net](http://hexawe.net/)!
 
 # Files
@@ -12,28 +12,29 @@ this, set Software rendering **or** change rendering resolution after LGPT has s
 
 ## Directory Structure
 - **bin**
-  - **lgpt.exe / lgpt.deb-exe / lgpt.app** … desktop executable file
-  - **SDL.dll** … dependency
-  - **stderr.txt** … debugging output file (created at startup and removed upon exit)
-  - **stdout.txt** … debugging output file (created at startup and removed upon exit)
-- **README.txt** … credits and changelog
-- **config_xml.md** … config.xml documentation
-- **INSTALL_HOW_TO.txt** … How to install for tricky systems
-- **BETA** … Example song by djdiskmachine showcasing some new featres. Note: all projects start with lgpt_*
-  - **Samples** … each project loads wav files from it's own Samples directory
-  - **lgptsav.dat** … all projects store their data in xml files called lgptsav.dat
-- **lgptNew** … another piggy project, following the lgpt* naming convention for projects
-  - **Samples** … when you start a new project you have to make a Samples directory and load it up (NOTE: Since version X.XX??? this is unnecessary as LGPT creates this folder when a new project is created in the opening selector screen)
-  - **lgptsav.dat** … this file doesn't exist for new projects but will be created by lgpt when you first save
-- **lgpt.fxe** … gp32 executable
-- **lgpt.gpe** … gp2x executable
-- **SampleLib** … Place your samples here
+  - **lgpt.exe / lgpt.deb-exe / lgpt.app** - desktop executable file
+  - **SDL.dll** - dependency
+  - **stderr.txt** - debugging output file (created at startup and removed upon exit)
+  - **stdout.txt** - debugging output file (created at startup and removed upon exit)
+- **README.txt** - credits and changelog
+- **config_xml.md** - config.xml documentation
+- **INSTALL_HOW_TO.txt** - How to install for tricky systems
+- **BETA** - Example song by djdiskmachine showcasing some new featres. Note: all projects start with lgpt_*
+  - **Samples** - each project loads wav files from it's own Samples directory
+  - **lgptsav.dat** - all projects store their data in xml files called lgptsav.dat
+- **lgptNew** - another piggy project, following the lgpt* naming convention for projects
+  - **Samples** - when you start a new project you have to make a Samples directory and load it up (NOTE: Since version X.XX??? this is unnecessary as LGPT creates this folder when a new project is created in the opening selector screen)
+  - **lgptsav.dat** - this file doesn't exist for new projects but will be created by lgpt when you first save
+- **lgpt.fxe** - gp32 executable
+- **lgpt.gpe** - gp2x executable
+- **SampleLib** - Place your samples here
 
 Getting lgpt to run depends on your platform:
 
 - **gp32:** place LGPT.fxe, lgptNew, and lgpt10k in \GPMM
 - **gp2x/caanoo:** place LGPT.gpe, lgptNew, and lgpt10k in the same folder (anywhere on your SD card)
-- **win/mac/*nix :** everything should be in the right spot, just run the executable in \install\bin\ (for fullscreen run “lgpt.exe -fullscreen”)
+- **win/mac/\*nix :** everything should be in the right spot, just run the executable in \install\bin\ (for fullscreen run “lgpt.exe -fullscreen”)
+
 ## Importing Samples
 
 Piggy doesn't save samples inside a project file like traditional trackers. Instead, when you save, piggy will create project data as /lgptRoot/lgptProject/lgptsav.dat and store the samples you are using in /lgptRoot/lgptProject/samples. This means that instead of copying/sharing a single module file, you need to distribute the whole lgptProject directory.
@@ -49,6 +50,7 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 **Piggy now supports .sf2 Soundfonts. You must add these by hand to your SAMPLES directory, use PROGRAM CHANGE commands to load different patches. Loop points are automatically loaded, but you'll need to make VOLM setting to adjust decay.**
 
 ## New project
+
 When creating a new project, use the regen button to generate a random name. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down
 
 ## Multiple Projects
@@ -62,15 +64,16 @@ Important Points to Remember:
 - Lgpt will list all the projects available on startup.
 - The lgptsav.dat file is created automatically the project's folder using the piggy's save function (see Controls & Moves). You should not create tah file manually.
 - Save often :)
+
 ## config.xml
 
 The config file is used to tweak certain global parameters of the application. It is not mandatory to have one but it will allow you to change key mapping, color scheme, key repeat setting and other.
-For more details check out the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md) page
+For more details check out the [configuration](../LittlePiggyTrackerConf.md) page
 
 # Controls & Moves
 
-If you want to change the default mapping in LGPT, you will want to edit the config.xml. More information can be found on this on the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md)
-If you want to augment the mapping controls to add a usb footpedal, another joystick, macros using additional buttons on your device, or even control of piggy via midi commands, check out [mapping](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/mapping_xml.md)
+If you want to change the default mapping in LGPT, you will want to edit the config.xml. More information can be found on this on the [configuration](../LittlePiggyTrackerConf.md)
+If you want to augment the mapping controls to add a usb footpedal, another joystick, macros using additional buttons on your device, or even control of piggy via midi commands, check out [mapping](../LittlePiggyTrackerConf.md#mappingxml-guide)
 
 ## Key Mapping
 
@@ -82,7 +85,7 @@ If you want to augment the mapping controls to add a usb footpedal, another joys
 - RT: Right trigger (shoulder button).
 - LT: Left trigger (shoulder button).
 
-*GP2X Specific notice*: The A & B buttons are “inverted” (when compared to GP32 and LSDJ on Gameboy). This can be modified in the [config](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md).
+*GP2X Specific notice*: The A & B buttons are “inverted” (when compared to GP32 and LSDJ on Gameboy). This can be modified in the [configuration](../LittlePiggyTrackerConf.md).
 
 The moves are close to what you would pull in lsdj, but shoulder buttons replace the lsdj SELECT key. Most of the time, the equivalent of SELECT is the shoulder button opposite the other buttons you're pushing. For example SELECT+B is LT+B, SELECT+RIGHT is RT+RIGHT.
 
@@ -140,19 +143,19 @@ You can switch between the modes by hitting B+LEFT/RIGHT in the Song screen.
 
 **Song Mode**
 
-    START:
+`START`:
 
 In the Song Screen: Starts/Stops song playback from the Highlighted Row. If one of the Row's Channel is marked `--`, LGPT will ignore that Channel entirely for the rest of the playback.
 In the Chain Screen: Starts/Stops playback from the Highlighted Step, soloing the Edited Chain.
 In the Phrase Screen: Starts/Stops playback from Step `00`, soloing the Edited Phrase.
 
-    RT+START:
+`RT+START`:
 
 Starts song playback from the Edited Row in all screens.
 
 **Live Mode**
 
-    START:
+`START`:
 
 In the Song Screen: Queues from the Highlighted Channel Step.
 In the Chain Screen: Queues the Highlighted Phrase Step.
@@ -162,35 +165,35 @@ In the Phrase Screen: Queues the Edited Chain Step from `00`.
 - If there is no playing Chain Step on the Edited Channel, the next Song Chain that reaches its last Step will trigger playback.
 - Queued Items are shown with a blinking `>`.
 
-    START[again]:
+`START`\[again\]:
 
 Pressing `START` a second time will queue the Item using Immediate Mode.
 
 - The Queued Item will be played as soon as the playing Phrase on its Channel reaches the last Step.
 - Immediate Mode Queued Items are shown with a fast blinking `>`.
 
-    LT+START:
+`LT+START`:
 
 In the Song Screen: Queues all Channel Steps on the current Row.
 
 - The Queued Items will be played as soon as the playing Chain on their Channel reaches its last Step.
 - Queued Items are shown with a blinking `>`.
 
-    LT+START[again]:
+`LT+START`\[again\]:
 
 Pressing `START` a second time will queue the Items using Immediate Mode.
 
 - The Queued Items will be played as soon as the playing Phrase on the their Channel reaches its last Step.
 - Immediate Mode Queued Items are shown with a fast blinking `>`.
 
-    RT+START:
+`RT+START`:
 
 In all Screens: Queues the Edited Channel Step to be stopped.
 
 - The Queued Channel will be stopped as soon as its playing Chain reaches the last Step.
 - Queued Items are shown with a blinking `_`.
 
-    RT+START[again]:
+`RT+START`\[again\]:
 
 Pressing `START` a second time will queue the Items using Immediate Mode.
 
@@ -248,7 +251,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 
 ## Selector Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140398472_selector_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:selector_1.1f.png)
 
 - All the folders you have named as lgptWhatever will show up here.
 - Up and Down to select a project, hit A to load the project.
@@ -256,7 +259,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 
 ## Project Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140419022_project_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:project_1.1f.png)
 
 - **Tempo:**: Can be set between 60bpm [0x3c] and 400bpm [0x190]. Resolution aligned to LSDJ. (nudge with b + left / right)
 - **Master:** Main volume goes from 10% to 200%. Piggy is loud now!
@@ -271,7 +274,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 
 ## Song Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140431434_song_1.1fb.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:song_1.1fb.png)
 
 - Songs are made up of chains. Each hex number on the song screen grid is a chain. You can navigate to any of those chains by putting your cursor on one and hitting RT+R.
 - The top of the song screen displays if you are in SONG or LIVE mode (toggle with B+L or B+R) and the name of the project you are editing (choose a new one with LT+RT+SELECT, but save before you go there because there is no turning back).
@@ -288,7 +291,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 
 ## Chain Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140447738_chain_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:chain_1.1f.png)
 
 - The three columns of the phrase screen, from left to right: (red) row counter, phrase list, and transpose.
 - Chains are made up of phrases. Each hex number in the second column represents a phrase.
@@ -304,7 +307,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 
 ## Phrase Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140464770_phrase_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:phrase_1.1f.png)
 
 - The top of the phrase screen displays the .wav file loaded into the instrument under your cursor. The left of the phrase screen is the play-time visualizer.
 - The seven columns of the phrase screen, from left to right: (red) row counter, note trigger, instrument selector, effect one, parameters for effect one, effect two, parameters for effect two.
@@ -315,7 +318,7 @@ To move from one screen to the other, press the RTrigger combined with the direc
 
 ## Instrument Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140478226_instrument_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:instrument_1.3n.png)
 
 - **sample:** selects the .wav file to associate with the instrument. you can select the same sample in more than one instrument. if you tap A,A here it will take you to the Sample Import Screen (which lets you load new .WAV into your project).
 - **FX selector:** Select between 4 impulse responses to print to the currently selected sample
@@ -372,20 +375,21 @@ In oscillator modes, under 0x80 the feedback of specified length is added to the
 accessible by hitting A,A on the “sample” parameter in the Instrument Screen.
 The samples of the library have to be located in a folder samplelib at the same level as the song folders (lgpt-xxxx). you can either put your samples in that directory or in sub-directories, allowing you to have some basic way of sorting the library. For example:
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140496106_sample_import_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:sample_import_1.1f.png)
 
 
-Hitting "A,A“ on the sample selection of the instrument screen will bring up a sample import pop-up screen. Use the cursor to select directories and samples. 
+Hitting "A,A“ on the sample selection of the instrument screen will bring up a sample import pop-up screen. Use the cursor to select directories and samples.
 When entering the import screen, the current folder is the library root folder “samplelib”. All samples and folders in that folder are listed.
 B+L/R jumps a page up/down in the sample folder.
 Legacy: Using A, choose “listen” to play the sample, “import” to add it to your project, or “exit” to return the instrument screen. Hold A and navigate up/down to preview samples while navigating.
 New in beta-2: Hold Start to preview. Keep holding start and navigate up/down to preview samples while navigating. Hold Start and Press Left to navigate up in the folder structure. Hold Start and press Right to load a sample.
 
 ## Midi Instrument Screen
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140537386_midi_1.1f.png)
+
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:midi_1.1f.png)
 
 
-Midi can be enabled on many platforms through simple software configs in your OS, or through the construction of platform specific hardware. More info about this can be found [**here**](http://wiki.littlegptracker.com/doku.php?id=lgpt:midi)
+Midi can be enabled on many platforms through simple software configs in your OS, or through the construction of platform specific hardware. More info about this can be found [**here**](lgpt_midi.md)
 
 A midi instrument has the following settings:
 
@@ -397,7 +401,8 @@ A midi instrument has the following settings:
 
 ## Table Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140549562_table_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:table_1.1f.png)
+
 - The seven columns of the phrase screen, from left to right: (red) row counter, effect one, parameters for effect one, effect two, parameters for effect two, effect three, parameters for effect three.
 - If you copy/cut anything in the table screen, pasting will put the data in the column where you are currently located. Pasting incompatible data like parameters into the effect columns and vice versa does nothing.
 - Hopping to self in table holds the step for x ticks. For example
@@ -412,7 +417,7 @@ the HOP rather than staying on the HOP line for one tick. Makes more sense.
 
 ## Groove Screen
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_B9C92C3440E8671360862F10CAB0FE70873BFE49CFB51CA246C781C17506C258_1522140567776_groove_1.1f.png)
+![](https://web.archive.org/web/20190321005749im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=screen:groove_1.1f.png)
 
 Groove screen is located on top of the phrase screen. Groove lets you rock some swing to bust funky beats.
 To grasp groove you must first you must know what a tick is, and a tick is simply a constant measurement of time. By default, every row of a phrase (aka step) gets 6 ticks, that's why you see two sixes when you go to the groove screen. But say you change the first 6 to a 1. Now, every other step lasts for 1 tick (which is shorter than 6 ticks).
@@ -477,7 +482,7 @@ ARPG 4050: loops between original pitch, +4 semitones, +0 semitones, + 5 semiton
 
 - hop is instant: instrument triggers and commands on the same row will be run.
 - no effect on instruments
-- in [TABLES](file:///C:/Users/naray/Downloads/lgpt%20reference_manual.html#table_screen), cursor position will jump to row bb aa times, then pass thru the hop command and continue thru the rest of the table
+- in [TABLES](#table-screen), cursor position will jump to row bb aa times, then pass thru the hop command and continue thru the rest of the table
 
 ## IRTG aabb
 
@@ -585,9 +590,9 @@ The following values can set for RENDER in the config.xml:
 - FILERT: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
 - FILESPLITRT: Real Time file split: same except all channels are rendered separately.
 
-Here is an example of the proper XML syntax: (See [The config.xml setup guide](https://github.com/djdiskmachine/LittleGPTracker/blob/master/docs/wiki/config_xml.md))
+Here is an example of the proper XML syntax: (See [The config.xml setup guide](../LittlePiggyTrackerConf.md))
 
-```
+```xml
 <RENDER value = "FILERT" />
 ```
 

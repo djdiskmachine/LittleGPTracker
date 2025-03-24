@@ -1,4 +1,4 @@
-# Delays and Echoes 
+# Delays and Echoes
 ## Simulating LSDj's D command
 
 One command that is from LSDj but doesn't exist in LGPT is the [D]elay command. However, it is possible to emulate it. It's a little tricky but gives a good view of several commands so I'll explain it here:
@@ -17,10 +17,10 @@ This will have the same effect as a Dx command in LSDj.
 
 So, link with the instrument a table containing:
 
-``` 
-00 VOLM 0000 ---- 0000 ---- 0000   
-01 VOLM 0080 PLOF 01FF ---- 0000     
-02 HOP  0002 HOP  0002 ---- 0000   
+```
+00 VOLM 0000 ---- 0000 ---- 0000
+01 VOLM 0080 PLOF 01FF ---- 0000
+02 HOP  0002 HOP  0002 ---- 0000
 ```
 
 Will do the trick :)
@@ -42,15 +42,15 @@ Note that you can also emulate triplet using this technique.
 
 ## Oscillator mode
 ### Oscillator base
-
 Oscillator is a special looping mode that allows to generate timbre from basically anything. It basically the loop start and loop end point of the instrument settings and adapts the sample scanning speed so that it becomes pitched to the played note.
 
 The most straightforward use is when you have short waveform samples (a single square wave for example). Rather than having to compute the sample length or try to find the note that is played when looped, just turn the instrument's loop mode to 'oscillator' and it'll be automatically tuned. Of course, nothing prevents you to grab loops in ANY kind of sample, voices, drum loops wathever. The oscillator mode is a great way to get timbres from material you already got.
 
 ### Wavetables
-Wavetables are a special process to allow to alter oscillator's content by switching or scanning the waveform of the oscillator while the note is playing. To get that effect, build a sample containing several waveforms (of the same loopsize preferably) in the same sample. For example, a few waves from the musicline pack. Each wave is 0x100 sample long so setup a loop from 0x00 to 0x100. Now to switch to the next wave, all you have to do is to offset the loop of 0x100. This can be easily achieved by using
-
+Wavetables are a special process to allow to alter oscillator's content by switching or scanning the waveform of the oscillator while the note is playing. To get that effect, build a sample containing several waveforms (of the same loopsize preferably) in the same sample. For example, a few waves from the [musicline pack](https://hexawe.net/mess/wip/lgptmonline.zip). Each wave is 0x100 sample long so setup a loop from 0x00 to 0x100. Now to switch to the next wave, all you have to do is to offset the loop of 0x100. This can be easily achieved by using
+```
 LPOF 0100
+```
 Alternatively, you can also scan slowly from one wave to the other by doing a table
 ```
 00 LPOF 0001 ---- ---- ---- -----
@@ -73,7 +73,7 @@ See for example the [PeteyDroney](http://www.hexawe.net/lgptwiki/lgpt-%20PeteyDr
 Loop chopping is really easy in LGPT through the PLOF command. PLOF sees the whole sample as 256 chunks of the same length. It allows to put the current playback head to the beginning of any of those chunks. To get it, we'll take a really simple drum loop sample going like this:
 
 ```
-BD1 -- SD1 -- BD2 HH1 SD2 -- 
+BD1 -- SD1 -- BD2 HH1 SD2 --
 ```
 BD2 is in the middle of the loop to to jump there, you issue LPOF 8000 SD1 is at the first quater of the loop, use LPOF 40000 HH1 is at LPOF A000 SD2 is at LPOF C000
 
@@ -92,7 +92,7 @@ The example project BETA uses Slice mode to chop up a dank AF sample by Basscarr
 
 #Autorun your Pig on GP2X
 
-Let's face it, playing live is a busy affair, and god help you if you have to reboot the gp2x for whatever reason. Luckily the GP2X allows you to drop a simple text file in the SD card root that will automatically boot any program. Here's how to get a piggy running midi to Autorun.
+Let's face it, playing live is a busy affair, and god help you if you have to reboot the gp2x for whatever reason. Luckily the GP2X allows you to drop a simple text file in the SD card root that will automatically boot any program. Here's how to get a piggy running [midi](./dfs_midi_cable.md) to Autorun.
 
 #### Setting the GP2X to Autorun
 In the gp2x system settings, make sure that Autorun is set to “on.”
@@ -102,17 +102,17 @@ This assumes you have installed piggy in the sd card root.
 
 Note: If using a version 2 firmware, the below scripts will not work. Simply change the name of lgpt.gpe or lgpt_midi.gpe to autorun.gpu
 
-```
+```sh
 #!/bin/sh
 cd /mnt/sd/
-exec ./lgpt.gpe 
+exec ./lgpt.gpe
 ```
 
 #### Creating autorun.gpu for midi
-```
+```sh
 #!/bin/sh
 cd /mnt/sd/
-exec ./lgpt_midi.gpe 
+exec ./lgpt_midi.gpe
 ```
 Now save this file as “autorun.gpu” to the root of your SD, and it should boot right into LGPT.
 
@@ -126,6 +126,7 @@ If you've ever messed around with grooves in either LGPT or LSDJ, you've probabl
 The constant of proportionality in this case, 96, comes from piggy's default behaviour where a 16 step pattern with each step is worth 6 tics will give you the BPM set in the project screen where one beat equals 4 steps. So, 16 steps * 6 tics will give you 96 tics per pattern.
 
 *Example*
+
 You make a song with a groove of 4/4. This groove will play 8 times in one pattern since it's 2 steps long. So, total pattern tics = `(4 tics + 4 tics)*8= 64` tics.
 
 The project screen says the BPM is 100.

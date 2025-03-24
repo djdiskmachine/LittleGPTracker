@@ -11,7 +11,7 @@ All versions are available for free under the [GPLv3 License](LICENSE). If you l
 ## About This Fork
 
 This build is derivative of the work of the original author `m-.-n`
-aka [Marc Nostromo](https://github.com/Mdashdotdashn/LittleGPTracker). 
+aka [Marc Nostromo](https://github.com/Mdashdotdashn/LittleGPTracker).
 The original work and releasing the source code has laid the foundation for everything in this repo.
 
 All implemented features have been tested not to break old
@@ -43,9 +43,9 @@ All the relevant documentation can be found in [Docs](docs) directory.
 Recommended reading to get you started:
 
 - [What is Little Piggy Tracker](docs/wiki/What-is-LittlePiggyTracker.md)
-- [The config.xml file](docs/wiki/config_xml.md)
-- [Tips and Tricks](docs/wiki/tips_and_tricks.md)
+- [Quick-Start Guide](docs/wiki/quick_start_guide.md)
 - [Little Piggy Tracker Configuration](docs/LittlePiggyTrackerConf.md)
+- [Tips and Tricks](docs/wiki/tips_and_tricks.md)
 
 ## Features per platform
 
