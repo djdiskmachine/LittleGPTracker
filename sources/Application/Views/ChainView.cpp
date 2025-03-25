@@ -701,7 +701,9 @@ void ChainView::DrawView() {
         unsigned char d = *data++;
         setTextProps(props, 0, j, false);
         if (d == 0xFF) {
+            SetColor(CD_BLANKSPACE);
             DrawString(pos._x, pos._y, "--", props);
+            SetColor(CD_NORMAL);
         } else {
             hex2char(d, row);
             DrawString(pos._x, pos._y, row, props);
@@ -811,8 +813,8 @@ void ChainView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
     pos._x += 200;
 /*
 	if (player->Clipped()) {
-           w_.DrawString("clip",pos,props); 
+           w_.DrawString("clip",pos,props);
     } else {
-           w_.DrawString("----",pos,props); 
+           w_.DrawString("----",pos,props);
     }
 */} ;

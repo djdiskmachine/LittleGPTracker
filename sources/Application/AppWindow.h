@@ -93,6 +93,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     static GUIColor borderColor_;
     static GUIColor songviewfeColor_;
     static GUIColor songview00Color_;
+    static GUIColor blankspaceColor_;
     static GUIColor highlight2Color_;
     static GUIColor highlightColor_;
     static GUIColor consoleColor_;

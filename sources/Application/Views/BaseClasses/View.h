@@ -63,6 +63,7 @@ enum ColorDefinition {
     CD_PLAY,
     CD_MUTE,
     CD_SONGVIEWFE,
+    CD_BLANKSPACE,
     CD_SONGVIEW00,
     CD_ROW,
     CD_ROW2,

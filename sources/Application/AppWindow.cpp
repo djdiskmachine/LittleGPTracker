@@ -23,6 +23,7 @@ GUIColor AppWindow::normalColor_(0xF5, 0xEB, 0xFF);
 GUIColor AppWindow::borderColor_(0xFF, 0x00, 0x8C);
 GUIColor AppWindow::songviewfeColor_(0xA5, 0x5B, 0x8F);
 GUIColor AppWindow::songview00Color_(0x85, 0x3B, 0x6F);
+GUIColor AppWindow::blankspaceColor_(0xF5, 0xEB, 0xFF);
 GUIColor AppWindow::highlightColor_(0xB7, 0x50, 0xD1);
 GUIColor AppWindow::highlight2Color_(0xDB, 0x33, 0xDB);
 GUIColor AppWindow::consoleColor_(0x00, 0xFF, 0x00);
@@ -103,6 +104,7 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
     defineColor("BORDER", borderColor_);
     defineColor("SONGVIEW_FE", songviewfeColor_);
     defineColor("SONGVIEW_00", songview00Color_);
+    defineColor("BLANKSPACE", blankspaceColor_);
     defineColor("HICOLOR1", highlightColor_);
     defineColor("HICOLOR2", highlight2Color_);
     defineColor("CURSORCOLOR", cursorColor_);
@@ -259,6 +261,9 @@ void AppWindow::Flush() {
                         break;
                     case CD_SONGVIEW00:
                         gcolor = songview00Color_;
+                        break;
+                    case CD_BLANKSPACE:
+                        gcolor = blankspaceColor_;
                         break;
                     case CD_ROW:
                         gcolor = rownumberColor_;
