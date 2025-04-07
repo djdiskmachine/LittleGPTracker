@@ -113,7 +113,6 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     position._y += 1;
     UIIntVarField *field = new UIIntVarField(position, *v, "Master: %d", 10, 200, 1, 10);
     T_SimpleList<UIField>::Insert(field);
-    position._x -= 12;
 
     v = project_->FindVariable(VAR_PREGAIN);
     position._y += 2;
