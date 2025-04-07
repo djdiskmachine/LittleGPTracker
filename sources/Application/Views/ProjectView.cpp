@@ -109,32 +109,27 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	f->AddObserver(*this) ;
 	tempoField_=f ;
 
-    v = project_->FindVariable(VAR_PREGAIN);
-    position._y+=2 ;
-    UIIntVarField *field =
-        new UIIntVarField(position, *v, "Pre-gain: %d", 10, 200, 1, 10);
-    T_SimpleList<UIField>::Insert(field);
-
+    v = project_->FindVariable(VAR_MASTERVOL);
     position._y += 1;
-    UIStaticField *staticField = new UIStaticField(position, "Saturation:");
-    T_SimpleList<UIField>::Insert(staticField) ;
-
-    v = project_->FindVariable(VAR_SOFTCLIP);
-    position._x += 12; 
-    field = new UIIntVarField(position, *v, "%s", 0, 4, 1, 4);
+    UIIntVarField *field = new UIIntVarField(position, *v, "Master: %d", 10, 200, 1, 10);
     T_SimpleList<UIField>::Insert(field);
     position._x -= 12;
 
-    v = project_->FindVariable(VAR_SOFTCLIP_GAIN);
-    position._x += 19;
-	field = new UIIntVarField(position, *v, "%s", 0, 1, 1, 1);
-	T_SimpleList<UIField>::Insert(field);
-	position._x -= 19;
-
-    v = project_->FindVariable(VAR_MASTERVOL);
-    position._y += 1;
-    field = new UIIntVarField(position, *v, "Master: %d", 0, 100, 1, 10);
+    v = project_->FindVariable(VAR_PREGAIN);
+    position._y += 2;
+    field = new UIIntVarField(position, *v, "Drive: %d", 10, 200, 1, 10);
     T_SimpleList<UIField>::Insert(field);
+
+    position._y += 1;
+    v = project_->FindVariable(VAR_SOFTCLIP);
+    field = new UIIntVarField(position, *v, "Type: %s", 0, 4, 1, 4);
+    T_SimpleList<UIField>::Insert(field);
+
+    v = project_->FindVariable(VAR_SOFTCLIP_GAIN);
+    position._x += 13;
+    field = new UIIntVarField(position, *v, "%s", 0, 1, 1, 1);
+    T_SimpleList<UIField>::Insert(field);
+    position._x -= 13;
 
     v = project_->FindVariable(VAR_TRANSPOSE);
     position._y += 2;

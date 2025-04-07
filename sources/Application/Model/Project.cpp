@@ -22,17 +22,18 @@ tempoNudge_(0)
 {
     WatchedVariable *tempo = new WatchedVariable("tempo", VAR_TEMPO, 138);
     this->Insert(tempo);
+    Variable *masterVolume=new Variable("master", VAR_MASTERVOL, 100);
+    this->Insert(masterVolume) ;
     Variable *pregain =
         new Variable("pregain", VAR_PREGAIN, 100, 200);
     this->Insert(pregain);
     Variable *softclip =
         new Variable("softclip", VAR_SOFTCLIP, softclipStates, 5, 0);
     this->Insert(softclip);
-    Variable *softclipGain = new Variable("softclipGain", VAR_SOFTCLIP_GAIN,
+    Variable *softclipGain =
+        new Variable("softclipGain", VAR_SOFTCLIP_GAIN,
                                           softclipGainStates, 2, 0);
     this->Insert(softclipGain);
-	Variable *masterVolume=new Variable("master", VAR_MASTERVOL, 100, 100);
-	this->Insert(masterVolume) ;
 	Variable *wrap=new Variable("wrap", VAR_WRAP, false);
 	this->Insert(wrap);
 	Variable *transpose=new Variable("transpose", VAR_TRANSPOSE, 0);
