@@ -7,8 +7,9 @@ DEFINES := \
 	-D__LINUX_ALSA__ \
 	-D__LINUX_ALSASEQ__ \
 	-DSDL2 \
-        -DSDLAUDIO \
-        -DRTMIDI
+	-DSDLAUDIO \
+	-DRTMIDI \
+	-DFFMPEG_ENABLED
 
 ALSA_CFLAGS := $(shell i686-linux-gnu-pkg-config alsa --cflags)
 ALSA_LIBS := $(shell i686-linux-gnu-pkg-config alsa --libs)

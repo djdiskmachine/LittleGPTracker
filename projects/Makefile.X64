@@ -9,7 +9,8 @@ DEFINES := \
 	-D__LINUX_ALSASEQ__ \
         -DSDL2 \
         -DSDLAUDIO \
-        -DRTMIDI
+        -DRTMIDI \
+        -DFFMPEG_ENABLED
 
 ALSA_CFLAGS := $(shell pkg-config alsa --cflags)
 ALSA_LIBS := $(shell pkg-config alsa --libs)

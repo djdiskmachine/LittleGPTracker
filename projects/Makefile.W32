@@ -3,7 +3,8 @@ include $(PWD)/rules_base
 DEFINES := \
 	-DPLATFORM_$(PLATFORM) \
 	-D_DEBUG \
-	-DDEBUG
+	-DDEBUG \
+	-DFFMPEG_ENABLED
 
 WTOOLPATH=C:\MinGW\bin
 PREFIX := 

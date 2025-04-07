@@ -86,6 +86,7 @@ void InstrumentView::fillSampleParameters() {
 	f1->SetFocus() ;
 
     position._y += 1;
+#ifdef FFMPEG_ENABLED
     v = instrument->FindVariable(SIP_PRINTFX);
     f1 = new UIIntVarField(position, *v, "%s", 0, 3, 1, 2);
     T_SimpleList<UIField>::Insert(f1) ;
@@ -100,7 +101,7 @@ void InstrumentView::fillSampleParameters() {
     f1 = new UIIntVarField(position, *v, "pad:%dms", 0, 5000, 5, 100);
     T_SimpleList<UIField>::Insert(f1);
     position._x -= 16;
-
+#endif
     position._y += 2;
     v=instrument->FindVariable(SIP_VOLUME) ;
 	f1=new UIIntVarField(position,*v,"volume: %d [%2.2X]",0,255,1,10) ;
