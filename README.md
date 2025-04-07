@@ -43,20 +43,21 @@ Recommended reading to get you started:
 | Platform    | MIDI_Possible | MIDI_enabled | Soundfonts | PrintFX | Note                                 |
 |-------------|---------------|--------------|------------|---------|-----------------------------|
 | PSP         | NO            | NO           | YES        | TBA                |[See notes](projects/resources/PSP/INSTALL_HOW_TO.txt) |
-| DEB         | YES           | YES          | YES        | Install ffmpeg     |                                      |
-| X64         | YES           | YES          | NO         | Install ffmpeg     |                                      |
-| X86         | YES           | YES          | YES        | Install ffmpeg     |                                      |
-| MIYOO       | NO            | NO           | YES        | YES?               | Port by [Nine-H](https://ninethehacker.xyz) |
-| W32         | YES           | YES          | YES        | Install ffmpeg     | Built in VS2008 with love            |
-| RASPI       | YES           | YES          | YES        | Install ffmpeg     | Versatile platform                   |
-| CHIP        | YES           | YES          | YES        | YES                | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
-| BITTBOY     | MAYBE         | NO           | YES        | YES?               |                                      |
-| GARLIC      | MAYBE         | NO           | YES        | YES?               | Port by [Simotek](http://simotek.net)|
-| GARLICPLUS  | MAYBE         | NO           | YES        | YES?               | Port by [Simotek](http://simotek.net)|
-| RG35XXPLUS  | MAYBE         | NO           | YES        | YES?               | Port by [Simotek](http://simotek.net)|
-| MACOS       | YES           | YES          | NO         | Install ffmpeg     | Port by [clsource](https://genserver.social/clsource) |
+| DEB         | YES           | YES          | YES        | ENABLED     |                                      |
+| X64         | YES           | YES          | NO         | ENABLED     |                                      |
+| X86         | YES           | YES          | YES        | ENABLED     |                                      |
+| MIYOO       | NO            | NO           | YES        | TBA               | Port by [Nine-H](https://ninethehacker.xyz) |
+| W32         | YES           | YES          | YES        | ENABLED     | Built in VS2008 with love            |
+| RASPI       | YES           | YES          | YES        | ENABLED     | Versatile platform                   |
+| CHIP        | YES           | YES          | YES        | ENABLED                | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
+| BITTBOY     | MAYBE         | NO           | YES        | TBA               |                                      |
+| GARLIC      | MAYBE         | NO           | YES        | TBA               | Port by [Simotek](http://simotek.net)|
+| GARLICPLUS  | MAYBE         | NO           | YES        | TBA               | Port by [Simotek](http://simotek.net)|
+| RG35XXPLUS  | MAYBE         | NO           | YES        | TBA               | Port by [Simotek](http://simotek.net)|
+| MACOS       | YES           | YES          | NO         | ENABLED     | Port by [clsource](https://genserver.social/clsource) |
 
 
 * **Soundfont library is currently not ported for 64bit OS**
 * **MIDI functionality __greatly__ depends on kernel support, please feature request your favourite OS maintainer =)**
 * **Install ffmpeg by following install instructions for your platform [here](https://www.ffmpeg.org/download.html)**
+* **PrintFX requires full ffmpeg. If marked as TBA, it requires a redesign using [libav](https://trac.ffmpeg.org/wiki/Using%20libav*)**

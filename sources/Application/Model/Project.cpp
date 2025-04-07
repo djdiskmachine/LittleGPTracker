@@ -30,8 +30,7 @@ tempoNudge_(0)
     Variable *softclip =
         new Variable("softclip", VAR_SOFTCLIP, softclipStates, 5, 0);
     this->Insert(softclip);
-    Variable *softclipGain =
-        new Variable("softclipGain", VAR_SOFTCLIP_GAIN,
+    Variable *softclipGain = new Variable("softclipGain", VAR_SOFTCLIP_GAIN,
                                           softclipGainStates, 2, 0);
     this->Insert(softclipGain);
 	Variable *wrap=new Variable("wrap", VAR_WRAP, false);

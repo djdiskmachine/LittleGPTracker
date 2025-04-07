@@ -1,2 +1,2 @@
 char *softclipStates[] = {"Bypass", "Subtle", "Medium", "Heavy", "Insane"};
-char *softclipGainStates[] = {"[makeup]", "[boost]"};
+char *softclipGainStates[] = {"[unity]", "[boost]"};
