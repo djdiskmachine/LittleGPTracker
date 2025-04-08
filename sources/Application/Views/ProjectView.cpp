@@ -111,7 +111,8 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
     v = project_->FindVariable(VAR_MASTERVOL);
     position._y += 1;
-    UIIntVarField *field = new UIIntVarField(position, *v, "Master: %d", 10, 200, 1, 10);
+    UIIntVarField *field =
+        new UIIntVarField(position, *v, "Master: %d", 10, 100, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
     v = project_->FindVariable(VAR_PREGAIN);
