@@ -22,7 +22,7 @@ tempoNudge_(0)
 {
     WatchedVariable *tempo = new WatchedVariable("tempo", VAR_TEMPO, 138);
     this->Insert(tempo);
-    Variable *masterVolume=new Variable("master", VAR_MASTERVOL, 100);
+    Variable *masterVolume = new Variable("master", VAR_MASTERVOL, 100, 100);
     this->Insert(masterVolume) ;
     Variable *pregain =
         new Variable("pregain", VAR_PREGAIN, 100, 200);

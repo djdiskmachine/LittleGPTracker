@@ -1,9 +1,11 @@
-1.4.3
+1.5.0
     Contributions:
     purelygrey
         Per-project option for soft clipping the output (#145)
         * Per-project option for soft clipping the output
-        * Multiple clipping modes
+        * Projects with Master Volume over 100 will be capped to 100
+        * Use pregain to saturate
+        * Multiple saturation modes
         Remove drawing optimization that causes flashing in Song view (#147)
         * Removed drawing optimization that caused flashing in Song view
 
@@ -17,11 +19,10 @@
         * Adds different color for the > play and _ mute indicators
         Fix rg35xx mapping (#139)            
         * rshoulder and lshoulder were the wrong way
+    kompadre
+        Enable skipping JUNK section for WAVs
+        * Load more old sample pack CD rips!
 
-
-    Post-clipping attenuation (#148)
-    * Post-clipping volume adjustment
-    
     Copy columns (#141)
     * Enables copying fx+params into any column in tables and phrases
       Pasting fx into notes column etc does nothing
@@ -31,8 +32,10 @@
     * In Song view, pressing LT+LEFT/RIGHT will do the same
     
     Printable fx in InstrumentView (#155)
-    * Uses ffmpeg to print reverb to currently selected sample and swap for sample with reverb
-    
+    * Uses ffmpeg to print reverb to currently selected sample
+    * New sample with fx is created and assigned to the current instrument
+    * Only available for platforms mentioned in README of this repo
+
     Other:
         Add line-by-line clang format (#144)
         Check uploads artifacts (#138)
@@ -47,8 +50,7 @@
     Set songview b jumping length to 16 rows in correspondence with LSDJ and M8
     
     Issue in deep clone (#135)
-    Was possible to accidentally deep clone position into
-    another position
+    Was possible to accidentally deep clone position into another position
 
     Fix build error for Raspi (#133)
     Restore 32bit linux config
