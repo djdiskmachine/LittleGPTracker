@@ -117,13 +117,28 @@ WavFile *WavFile::Open(const char *path) {
 		return 0 ;
 	}
 
-		// Read fmt
+    // Read fmt or JUNK
 
-	position+=wav->readBlock(position,4) ;
-	memcpy(&chunk,wav->readBuffer_,4) ;
+    position += wav->readBlock(position, 4);
+    memcpy(&chunk,wav->readBuffer_,4) ;
 	chunk = Swap32(chunk);
-		
-	if (chunk!=0x20746D66) {
+
+        // Read (possible) JUNK
+
+    if (chunk == 0x4b4e554a) {
+        position+=wav->readBlock(position,4) ;
+        memcpy(&size, wav->readBuffer_,4) ;
+        size = Swap32(size) ;
+        Trace::Debug("WavFile::Open(): skipping JUNK with size=%d", size);
+        position+=size;
+        position += wav->readBlock(position, 4);
+        memcpy(&chunk,wav->readBuffer_,4) ;
+		chunk = Swap32(chunk);
+    }
+
+    // Read fmt
+
+    if (chunk!=0x20746D66) {
 		Trace::Error("Bad WAV/fmt format") ;
 		delete wav ;
 		return 0 ;
