@@ -60,3 +60,4 @@ collect_resources RG35XXPLUS lgpt-rg35xxplus.elf
 collect_resources MACOS LittleGPTracker.app
 # collect_resources RS97 lgpt.dge
 # collect_resources STEAM lgpt.steam-exe
+collect_resources VITA lgpt-vita.vpk
