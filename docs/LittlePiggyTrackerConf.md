@@ -129,10 +129,10 @@ All colors are defined by a set of hexadecimal triplet for RGB. Here's an exampl
 
 ```
 <CONFIG>
-<BACKGROUND value="505444" />
-<FOREGROUND value="FFFFFF" /> <!-- text and cursor in cursor -->
-<HICOLOR1 value="F41B38" /> <!-- row count in song screen -->
-<HICOLOR2 value="FF0000" /> <!-- cursor-->
+<BACKGROUND value="1D0A1F" />
+<FOREGROUND value="F5EBFF" /> <!-- text and cursor in cursor -->
+<HICOLOR1 value="B750D1" /> <!-- row count in song screen -->
+<HICOLOR2 value="DB33DB" /> <!-- cursor-->
 </CONFIG>
 ```
 

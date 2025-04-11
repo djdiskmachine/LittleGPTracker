@@ -1,14 +1,8 @@
 #!/bin/bash
 cd "$(git rev-parse --show-toplevel)/projects/"
-if [[ "$(uname)" == "Darwin" ]]; then #MacOS
-  PROJECT_NUMBER=$(perl -nle 'print $1 if /PROJECT_NUMBER "([^"]*)"/' ../sources/Application/Model/Project.h)
-  PROJECT_RELEASE=$(perl -nle 'print $1 if /PROJECT_RELEASE "([^"]*)"/' ../sources/Application/Model/Project.h)
-  BUILD_COUNT=$(perl -nle 'print $1 if /BUILD_COUNT "([^"]*)"/' ../sources/Application/Model/Project.h)
-else
-  PROJECT_NUMBER=$(grep -oP 'PROJECT_NUMBER "\K[^"]*' ../sources/Application/Model/Project.h)
-  PROJECT_RELEASE=$(grep -oP 'PROJECT_RELEASE "\K[^"]*' ../sources/Application/Model/Project.h)
-  BUILD_COUNT=$(grep -oP 'BUILD_COUNT "\K[^"]*' ../sources/Application/Model/Project.h)
-fi
+PROJECT_NUMBER=$(perl -nle 'print $1 if /PROJECT_NUMBER "([^"]*)"/' ../sources/Application/Model/Project.h)
+PROJECT_RELEASE=$(perl -nle 'print $1 if /PROJECT_RELEASE "([^"]*)"/' ../sources/Application/Model/Project.h)
+BUILD_COUNT=$(perl -nle 'print $1 if /BUILD_COUNT "([^"]*)"/' ../sources/Application/Model/Project.h)
 VERSION="${PROJECT_NUMBER}.${PROJECT_RELEASE}.${BUILD_COUNT}"
 
 collect_resources() { #1PLATFORM #2lgpt.*-exe
@@ -20,17 +14,19 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   fi
   PACKAGE=LGPT-$1-$VERSION.zip
   echo "-=-=Packaging $PACKAGE=-=-"
+  BINARY=" $(find . -iname $2)"
+  chmod +x $BINARY
   CONTENTS="./resources/$1/*"
   CONTENTS+=" ./custom_font.xml"
-  CONTENTS+=" $(find . -iname $2)"
+  CONTENTS+=" $BINARY"
   if [ "$1" == "PSP" ] ||
   [ "$1" == "GARLIC" ] ||
   [ "$1" == "RG35XXPLUS" ] ||
   [ "$1" == "BITTBOY" ]; then # All files go in the root folder
     zip -9 $PACKAGE -j $CONTENTS
   elif [ "$1" == "MACOS" ]; then # .app is a folder
-        zip -9 $PACKAGE -j $CONTENTS
-        zip -9yr $PACKAGE LittleGPTracker.app/
+    zip -9 $PACKAGE -j $CONTENTS
+    zip -9yr $PACKAGE LittleGPTracker.app/
   else # all the others go in the bin
     mkdir bin ; cp $CONTENTS bin
     zip -9 $PACKAGE bin/* && rm -r bin/
