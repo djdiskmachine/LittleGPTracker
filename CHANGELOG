@@ -19,9 +19,13 @@
         * Adds different color for the > play and _ mute indicators
         Fix rg35xx mapping (#139)            
         * rshoulder and lshoulder were the wrong way
+
     kompadre
         Enable skipping JUNK section for WAVs
         * Load more old sample pack CD rips!
+
+    isage
+        Vita port
 
     Copy columns (#141)
     * Enables copying fx+params into any column in tables and phrases
@@ -48,6 +52,8 @@
     Jumping from row 0 was not possible in chainview
     Limit jump to maximum lowest populated row
     Set songview b jumping length to 16 rows in correspondence with LSDJ and M8
+    Scales no longer affect instrument numbers ([djdiskmachine/LittleGPTracker#172](https://github.com/djdiskmachine/LittleGPTracker/issues/172))
+    Bug in Variable:SetString [djdiskmachine/LittleGPTracker#169](https://github.com/djdiskmachine/LittleGPTracker/issues/169)
     
     Issue in deep clone (#135)
     Was possible to accidentally deep clone position into another position
