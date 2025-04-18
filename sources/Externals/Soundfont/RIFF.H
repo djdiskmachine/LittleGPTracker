@@ -217,7 +217,7 @@ class RIFFClass
     SHORT   fRefNum;
     #endif
     
-    LONG  lLastFilePtr;    // The chunk in the file where we visited last
+    uintptr_t  lLastFilePtr;    // The chunk in the file where we visited last
     DWORD dwLastID;        // The ID of the last RIFF/LIST chunk visited
     DWORD dwLastSize;      // The size of our last visited chunk
     DWORD dwLastFormID;    // The last form/list-type we visited

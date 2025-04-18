@@ -234,13 +234,18 @@ SHORT RIFFClass::initRiffTokensArray()
 WORD RIFFClass::OpenRIFF(CHAR* pName)
 {
   byWhereIsRIFFData = RIFF_ONDISK;
+  
+  SHORT ret = RIFFOpen((LONG)pName);
 
-  if ((RIFFOpen((LONG)pName) != SUCCESS ) || (pFile == NULL))
+
+  if ((ret != SUCCESS ) || (pFile == NULL))
   { 
+     printf("RIFFOpen Error %d::%d %d 0x%X\n", ret, SUCCESS, errno,pFile);      
      SetError(errno); // Set inside RIFFOpen
      return (uiErrorNdx = RIFF_OPENFILEERROR);
   }
 
+  printf("InitRIFF()\n");
   return (InitRIFF()); 
   
 }
@@ -270,10 +275,13 @@ WORD RIFFClass::OpenRIFF(FSSpec* pSpecifier)
 WORD  RIFFClass::InitRIFF(void)
 {
 
-  if (ReadCkHdr() != SUCCESS)
+  if (ReadCkHdr() != SUCCESS) {
+     printf("check HDR\n");
 	 return (uiErrorNdx = RIFF_OPENFILEERROR);
-  else if (dwLastID != MAKE_ID(RIFF))
+  } else if ((int)dwLastID != (int)MAKE_ID(RIFF)) {
+      printf("MAKE_ID %d::%d\n",dwLastID, MAKE_ID(RIFF));
 	 return (uiErrorNdx = RIFF_IDERROR);
+  }
 
   dwRIFFSize = dwLastSize;
   return (uiErrorNdx = SUCCESS);
@@ -314,9 +322,10 @@ WORD  RIFFClass::ReadCkHdr(void)
   } ;
   dwLastID   = ckHdr.dwCkID;
   dwLastSize = ckHdr.dwCkSize;
+  printf("dwLastSizeA %d\n", (int) ckHdr.dwCkSize);
   SwapDWORD(&dwLastSize);
 
-  if ((dwLastID == MAKE_ID(RIFF)) || (dwLastID == MAKE_ID(LIST))) {
+  if (((int)dwLastID == (int)MAKE_ID(RIFF)) || ((int)dwLastID == (int)MAKE_ID(LIST))) {
     
     RIFFRead(&dwLastFormID, sizeof(dwLastFormID), 1);
   	chIdPtr=(char *)&dwLastFormID ;
@@ -340,7 +349,7 @@ WORD  RIFFClass::ReadCkHdr(void)
 WORD  RIFFClass::Descend(void)
 {
   //// We are at a RIFF or LIST ID ////
-  if ((dwLastID == MAKE_ID(RIFF)) || (dwLastID == MAKE_ID(LIST)))
+  if (((int)dwLastID == (int)MAKE_ID(RIFF)) || ((int)dwLastID == (int)MAKE_ID(LIST)))
   {
     return (ReadCkHdr());
   }
@@ -357,13 +366,17 @@ WORD  RIFFClass::Descend(void)
 //************************************************************
 WORD  RIFFClass::Ascend(void)
 {
-  if (((DWORD) lLastFilePtr + dwLastSize) <= dwRIFFSize)
+  if (((uintptr_t) lLastFilePtr + dwLastSize) <= (uintptr_t)dwRIFFSize)
   {
 	 //// Our last chunk had a RIFF or LIST ID ////
+      printf("Ascend %d\n", dwLastSize);
+	 
 	 if (dwLastFormID)
-		dwLastSize -= sizeof(DWORD);
+        // SL: IsssueHereMaybe.
+		dwLastSize -= sizeof(uintptr_t);
+        printf("Ascend 2 %d\n", dwLastSize);
 
-	 if ((RIFFSeek(lLastFilePtr + (LONG) dwLastSize, SEEK_SET)) == 0)
+	 if ((RIFFSeek(lLastFilePtr + (uintptr_t) dwLastSize, SEEK_SET)) == 0)
 		return (ReadCkHdr());
 	 else
 		return (RIFF_READFILEERROR);
@@ -378,11 +391,13 @@ WORD  RIFFClass::Ascend(void)
 //**************************************
 WORD  RIFFClass::FindCk(CHAR* pID)
 {
+  printf("pID: %s\n", pID);
   char tmp[4] ;
   for (int i=0;i<4;i++) 
   {
 	  tmp[i]=toupper(*pID++) ;
   }
+  printf("tmp:%s\n",tmp);
   DWORD dwID     = MAKE_ID(tmp);
 
   Reset();
@@ -390,8 +405,11 @@ WORD  RIFFClass::FindCk(CHAR* pID)
 
   while (TRUE)
   {
-	  if ((dwID == dwLastID) ||        // We found our chunk
-	      (dwID == dwLastFormID))
+      //int * tsta= (int *)(long)dwID;
+      //int tstb = *tsta;
+      printf("    %d-%u-%u\n", dwID, dwLastID, dwLastFormID);
+	  if (((int)dwID == (int)dwLastID) ||        // We found our chunk
+	      ((int)dwID == (int)dwLastFormID))
     {
   		return (SUCCESS);
     }
@@ -467,6 +485,7 @@ SHORT RIFFClass::RIFFOpen(LONG lPointer)
   {
     case RIFF_ONDISK:
       pFile = fopen((CHAR *)lPointer, "rb");
+      printf("fopen: %d\n", errno);      
       return (errno);
 
   #ifdef USE_MACINTOSH
@@ -475,6 +494,7 @@ SHORT RIFFClass::RIFFOpen(LONG lPointer)
   #endif
 
     default:
+      printf("Default\n");
       return (1);
   }
 }
