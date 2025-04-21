@@ -110,3 +110,9 @@ From repo root: cp pre-commit ./git/hooks
             tar -xf rg35xx-plus-aarch64-SDL2-SDK-0.1.0.tar.xz
         Build with:
             make PLATFORM=RG35XXPLUS
+
+##### VITA: Compile under linux/WSL2
+	Install vitasdk:
+		https://vitasdk.org/
+	Build with:
+		make PLATFORM=VITA

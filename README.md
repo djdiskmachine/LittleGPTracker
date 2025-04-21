@@ -64,6 +64,7 @@ Recommended reading to get you started:
 | GARLICPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
 | RG35XXPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
 | MACOS       | YES           | YES          | NO         | Port by [clsource](https://genserver.social/clsource) |
+| VITA        | NO            | NO           | YES        |                                      |
 
 
 * **Soundfont library is currently not ported for 64bit OS**

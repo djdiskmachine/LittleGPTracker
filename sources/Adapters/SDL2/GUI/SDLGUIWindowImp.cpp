@@ -44,6 +44,11 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 480; 
   int screenHeight = 272;
   windowed_ = false;
+ #elif defined(PLATFORM_VITA)
+  int screenWidth = 960;
+  int screenHeight = 544;
+  windowed_ = false;
+  mult_ = 2;
  #elif defined(RS97)
   int screenWidth = 320; 
   int screenHeight = 240;
@@ -78,8 +83,10 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
     windowed_ = false;
   }
  
-  #ifdef PLATFORM_PSP
+  #if defined(PLATFORM_PSP)
   	mult_ = 1;
+  #elif defined(PLATFORM_VITA)
+  	mult_ = 2;
   #else
 	int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
 	const char *mult=Config::GetInstance()->GetValue("SCREENMULT") ;
