@@ -911,7 +911,7 @@ void SongView::DrawView() {
     std::ostringstream os;
 
     os << ((player->GetSequencerMode() == SM_SONG) ? "Song" : "Live");
-    os << " - ";
+    os << ": ";
     os << songname_;
     std::string buffer(os.str());
 

@@ -8,8 +8,7 @@ GrooveView::GrooveView(GUIWindow &w,ViewData *viewData):View(w,viewData) {
 	lastPosition_=0 ;
 }
 
-GrooveView::~GrooveView() {
-} 
+GrooveView::~GrooveView() {}
 
 void GrooveView::updateCursor(int dir) {
 	position_+=dir ;
@@ -25,8 +24,8 @@ void GrooveView::updateCursorValue(int val,bool sync) {
 	if (val<1) val=1 ;
 	if (val>0xF) val=0xF ;
 	grooveData[position_]=val ;
-	isDirty_=true; 
-} ;
+    isDirty_ = true;
+};
 
 void GrooveView::warpGroove(int dir) {
 	int current=viewData_->currentGroove_ ;
@@ -53,19 +52,20 @@ void GrooveView::clearCursorValue() {
 	unsigned char *grooveData=Groove::GetInstance()->GetGrooveData(viewData_->currentGroove_) ;
 	grooveData[position_]=NO_GROOVE_DATA ;
 	isDirty_=true ;
-}	
+}
 
 void GrooveView::ProcessButtonMask(unsigned short mask,bool pressed) {
 
-	if (!pressed) return ;
-	
-	Player *player=Player::GetInstance() ;
+    if (!pressed)
+        return;
 
-	if (mask&EPBM_B) {         
-			if (mask&EPBM_LEFT) {
-				warpGroove(-1) ;
-			}
-			if (mask&EPBM_RIGHT) {
+    Player *player = Player::GetInstance();
+
+    if (mask&EPBM_B) {
+        if (mask & EPBM_LEFT) {
+            warpGroove(-1);
+        }
+            if (mask&EPBM_RIGHT) {
 				warpGroove(1) ;
 			}
 			if (mask&EPBM_DOWN) {
@@ -79,12 +79,12 @@ void GrooveView::ProcessButtonMask(unsigned short mask,bool pressed) {
 			} ;
 	} else {
 
-	  // A modifier
-	  if (mask&EPBM_A) {         
-			if (mask&EPBM_LEFT) {
-				updateCursorValue(-1) ;
-			}
-			if (mask&EPBM_RIGHT) {
+        // A modifier
+        if (mask & EPBM_A) {
+            if (mask & EPBM_LEFT) {
+                updateCursorValue(-1);
+            }
+            if (mask&EPBM_RIGHT) {
 				updateCursorValue(1) ;
 			}
 			if (mask&EPBM_DOWN) {
@@ -107,20 +107,20 @@ void GrooveView::ProcessButtonMask(unsigned short mask,bool pressed) {
 					NotifyObservers(&ve) ;
 				}
 				if (mask&EPBM_START) {
-					player->OnStartButton(PM_PHRASE,viewData_->songX_,true,viewData_->chainRow_) ;
-    			}			
+                    player->OnStartButton(PM_PHRASE, viewData_->songX_, true,
+                                          viewData_->chainRow_);
+                }
 
-	    	} else {
+            } else {
                 // No modifier
     			if (mask&EPBM_DOWN) updateCursor(1) ;
     			if (mask&EPBM_UP) updateCursor(-1) ;
     			if (mask&EPBM_START) {
 					player->OnStartButton(PM_PHRASE,viewData_->songX_,false,viewData_->chainRow_) ;
-    			}
-		    }
-	  } 
-	    
-	}
+                }
+            }
+      }
+    }
 } ;
 
 void GrooveView::DrawView() {
@@ -134,18 +134,17 @@ void GrooveView::DrawView() {
 
 	char title[40] ;
 
-	SetColor(CD_NORMAL) ;
-
-	sprintf(title,"Groove: %2.2x",viewData_->currentGroove_) ;
+    SetColor(CD_NORMAL);
+    sprintf(title,"Groove %2.2x", viewData_->currentGroove_) ;
 	DrawString(pos._x,pos._y,title,props) ;
 
 // Compute song grid location
 
-	GUIPoint anchor=GetAnchor() ;
-	
-// Display row numbers
+    GUIPoint anchor = GetAnchor();
 
-	char buffer[6] ;
+    // Display row numbers
+
+    char buffer[6] ;
 	pos=anchor ;
 	pos._x-=3 ;
 	for (int j=0;j<16;j++) {
@@ -168,12 +167,12 @@ void GrooveView::DrawView() {
 			hex2char(grooveData[j],buffer) ;
 			buffer[3]=0 ;
 		} else {
-			strcpy(buffer,"--") ;
-		} ;
-		props.invert_=(j==position_) ; 
-		DrawString(pos._x,pos._y,buffer,props) ;
-		pos._y++ ;
-	}
+            strcpy(buffer, "--");
+        } ;
+        props.invert_ = (j == position_);
+        DrawString(pos._x,pos._y,buffer,props) ;
+        pos._y++;
+    }
 
 	drawMap() ;
 	drawNotes() ;
@@ -186,12 +185,12 @@ void GrooveView::OnPlayerUpdate(PlayerEventType ,unsigned int tick) {
 	GUIPoint pos ;
 
 	pos._x=anchor._x-1 ;
-	pos._y=anchor._y+lastPosition_ ;
-	DrawString(pos._x,pos._y," ",props) ;
-		
-	Groove *gr=Groove::GetInstance() ;
-	// Get current channel
-	int channel=viewData_->songX_ ;
+    pos._y = anchor._y + lastPosition_;
+    DrawString(pos._x,pos._y," ",props) ;
+
+    Groove *gr=Groove::GetInstance() ;
+    // Get current channel
+    int channel=viewData_->songX_ ;
 
 	int groove ;
 	int groovepos ;
