@@ -264,14 +264,11 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			break ;
 		}
 		case ACTION_SAVE:
-			if (!player->IsRunning()) {
-				PersistencyService *service=PersistencyService::GetInstance() ;
-				service->Save() ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
+    {
+      PersistencyService *service=PersistencyService::GetInstance() ;
+      service->Save() ;
+      break ;
+    }
 		case ACTION_SAVE_AS:
 			if (!player->IsRunning()) {
 				PersistencyService *service=PersistencyService::GetInstance() ;
@@ -298,13 +295,8 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 		}
 		case ACTION_QUIT:
 		{
-			if (!player->IsRunning()) {
-				MessageBox *mb=new MessageBox(*this,"Quit and lose faith ?",MBBF_YES|MBBF_NO) ;
-				DoModal(mb,QuitCallback) ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Duh ! Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
+      MessageBox *mb=new MessageBox(*this,"Quit and lose faith ?",MBBF_YES|MBBF_NO) ;
+      DoModal(mb,QuitCallback) ;
 			break ;
 		}
 		case ACTION_TEMPO_CHANGED:
