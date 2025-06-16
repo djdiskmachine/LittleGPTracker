@@ -283,16 +283,21 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			break ;
 
 		case ACTION_LOAD:
-		{
-			if (!player->IsRunning()) {
-				MessageBox *mb=new MessageBox(*this,"Load song and lose changes ?",MBBF_YES|MBBF_NO) ;
-				DoModal(mb,LoadCallback) ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
+    {
+      MessageBox *mb=new MessageBox(*this,"Load song and lose changes ?",MBBF_YES|MBBF_NO) ;
+      DoModal(mb,LoadCallback) ;
 			break ;
-		}
+    }
+		//{
+		//	if (!player->IsRunning()) {
+		//		MessageBox *mb=new MessageBox(*this,"Load song and lose changes ?",MBBF_YES|MBBF_NO) ;
+		//		DoModal(mb,LoadCallback) ;
+		//	} else {
+		//		MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
+		//		DoModal(mb) ;
+		//	}
+		//	break ;
+		//}
 		case ACTION_QUIT:
 		{
       MessageBox *mb=new MessageBox(*this,"Quit and lose faith ?",MBBF_YES|MBBF_NO) ;
