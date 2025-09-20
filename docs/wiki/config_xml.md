@@ -224,7 +224,7 @@ This setting is for GP2X and Dingoo only. It is used to set the volume of the ha
 These settings are used to control various options of the audio configuration. They are currenly mostly used for W32 but might extend in the future to other platforms
 
 -   `AUDIOAPI`: Allows to select the class of drivers to use. Currently can be set to ASIO to enable asio output instead of direct sound.
--   `AUDIODRIVER`: Allows to specify which driver to open. It takes the first drvier whose name matches the beginning of the string. For example, to force using a realtek soundcard instead of the default one, you can just specify "Real"
+-   `AUDIODRIVER`: Allows to specify which driver to open. It takes the first driver whose name matches the beginning of the string. For example, to force using a realtek soundcard instead of the default one, you can just specify "Real"
 -   `AUDIOBUFFERSIZE`: Allows to tweak the default buffersize used for the audio. If the piggy glitches, increase this value.
 -   `AUDIOPREBUFFERCOUNT`: Even if the computer has the ability to run the piggy full screen, some sound hardware needs nearly instant reply for the couple of first buffers. If you have upped the AUDIOBUFFERSIZE but still get glitches, try putting it back to something decent (like 512) and define AUDIOPREBUFFERCOUNT to be 2,3,... that way, a set of blank buffer will be queued, ready for the soundcard to grab, before the sequencer is actually kicked in.
 
