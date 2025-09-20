@@ -94,9 +94,9 @@ static void PurgeCallback(View &v,ModalView &dialog) {
 } ;
 
 static void DeleteProjectCallback(View &v, ModalView &dialog) {
-    if (dialog.GetReturnCode()==MBL_YES) {
-		((ProjectView &)v).OnDelete() ;
-	}
+    if (dialog.GetReturnCode() == MBL_YES) {
+        ((ProjectView &)v).OnDelete();
+    }
 };
 
 ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
@@ -173,7 +173,7 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
 
-    position._y += 1;
+    position._y += 2;
     a1 = new UIActionField("Delete Song", ACTION_DELETE, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
@@ -304,15 +304,17 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 
     case ACTION_DELETE:
       {
-        if (!player->IsRunning()) {
-          // Ideally just stop it now
-          MessageBox *mb = new MessageBox(*this, "Not while playing", MBBF_OK);
-          DoModal(mb);
+        if (player->IsRunning()) {
+            // Ideally just stop it now
+            MessageBox *mb =
+                new MessageBox(*this, "Not while playing", MBBF_OK);
+            DoModal(mb);
+        } else {
+            MessageBox *mb = new MessageBox(*this, "Delete this song forever?",
+                                            MBBF_YES | MBBF_NO);
+            DoModal(mb, DeleteProjectCallback);
         }
-        else {
-          MessageBox *mb = new MessageBox(*this, "Delete this song forever?", MBBF_YES|MBBF_NO);
-          DoModal(mb, DeleteProjectCallback);
-        }
+        break;
       }
 
 		case ACTION_QUIT:
