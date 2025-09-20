@@ -101,3 +101,22 @@ bool PersistencyService::Load() {
 	}
 	return true ;
 } ;
+
+// Delete all samples and project files, free up memory
+bool PersistencyService::Delete() {
+
+    Path filename("project:lgptsav.dat");
+    PersistencyDocument doc(filename.GetPath());
+
+    // Try opening the file
+
+    FileSystem *fs = FileSystem::GetInstance();
+    I_File *file = fs->Open(filename.GetPath().c_str(), "r");
+    if (!file)
+        return false;
+
+    // delete file ;
+    // PurgeAllInstruments()
+
+    return false;
+};

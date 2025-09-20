@@ -10,6 +10,7 @@ public:
 	PersistencyService() ;
 	void Save() ;
 	bool Load() ;
+    bool Delete();
 } ;
 
 class PersistencyDocument: public TiXmlDocument {
