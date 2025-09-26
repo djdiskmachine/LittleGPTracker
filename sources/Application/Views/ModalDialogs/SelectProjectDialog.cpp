@@ -9,11 +9,9 @@
 #define LIST_SIZE 20
 #define LIST_WIDTH 32
 
-static char *buttonText[3]= {
-	"Load",
-	"New",
-	"Exit"	
-} ;
+#define NUM_BUTTONS 4
+
+static char *buttonText[NUM_BUTTONS] = {"Load", "New", "Delete", "Exit"};
 
 Path SelectProjectDialog::lastFolder_("root:") ;
 int SelectProjectDialog::lastProject_ = 0 ;
@@ -103,18 +101,17 @@ void SelectProjectDialog::DrawView() {
 		count++ ;
 	} ;
 
-	y=LIST_SIZE+2 ;
-	int offset=LIST_WIDTH/4 ;
+    y = LIST_SIZE + 2;
+    int offset=LIST_WIDTH/(NUM_BUTTONS + 1);
 
 	SetColor(CD_NORMAL) ;
 
-	for (int i=0;i<3;i++) {
-		const char *text=buttonText[i] ;
+    for (int i = 0; i < NUM_BUTTONS; i++) {
+        const char *text=buttonText[i] ;
 		x=offset*(i+1)-strlen(text)/2 ;
-		props.invert_=(i==selected_)?true:false ;
-		DrawString(x,y,text,props) ;
-	}	
-
+        props.invert_ = (i == selected_) ? true : false;
+        DrawString(x, y, text, props);
+    }
 };
 
 void SelectProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick) {
@@ -181,8 +178,18 @@ void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				NewProjectDialog *npd=new NewProjectDialog(*this) ;
 				DoModal(npd,NewProjectCallback) ;
 				break ;
+            }
+            case 2: // delete
+			{
+                // Is it a project directory?
+                // if so, ask form confirmation
+                // tell fs to remove it all
+                // show success (or failure)
+                // if not a project dir, show msg
+                // show SelectProectDialog once more
+                break ;
 			}
-			case 2: // Exit ;
+			case 3: // Exit ;
 				EndModal(0) ;
 				break ;
 		}
@@ -195,18 +202,18 @@ void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
                 // No modifier
 				if (mask==EPBM_UP) warpToNextProject(-1) ;
 				if (mask==EPBM_DOWN) warpToNextProject(1) ;
-				if (mask==EPBM_LEFT) {
-					selected_-- ;
-					if (selected_<0) selected_+=3 ;
-					isDirty_=true ;
-				}
-				if (mask==EPBM_RIGHT) {
-					selected_=(selected_+1)%3 ;
-					isDirty_=true ;
-				}
-		    }
-	  } 
-	}
+                if (mask == EPBM_LEFT) {
+                    selected_--;
+					if (selected_ < 0) selected_ += NUM_BUTTONS;
+					isDirty_ = true;
+                }
+                if (mask == EPBM_RIGHT) {
+                    selected_ = (selected_ + 1) % NUM_BUTTONS;
+                    isDirty_ = true;
+                }
+            }
+      }
+    }
 };
 
 void SelectProjectDialog::warpToNextProject(int amount) {
