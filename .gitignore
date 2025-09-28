@@ -12,3 +12,17 @@ font.h
 projects/resources/packaging/samplelib
 projects/resources/packaging/lgpt_BETA
 .DS_Store
+
+# build artifacts as per projects/resources/packaging/lgpt_package.sh
+projects/lgpt.deb-exe
+projects/lgpt.x64
+projects/lgpt.x86
+projects/lgpt-miyoo.elf
+projects/lgpt-W32.exe
+projects/lgpt.rpi-exe
+projects/lgpt.chip-exe
+projects/lgpt-bittboy.elf
+projects/lgpt-garlic.elf
+projects/lgpt-garlicplus.elf
+projects/lgpt-rg35xxplus.elf
+projects/LittleGPTracker.app
