@@ -9,22 +9,20 @@
 #ifdef SendMessage
 #undef SendMessage
 #endif
-	
-MidiService::MidiService():
-	T_SimpleList<MidiOutDevice>(true),
-  inList_(true),
-	device_(0),
-	sendSync_(true)
-{
-	for (int i=0;i<MIDI_MAX_BUFFERS;i++) {
+
+MidiService::MidiService()
+    : T_SimpleList<MidiOutDevice>(true), inList_(true), device_(0),
+      sendSync_(true) {
+#ifndef _64BIT
+    for (int i=0;i<MIDI_MAX_BUFFERS;i++) {
 		queues_[i]=new T_SimpleList<MidiMessage>(true);
 	}
+#endif
+    const char *delay = Config::GetInstance()->GetValue("MIDIDELAY");
+    midiDelay_ = delay ? atoi(delay) : 1;
 
-	const char *delay = Config::GetInstance()->GetValue("MIDIDELAY");
-	midiDelay_ = delay?atoi(delay):1;
-
-	const char *sendSync = Config::GetInstance()->GetValue("MIDISENDSYNC");
-	if (sendSync) {
+    const char *sendSync = Config::GetInstance()->GetValue("MIDISENDSYNC");
+    if (sendSync) {
 		sendSync_ = (strcmp(sendSync,"YES")==0);
 	}
 };
@@ -61,50 +59,57 @@ void MidiService::SelectDevice(const std::string &name) {
 };
 
 bool MidiService::Start() {
-	currentPlayQueue_ = 0;
-	currentOutQueue_ = 0;
-	return true;
-} ;
+#ifndef _64BIT
+    currentPlayQueue_ = 0;
+    currentOutQueue_ = 0;
+#endif
+    return true;
+}
 
+void MidiService::Stop() { stopDevice(); }
 
-void MidiService::Stop() {
-	stopDevice();
-} ;
+#ifdef _64BIT
+// For multi-threaded systems we use a concurrentqueue
+void MidiService::QueueMessage(MidiMessage &m) {
+    if (!device_)
+        return;
+    // Trace::Log("MidiService", "QueueMessage: status=0x%X", m.status_);
 
+    midiQueue_.enqueue(m);
+}
+#else
+// For single-threaded systems we do it the old way
 void MidiService::QueueMessage(MidiMessage &m) {
     if (!device_)
         return;
 
-    if (queueMutex_.TryLock()) {
-        T_SimpleList<MidiMessage> *queue = queues_[currentPlayQueue_];
-        MidiMessage *ms = new MidiMessage(m.status_, m.data1_, m.data2_);
-        queue->Insert(ms);
-        queueMutex_.Unlock();
-    }
+    T_SimpleList<MidiMessage> *queue = queues_[currentPlayQueue_];
+    MidiMessage *ms = new MidiMessage(m.status_, m.data1_, m.data2_);
+    queue->Insert(ms);
 }
+#endif
 
 void MidiService::Trigger() {
-	AdvancePlayQueue();
-
-	if (device_&&sendSync_) {
-		SyncMaster *sm=SyncMaster::GetInstance();
+#ifndef _64BIT
+    AdvancePlayQueue();
+#endif
+    if (device_ && sendSync_) {
+        SyncMaster *sm=SyncMaster::GetInstance();
 		if (sm->MidiSlice()) {
-			MidiMessage msg;
-			msg.status_ = 0xF8;
-			QueueMessage(msg);
-		}
-	}
-}
-
-void MidiService::AdvancePlayQueue() {
-    int next = (currentPlayQueue_ + 1) % MIDI_MAX_BUFFERS;
-    if (queueMutex_.TryLock()) {
-        // Only clear AFTER successful lock — avoids data loss
-        queues_[next]->Empty();
-        queueMutex_.Unlock();
-        currentPlayQueue_ = next;
+            MidiMessage msg;
+            msg.status_ = 0xF8;
+            QueueMessage(msg);
+        }
     }
 }
+
+#ifndef _64BIT
+void MidiService::AdvancePlayQueue() {
+    int next = (currentPlayQueue_ + 1) % MIDI_MAX_BUFFERS;
+    queues_[next]->Empty();
+    currentPlayQueue_ = next;
+}
+#endif
 
 void MidiService::Update(Observable &o,I_ObservableData *d) {
   AudioDriver::Event *event=(AudioDriver::Event *)d;
@@ -114,35 +119,49 @@ void MidiService::Update(Observable &o,I_ObservableData *d) {
 };
 
 void MidiService::onAudioTick() {
-	if (tickToFlush_>0) {
-		if (--tickToFlush_ ==0) {
+    if (tickToFlush_ > 0) {
+        if (--tickToFlush_ ==0) {
 			flushOutQueue();
-		}
-	}
+        }
+    }
 }
 
 void MidiService::Flush() {
-	tickToFlush_ = midiDelay_;
-	if (tickToFlush_ == 0) {
+    tickToFlush_ = midiDelay_;
+    if (tickToFlush_ == 0) {
 		flushOutQueue();
-	}
+    }
 };
 
+#ifdef _64BIT
 void MidiService::flushOutQueue() {
-    int next = (currentOutQueue_ + 1) % MIDI_MAX_BUFFERS;
+    if (!device_)
+        return;
 
-    if (queueMutex_.TryLock()) {
-        T_SimpleList<MidiMessage> *flushQueue = queues_[next];
-
-        if (device_) {
-            device_->SendQueue(*flushQueue);
-        }
-
-        flushQueue->Empty();
-        currentOutQueue_ = next;  // Advance only after safe flush
-        queueMutex_.Unlock();
+    MidiMessage msg;
+    T_SimpleList<MidiMessage> batch;
+    // Drain all messages currently in the queue
+    while (midiQueue_.try_dequeue(msg)) {
+        batch.Insert(msg);
+        // Trace::Log("MidiService", "flushOutQueue: status=0x%X", msg.status_);
+    }
+    if (batch.Size() > 0) {
+        device_->SendQueue(batch);
+		// Trace::Log("MidiService", "flushOutQueue: batch=0x%X", batch);
     }
 }
+#else
+void MidiService::flushOutQueue() {
+    int next = (currentOutQueue_ + 1) % MIDI_MAX_BUFFERS;
+    T_SimpleList<MidiMessage> *flushQueue = queues_[next];
+    if (device_) {
+        device_->SendQueue(*flushQueue);
+    }
+
+    flushQueue->Empty();
+    currentOutQueue_ = next;  // Advance only after safe flush
+}
+#endif
 
 /*
  * starts midi device
