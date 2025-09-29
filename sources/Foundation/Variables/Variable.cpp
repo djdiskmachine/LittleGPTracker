@@ -245,7 +245,13 @@ const char *Variable::GetString() {
         if ((value_.index_ < 0) || (value_.index_ >= listSize_)) {
             return "(null)";
         } else {
-            return list_.char_[value_.index_];
+            const char* src = list_.char_[value_.index_];
+            if (strlen(src) > MAX_NAME_LENGTH) {
+                strncpy(string_, src, MAX_NAME_LENGTH);
+                string_[MAX_NAME_LENGTH] = '\0';
+                return string_;
+            }
+            return src;
         }
         break;
     case STRING:

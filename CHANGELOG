@@ -49,6 +49,7 @@
         Update to github actions checkout@v4.1.7 (#136)
 
     Fixes:
+    Long sample names causing crashes in InstrumentView (#189)
     Bug in chainview: column warping (#134)
     Jumping below lowest row would cause infinite loop
     Jumping from row 0 was not possible in chainview

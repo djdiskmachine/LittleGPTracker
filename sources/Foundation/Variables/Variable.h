@@ -84,6 +84,9 @@ protected:
 	int listSize_ ;
 	
 	char string_[40] ;
+
+private:
+    static const int MAX_NAME_LENGTH = 25;
 } ;
 #endif
 
