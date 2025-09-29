@@ -13,7 +13,7 @@
 MidiService::MidiService()
     : T_SimpleList<MidiOutDevice>(true), inList_(true), device_(0),
       sendSync_(true) {
-#ifndef _64BIT
+#ifndef _FEAT_MIDI_MULTITHREAD
     for (int i=0;i<MIDI_MAX_BUFFERS;i++) {
 		queues_[i]=new T_SimpleList<MidiMessage>(true);
 	}
@@ -59,7 +59,7 @@ void MidiService::SelectDevice(const std::string &name) {
 };
 
 bool MidiService::Start() {
-#ifndef _64BIT
+#ifndef _FEAT_MIDI_MULTITHREAD
     currentPlayQueue_ = 0;
     currentOutQueue_ = 0;
 #endif
@@ -68,7 +68,7 @@ bool MidiService::Start() {
 
 void MidiService::Stop() { stopDevice(); }
 
-#ifdef _64BIT
+#ifdef _FEAT_MIDI_MULTITHREAD
 // For multi-threaded systems we use a concurrentqueue
 void MidiService::QueueMessage(MidiMessage &m) {
     if (!device_)
@@ -90,7 +90,7 @@ void MidiService::QueueMessage(MidiMessage &m) {
 #endif
 
 void MidiService::Trigger() {
-#ifndef _64BIT
+#ifndef _FEAT_MIDI_MULTITHREAD
     AdvancePlayQueue();
 #endif
     if (device_ && sendSync_) {
@@ -103,7 +103,7 @@ void MidiService::Trigger() {
     }
 }
 
-#ifndef _64BIT
+#ifndef _FEAT_MIDI_MULTITHREAD
 void MidiService::AdvancePlayQueue() {
     int next = (currentPlayQueue_ + 1) % MIDI_MAX_BUFFERS;
     queues_[next]->Empty();
@@ -133,7 +133,7 @@ void MidiService::Flush() {
     }
 };
 
-#ifdef _64BIT
+#ifdef _FEAT_MIDI_MULTITHREAD
 void MidiService::flushOutQueue() {
     if (!device_)
         return;

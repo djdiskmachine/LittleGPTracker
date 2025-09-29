@@ -122,7 +122,7 @@ bool SDLAudioDriver::StartDriver() {
 
 	for (int i=0;i<settings_.preBufferCount_;i++) {
 		AddBuffer((short *)miniBlank_,fragSize_/4) ;
-#ifndef _64BIT
+#ifndef _FEAT_MIDI_MULTITHREAD
         MidiService::GetInstance()->AdvancePlayQueue();
 #endif
     }

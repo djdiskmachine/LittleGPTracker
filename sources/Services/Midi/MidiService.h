@@ -9,7 +9,7 @@
 #include "MidiOutDevice.h"
 #include "System/Timer/Timer.h"
 #include <string>
-#ifdef _64BIT
+#ifdef _FEAT_MIDI_MULTITHREAD
 #include "System/Process/ConcurrentQueue.h"
 #endif
 
@@ -46,7 +46,7 @@ public:
 	//! Time chunk trigger
 
     void Trigger();
-#ifndef _64BIT
+#ifndef _FEAT_MIDI_MULTITHREAD
     void AdvancePlayQueue();
 #endif
 	//! Flush current queue to the output
@@ -77,7 +77,7 @@ private:
   std::string deviceName_;
   MidiOutDevice *device_;
 
-#ifdef _64BIT
+#ifdef _FEAT_MIDI_MULTITHREAD
   moodycamel::ConcurrentQueue<MidiMessage> midiQueue_;
 #else
   T_SimpleList<MidiMessage> *queues_[MIDI_MAX_BUFFERS];

@@ -49,6 +49,7 @@
         Update to github actions checkout@v4.1.7 (#136)
 
     Fixes:
+    Fix audio randomly dying (#194)
     Bug in chainview: column warping (#134)
     Jumping below lowest row would cause infinite loop
     Jumping from row 0 was not possible in chainview
@@ -64,6 +65,7 @@
     Restore 32bit linux config
 
     Crash when nudging below 0 BPM (shoutout @merumerutho) https://github.com/djdiskmachine/LittleGPTracker/issues/127
+    Fixed Garlic docker being outdated (#194)
 
 
 1.4.2
