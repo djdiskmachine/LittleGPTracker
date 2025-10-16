@@ -263,51 +263,31 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			DoModal(mb,PurgeCallback) ;
 			break ;
 		}
-		case ACTION_SAVE:
-			if (!player->IsRunning()) {
-				PersistencyService *service=PersistencyService::GetInstance() ;
-				service->Save() ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-		case ACTION_SAVE_AS:
-			if (!player->IsRunning()) {
-				PersistencyService *service=PersistencyService::GetInstance() ;
-				service->Save() ;
-				NewProjectDialog *mb=new NewProjectDialog(*this) ;
-				DoModal(mb,SaveAsProjectCallback) ;
-
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-
-		case ACTION_LOAD:
-		{
-			if (!player->IsRunning()) {
-				MessageBox *mb=new MessageBox(*this,"Load song and lose changes ?",MBBF_YES|MBBF_NO) ;
-				DoModal(mb,LoadCallback) ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-		}
-		case ACTION_QUIT:
-		{
-			if (!player->IsRunning()) {
-				MessageBox *mb=new MessageBox(*this,"Quit and lose faith ?",MBBF_YES|MBBF_NO) ;
-				DoModal(mb,QuitCallback) ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Duh ! Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-		}
-		case ACTION_TEMPO_CHANGED:
+        case ACTION_SAVE: {
+            PersistencyService *service = PersistencyService::GetInstance();
+            service->Save();
+            break;
+        }
+        case ACTION_SAVE_AS: {
+            PersistencyService *service = PersistencyService::GetInstance();
+            service->Save();
+            NewProjectDialog *mb = new NewProjectDialog(*this);
+            DoModal(mb, SaveAsProjectCallback);
+            break;
+        }
+        case ACTION_LOAD: {
+            MessageBox *mb = new MessageBox(
+                *this, "Load song and lose changes ?", MBBF_YES | MBBF_NO);
+            DoModal(mb, LoadCallback);
+            break;
+        }
+        case ACTION_QUIT: {
+            MessageBox *mb = new MessageBox(*this, "Quit and lose faith ?",
+                                            MBBF_YES | MBBF_NO);
+            DoModal(mb, QuitCallback);
+            break;
+        }
+        case ACTION_TEMPO_CHANGED:
 			break ;
 		default:
 			NInvalid ;
