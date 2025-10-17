@@ -1,0 +1,7 @@
+FFMPEG_INCL=  libavformat \
+              libavfilter \
+              libavcodec  \
+              libavutil   \
+
+FFMPEG_CFLAGS := $(shell pkg-config --cflags $(FFMPEG_INCL))
+FFMPEG_LIBS := $(shell pkg-config --libs $(FFMPEG_INCL))
