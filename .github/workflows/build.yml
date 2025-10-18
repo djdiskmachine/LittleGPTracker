@@ -14,7 +14,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install Pillow
-          choco install -y directx-sdk zip --no-progress --yes
+          choco install -y directx-sdk zip ffmpeg-shared --no-progress --yes
         shell: powershell
 
       - name: Download and Extract VCE9 release
@@ -151,7 +151,7 @@ jobs:
       - name: Install required libraries
         run: |
           sudo apt update
-          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow
+          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow libavcodec-dev libavformat-dev libavfilter-dev libavutil-dev libswresample-dev
 
       - name: Build X64
         working-directory: projects
@@ -319,7 +319,7 @@ jobs:
             wget -qO ./debian-archive-keyring.deb "$BASE$LATEST"
             dpkg -i ./debian-archive-keyring.deb
 
-            apt update && apt install -y python3 python3-pillow
+            apt update && apt install -y python3 python3-pillow 
             cd projects
             make PLATFORM=GARLIC
           '
@@ -439,6 +439,7 @@ jobs:
           wget https://www.libsdl.org/release/SDL2-2.0.14.dmg
           hdiutil attach SDL2-2.0.14.dmg
           sudo cp -R /Volumes/SDL2/SDL2.framework /Library/Frameworks/
+          brew install ffmpeg
 
       - name: Build Xcode project
         run: |

@@ -24,11 +24,13 @@ TOOLPATH=$(DEVKIT)/usr/bin
 SDL_CFLAGS  := -I/$(SYSROOT)/include -D_REENTRANT
 SDL_LIBS    := -lSDL2
 
+-include $(PWD)/rules_libav
+
 OPT_FLAGS = -O3 -mlittle-endian -mabi=lp64 -march=armv8-a+crypto+crc -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -dumpbase
-INCLUDES = -Iinclude $(SDL_CFLAGS) -I$(DEVKIT)/$(TRIPLET)/include -I$(DEVKIT)/$(TRIPLET)/include/c++/11/ -I$(PWD)/../sources
+INCLUDES = -Iinclude $(SDL_CFLAGS) $(FFMPEG_CFLAGS) -I$(DEVKIT)/$(TRIPLET)/include -I$(DEVKIT)/$(TRIPLET)/include/c++/11/ -I$(PWD)/../sources
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
-LIBS	:= -Wl,-rpath-link,$(DEVKIT)/$(TRIPLET)/lib -Wl,-rpath-link,$(DEVKIT)/$(TRIPLET)/lib/pulseaudio $(SDL_LIBS) -lpthread
+LIBS	:= -Wl,-rpath-link,$(DEVKIT)/$(TRIPLET)/lib -Wl,-rpath-link,$(DEVKIT)/$(TRIPLET)/lib/pulseaudio $(SDL_LIBS) $(FFMPEG_LIBS) -lpthread
 OUTPUT = ../lgpt-rg35xxplus
 EXTENSION:= elf
 

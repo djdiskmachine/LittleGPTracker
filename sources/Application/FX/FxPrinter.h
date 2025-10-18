@@ -5,10 +5,12 @@
 #include "Application/Instruments/SampleInstrument.h"
 #include "Application/Instruments/SamplePool.h"
 #include "Application/Views/ViewData.h"
-#include "LibavProcessor.h"
 #include "System/FileSystem/FileSystem.h"
 #include <sstream>
 #include <string>
+#ifdef FFMPEG_ENABLED
+#include "LibavProcessor.h"
+#endif
 
 class FxPrinter {
 public:
