@@ -24,7 +24,7 @@ static AVCodecContext *enc_ctx = NULL;
 
 static int open_input_file(const char *filename)
 {
-    const AVCodec *dec;
+    AVCodec *dec;
     AVCodecContext *dec_ctx;
     AVStream *stream;
     int ret;
@@ -63,7 +63,12 @@ static int open_input_file(const char *filename)
     stream->codecpar->codec_id = dec_ctx->codec_id;
     stream->codecpar->sample_rate = dec_ctx->sample_rate;
     stream->codecpar->format = dec_ctx->sample_fmt;
+#ifdef FFMPEG_LEGACY_API
+    stream->codecpar->channels = dec_ctx->channels;
+    stream->codecpar->channel_layout = dec_ctx->channel_layout;
+#else
     av_channel_layout_copy(&stream->codecpar->ch_layout, &dec_ctx->ch_layout);
+#endif
 
     avcodec_free_context(&dec_ctx);
 
@@ -72,7 +77,7 @@ static int open_input_file(const char *filename)
 
 static int open_ir_file(const char *filename)
 {
-    const AVCodec *dec;
+    AVCodec *dec;
     AVCodecContext *dec_ctx;
     AVStream *stream;
     int ret;
@@ -111,7 +116,12 @@ static int open_ir_file(const char *filename)
     stream->codecpar->codec_id = dec_ctx->codec_id;
     stream->codecpar->sample_rate = dec_ctx->sample_rate;
     stream->codecpar->format = dec_ctx->sample_fmt;
+#ifdef FFMPEG_LEGACY_API
+    stream->codecpar->channels = dec_ctx->channels;
+    stream->codecpar->channel_layout = dec_ctx->channel_layout;
+#else
     av_channel_layout_copy(&stream->codecpar->ch_layout, &dec_ctx->ch_layout);
+#endif
 
     avcodec_free_context(&dec_ctx);
 
@@ -155,6 +165,20 @@ static int open_output_file(const char *filename)
     enc_ctx->sample_rate = 44100;
     
     /* Set channel layout based on IR format */
+#ifdef FFMPEG_LEGACY_API
+    int ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
+    if (ir_channels == 0) {
+        ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
+    }
+    
+    if (ir_channels == 1) {
+        enc_ctx->channels = 1;
+        enc_ctx->channel_layout = AV_CH_LAYOUT_MONO;
+    } else {
+        enc_ctx->channels = 2;
+        enc_ctx->channel_layout = AV_CH_LAYOUT_STEREO;
+    }
+#else
     int ir_channels = ir_fmt_ctx->streams[0]->codecpar->ch_layout.nb_channels;
     if (ir_channels == 0) {
         ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
@@ -165,7 +189,8 @@ static int open_output_file(const char *filename)
     } else {
         av_channel_layout_default(&enc_ctx->ch_layout, 2);  /* Stereo */
     }
-    
+#endif
+
     /* Use S16 format to match encoder */
     enc_ctx->sample_fmt = AV_SAMPLE_FMT_S16;
 
@@ -220,11 +245,18 @@ static int init_filters(int ir_wet, int ir_pad)
     int target_sample_rate = 44100;
     
     /* Determine output channel layout based on IR format */
+#ifdef FFMPEG_LEGACY_API
+    int ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
+    if (ir_channels == 0) {
+        ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
+    }
+#else
     int ir_channels = ir_fmt_ctx->streams[0]->codecpar->ch_layout.nb_channels;
     if (ir_channels == 0) {
         ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
     }
-    
+#endif
+
     if (ir_channels == 1) {
         strcpy(target_layout, "mono");  /* If IR is mono, output mono for simplicity */
     } else {
@@ -255,6 +287,15 @@ static int init_filters(int ir_wet, int ir_pad)
     /* Set the filter options through the AVOptions API. */
     char ch_layout_str[64];
     // Use the actual channel layout from the input file
+#ifdef FFMPEG_LEGACY_API
+    if (ifmt_ctx->streams[0]->codecpar->channels == 1) {
+        strcpy(ch_layout_str, "mono");
+    } else if (ifmt_ctx->streams[0]->codecpar->channels == 2) {
+        strcpy(ch_layout_str, "stereo");
+    } else {
+        snprintf(ch_layout_str, sizeof(ch_layout_str), "%dc", ifmt_ctx->streams[0]->codecpar->channels);
+    }
+#else
     if (ifmt_ctx->streams[0]->codecpar->ch_layout.nb_channels == 0) {
         // If channel layout is unknown, default based on channel count
         if (ifmt_ctx->streams[0]->codecpar->channels == 1) {
@@ -265,8 +306,10 @@ static int init_filters(int ir_wet, int ir_pad)
             snprintf(ch_layout_str, sizeof(ch_layout_str), "%dc", ifmt_ctx->streams[0]->codecpar->channels);
         }
     } else {
-        av_channel_layout_describe(&ifmt_ctx->streams[0]->codecpar->ch_layout, ch_layout_str, sizeof(ch_layout_str));
+        av_channel_layout_describe(&buffersink_ctx->inputs[0]->ch_layout,
+                                   ch_layout_str, sizeof(ch_layout_str));
     }
+#endif
     snprintf(args, sizeof(args),
              "time_base=%d/%d:sample_rate=%d:sample_fmt=%s:channel_layout=%s",
              time_base.num, time_base.den, ifmt_ctx->streams[0]->codecpar->sample_rate,
@@ -288,6 +331,15 @@ static int init_filters(int ir_wet, int ir_pad)
 
     char ir_ch_layout_str[64];
     // Use the actual channel layout from the IR file
+#ifdef FFMPEG_LEGACY_API
+    if (ir_fmt_ctx->streams[0]->codecpar->channels == 1) {
+        strcpy(ir_ch_layout_str, "mono");
+    } else if (ir_fmt_ctx->streams[0]->codecpar->channels == 2) {
+        strcpy(ir_ch_layout_str, "stereo");
+    } else {
+        snprintf(ir_ch_layout_str, sizeof(ir_ch_layout_str), "%dc", ir_fmt_ctx->streams[0]->codecpar->channels);
+    }
+#else
     if (ir_fmt_ctx->streams[0]->codecpar->ch_layout.nb_channels == 0) {
         // If channel layout is unknown, default based on channel count
         if (ir_fmt_ctx->streams[0]->codecpar->channels == 1) {
@@ -298,8 +350,10 @@ static int init_filters(int ir_wet, int ir_pad)
             snprintf(ir_ch_layout_str, sizeof(ir_ch_layout_str), "%dc", ir_fmt_ctx->streams[0]->codecpar->channels);
         }
     } else {
-        av_channel_layout_describe(&ir_fmt_ctx->streams[0]->codecpar->ch_layout, ir_ch_layout_str, sizeof(ir_ch_layout_str));
+        av_channel_layout_describe(&buffersink_ctx->inputs[0]->ch_layout,
+                                   ir_ch_layout_str, sizeof(ir_ch_layout_str));
     }
+#endif
     snprintf(ir_args, sizeof(ir_args),
              "time_base=%d/%d:sample_rate=%d:sample_fmt=%s:channel_layout=%s",
              ir_time_base.num, ir_time_base.den, ir_fmt_ctx->streams[0]->codecpar->sample_rate,
@@ -492,8 +546,14 @@ static int filter_encode_write_frame(AVFrame *frame, AVFrame *ir_frame, unsigned
             break;
         }
 
-        printf("Got filtered frame: %d samples, %d channels, %d Hz\n", 
-               filt_frame->nb_samples, filt_frame->ch_layout.nb_channels, filt_frame->sample_rate);
+        printf("Got filtered frame: %d samples, %d channels, %d Hz\n",
+#ifdef FFMPEG_LEGACY_API
+               filt_frame->nb_samples, filt_frame->channels,
+               filt_frame->sample_rate);
+#else
+               filt_frame->nb_samples, filt_frame->ch_layout.nb_channels,
+               filt_frame->sample_rate);
+#endif
 
         ret = encode_write_frame(filt_frame, stream_index, NULL);
         av_frame_free(&filt_frame);
@@ -532,8 +592,9 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
     }
 
     /* Set up decoder contexts */
-    const AVCodec *dec = avcodec_find_decoder(ifmt_ctx->streams[0]->codecpar->codec_id);
-    const AVCodec *ir_dec = avcodec_find_decoder(ir_fmt_ctx->streams[0]->codecpar->codec_id);
+    AVCodec *dec =
+        avcodec_find_decoder(ifmt_ctx->streams[0]->codecpar->codec_id);
+    AVCodec *ir_dec = avcodec_find_decoder(ir_fmt_ctx->streams[0]->codecpar->codec_id);
     
     dec_ctx = avcodec_alloc_context3(dec);
     ir_dec_ctx = avcodec_alloc_context3(ir_dec);
