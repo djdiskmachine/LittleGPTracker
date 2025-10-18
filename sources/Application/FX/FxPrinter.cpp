@@ -73,5 +73,9 @@ bool FxPrinter::Run() {
         notificationResult_ = "Failed, check lgpt.log";
         return false;
     }
+#else
+    Trace::Log("PRINTFX", "Failed");
+    notificationResult_ = "Failed, check lgpt.log";
+    return false;
 #endif
 }
