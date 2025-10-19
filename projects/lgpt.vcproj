@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="../sources/Externals;../sources/"
+				AdditionalIncludeDirectories="../sources/Externals;../sources/;C:\vcpkg\installed\x86-windows-static\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WINDOWS_DS__;__WINDOWS_ASIO__;_CRT_SECURE_NO_WARNINGS;__WINDOWS_MM__;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;FFMPEG_ENABLED;FFMPEG_LEGACY_API"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -125,7 +125,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="../sources/Externals;../sources/"
+				AdditionalIncludeDirectories="../sources/Externals;../sources/;C:\vcpkg\installed\x86-windows-static\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WINDOWS_DS__;__WINDOWS_ASIO__;__WINDOWS_MM__;_CRT_SECURE_NO_WARNINGS;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;FFMPEG_ENABLED;FFMPEG_LEGACY_API"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
