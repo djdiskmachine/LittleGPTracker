@@ -10,7 +10,8 @@ DEFINES := \
 	-D_NDEBUG \
 	-DHAVE_STDINT_H \
 	-D_NO_JACK_ \
-	-DFFMPEG_ENABLED
+	-DFFMPEG_ENABLED \
+	-DFFMPEG_LEGACY_API
 
 
 # compiled using the https://github.com/shauninman/union-rg35xxplus-toolchain

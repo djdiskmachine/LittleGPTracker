@@ -6,7 +6,6 @@ DEFINES := \
 	-DCPP_MEMORY \
 	-DHAVE_STDINT_H \
 	-D_NDEBUG \
-	-DFFMPEG_ENABLED \
 	-D_NO_JACK_ 
 
 DEVKIT = /opt/miyoomini-toolchain/
@@ -19,17 +18,15 @@ SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
-INCLUDES = -Iinclude $(SDL_CFLAGS) $(FFMPEG_CFLAGS) -I$(PWD)/../sources
+INCLUDES = -Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources
 OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7ve+simd
-
--include $(PWD)/rules_libav
 
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	arm-linux-gnueabihf-
 
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(SDL_CFLAGS) $(OPT_FLAGS) -Wall  
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
-LIBS	:=  -lSDL -lSDL_mixer -lpthread $(SDL_LIBS) $(FFMPEG_LIBS)
+LIBS	:=  -lSDL -lSDL_mixer -lpthread $(SDL_LIBS)
 LIBDIRS	:=	$(DEKVIT)/usr/lib
 LIBDIRS	+=	$(DEKVIT)/usr/include
 OUTPUT = ../lgpt-miyoo
