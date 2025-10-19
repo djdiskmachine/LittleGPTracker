@@ -358,7 +358,7 @@ jobs:
       - name: Install Garlic Plus toolchain
         run: |
           sudo apt update && sudo apt install -y python3-pillow
-          wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/simotek/union-rg35xxplus-toolchain/releases/download/20240830/rg35xxplus-toolchain.tar.xz
+          wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/djdiskmachine/union-rg35xxplus-toolchain/releases/download/1.1/rg35xxplus-toolchain.tar.gz
           mkdir /opt/rg35xxplus-toolchain
           tar -xvf /tmp/rg35xxplus-toolchain.tar.xz -C /opt/rg35xxplus-toolchain  --strip-components=1
 

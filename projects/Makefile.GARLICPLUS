@@ -25,7 +25,16 @@ SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
--include $(PWD)/rules_libav
+FFMPEG_INCL=  libavformat \
+              libavfilter \
+              libavcodec  \
+              libavutil   \
+
+FFMPEG_CFLAGS := $(shell $(DEVKIT)/usr/bin/pkg-config --cflags $(FFMPEG_INCL))
+FFMPEG_LIBS := $(shell $(DEVKIT)/usr/bin/pkg-config --libs $(FFMPEG_INCL))
+
+$(info FFMPEG_CFLAGS: $(FFMPEG_CFLAGS))
+$(info FFMPEG_LIBS: $(FFMPEG_LIBS))
 
 # optimization
 OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a53 -mfpu=neon-vfpv4 -mfloat-abi=hard
