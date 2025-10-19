@@ -63,6 +63,13 @@ jobs:
         run: choco install -y directx-sdk zip ffmpeg-shared --no-progress --yes
         shell: powershell
 
+      - name: Install FFmpeg development libraries via vcpkg
+        run: |
+          git clone https://github.com/Microsoft/vcpkg.git C:\vcpkg
+          C:\vcpkg\bootstrap-vcpkg.bat
+          C:\vcpkg\vcpkg.exe install ffmpeg[avcodec,avformat,avfilter,avutil]:x86-windows-static
+        shell: cmd
+
       - name: Download and Extract VCE9 release
         run: |
           $url = "https://github.com/djdiskmachine/VCE9/releases/download/v1.0.0/Microsoft.Visual.Studio.9.0.zip"
