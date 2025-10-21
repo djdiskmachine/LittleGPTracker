@@ -117,11 +117,11 @@ All colors are defined by a set of hexadecimal triplet for RGB. Here's an exampl
 
 ```xml
 <CONFIG>
-    <BACKGROUND   value = "505444" />
-    <FOREGROUND   value = "FFFFFF" /> <!-- Text and cursor in cursor -->
+    <BACKGROUND   value = "1D0A1F" />
+    <FOREGROUND   value = "F5EBFF" /> <!-- Text and cursor in cursor -->
     <BORDER       value = "FF00DD" /> <!-- Dialog Border -->
-    <HICOLOR1     value = "F41B38" /> <!-- Highlight color 1 -->
-    <HICOLOR2     value = "FF0000" /> <!-- Highlight color 2 -->
+    <HICOLOR1     value = "B750D1" /> <!-- Highlight color 1 -->
+    <HICOLOR2     value = "DB33DB" /> <!-- Highlight color 2 -->
     <CURSORCOLOR  value = "FF00DD" /> <!-- Cursor color -->
     <PLAYCOLOR    value = "FF00DD" /> <!-- Play indicator color -->
     <MUTECOLOR    value = "FFFFFF" /> <!-- Mute indicator color -->

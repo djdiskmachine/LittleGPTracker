@@ -312,11 +312,17 @@ jobs:
         run: |
           ln -s /home/runner/work/LittleGPTracker/LittleGPTracker workspace
           docker run -d --name rg35xx-container -v "$(pwd)/workspace:/root/workspace" aveferrum/rg35xx-toolchain sleep infinity
-          docker exec rg35xx-container bash -c "
+          docker exec rg35xx-container bash -c '
+            # Workaround for eol-ed docker debian image
+            BASE="https://deb.debian.org/debian/pool/main/d/debian-archive-keyring/"
+            LATEST="debian-archive-keyring_2025.1_all.deb"
+            wget -qO ./debian-archive-keyring.deb "$BASE$LATEST"
+            dpkg -i ./debian-archive-keyring.deb
+
             apt update && apt install -y python3 python3-pillow
             cd projects
             make PLATFORM=GARLIC
-          "
+          '
           sudo chmod -R 777 ./workspace/projects
           sudo chown -R root:root ./workspace/projects
 

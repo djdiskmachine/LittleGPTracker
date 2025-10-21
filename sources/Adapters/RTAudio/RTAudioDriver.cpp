@@ -146,9 +146,11 @@ bool RTAudioDriver::StartDriver()
 
 	for (int i=0;i<settings_.preBufferCount_;i++)
   {
-		AddBuffer((short *)miniBlank_,fragSize_/4);
+        AddBuffer((short *)miniBlank_, fragSize_ / 4);
+#ifndef _FEAT_MIDI_MULTITHREAD
 		MidiService::GetInstance()->AdvancePlayQueue();
-	}
+#endif
+    }
 
 	if (settings_.preBufferCount_==0)
   {

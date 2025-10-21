@@ -7,6 +7,7 @@
 #include "BaseClasses/UIActionField.h"
 #include "BaseClasses/UIField.h"
 #include "BaseClasses/UIIntVarField.h"
+#include "BaseClasses/UIStaticField.h"
 #include "BaseClasses/UITempoField.h"
 #include "Services/Midi/MidiService.h"
 #include "System/System/System.h"
@@ -102,41 +103,47 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	GUIPoint position=GetAnchor() ;
 	
 	Variable *v=project_->FindVariable(VAR_TEMPO) ;
-	UITempoField *f=new UITempoField(ACTION_TEMPO_CHANGED,position,*v,"tempo: %d [%2.2x]  ",60,400,1,10) ;
-	T_SimpleList<UIField>::Insert(f) ;
+    UITempoField *f = new UITempoField(ACTION_TEMPO_CHANGED, position, *v,
+                                       "Tempo: %d [%2.2x]  ", 60, 400, 1, 10);
+    T_SimpleList<UIField>::Insert(f) ;
 	f->AddObserver(*this) ;
 	tempoField_=f ;
 
-	v=project_->FindVariable(VAR_MASTERVOL) ;
-	position._y+=1 ;
-    UIIntVarField *field =
-        new UIIntVarField(position, *v, "master: %d", 10, 200, 1, 10);
-    T_SimpleList<UIField>::Insert(field) ;
-
-    v = project_->FindVariable(VAR_SOFTCLIP);
+    v = project_->FindVariable(VAR_MASTERVOL);
     position._y += 1;
-    field = new UIIntVarField(position, *v, "soft clip: %s", 0, 4, 1, 3);
+    UIIntVarField *field =
+        new UIIntVarField(position, *v, "Master: %d", 10, 100, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
-    v = project_->FindVariable(VAR_CLIP_ATTENUATION);
-    position._x += 18;
-    field = new UIIntVarField(position, *v, "post: %d", 1, 100, 1, 10);
+    v = project_->FindVariable(VAR_PREGAIN);
+    position._y += 2;
+    field = new UIIntVarField(position, *v, "Drive: %d", 10, 200, 1, 10);
     T_SimpleList<UIField>::Insert(field);
-    position._x -= 18;
+
+    position._y += 1;
+    v = project_->FindVariable(VAR_SOFTCLIP);
+    field = new UIIntVarField(position, *v, "Type: %s", 0, 4, 1, 4);
+    T_SimpleList<UIField>::Insert(field);
+
+    v = project_->FindVariable(VAR_SOFTCLIP_GAIN);
+    position._x += 13;
+    field = new UIIntVarField(position, *v, "%s", 0, 1, 1, 1);
+    T_SimpleList<UIField>::Insert(field);
+    position._x -= 13;
 
     v = project_->FindVariable(VAR_TRANSPOSE);
-    position._y+=2 ;
-	UIIntVarField *f2=new UIIntVarField(position,*v,"transpose: %3.2d",-48,48,0x1,0xC) ;
+    position._y += 2;
+    UIIntVarField *f2=new UIIntVarField(position,*v,"Transpose: %3.2d",-48,48,0x1,0xC) ;
 	T_SimpleList<UIField>::Insert(f2) ;
-	
-	v = project_->FindVariable(VAR_SCALE);
+
+    v = project_->FindVariable(VAR_SCALE);
 	// if scale name is not found, set the default chromatic scale
 	if (v->GetInt() < 0) {
 		v->SetInt(0);
     }
     position._y += 1;
     field =
-        new UIIntVarField(position, *v, "scale: %s", 0, scaleCount - 1, 1, 10);
+        new UIIntVarField(position, *v, "Scale: %s", 0, scaleCount - 1, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
     position._y += 2;
@@ -205,8 +212,8 @@ void ProjectView::ProcessButtonMask(unsigned short mask,bool pressed) {
 } ;
 
 void ProjectView::DrawView() {
-   
-	Clear() ;
+
+    Clear() ;
 
 	GUITextProperties props ;
 	GUIPoint pos=GetTitlePosition() ;
@@ -214,10 +221,11 @@ void ProjectView::DrawView() {
 // Draw title
 
 	char projectString[80] ;
-	sprintf(projectString,"Project - Build %s.%s.%s",PROJECT_NUMBER,PROJECT_RELEASE,BUILD_COUNT) ;
+    sprintf(projectString, "Project (Build %s.%s.%s)", PROJECT_NUMBER,
+            PROJECT_RELEASE, BUILD_COUNT);
 
-	SetColor(CD_NORMAL) ;
-	DrawString(pos._x,pos._y,projectString,props) ;
+    SetColor(CD_NORMAL);
+    DrawString(pos._x,pos._y,projectString,props) ;
 
 	FieldView::Redraw() ;
 	drawMap() ;
@@ -255,51 +263,31 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			DoModal(mb,PurgeCallback) ;
 			break ;
 		}
-		case ACTION_SAVE:
-			if (!player->IsRunning()) {
-				PersistencyService *service=PersistencyService::GetInstance() ;
-				service->Save() ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-		case ACTION_SAVE_AS:
-			if (!player->IsRunning()) {
-				PersistencyService *service=PersistencyService::GetInstance() ;
-				service->Save() ;
-				NewProjectDialog *mb=new NewProjectDialog(*this) ;
-				DoModal(mb,SaveAsProjectCallback) ;
-
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-
-		case ACTION_LOAD:
-		{
-			if (!player->IsRunning()) {
-				MessageBox *mb=new MessageBox(*this,"Load song and lose changes ?",MBBF_YES|MBBF_NO) ;
-				DoModal(mb,LoadCallback) ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-		}
-		case ACTION_QUIT:
-		{
-			if (!player->IsRunning()) {
-				MessageBox *mb=new MessageBox(*this,"Quit and lose faith ?",MBBF_YES|MBBF_NO) ;
-				DoModal(mb,QuitCallback) ;
-			} else {
-				MessageBox *mb=new MessageBox(*this,"Duh ! Not while playing",MBBF_OK) ;
-				DoModal(mb) ;
-			}
-			break ;
-		}
-		case ACTION_TEMPO_CHANGED:
+        case ACTION_SAVE: {
+            PersistencyService *service = PersistencyService::GetInstance();
+            service->Save();
+            break;
+        }
+        case ACTION_SAVE_AS: {
+            PersistencyService *service = PersistencyService::GetInstance();
+            service->Save();
+            NewProjectDialog *mb = new NewProjectDialog(*this);
+            DoModal(mb, SaveAsProjectCallback);
+            break;
+        }
+        case ACTION_LOAD: {
+            MessageBox *mb = new MessageBox(
+                *this, "Load song and lose changes ?", MBBF_YES | MBBF_NO);
+            DoModal(mb, LoadCallback);
+            break;
+        }
+        case ACTION_QUIT: {
+            MessageBox *mb = new MessageBox(*this, "Quit and lose faith ?",
+                                            MBBF_YES | MBBF_NO);
+            DoModal(mb, QuitCallback);
+            break;
+        }
+        case ACTION_TEMPO_CHANGED:
 			break ;
 		default:
 			NInvalid ;

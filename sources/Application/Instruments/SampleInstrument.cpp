@@ -1395,11 +1395,20 @@ void SampleInstrument::ProcessCommand(int channel,FourCC cc,ushort value) {
 	} ;
 } ;
 
-const char *SampleInstrument::GetName() {   
+const char *SampleInstrument::GetName() {
+    Variable *v = FindVariable(SIP_SAMPLE);
+    const char *src = v->GetString();
 
-    Variable *v=FindVariable(SIP_SAMPLE) ;
-    return v->GetString() ;
-} ;
+    // Shorten names if they're too long to display
+    if (strlen(src) > Variable::MAX_NAME_LENGTH) {
+	    static char shortName[Variable::MAX_NAME_LENGTH + 1];
+        strncpy(shortName, src, Variable::MAX_NAME_LENGTH);
+        shortName[Variable::MAX_NAME_LENGTH] = '\0';
+        return shortName;
+    }
+
+    return src;
+}
 
 void SampleInstrument::Purge() {
 	IteratorPtr<Variable> it(GetIterator()) ;

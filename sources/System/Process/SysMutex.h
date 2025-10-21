@@ -21,6 +21,9 @@ public:
 	SysMutex() ;
 	~SysMutex() ;
 	bool Lock() ;
+    // Returns True if lock was succesfully taken
+    // Only on SDL2, SDL1 just returns
+    bool TryLock();
 	void Unlock() ;
 private:
 	SDL_mutex *mutex_ ;

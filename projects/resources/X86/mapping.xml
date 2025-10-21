@@ -14,14 +14,17 @@
         <MAP src="key:0:q" dst="/event/lshoulder" />
         <MAP src="key:0:w" dst="/event/rshoulder" />
 
+        <!-- commented-out due to double-mapping causing issues
         <MAP src="key:0:up" dst="/event/up" />
         <MAP src="key:0:down" dst="/event/down" />
         <MAP src="key:0:left" dst="/event/left" />
         <MAP src="key:0:right" dst="/event/right" />
+        -->
+
 
         <MAP src="key:0:a" dst="/event/b" />
         <MAP src="key:0:s" dst="/event/a" />
-        <MAP src="key:0:space" dst="/event/space" />
+        <MAP src="key:0:space" dst="/event/start" />
 <!--
     EXAMPLE
     maps the button "8" to left shoulder
