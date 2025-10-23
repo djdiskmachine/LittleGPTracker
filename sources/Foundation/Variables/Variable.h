@@ -45,6 +45,7 @@ public:
   int GetListSize();
   char **GetListPointer();
   void Reset();
+  static const int MAX_NAME_LENGTH = 25;
 
 protected:
 	virtual void onChange() {} ;
@@ -81,12 +82,9 @@ protected:
     std::string stringValue_;
     std::string stringDefaultValue_ ;
 
-	int listSize_ ;
-	
-	char string_[40] ;
+    int listSize_;
 
-private:
-    static const int MAX_NAME_LENGTH = 25;
+    char string_[40];
 } ;
 #endif
 
