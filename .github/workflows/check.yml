@@ -370,7 +370,7 @@ jobs:
 
       - name: Build Miyoo Mini
         working-directory: projects
-      run: |
+        run: |
           make PLATFORM=MIYOO
 
       - name: Package build
