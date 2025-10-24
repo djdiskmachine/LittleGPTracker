@@ -6,6 +6,8 @@ DEFINES := \
 	-DCPP_MEMORY \
 	-D_NDEBUG \
 	-DHAVE_STDINT_H \
+	-DFFMPEG_ENABLED \
+	-DFFMPEG_LEGACY_API \
 	-D_NO_JACK_  
 
 DEVKIT = /opt/miyoo/
@@ -19,13 +21,15 @@ SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
+-include $(PWD)/rules_libav
+
 # optimization
 OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a53 -mfpu=neon-vfpv4 -mfloat-abi=hard
 PREFIX	:=	arm-linux-gnueabihf-
-INCLUDES:=	-Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources 
+INCLUDES:=	-Iinclude $(SDL_CFLAGS) $(FFMPEG_CFLAGS) -I$(PWD)/../sources 
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
-LIBS	:=	$(SDL_LIBS) -lpthread
+LIBS	:=	$(SDL_LIBS) $(FFMPEG_LIBS) -lpthread
 LIBDIRS	:=	$(DEKVIT)/usr/lib
 LIBDIRS	+=	$(DEKVIT)/usr/include
 OUTPUT := ../lgpt-garlic
