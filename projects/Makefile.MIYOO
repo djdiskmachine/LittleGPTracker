@@ -19,10 +19,20 @@ SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
+FFMPEG_INCL=  libavformat \
+              libavfilter \
+              libavcodec  \
+              libavutil   \
+
+LIBAV_PATH := arm-linux-gnueabihf/libc/usr/include
+FFMPEG_CFLAGS := -I$(DEVKIT)/$(LIBAV_PATH)/libavformat -I$(DEVKIT)/$(LIBAV_PATH)/libavfilter -I$(DEVKIT)/$(LIBAV_PATH)/libavcodec -I$(SYSROOT)/$(LIBAV_PATH)/libavutil
+FFMPEG_LIBS := -lavformat -lavfilter -lavcodec -lavutil
+
+$(info FFMPEG_CFLAGS: $(FFMPEG_CFLAGS))
+$(info FFMPEG_LIBS: $(FFMPEG_LIBS))
+
 INCLUDES = -Iinclude $(SDL_CFLAGS) $(FFMPEG_CFLAGS) -I$(PWD)/../sources
 OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7ve+simd
-
--include $(PWD)/rules_libav
 
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	arm-linux-gnueabihf-
