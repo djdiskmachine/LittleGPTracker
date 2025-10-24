@@ -18,6 +18,7 @@
 #define ACTION_QUIT             MAKE_FOURCC('Q','U','I','T')
 #define ACTION_PURGE_INSTRUMENT MAKE_FOURCC('P','R','G','I')
 #define ACTION_TEMPO_CHANGED    MAKE_FOURCC('T','E','M','P')
+#define ACTION_DELETE MAKE_FOURCC('D', 'E', 'S', 'O')
 
 static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 
@@ -91,6 +92,12 @@ static void QuitCallback(View &v,ModalView &dialog) {
 static void PurgeCallback(View &v,ModalView &dialog) {
 	((ProjectView &)v).OnPurgeInstruments(dialog.GetReturnCode()==MBL_YES) ;
 } ;
+
+static void DeleteProjectCallback(View &v, ModalView &dialog) {
+    if (dialog.GetReturnCode() == MBL_YES) {
+        ((ProjectView &)v).OnDelete();
+    }
+};
 
 ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
@@ -166,6 +173,11 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
 
+    position._y += 2;
+    a1 = new UIActionField("Delete Song", ACTION_DELETE, position);
+    a1->AddObserver(*this);
+    T_SimpleList<UIField>::Insert(a1);
+
     v = project_->FindVariable(VAR_MIDIDEVICE);
     NAssert(v);
     position._y += 2;
@@ -177,7 +189,6 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     a1 = new UIActionField("Exit", ACTION_QUIT, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
-
 }
 
 ProjectView::~ProjectView() {
@@ -249,13 +260,15 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 		case ACTION_PURGE:
 			project_->Purge() ;
 			break ;
-		case ACTION_PURGE_INSTRUMENT:
+
+        case ACTION_PURGE_INSTRUMENT:
 		{
 			MessageBox *mb=new MessageBox(*this,"Purge unused samples from disk ?",MBBF_YES|MBBF_NO) ;
 			DoModal(mb,PurgeCallback) ;
 			break ;
 		}
-		case ACTION_SAVE:
+
+        case ACTION_SAVE:
 			if (!player->IsRunning()) {
 				PersistencyService *service=PersistencyService::GetInstance() ;
 				service->Save() ;
@@ -264,14 +277,14 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 				DoModal(mb) ;
 			}
 			break ;
-		case ACTION_SAVE_AS:
+
+        case ACTION_SAVE_AS:
 			if (!player->IsRunning()) {
 				PersistencyService *service=PersistencyService::GetInstance() ;
 				service->Save() ;
 				NewProjectDialog *mb=new NewProjectDialog(*this) ;
-				DoModal(mb,SaveAsProjectCallback) ;
-
-			} else {
+                DoModal(mb, SaveAsProjectCallback);
+            } else {
 				MessageBox *mb=new MessageBox(*this,"Not while playing",MBBF_OK) ;
 				DoModal(mb) ;
 			}
@@ -288,6 +301,22 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			}
 			break ;
 		}
+
+    case ACTION_DELETE:
+      {
+        if (player->IsRunning()) {
+            // Ideally just stop it now
+            MessageBox *mb =
+                new MessageBox(*this, "Not while playing", MBBF_OK);
+            DoModal(mb);
+        } else {
+            MessageBox *mb = new MessageBox(*this, "Delete this song forever?",
+                                            MBBF_YES | MBBF_NO);
+            DoModal(mb, DeleteProjectCallback);
+        }
+        break;
+      }
+
 		case ACTION_QUIT:
 		{
 			if (!player->IsRunning()) {
@@ -299,7 +328,8 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			}
 			break ;
 		}
-		case ACTION_TEMPO_CHANGED:
+
+        case ACTION_TEMPO_CHANGED:
 			break ;
 		default:
 			NInvalid ;
@@ -324,6 +354,12 @@ void ProjectView::OnSaveAsProject(char * data) {
 	SetChanged();
 	NotifyObservers(&ve) ;
 } ;
+
+void ProjectView::OnDelete() {
+    SetChanged();
+    // TODO delete actually
+    // Send ViewEvent
+}
 
 void ProjectView::OnQuit() {
 	ViewEvent ve(VET_QUIT_APP) ;
