@@ -7,6 +7,7 @@ DEFINES := \
 	-DHAVE_STDINT_H \
 	-D_NDEBUG \
 	-DFFMPEG_ENABLED \
+ -DFFMPEG_LEGACY_API \
 	-D_NO_JACK_ 
 
 DEVKIT = /opt/miyoomini-toolchain/
