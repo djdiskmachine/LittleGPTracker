@@ -7,7 +7,7 @@ DEFINES := \
 	-DHAVE_STDINT_H \
 	-D_NDEBUG \
 	-DFFMPEG_ENABLED \
- -DFFMPEG_LEGACY_API \
+ 	-DFFMPEG_LEGACY_API \
 	-D_NO_JACK_ 
 
 DEVKIT = /opt/miyoomini-toolchain/
@@ -20,13 +20,12 @@ SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
-FFMPEG_INCL=  libavformat \
-              libavfilter \
-              libavcodec  \
-              libavutil   \
-
 LIBAV_PATH := arm-linux-gnueabihf/libc/usr/include
-FFMPEG_CFLAGS := -I$(DEVKIT)/$(LIBAV_PATH)/libavformat -I$(DEVKIT)/$(LIBAV_PATH)/libavfilter -I$(DEVKIT)/$(LIBAV_PATH)/libavcodec -I$(SYSROOT)/$(LIBAV_PATH)/libavutil
+FFMPEG_CFLAGS :=  -I$(DEVKIT)/$(LIBAV_PATH)/libavformat \
+				  -I$(DEVKIT)/$(LIBAV_PATH)/libavfilter \
+				  -I$(DEVKIT)/$(LIBAV_PATH)/libavcodec \
+				  -I$(DEVKIT)/$(LIBAV_PATH)/libavutil \
+
 FFMPEG_LIBS := -lavformat -lavfilter -lavcodec -lavutil
 
 $(info FFMPEG_CFLAGS: $(FFMPEG_CFLAGS))
@@ -41,8 +40,8 @@ PREFIX		:=	arm-linux-gnueabihf-
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(SDL_CFLAGS) $(OPT_FLAGS) -Wall  
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
 LIBS	:=  -lSDL -lSDL_mixer -lpthread $(SDL_LIBS) $(FFMPEG_LIBS)
-LIBDIRS	:=	$(DEKVIT)/usr/lib
-LIBDIRS	+=	$(DEKVIT)/usr/include
+LIBDIRS	:=	$(DEVKIT)/usr/lib
+LIBDIRS	+=	$(DEVKIT)/usr/include
 OUTPUT = ../lgpt-miyoo
 EXTENSION:= elf
 

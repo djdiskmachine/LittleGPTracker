@@ -3,7 +3,7 @@ FFMPEG_INCL=  libavformat \
               libavcodec  \
               libavutil   \
 
-# Use SYSROOT for cross-compilation, fallback to system pkg-config for native builds
+$(info SYSROOT: $(SYSROOT))
 ifdef SYSROOT
 FFMPEG_CFLAGS := $(shell $(DEVKIT)/bin/pkg-config --cflags $(FFMPEG_INCL))
 FFMPEG_LIBS := $(shell $(DEVKIT)/bin/pkg-config --libs $(FFMPEG_INCL))

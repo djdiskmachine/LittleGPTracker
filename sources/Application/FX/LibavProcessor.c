@@ -30,19 +30,19 @@ static int open_input_file(const char *filename)
     int ret;
 
     if ((ret = avformat_open_input(&ifmt_ctx, filename, NULL, NULL)) < 0) { 
-        av_log(NULL, AV_LOG_ERROR, "Cannot open input file\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open input file\n");
         return ret;
     }
 
     if ((ret = avformat_find_stream_info(ifmt_ctx, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot find stream information\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find stream information\n");
         return ret;
     }
 
     /* select the audio stream */
     ret = av_find_best_stream(ifmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, &dec, 0);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot find an audio stream in the input file\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find an audio stream in the input file\n");
         return ret;
     }
 
@@ -56,7 +56,7 @@ static int open_input_file(const char *filename)
 
     /* init the audio decoder */
     if ((ret = avcodec_open2(dec_ctx, dec, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot open audio decoder\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open audio decoder\n");
         return ret;
     }
 
@@ -83,19 +83,19 @@ static int open_ir_file(const char *filename)
     int ret;
 
     if ((ret = avformat_open_input(&ir_fmt_ctx, filename, NULL, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot open IR file\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open IR file\n");
         return ret;
     }
 
     if ((ret = avformat_find_stream_info(ir_fmt_ctx, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot find stream information in IR file\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find stream information in IR file\n");
         return ret;
     }
 
     /* select the audio stream */
     ret = av_find_best_stream(ir_fmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, &dec, 0);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot find an audio stream in the IR file\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find an audio stream in the IR file\n");
         return ret;
     }
 
@@ -109,7 +109,7 @@ static int open_ir_file(const char *filename)
 
     /* init the audio decoder */
     if ((ret = avcodec_open2(dec_ctx, dec, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot open IR audio decoder\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open IR audio decoder\n");
         return ret;
     }
 
@@ -137,14 +137,14 @@ static int open_output_file(const char *filename)
 
     avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, filename);
     if (!ofmt_ctx) {
-        av_log(NULL, AV_LOG_ERROR, "Could not create output context\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not create output context\n");
         return AVERROR_UNKNOWN;
     }
 
     in_stream = ifmt_ctx->streams[0];
     out_stream = avformat_new_stream(ofmt_ctx, NULL);
     if (!out_stream) {
-        av_log(NULL, AV_LOG_ERROR, "Failed allocating output stream\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Failed allocating output stream\n");
         return AVERROR_UNKNOWN;
     }
 
@@ -197,12 +197,12 @@ static int open_output_file(const char *filename)
     /* Third parameter can be used to pass settings to encoder */
     ret = avcodec_open2(enc_ctx, encoder, NULL);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot open video encoder for stream\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open video encoder for stream\n");
         return ret;
     }
     ret = avcodec_parameters_from_context(out_stream->codecpar, enc_ctx);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Failed to copy encoder parameters to output stream\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Failed to copy encoder parameters to output stream\n");
         return ret;
     }
 
@@ -214,7 +214,7 @@ static int open_output_file(const char *filename)
     if (!(ofmt_ctx->oformat->flags & AVFMT_NOFILE)) {
         ret = avio_open(&ofmt_ctx->pb, filename, AVIO_FLAG_WRITE);
         if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "Could not open output file '%s'", filename);
+            av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not open output file '%s'", filename);
             return ret;
         }
     }
@@ -222,7 +222,7 @@ static int open_output_file(const char *filename)
     /* init muxer, write output file header */
     ret = avformat_write_header(ofmt_ctx, NULL);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Error occurred when opening output file\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error occurred when opening output file\n");
         return ret;
     }
 
@@ -272,14 +272,14 @@ static int init_filters(int ir_wet, int ir_pad)
     /* buffer audio source: the decoded frames from the decoder will be inserted here. */
     abuffer = avfilter_get_by_name("abuffer");
     if (!abuffer) {
-        av_log(NULL, AV_LOG_ERROR, "Could not find the abuffer filter.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not find the abuffer filter.\n");
         ret = AVERROR_FILTER_NOT_FOUND;
         goto end;
     }
 
     buffersrc_ctx = avfilter_graph_alloc_filter(filter_graph, abuffer, "in");
     if (!buffersrc_ctx) {
-        av_log(NULL, AV_LOG_ERROR, "Could not allocate the abuffer instance.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not allocate the abuffer instance.\n");
         ret = AVERROR(ENOMEM);
         goto end;
     }
@@ -317,14 +317,14 @@ static int init_filters(int ir_wet, int ir_pad)
              ch_layout_str);
     ret = avfilter_init_str(buffersrc_ctx, args);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Could not initialize the abuffer filter.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not initialize the abuffer filter.\n");
         goto end;
     }
 
     /* buffer audio source for IR: the decoded IR frames will be inserted here. */
     ir_buffersrc_ctx = avfilter_graph_alloc_filter(filter_graph, abuffer, "ir_in");
     if (!ir_buffersrc_ctx) {
-        av_log(NULL, AV_LOG_ERROR, "Could not allocate the IR abuffer instance.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not allocate the IR abuffer instance.\n");
         ret = AVERROR(ENOMEM);
         goto end;
     }
@@ -361,21 +361,21 @@ static int init_filters(int ir_wet, int ir_pad)
              ir_ch_layout_str);
     ret = avfilter_init_str(ir_buffersrc_ctx, ir_args);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Could not initialize the IR abuffer filter.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not initialize the IR abuffer filter.\n");
         goto end;
     }
 
     /* buffer audio sink: to terminate the filter chain. */
     abuffersink = avfilter_get_by_name("abuffersink");
     if (!abuffersink) {
-        av_log(NULL, AV_LOG_ERROR, "Could not find the abuffersink filter.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not find the abuffersink filter.\n");
         ret = AVERROR_FILTER_NOT_FOUND;
         goto end;
     }
 
     buffersink_ctx = avfilter_graph_alloc_filter(filter_graph, abuffersink, "out");
     if (!buffersink_ctx) {
-        av_log(NULL, AV_LOG_ERROR, "Could not allocate the abuffersink instance.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not allocate the abuffersink instance.\n");
         ret = AVERROR(ENOMEM);
         goto end;
     }
@@ -384,20 +384,14 @@ static int init_filters(int ir_wet, int ir_pad)
     static const enum AVSampleFormat out_sample_fmts[] = { AV_SAMPLE_FMT_S16, -1 };
     ret = av_opt_set_int_list(buffersink_ctx, "sample_fmts", out_sample_fmts, -1, AV_OPT_SEARCH_CHILDREN);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot set output sample format\n");
-        goto end;
-    }
-    
-    ret = av_opt_set(buffersink_ctx, "ch_layouts", target_layout, AV_OPT_SEARCH_CHILDREN);
-    if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot set output channel layout\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot set output sample format\n");
         goto end;
     }
 
     /* This filter takes no options. */
     ret = avfilter_init_str(buffersink_ctx, NULL);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Could not initialize the abuffersink instance.\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not initialize the abuffersink instance.\n");
         goto end;
     }
 
@@ -514,7 +508,7 @@ static int filter_encode_write_frame(AVFrame *frame, AVFrame *ir_frame, unsigned
     if (frame) {
         ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF);
         if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "Error while feeding the input filtergraph\n");
+            av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the input filtergraph\n");
             return ret;
         }
     }
@@ -522,7 +516,7 @@ static int filter_encode_write_frame(AVFrame *frame, AVFrame *ir_frame, unsigned
     if (ir_frame) {
         ret = av_buffersrc_add_frame_flags(ir_buffersrc_ctx, ir_frame, AV_BUFFERSRC_FLAG_KEEP_REF);
         if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "Error while feeding the IR filtergraph\n");
+            av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the IR filtergraph\n");
             return ret;
         }
     }
@@ -623,7 +617,7 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
 
                 ret = av_buffersrc_add_frame_flags(ir_buffersrc_ctx, ir_frame, AV_BUFFERSRC_FLAG_KEEP_REF);
                 if (ret < 0) {
-                    av_log(NULL, AV_LOG_ERROR, "Error while feeding the IR filtergraph\n");
+                    av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the IR filtergraph\n");
                     goto end;
                 }
                 ir_loaded = 1;
@@ -635,7 +629,7 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
     /* Signal end of IR stream */
     ret = av_buffersrc_add_frame_flags(ir_buffersrc_ctx, NULL, 0);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Error closing IR filtergraph\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error closing IR filtergraph\n");
         goto end;
     }
     
@@ -659,7 +653,7 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
 
                 ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF);
                 if (ret < 0) {
-                    av_log(NULL, AV_LOG_ERROR, "Error while feeding the input filtergraph\n");
+                    av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the input filtergraph\n");
                     goto end;
                 }                
                 /* Pull filtered frames immediately */
@@ -692,21 +686,21 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
     /* flush the filter graph by sending EOF to input sources */
     ret = av_buffersrc_add_frame_flags(buffersrc_ctx, NULL, 0);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Error while closing the input filtergraph\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while closing the input filtergraph\n");
         goto end;
     }
     
     /* Pull any remaining frames from the filter graph */
     ret = filter_encode_write_frame(NULL, NULL, 0);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Flushing filter failed\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Flushing filter failed\n");
         goto end;
     }
 
     /* flush the encoder */
     ret = avcodec_send_frame(enc_ctx, NULL);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Error sending NULL frame to encoder\n");
+        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error sending NULL frame to encoder\n");
         goto end;
     }
     
@@ -718,7 +712,7 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
             break;
         } else if (ret < 0) {
             av_packet_free(&enc_pkt);
-            av_log(NULL, AV_LOG_ERROR, "Error during encoder flush\n");
+            av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error during encoder flush\n");
             goto end;
         }
         
@@ -727,7 +721,7 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
         ret = av_interleaved_write_frame(ofmt_ctx, enc_pkt);
         av_packet_free(&enc_pkt);
         if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "Error writing final packet\n");
+            av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error writing final packet\n");
             goto end;
         }
     }

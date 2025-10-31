@@ -32,7 +32,7 @@ INCLUDES = -I$(PWD)/../sources -Iinclude $(SDL_CFLAGS) $(FFMPEG_CFLAGS)
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) $(SDL_CFLAGS) -Wall -DRS97
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03
 LIBS	:=	$(SDL_LIBS) -lSDL -lSDL_mixer -lasound -lpthread $(FFMPEG_LIBS)
-LIBDIRS	:=	$(DEKVIT)/usr/lib
+LIBDIRS	:=	$(SYSROOT)/usr/lib
 OUTPUT = ../lgpt-bittboy
 EXTENSION:= elf
 
