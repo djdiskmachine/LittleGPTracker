@@ -19,8 +19,8 @@
 #define VAR_SCALE 			MAKE_FOURCC('S', 'C', 'A', 'L')
 
 #define PROJECT_NUMBER "1"
-#define PROJECT_RELEASE "5"
-#define BUILD_COUNT "0-bacon3"
+#define PROJECT_RELEASE "6"
+#define BUILD_COUNT "0-bacon0"
 
 #define MAX_TAP 3
 
