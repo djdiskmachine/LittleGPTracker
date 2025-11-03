@@ -1,11 +1,12 @@
 #include "MixerService.h"
+#include "Application/Audio/DummyAudioOut.h"
+#include "Application/Model/Config.h"
+#include "Application/Model/Mixer.h"
+#include "Application/Model/Project.h"
 #include "Services/Audio/Audio.h"
 #include "Services/Audio/AudioDriver.h"
 #include "Services/Midi/MidiService.h"
 #include "System/Console/Trace.h"
-#include "Application/Model/Config.h"
-#include "Application/Audio/DummyAudioOut.h"
-#include "Application/Model/Mixer.h"
 
 MixerService::MixerService():
 	out_(0),
@@ -60,23 +61,8 @@ bool MixerService::Init() {
 			out_->Insert(master_);
 		}
 
-		switch(mode_) {
-			case MSM_AUDIO:
-				break ;
-			case MSM_FILERT:
-			case MSM_FILE:
-				out_->SetFileRenderer("project:mixdown.wav");
-				break;
-			case MSM_FILESPLITRT:
-			case MSM_FILESPLIT:
-				for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-					char buffer[1024] ;
-					sprintf(buffer,"project:channel%d.wav",i);
-					bus_[i].SetFileRenderer(buffer);
-				}
-				break;
-		}
-		out_->AddObserver(*MidiService::GetInstance());
+        initRendering(mode_);
+        out_->AddObserver(*MidiService::GetInstance());
 	}
 
 	sync_=SDL_CreateMutex();
@@ -89,6 +75,25 @@ bool MixerService::Init() {
 	}
 	return (result);
 };
+
+void MixerService::initRendering(MixerServiceMode mode) {
+    switch(mode) {
+    case MSM_AUDIO:
+        break;
+    case MSM_FILERT:
+    case MSM_FILE:
+        out_->SetFileRenderer("project:mixdown.wav");
+        break;
+    case MSM_FILESPLITRT:
+    case MSM_FILESPLIT:
+        for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+            char buffer[1024];
+            sprintf(buffer, "project:channel%d.wav", i);
+            bus_[i].SetFileRenderer(buffer);
+        }
+        break;
+    }
+}
 
 void MixerService::Close() {
 	if (out_) {
@@ -120,6 +125,8 @@ void MixerService::Close() {
 	SDL_DestroyMutex(sync_) ;
 	sync_=0 ;
 } ;
+
+void MixerService::SetRenderMode(int mode) { mode_ = MixerServiceMode(mode); }
 
 bool MixerService::Start() {
 	MidiService::GetInstance()->Start() ;

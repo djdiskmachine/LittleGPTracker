@@ -17,10 +17,11 @@
 #define VAR_SOFTCLIP_GAIN 	MAKE_FOURCC('S', 'F', 'G', 'N')
 #define VAR_PREGAIN   		MAKE_FOURCC('P', 'R', 'G', 'N')
 #define VAR_SCALE 			MAKE_FOURCC('S', 'C', 'A', 'L')
+#define VAR_RENDER MAKE_FOURCC('R', 'N', 'D', 'R')
 
 #define PROJECT_NUMBER "1"
-#define PROJECT_RELEASE "5"
-#define BUILD_COUNT "0-bacon3"
+#define PROJECT_RELEASE "6"
+#define BUILD_COUNT "0-bacon1"
 
 #define MAX_TAP 3
 
@@ -43,7 +44,7 @@ public:
     int GetSoftclip();
     int GetSoftclipGain();
     int GetPregain();
-
+    int GetRenderMode();
     void Trigger();
 
     // I_Observer
@@ -54,9 +55,10 @@ public:
 	virtual void RestoreContent(TiXmlElement *element);
 
 	void LoadFirstGen(const char *root) ;
+    const unsigned int MAX_RENDER_MODE = 2;
 
-protected:
-	void buildMidiDeviceList() ;
+  protected:
+    void buildMidiDeviceList() ;
 private:
 	InstrumentBank *instrumentBank_ ;
 	char **midiDeviceList_ ;

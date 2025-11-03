@@ -51,6 +51,7 @@ public:
     void SetPregain(int);
     void SetSoftclip(int, int);
     void SetMasterVolume(int);
+    void SetRenderMode(int);
     int GetPlayedBufferPercentage() ;
 	
 	virtual void Execute(FourCC id,float value) ;
@@ -63,11 +64,11 @@ public:
 protected:
 	void toggleRendering(bool enable) ;
 private:
-	AudioOut *out_ ;
-	MixBus master_ ;
-	MixBus bus_[MAX_BUS_COUNT] ;
-	MixerServiceMode mode_ ;
-	SDL_mutex *sync_ ;  
-
+  void initRendering(MixerServiceMode);
+  AudioOut *out_;
+  MixBus master_;
+  MixBus bus_[MAX_BUS_COUNT];
+  MixerServiceMode mode_;
+  SDL_mutex *sync_;
 } ;
 #endif

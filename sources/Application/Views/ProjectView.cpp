@@ -1,4 +1,5 @@
 #include "ProjectView.h"
+#include "Application/Mixer/MixerService.h"
 #include "Application/Model/Scale.h"
 #include "Application/Persistency/PersistencyService.h"
 #include "Application/Views/ModalDialogs/MessageBox.h"
@@ -180,6 +181,12 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
                               MidiService::GetInstance()->Size(), 1, 1);
     T_SimpleList<UIField>::Insert(field);
 
+    v = project_->FindVariable(VAR_RENDER);
+    NAssert(v);
+    position._y += 2;
+	field = new UIIntVarField(position, *v, "Render: %s", 0, project_->MAX_RENDER_MODE, 1, 2);
+    T_SimpleList<UIField>::Insert(field);
+
     position._y += 2;
     a1 = new UIActionField("Exit", ACTION_QUIT, position);
     a1->AddObserver(*this);
@@ -243,7 +250,8 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 	int fourcc=(unsigned int)data ;
 #endif
 
-	UIField *focus=GetFocus() ;
+    MixerService::GetInstance()->SetRenderMode(project_->GetRenderMode());
+    UIField *focus=GetFocus() ;
 	if (fourcc!=ACTION_TEMPO_CHANGED) {
 		focus->ClearFocus() ;
 		focus->Draw(w_) ;
