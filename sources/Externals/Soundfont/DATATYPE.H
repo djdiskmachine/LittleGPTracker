@@ -35,7 +35,9 @@
 ************/
 
 #include <limits.h>
-
+#ifdef _64BIT
+  #include <cstdint>
+#endif
 
 /************
 * Defines
@@ -84,7 +86,11 @@
 * Typedefs
 *************/
 
-typedef char                CHAR;      /*  8 bit signed value          */
+//#ifdef _64BIT
+//  typedef signed char CHAR;      /*  8 bit signed value          */
+//#else
+    typedef char   CHAR;  
+//#endif
 typedef short               SHORT;     /* 16 bit signed value was: INT */
 
 #ifdef EMU_WINDOWS
