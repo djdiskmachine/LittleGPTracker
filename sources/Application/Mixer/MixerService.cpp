@@ -8,46 +8,25 @@
 #include "Services/Midi/MidiService.h"
 #include "System/Console/Trace.h"
 
-MixerService::MixerService():
-	out_(0),
-	sync_(0)
-{
-	mode_=MSM_AUDIO ;
-	const char *render=Config::GetInstance()->GetValue("RENDER") ;
-	if (render) {
-		if (!strcmp(render,"FILERT")) {
-			mode_=MSM_FILERT ;
-		} ;
-		if (!strcmp(render,"FILE")) {
-			mode_=MSM_FILE ;
-		} ;
-		if (!strcmp(render,"FILESPLIT")) {
-			mode_=MSM_FILESPLIT ;
-		} ;
-		if (!strcmp(render,"FILESPLITRT")) {
-			mode_=MSM_FILESPLITRT ;
-		} ;
-	} ;
-} ;
+MixerService::MixerService() : out_(0), sync_(0) { mode_ = MSRM_PLAYBACK; };
 
-MixerService::~MixerService() {
-} ;
+MixerService::~MixerService(){};
 
 /*
  * initializes the mixer service, config changes depending if we're in sequencer or render mode
  */
 bool MixerService::Init() {
-	// create the output depending on rendering mode
-	out_ = 0;
+    // create the output depending on rendering mode
+    out_ = 0;
 	switch (mode_) {
-		case MSM_FILE:
-		case MSM_FILESPLIT:
-			out_ = new DummyAudioOut();
-			break;
-		default:
-			Audio *audio = Audio::GetInstance();
-			out_ = audio->GetFirst();
-			break;
+    case MSRM_STEREO:
+    case MSRM_STEMS:
+        out_ = new DummyAudioOut();
+        break;
+    default:
+        Audio *audio = Audio::GetInstance();
+        out_ = audio->GetFirst();
+        break;
 	}
 
 	for (int i=0;i<MAX_BUS_COUNT;i++) {
@@ -76,16 +55,14 @@ bool MixerService::Init() {
 	return (result);
 };
 
-void MixerService::initRendering(MixerServiceMode mode) {
+void MixerService::initRendering(MixerServiceRenderMode mode) {
     switch(mode) {
-    case MSM_AUDIO:
+    case MSRM_PLAYBACK:
         break;
-    case MSM_FILERT:
-    case MSM_FILE:
+    case MSRM_STEREO:
         out_->SetFileRenderer("project:mixdown.wav");
         break;
-    case MSM_FILESPLITRT:
-    case MSM_FILESPLIT:
+    case MSRM_STEMS:
         for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
             char buffer[1024];
             sprintf(buffer, "project:channel%d.wav", i);
@@ -103,21 +80,13 @@ void MixerService::Close() {
 		master_.Empty() ;
 
 		switch(mode_) {
-			case MSM_FILE:
-			case MSM_FILESPLIT:
-				SAFE_DELETE(out_) ;
-				break;
-			default:
-				break ;
-		}
-		switch(mode_) {
-			case MSM_FILESPLITRT:
-			case MSM_FILESPLIT:
-				break;
-			default:
-				break ;
-		}
-	}
+        case MSRM_STEMS:
+        case MSRM_STEREO:
+            break;
+        default:
+            break;
+        }
+    }
    for (int i=0;i<MAX_BUS_COUNT;i++) {
 	   bus_[i].Empty() ;
    }
@@ -126,13 +95,15 @@ void MixerService::Close() {
 	sync_=0 ;
 } ;
 
-void MixerService::SetRenderMode(int mode) { mode_ = MixerServiceMode(mode); }
+void MixerService::SetRenderMode(int mode) {
+    mode_ = MixerServiceRenderMode(mode);
+}
 
 bool MixerService::Start() {
-	MidiService::GetInstance()->Start() ;
-     if (out_) {
-      out_->AddObserver(*this) ;
-      out_->Start() ;
+    MidiService::GetInstance()->Start();
+    if (out_) {
+        out_->AddObserver(*this);
+        out_->Start();
      }
 	return true ;
 } ;
@@ -188,20 +159,18 @@ int MixerService::GetPlayedBufferPercentage() {
 }
 
 void MixerService::toggleRendering(bool enable) {
-	switch(mode_) {
-		case MSM_AUDIO:
-			break ;
-		case MSM_FILERT:
-		case MSM_FILE:
-			out_->EnableRendering(enable) ;
-			break ;
-		case MSM_FILESPLITRT:
-		case MSM_FILESPLIT:
-			for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-				bus_[i].EnableRendering(enable) ;
-			} ;
-			break ;
-	}
+    switch (mode_) {
+    case MSRM_PLAYBACK:
+        break;
+    case MSRM_STEREO:
+        out_->EnableRendering(enable);
+        break;
+    case MSRM_STEMS:
+        for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+            bus_[i].EnableRendering(enable);
+        };
+        break;
+    }
 }
 
 void MixerService::OnPlayerStart() {

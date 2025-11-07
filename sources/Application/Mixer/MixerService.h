@@ -13,13 +13,11 @@
 #include "Services/Audio/AudioOut.h"
 #include "MixBus.h"
 
-enum MixerServiceMode {
-	MSM_AUDIO,
-	MSM_FILE,
-	MSM_FILESPLIT,
-	MSM_FILERT,
-	MSM_FILESPLITRT
-} ;
+enum MixerServiceRenderMode {
+    MSRM_PLAYBACK,
+    MSRM_STEREO,
+    MSRM_STEMS,
+};
 
 #define MAX_BUS_COUNT 10
 
@@ -64,11 +62,11 @@ public:
 protected:
 	void toggleRendering(bool enable) ;
 private:
-  void initRendering(MixerServiceMode);
+  void initRendering(MixerServiceRenderMode);
   AudioOut *out_;
   MixBus master_;
   MixBus bus_[MAX_BUS_COUNT];
-  MixerServiceMode mode_;
+  MixerServiceRenderMode mode_;
   SDL_mutex *sync_;
 } ;
 #endif

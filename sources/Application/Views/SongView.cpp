@@ -1,5 +1,7 @@
 #include "SongView.h"
 #include "Application/Commands/ApplicationCommandDispatcher.h"
+#include "Application/Mixer/MixerService.h"
+#include "Application/Model/ProjectDatas.h"
 #include "Application/Player/Player.h"
 #include "Application/Utils/char.h"
 #include "System/Console/Trace.h"
@@ -20,6 +22,7 @@ SongView::SongView(GUIWindow &w, ViewData *viewData, const char *song)
     updatingChain_ = false;
     lastChain_ = 0;
     songname_ = song;
+    project_ = viewData->project_;
 
     for (int i = 0; i < 8; i++) {
         this->lastPlayedPosition_[i] = 0;
@@ -477,6 +480,15 @@ void SongView::switchSoloMode() {
 };
 
 void SongView::onStart() {
+    if (project_->GetRenderMode() > 0) {
+        if (!lastRenderMode_) {
+            lastRenderMode_ = true;
+            View::SetNotification("Rendering start!");
+        } else if(lastRenderMode_) {
+            lastRenderMode_ = false;
+            View::SetNotification("Rendering done!");
+        }
+    }
     Player *player = Player::GetInstance();
     unsigned char from = viewData_->songX_;
     unsigned char to = from;

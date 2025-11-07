@@ -1,5 +1,6 @@
 #include "ProjectView.h"
 #include "Application/Mixer/MixerService.h"
+#include "Application/Model/ProjectDatas.h"
 #include "Application/Model/Scale.h"
 #include "Application/Persistency/PersistencyService.h"
 #include "Application/Views/ModalDialogs/MessageBox.h"
@@ -96,7 +97,8 @@ static void PurgeCallback(View &v,ModalView &dialog) {
 
 ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
-	lastClock_=0 ;
+    lastRenderMode_ = 0;
+    lastClock_=0 ;
 	lastTick_=0 ;
 
 	project_=data->project_ ;
@@ -184,7 +186,8 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     v = project_->FindVariable(VAR_RENDER);
     NAssert(v);
     position._y += 2;
-	field = new UIIntVarField(position, *v, "Render: %s", 0, project_->MAX_RENDER_MODE, 1, 2);
+    field = new UIIntVarField(position, *v, "Render: %s", 0,
+                              project_->MAX_RENDER_MODE - 1, 1, 2);
     T_SimpleList<UIField>::Insert(field);
 
     position._y += 2;
@@ -199,7 +202,9 @@ ProjectView::~ProjectView() {
 
 void ProjectView::ProcessButtonMask(unsigned short mask,bool pressed) {
 
-	if (!pressed) return ;
+    if (!pressed)
+        return;
+    View::SetNotification(""); //Clear to not write junk to notification
 
 	FieldView::ProcessButtonMask(mask) ;
 
@@ -210,12 +215,21 @@ void ProjectView::ProcessButtonMask(unsigned short mask,bool pressed) {
 			SetChanged();
 			NotifyObservers(&ve) ;
 		}
-	} else {
-		if (mask&EPBM_START) {
+    } else {
+        if (mask&EPBM_START) {
+            if (project_->GetRenderMode() > 0) {
+                if (!lastRenderMode_) {
+                   lastRenderMode_ = true;
+                   View::SetNotification("Rendering start!");
+                } else if(lastRenderMode_) {
+                   lastRenderMode_ = false;
+                   View::SetNotification("Rendering done!");
+                }
+            }
    			Player *player=Player::GetInstance() ;
 			player->OnStartButton(PM_SONG,viewData_->songX_,false,viewData_->songX_) ;
 		}
-	} ;
+    };
 } ;
 
 void ProjectView::DrawView() {
@@ -234,8 +248,15 @@ void ProjectView::DrawView() {
     SetColor(CD_NORMAL);
     DrawString(pos._x,pos._y,projectString,props) ;
 
-	FieldView::Redraw() ;
-	drawMap() ;
+    FieldView::Redraw();
+    drawMap() ;
+	if(lastRenderMode_ != project_->GetRenderMode()) {
+		lastRenderMode_ = project_->GetRenderMode();
+		MixerService::GetInstance()->SetRenderMode(lastRenderMode_);
+		if (lastRenderMode_ > 0) View::SetNotification("Rendering armed, press start");
+		else View::SetNotification("Rendering disabled"); 
+	}
+    View::EnableNotification();
 } ;
 
 void ProjectView::Update(Observable &,I_ObservableData *data) {
@@ -247,10 +268,9 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 # ifdef _64BIT
 	int fourcc=*((int*)data);
 #else
-	int fourcc=(unsigned int)data ;
+    int fourcc = (unsigned int)data;
 #endif
 
-    MixerService::GetInstance()->SetRenderMode(project_->GetRenderMode());
     UIField *focus=GetFocus() ;
 	if (fourcc!=ACTION_TEMPO_CHANGED) {
 		focus->ClearFocus() ;

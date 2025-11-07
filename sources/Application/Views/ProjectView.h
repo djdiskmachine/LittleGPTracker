@@ -28,7 +28,8 @@ public:
 protected:
 private:
 	Project *project_ ;
-// Debug
+    int lastRenderMode_;
+    // Debug
 	unsigned long lastTick_ ;
 	unsigned long lastClock_ ;
 	UIField *tempoField_ ;
