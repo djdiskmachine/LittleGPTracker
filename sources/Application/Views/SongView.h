@@ -81,9 +81,7 @@ class SongView : public View {
     bool needClear_;
     bool canDeepClone_;
     void nudgeTempo(int direction);
-    bool lastRenderMode_ = false;
-    Project *project_;
-uint8_t jumpLength_; // When jumping columns with B
+    uint8_t jumpLength_; // When jumping columns with B
 };
 
 #endif

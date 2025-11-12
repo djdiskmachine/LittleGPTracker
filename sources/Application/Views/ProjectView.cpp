@@ -80,13 +80,15 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 }
 
 static void LoadCallback(View &v,ModalView &dialog) {
-	if (dialog.GetReturnCode()==MBL_YES) {
+    MixerService::GetInstance()->SetRenderMode(0);
+    if (dialog.GetReturnCode()==MBL_YES) {
 		((ProjectView &)v).OnLoadProject() ;
 	}
 } ;
 
 static void QuitCallback(View &v,ModalView &dialog) {
-	if (dialog.GetReturnCode()==MBL_YES) {
+    MixerService::GetInstance()->SetRenderMode(0);
+    if (dialog.GetReturnCode()==MBL_YES) {
 		((ProjectView &)v).OnQuit() ;
 	}
 } ;
@@ -97,9 +99,8 @@ static void PurgeCallback(View &v,ModalView &dialog) {
 
 ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
-    lastRenderMode_ = 0;
-    lastClock_=0 ;
-	lastTick_=0 ;
+    lastClock_ = 0;
+    lastTick_ = 0;
 
 	project_=data->project_ ;
 
@@ -204,29 +205,29 @@ void ProjectView::ProcessButtonMask(unsigned short mask,bool pressed) {
 
     if (!pressed)
         return;
-    View::SetNotification(""); //Clear to not write junk to notification
 
-	FieldView::ProcessButtonMask(mask) ;
+    FieldView::ProcessButtonMask(mask);
 
-	if (mask&EPBM_R) {
-		if (mask&EPBM_DOWN) {
+    if (mask & EPBM_R) {
+        if (mask&EPBM_DOWN) {
 			ViewType vt=VT_SONG;
 			ViewEvent ve(VET_SWITCH_VIEW,&vt) ;
 			SetChanged();
-			NotifyObservers(&ve) ;
-		}
+            NotifyObservers(&ve);
+        }
     } else {
         if (mask&EPBM_START) {
-            if (project_->GetRenderMode() > 0) {
-                if (!lastRenderMode_) {
-                   lastRenderMode_ = true;
-                   View::SetNotification("Rendering start!");
-                } else if(lastRenderMode_) {
-                   lastRenderMode_ = false;
-                   View::SetNotification("Rendering done!");
-                }
-            }
-   			Player *player=Player::GetInstance() ;
+            Player *player = Player::GetInstance();
+
+            int renderMode = viewData_->renderMode_;
+			if (renderMode > 0 && !player->IsRunning()) {
+				viewData_->isRendering_ = true;
+				View::SetNotification("Rendering started!");
+			} else if (viewData_->isRendering_ && player->IsRunning()) {
+				viewData_->isRendering_ = false;
+				View::SetNotification("Rendering done!");
+			}
+
 			player->OnStartButton(PM_SONG,viewData_->songX_,false,viewData_->songX_) ;
 		}
     };
@@ -249,13 +250,20 @@ void ProjectView::DrawView() {
     DrawString(pos._x,pos._y,projectString,props) ;
 
     FieldView::Redraw();
-    drawMap() ;
-	if(lastRenderMode_ != project_->GetRenderMode()) {
-		lastRenderMode_ = project_->GetRenderMode();
-		MixerService::GetInstance()->SetRenderMode(lastRenderMode_);
-		if (lastRenderMode_ > 0) View::SetNotification("Rendering armed, press start");
-		else View::SetNotification("Rendering disabled"); 
-	}
+    drawMap();
+
+    // Sync render mode from project to viewData and show notification
+	int currentMode = project_->GetRenderMode();
+	if (viewData_->renderMode_ != currentMode) {
+		// Mode changed
+		if (currentMode > 0 && viewData_->renderMode_ == 0) {
+			// Changed from off to on
+			View::SetNotification("Rendering on, press start");
+		}
+		viewData_->renderMode_ = currentMode;
+		MixerService::GetInstance()->SetRenderMode(currentMode);
+    }
+
     View::EnableNotification();
 } ;
 
@@ -292,6 +300,7 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			break ;
 		}
         case ACTION_SAVE: {
+            MixerService::GetInstance()->SetRenderMode(0);
             PersistencyService *service = PersistencyService::GetInstance();
             service->Save();
             break;

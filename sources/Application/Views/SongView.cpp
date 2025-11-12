@@ -22,7 +22,6 @@ SongView::SongView(GUIWindow &w, ViewData *viewData, const char *song)
     updatingChain_ = false;
     lastChain_ = 0;
     songname_ = song;
-    project_ = viewData->project_;
 
     for (int i = 0; i < 8; i++) {
         this->lastPlayedPosition_[i] = 0;
@@ -480,15 +479,6 @@ void SongView::switchSoloMode() {
 };
 
 void SongView::onStart() {
-    if (project_->GetRenderMode() > 0) {
-        if (!lastRenderMode_) {
-            lastRenderMode_ = true;
-            View::SetNotification("Rendering start!");
-        } else if(lastRenderMode_) {
-            lastRenderMode_ = false;
-            View::SetNotification("Rendering done!");
-        }
-    }
     Player *player = Player::GetInstance();
     unsigned char from = viewData_->songX_;
     unsigned char to = from;
@@ -496,6 +486,14 @@ void SongView::onStart() {
         GUIRect r = getSelectionRect();
         from = r.Left();
         to = r.Right();
+    }
+    int renderMode = viewData_->renderMode_;
+    if (renderMode > 0 && !player->IsRunning()) {
+        viewData_->isRendering_ = true;
+        View::SetNotification("Rendering started!");
+    } else if (viewData_->isRendering_ && player->IsRunning()) {
+        viewData_->isRendering_ = false;
+        View::SetNotification("Rendering done!");
     }
     player->OnSongStartButton(from, to, false, false);
 };
@@ -523,6 +521,7 @@ void SongView::onStop() {
         from = r.Left();
         to = r.Right();
     }
+
     player->OnSongStartButton(from, to, true, false);
 };
 
