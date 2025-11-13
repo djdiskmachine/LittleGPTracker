@@ -81,7 +81,7 @@ void NewProjectDialog::DrawView() {
 
     char buffer[2];
     buffer[1] = 0;
-    for (int i=0;i< MAX_NAME_LENGTH; i++) {
+    for (int i = 0; i < MAX_NAME_LENGTH; i++) {
         props.invert_ =
             ((i == currentChar_) && (selected_ == 0) && !keyboardMode_);
         buffer[0]=name_[i] ;
@@ -117,7 +117,7 @@ void NewProjectDialog::DrawView() {
         DrawString(x + currentChar_, 3, "-", props);
         props.invert_ = false;
 		return; // Don't draw buttons in keyboard mode
-	}
+    }
 
     // Draw buttons
 
@@ -128,24 +128,24 @@ void NewProjectDialog::DrawView() {
 	int offset = DIALOG_WIDTH / (BUTTONS_LENGTH + 1);
 
     for (int i = 0; i < BUTTONS_LENGTH; i++) {
-        const char *text= buttonText[i] ;
+        const char *text = buttonText[i];
         x = (offset * (i + 1) - strlen(text) / BUTTONS_LENGTH) - 2;
         props.invert_ = (selected_ == i + 1);
-        DrawString(x,4, text,props) ;
+        DrawString(x, 4, text, props);
     }
-};
+}
 
 void NewProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick) {
 };
 
 void NewProjectDialog::OnFocus() {
     selected_ = currentChar_ = 0;
-    memset(name_,' ', MAX_NAME_LENGTH+1) ;
+    memset(name_, ' ', MAX_NAME_LENGTH + 1);
     lastChar_ = 'A';
     keyboardMode_ = false;
 	keyboardRow_ = 1; // Start on QWERTY row
 	keyboardCol_ = 0;
-};
+}
 
 void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
@@ -171,13 +171,13 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					char nextChar = name_[currentChar_];
 					if (nextChar != ' ') {
 						findCharacterInKeyboard(nextChar, keyboardRow_, keyboardCol_);
-					}
-				}
-			}
-			isDirty_ = true;
+                    }
+                }
+            }
+            isDirty_ = true;
 			return;
-		}
-		if (mask == EPBM_UP) {
+        }
+        if (mask == EPBM_UP) {
 			keyboardRow_ = (keyboardRow_ - 1 + keyboardRows) % keyboardRows;
 			// Clamp column to valid range for new row
 			if (keyboardRow_ == 6) {
@@ -189,8 +189,8 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 			}
 			isDirty_ = true;
 			return;
-		}
-		if (mask == EPBM_DOWN) {
+        }
+        if (mask == EPBM_DOWN) {
 			keyboardRow_ = (keyboardRow_ + 1) % keyboardRows;
 			// Clamp column to valid range for new row
 			if (keyboardRow_ == 6) {
@@ -202,8 +202,8 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 			}
 			isDirty_ = true;
 			return;
-		}
-		if (mask == EPBM_LEFT) {
+        }
+        if (mask == EPBM_LEFT) {
 			if (keyboardRow_ == 6) {
 				// Special row: toggle between [____] and <-
 				keyboardCol_ = (keyboardCol_ < 8) ? 8 : 0;
@@ -234,9 +234,9 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 		return;
 	}
 
-	if (mask&EPBM_B) {
+    if (mask & EPBM_B) {
 
-	} else {
+    } else {
 
         // A modifier
         if (mask & EPBM_A) {
@@ -279,56 +279,56 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
                     isDirty_ = true;
                 }
             }
-      } else {
+        } else {
 
-          // R Modifier
+            // R Modifier
 
-          if (mask & EPBM_R) {
-          } else {
-              // No modifier
-              if (mask == EPBM_UP) {
-                  selected_ = (selected_ == 0) ? 1 : 0;
-                  isDirty_ = true;
-              }
-              if (mask == EPBM_DOWN) {
-                  selected_ = (selected_ == 0) ? 1 : 0;
-                  isDirty_ = true;
-              }
+            if (mask & EPBM_R) {
+            } else {
+                // No modifier
+                if (mask == EPBM_UP) {
+                    selected_ = (selected_ == 0) ? 1 : 0;
+                    isDirty_ = true;
+                }
+                if (mask == EPBM_DOWN) {
+                    selected_ = (selected_ == 0) ? 1 : 0;
+                    isDirty_ = true;
+                }
 
-              if (mask == EPBM_LEFT) {
-                  switch (selected_) {
-                  case 0:
-                      if (currentChar_ > 0)
-                          currentChar_--;
-                      break;
-                  case 1:
-                  case 2:
-                  case 3:
-                      if (selected_ > 0)
-                          selected_--;
-                      break;
-                  }
-                  isDirty_ = true;
-              }
-              if (mask == EPBM_RIGHT) {
-                  switch (selected_) {
-                  case 0:
-                      if (currentChar_ < MAX_NAME_LENGTH - 1)
-                          currentChar_++;
-                      else
-                          selected_++;
-                      break;
-                  case 1:
-                  case 2:
-                  case 3:
-                      if (selected_ < BUTTONS_LENGTH)
-                          selected_++;
-                      break;
-                  }
-                  isDirty_ = true;
-              }
-          }
-      }
+                if (mask == EPBM_LEFT) {
+                    switch (selected_) {
+                    case 0:
+                        if (currentChar_ > 0)
+                            currentChar_--;
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                        if (selected_ > 0)
+                            selected_--;
+                        break;
+                    }
+                    isDirty_ = true;
+                }
+                if (mask == EPBM_RIGHT) {
+                    switch (selected_) {
+                    case 0:
+                        if (currentChar_ < MAX_NAME_LENGTH - 1)
+                            currentChar_++;
+                        else
+                            selected_++;
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                        if (selected_ < BUTTONS_LENGTH)
+                            selected_++;
+                        break;
+                    }
+                    isDirty_ = true;
+                }
+            }
+        }
     }
 };
 
