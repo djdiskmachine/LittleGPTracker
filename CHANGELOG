@@ -1,3 +1,8 @@
+1.6.0-bacon2
+    Interpolate values in tables and phrases
+        R + B on single-column selection will fill values from lowest to highest
+        Good for plotting out fx rises or note scales
+
 1.5.0-bacon3
     Contributions:
     purelygrey
