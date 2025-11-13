@@ -21,6 +21,7 @@ class TableView : public View {
 
     void cutPosition();
     void pasteLast();
+    void interpolateSelection();
     void copySelection();
     void cutSelection();
     void pasteClipboard();

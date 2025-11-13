@@ -1278,7 +1278,7 @@ void PhraseView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 2, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 2 || col_ == 3)) {
+        if (j == row_ && col_ == 2) {
             printHelpLegend(command, props);
         }
     }
@@ -1325,7 +1325,7 @@ void PhraseView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 4, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 4 || col_ == 5)) {
+        if (j == row_ && col_ == 4) {
             printHelpLegend(command, props);
         }
     }
