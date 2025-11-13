@@ -51,7 +51,7 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 ## New project
 
-When creating a new project, use the regen button to generate a random name. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down
+When creating a new project, use the regen button to generate a random name. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down to enter the QWERTY keyboard. Exit QWERTY mode with B
 
 ## Multiple Projects
 

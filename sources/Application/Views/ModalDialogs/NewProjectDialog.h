@@ -23,6 +23,12 @@ private:
 	int lastChar_ ;
 	char name_[MAX_NAME_LENGTH+1] ;
 	int currentChar_ ;
+    bool keyboardMode_;
+    int keyboardRow_ ;
+	int keyboardCol_ ;
+	
+	char getKeyAtPosition(int row, int col) ;
+	void findCharacterInKeyboard(char ch, int &outRow, int &outCol) ;
 } ;
 
 #endif
