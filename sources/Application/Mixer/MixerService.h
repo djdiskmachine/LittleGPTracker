@@ -50,6 +50,7 @@ public:
     void SetSoftclip(int, int);
     void SetMasterVolume(int);
     void SetRenderMode(int);
+    bool IsRendering();
     int GetPlayedBufferPercentage() ;
 	
 	virtual void Execute(FourCC id,float value) ;
@@ -68,5 +69,6 @@ private:
   MixBus bus_[MAX_BUS_COUNT];
   MixerServiceRenderMode mode_;
   SDL_mutex *sync_;
+  bool isRendering_ = false;
 } ;
 #endif

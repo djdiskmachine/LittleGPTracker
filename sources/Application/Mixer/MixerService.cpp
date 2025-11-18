@@ -99,6 +99,8 @@ void MixerService::SetRenderMode(int mode) {
     mode_ = MixerServiceRenderMode(mode);
 }
 
+bool MixerService::IsRendering() { return isRendering_; }
+
 bool MixerService::Start() {
     MidiService::GetInstance()->Start();
     if (out_) {
@@ -159,13 +161,17 @@ int MixerService::GetPlayedBufferPercentage() {
 }
 
 void MixerService::toggleRendering(bool enable) {
+    isRendering_ = enable;
     switch (mode_) {
     case MSRM_PLAYBACK:
+        initRendering(MSRM_PLAYBACK);
         break;
     case MSRM_STEREO:
+        initRendering(MSRM_STEREO);
         out_->EnableRendering(enable);
         break;
     case MSRM_STEMS:
+        initRendering(MSRM_STEMS);
         for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
             bus_[i].EnableRendering(enable);
         };

@@ -184,9 +184,9 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
                               MidiService::GetInstance()->Size(), 1, 1);
     T_SimpleList<UIField>::Insert(field);
 
+    position._y += 2;
     v = project_->FindVariable(VAR_RENDER);
     NAssert(v);
-    position._y += 2;
     field = new UIIntVarField(position, *v, "Render: %s", 0,
                               project_->MAX_RENDER_MODE - 1, 1, 2);
     T_SimpleList<UIField>::Insert(field);
@@ -252,16 +252,16 @@ void ProjectView::DrawView() {
     FieldView::Redraw();
     drawMap();
 
-    // Sync render mode from project to viewData and show notification
-	int currentMode = project_->GetRenderMode();
-	if (viewData_->renderMode_ != currentMode) {
-		// Mode changed
-		if (currentMode > 0 && viewData_->renderMode_ == 0) {
-			// Changed from off to on
-			View::SetNotification("Rendering on, press start");
-		}
-		viewData_->renderMode_ = currentMode;
-		MixerService::GetInstance()->SetRenderMode(currentMode);
+    int currentMode = project_->GetRenderMode();
+    if ((viewData_->renderMode_ != currentMode) && !MixerService::GetInstance()->IsRendering()) {
+        // Mode changed
+        if (currentMode > 0 && viewData_->renderMode_ == 0) {
+            View::SetNotification("Rendering on, press start");
+        } else if (currentMode == 0 && viewData_->renderMode_ > 0) {
+            View::SetNotification("Rendering off");
+        }
+        viewData_->renderMode_ = currentMode;
+        MixerService::GetInstance()->SetRenderMode(currentMode);
     }
 
     View::EnableNotification();
