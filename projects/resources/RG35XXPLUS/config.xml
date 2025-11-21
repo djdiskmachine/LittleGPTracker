@@ -1,4 +1,5 @@
 <CONFIG>
+	<AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
 	<AUDIOBUFFERSIZE value='512'/>
 	<SCREENMULT value='2'/>
 	<KEY_A value="but:0:0" />

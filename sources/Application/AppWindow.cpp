@@ -43,6 +43,7 @@ static void ProjectSelectCallback(View &v, ModalView &dialog) {
     SelectProjectDialog &spd = (SelectProjectDialog &)dialog;
     if (dialog.GetReturnCode() > 0) {
         Path selected = spd.GetSelection();
+        instance->SaveLastProject(selected);
         instance->LoadProject(selected.GetPath().c_str());
     } else {
         System::GetInstance()->PostQuitMessage();
@@ -118,8 +119,20 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
     _currentView = _nullView;
     _nullView->SetDirty(true);
 
+    Config *config = Config::GetInstance(); // Possible to disable autoloading
+    const char *autoLoadEnabled = config->GetValue("AUTO_LOAD_LAST");
+    bool shouldAutoLoad = (autoLoadEnabled && strcmp(autoLoadEnabled, "YES") == 0);
+
     SelectProjectDialog *spd = new SelectProjectDialog(*_currentView);
-    _currentView->DoModal(spd, ProjectSelectCallback);
+    Path lastProjectPath = GetLastProjectPath();
+    if (shouldAutoLoad && lastProjectPath.Exists()) { // Try to load the last project from previous session
+        Trace::Log("AppWindow", "Auto-loading last project: %s", lastProjectPath.GetPath().c_str()) ;
+        // Store the path to load after initialization completes
+        strcpy(_newProjectToLoad, lastProjectPath.GetPath().c_str());
+        _loadAfterResume = true;
+    } else { // Show project selection dialog
+        _currentView->DoModal(spd, ProjectSelectCallback);
+    }
 
     memset(_charScreen, ' ', 1200);
     memset(_preScreen, ' ', 1200);
@@ -500,7 +513,12 @@ bool AppWindow::onEvent(GUIEvent &event) {
 };
 
 void AppWindow::onUpdate() {
-    //	Redraw() ;
+    if (_loadAfterResume) {
+        _loadAfterResume = false;
+        _isDirty = true;
+        LoadProject(_newProjectToLoad);
+        return;
+    }
     Flush();
 };
 
@@ -624,3 +642,51 @@ void AppWindow::Print(char *line) {
 };
 
 void AppWindow::SetColor(ColorDefinition cd) { colorIndex_ = cd; };
+
+Path AppWindow::GetLastProjectPath() {
+    Path lastProjectFile(LAST_PROJECT_NAME);
+    FileSystem *fs = FileSystem::GetInstance();
+    I_File *file = fs->Open(lastProjectFile.GetPath().c_str(), "r");
+
+    if (!file) {
+        return Path();
+    }
+
+    char buffer[256];
+    memset(buffer, 0, 256);
+    file->Read(buffer, 1, 255);
+    file->Close();
+    delete file;
+
+    // Remove newline if present
+    int len = strlen(buffer);
+    if (len > 0 && buffer[len-1] == '\n') {
+        buffer[len-1] = 0;
+    }
+
+    if (strlen(buffer) > 0) {
+        Trace::Log("SelectProjectDialog", "Loaded last project: %s", buffer);
+        return Path(buffer);
+    }
+
+    return Path();
+}
+
+void AppWindow::SaveLastProject(const Path &p) {
+    Path lastProjectFile(LAST_PROJECT_NAME);
+    FileSystem *fs = FileSystem::GetInstance();
+    I_File *file = fs->Open(lastProjectFile.GetPath().c_str(), "w");
+
+    if (!file) {
+        Trace::Error("SelectProjectDialog", "Failed to open %s for writing", LAST_PROJECT_NAME);
+        return;
+    }
+
+    std::string pathStr = p.GetPath();
+    file->Write(pathStr.c_str(), 1, pathStr.length());
+    file->Write("\n", 1, 1);
+    file->Close();
+    delete file;
+
+    Trace::Log("SelectProjectDialog", "Saved last project: %s", p.GetPath().c_str());
+}

@@ -1,5 +1,8 @@
-1.6.0-bacon4
+1.6.0-bacon5
     QWERTY keyboard name entry for new projects
+    Auto-load last project on startup
+        * Application can now load the last project automatically on startup
+        * Disable by setting AUTO_LOAD_LAST=NO in config.xml
 
 1.5.0-bacon3
     Contributions:

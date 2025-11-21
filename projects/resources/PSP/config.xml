@@ -1,5 +1,6 @@
 <CONFIG>
 	<DUMPEVENT value="YES"/><!--debug logging-->>
+	<AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
 	<SCREENMULT value="1"/> <!-- Does nothing on PSP -->
 
 <!-- Default colors below -->

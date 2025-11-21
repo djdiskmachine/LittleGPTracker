@@ -1,4 +1,5 @@
 <CONFIG>
+        <AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
         <ROOTFOLDER value="/mnt/mmc/MUOS/application/.lgpt/"/>
         <SAMPLELIB value="/mnt/mmc/MUOS/application/.lgpt/samplelib/"/>
         <SCREENMULT value='2'/>
