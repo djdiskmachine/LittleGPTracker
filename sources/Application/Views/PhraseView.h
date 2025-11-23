@@ -33,6 +33,7 @@ class PhraseView : public View {
 
     GUIRect getSelectionRect();
     void fillClipboardData();
+    void interpolateSelection();
     void copySelection();
     void cutSelection();
     void pasteClipboard();
