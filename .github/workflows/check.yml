@@ -60,8 +60,12 @@ jobs:
         uses: actions/checkout@v4.1.7
 
       - name: Install build deps
-        run: choco install -y directx-sdk zip --no-progress --yes
+        run: choco install -y directx-sdk zip ffmpeg-shared --no-progress --yes
         shell: powershell
+      
+      - name: Install FFmpeg development libraries
+        run: vcpkg install ffmpeg[avcodec,avformat,avfilter]:x86-windows-static
+        shell: cmd
 
       - name: Download and Extract VCE9 release
         run: |
@@ -116,7 +120,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow
+          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl1.2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow libavcodec-dev:i386 libavformat-dev:i386 libavfilter-dev:i386 libavutil-dev:i386 libswresample-dev:i386
 
       - name: Build DEB
         working-directory: projects
@@ -148,7 +152,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow
+          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow libavcodec-dev:i386 libavformat-dev:i386 libavfilter-dev:i386 libavutil-dev:i386 libswresample-dev:i386
 
       - name: Build X86
         working-directory: projects
@@ -292,7 +296,7 @@ jobs:
       - name: Install Garlic Plus toolchain
         run: |
           sudo apt update && sudo apt install -y python3-pillow
-          wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/simotek/union-rg35xxplus-toolchain/releases/download/20240830/rg35xxplus-toolchain.tar.xz
+          wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/djdiskmachine/union-rg35xxplus-toolchain/releases/download/1.1/rg35xxplus-toolchain.tar.gz
           mkdir /opt/rg35xxplus-toolchain
           tar -xvf /tmp/rg35xxplus-toolchain.tar.xz -C /opt/rg35xxplus-toolchain  --strip-components=1
 
@@ -360,7 +364,7 @@ jobs:
       - name: Install Miyoo Mini toolchain
         run: |
           sudo apt update && sudo apt install -y python3-pillow
-          wget -O /tmp/miyoomini-toolchain.tar.xz https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.0.0/miyoomini-toolchain.tar.xz
+          wget -O /tmp/miyoomini-toolchain.tar.xz https://github.com/djdiskmachine/miyoomini-toolchain-buildroot/releases/download/1.1/miyoomini-toolchain.tar.xz
           mkdir /opt/miyoomini-toolchain
           tar -xvf /tmp/miyoomini-toolchain.tar.xz -C /opt/miyoomini-toolchain  --strip-components=1
 
@@ -395,7 +399,8 @@ jobs:
       - name: Install required libraries
         run: |
           sudo apt update
-          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow
+          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow libavcodec-dev libavformat-dev libavfilter-dev libavutil-dev libswresample-dev
+
 
       - name: Build X64
         working-directory: projects
@@ -429,6 +434,7 @@ jobs:
           wget https://www.libsdl.org/release/SDL2-2.0.14.dmg
           hdiutil attach SDL2-2.0.14.dmg
           sudo cp -R /Volumes/SDL2/SDL2.framework /Library/Frameworks/
+          brew install ffmpeg
 
       - name: Build Xcode project
         run: |
