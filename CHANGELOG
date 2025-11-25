@@ -1,3 +1,79 @@
+1.5.0-bacon3
+    Contributions:
+    purelygrey
+        Per-project option for soft clipping the output (#145)
+        * Per-project option for soft clipping the output
+        * Projects with Master Volume over 100 will be capped to 100
+        * Use pregain to saturate
+        * Multiple saturation modes
+        Remove drawing optimization that causes flashing in Song view (#147)
+        * Removed drawing optimization that caused flashing in Song view
+
+    clsource
+        Scales
+        * implementation by @maksmakes
+        * instrumentation by clsource
+
+    simotek
+        Add color options for Border Play and Mute (#143)    
+        * Adds different color for the > play and _ mute indicators
+        Fix rg35xx mapping (#139)            
+        * rshoulder and lshoulder were the wrong way
+
+    kompadre
+        Enable skipping JUNK section for WAVs
+        * Load more old sample pack CD rips!
+
+    mrtnvgr
+        Hide lgpt_ prefix for songs #165
+        Consistent view title separators #166
+
+    nine-h
+        Reduce nag dialogs (#187)
+        Allow user to save, load, save as and quit while song is playing
+
+
+    Copy columns (#141)
+    * Enables copying fx+params into any column in tables and phrases
+      Pasting fx into notes column etc does nothing
+
+    Nudge functionality (#130)
+    * In Project view, select tempo and hold B+LEFT/RIGHT to nudge slower/faster
+    * In Song view, pressing LT+LEFT/RIGHT will do the same
+    
+    Printable fx in InstrumentView (#155)
+    * Uses ffmpeg to print reverb to currently selected sample
+    * New sample with fx is created and assigned to the current instrument
+    * Only available for platforms mentioned in README of this repo
+
+    Other:
+        Add line-by-line clang format (#144)
+        Check uploads artifacts (#138)
+        Globally accessible notifications (#137)
+        Update to github actions checkout@v4.1.7 (#136)
+
+    Fixes:
+    Fix audio randomly dying (#194)
+    Long sample names causing crashes in InstrumentView (#189)
+    Sample names that start with the same characters get mixed up InstrumentView (#199)
+    Bug in chainview: column warping (#134)
+    Jumping below lowest row would cause infinite loop
+    Jumping from row 0 was not possible in chainview
+    Limit jump to maximum lowest populated row
+    Set songview b jumping length to 16 rows in correspondence with LSDJ and M8
+    Scales no longer affect instrument numbers ([djdiskmachine/LittleGPTracker#172](https://github.com/djdiskmachine/LittleGPTracker/issues/172))
+    Bug in Variable:SetString [djdiskmachine/LittleGPTracker#169](https://github.com/djdiskmachine/LittleGPTracker/issues/169)
+    
+    Issue in deep clone (#135)
+    Was possible to accidentally deep clone position into another position
+
+    Fix build error for Raspi (#133)
+    Restore 32bit linux config
+
+    Crash when nudging below 0 BPM (shoutout @merumerutho) https://github.com/djdiskmachine/LittleGPTracker/issues/127
+    Fixed Garlic docker being outdated (#194)
+
+
 1.4.2
     Contributions:
     koisignal

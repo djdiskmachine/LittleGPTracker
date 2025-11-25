@@ -76,16 +76,16 @@ All colors are defined by a set of hexadecimal triplet for RGB. Here's an exampl
 
 ```xml
 <CONFIG>
-    <BACKGROUND   value = "505444" />
-    <FOREGROUND   value = "FFFFFF" /> <!-- Text and cursor in cursor -->
+    <BACKGROUND   value = "1D0A1F" />
+    <FOREGROUND   value = "F5EBFF" /> <!-- Text and cursor in cursor -->
     <BORDER       value = "FF00DD" /> <!--Dialog Border-->
-    <HICOLOR1     value = "F41B38" /> <!-- Highlight color 1 -->
-    <HICOLOR2     value = "FF0000" /> <!-- Highlight color 2 -->
+    <HICOLOR1     value = "B750D1" /> <!-- Highlight color 1 -->
+    <HICOLOR2     value = "DB33DB" /> <!-- Highlight color 2 -->
     <SONGVIEW_FE  value = "A55B8F" /> <!-- Color of the chain "FE" in song screen-->
     <SONGVIEW_00  value = "853B6F" /> <!-- Color of the chain "00" in song screen-->
     <CURSORCOLOR  value = "FF00DD" /> <!--Cursor color-->
     <PLAYCOLOR    value = "FF00DD" /> <!--Cursor color-->
-    <MUTECOLOR    value = "FFFFFF" /> <!-- Text and cursor in cursor -->
+    <MUTECOLOR    value = "F5EBFF" /> <!-- Text and cursor in cursor -->
     <ROWCOLOR1    value = "BA28F9" /> <!--Row count color 1 -->
     <ROWCOLOR2    value = "FF00FF" /> <!--Row count color 2-->
     <ALTROWNUMBER value = "4"/>       <!--How many rows of each ROWCOLOR-->

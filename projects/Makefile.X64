@@ -9,7 +9,9 @@ DEFINES := \
 	-D__LINUX_ALSASEQ__ \
         -DSDL2 \
         -DSDLAUDIO \
-        -DRTMIDI
+        -DRTMIDI \
+        -DFFMPEG_ENABLED \
+        -D_FEAT_MIDI_MULTITHREAD
 
 ALSA_CFLAGS := $(shell pkg-config alsa --cflags)
 ALSA_LIBS := $(shell pkg-config alsa --libs)
@@ -24,7 +26,7 @@ OPT_FLAGS := -O3
 OPT_FLAGS := -g
 INCLUDES := $(ALSA_CFLAGS) $(JACK_CFLAGS) $(SDL_CFLAGS) -I$(PWD)/../sources
 CFLAGS := $(OPT_FLAGS) $(DEFINES) $(INCLUDES) -Wall
-CXXFLAGS := $(CFLAGS) -std=gnu++03
+CXXFLAGS := $(CFLAGS) -std=gnu++11
 LIBS := $(ALSA_LIBS) $(JACK_LIBS) $(SDL_LIBS)
 OUTPUT := ../lgpt
 EXTENSION := x64

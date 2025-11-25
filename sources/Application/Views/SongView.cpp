@@ -911,8 +911,12 @@ void SongView::DrawView() {
     std::ostringstream os;
 
     os << ((player->GetSequencerMode() == SM_SONG) ? "Song" : "Live");
-    os << " - ";
-    os << songname_;
+    os << ": ";
+
+    if (songname_.substr(0, 5) == "lgpt_") {
+        os << songname_.substr(5);
+    }
+
     std::string buffer(os.str());
 
     DrawString(pos._x, pos._y, buffer.c_str(), props);

@@ -10,8 +10,9 @@ DEFINES := \
 	-D_NDEBUG \
 	-D_NO_JACK_ \
 	-DSDL2 \
-        -DSDLAUDIO \
-        -DDUMMYMIDI
+	-DSDLAUDIO \
+	-DDUMMYMIDI \
+	-DFFMPEG_ENABLED
 
 DEVKIT := /opt/rg35xx-plus-aarch64-SDL2-SDK-0.1.0/
 CROSS_COMPILE:=$(DEVKIT)bin/aarch64-none-linux-gnu-
