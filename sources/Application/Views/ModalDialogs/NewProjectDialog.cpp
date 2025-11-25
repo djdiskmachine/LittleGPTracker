@@ -187,8 +187,8 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
 				if (keyboardCol_ > maxCol) keyboardCol_ = maxCol;
 			}
-			isDirty_ = true;
-			return;
+            isDirty_ = true;
+            return;
         }
         if (mask == EPBM_DOWN) {
 			keyboardRow_ = (keyboardRow_ + 1) % keyboardRows;
