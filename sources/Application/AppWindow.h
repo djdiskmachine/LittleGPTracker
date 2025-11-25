@@ -104,6 +104,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     static GUIColor rownumberColor_;
     static GUIColor rownumber2Color_;
     static GUIColor majorbeatColor_;
+#define LAST_PROJECT_NAME "bin:last_project"
 
     ColorDefinition colorIndex_;
 
@@ -113,7 +114,6 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     SysMutex drawMutex_;
 
     Path GetLastProjectPath();
-    const char* LAST_PROJECT_NAME = "bin:last_project";
 };
 
 #endif

@@ -44,8 +44,9 @@ char NewProjectDialog::getKeyAtPosition(int row, int col) {
 	return rowStr[col];
 }
 
-void NewProjectDialog::findCharacterInKeyboard(char ch, int &outRow, int &outCol) {
-	// Search for character in keyboard layout
+void NewProjectDialog::findCharacterInKeyboard(char ch, int &outRow,
+                                               int &outCol) {
+    // Search for character in keyboard layout
 	for (int row = 0; row < keyboardRows - 1; row++) { // Exclude special row
 		const char* rowStr = keyboardLayout[row];
 		int len = strlen(rowStr);
@@ -79,8 +80,8 @@ void NewProjectDialog::DrawView() {
     int x = (DIALOG_WIDTH - MAX_NAME_LENGTH) / 3;
 
     char buffer[2];
-    buffer[1]=0 ;
-	for (int i=0;i<MAX_NAME_LENGTH;i++) {
+    buffer[1] = 0;
+    for (int i=0;i< MAX_NAME_LENGTH; i++) {
         props.invert_ =
             ((i == currentChar_) && (selected_ == 0) && !keyboardMode_);
         buffer[0]=name_[i] ;
@@ -126,11 +127,11 @@ void NewProjectDialog::DrawView() {
 
 	int offset = DIALOG_WIDTH / (BUTTONS_LENGTH + 1);
 
-	for (int i = 0; i < BUTTONS_LENGTH; i++) {
-		const char *text=buttonText[i] ;
+    for (int i = 0; i < BUTTONS_LENGTH; i++) {
+        const char *text= buttonText[i] ;
         x = (offset * (i + 1) - strlen(text) / BUTTONS_LENGTH) - 2;
-        props.invert_=(selected_==i+1) ;
-		DrawString(x,4,text,props) ;
+        props.invert_ = (selected_ == i + 1);
+        DrawString(x,4, text,props) ;
     }
 };
 
@@ -138,8 +139,8 @@ void NewProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick)
 };
 
 void NewProjectDialog::OnFocus() {
-	selected_=currentChar_=0;
-	memset(name_,' ',MAX_NAME_LENGTH+1) ;
+    selected_ = currentChar_ = 0;
+    memset(name_,' ', MAX_NAME_LENGTH+1) ;
     lastChar_ = 'A';
     keyboardMode_ = false;
 	keyboardRow_ = 1; // Start on QWERTY row
@@ -237,46 +238,47 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
 	} else {
 
-	  // A modifier
-      if (mask & EPBM_A) {
-          if (mask == EPBM_A) {
-              std::string randomName = getRandomName();
-              switch (selected_) {
-              case 0:
-                  if (name_[currentChar_] == ' ') {
-                      name_[currentChar_] = lastChar_;
-                  }
-                  isDirty_ = true;
-                  break;
-              case 1:
-                  std::fill(name_ + randomName.length(),
-                            name_ + sizeof(name_) / sizeof(name_[0]), ' ');
-                  strncpy(name_, randomName.c_str(), randomName.length());
-                  lastChar_ = currentChar_ = randomName.length() - 1;
-                  isDirty_ = true;
-                  break;
-              case 2:
-                  EndModal(1);
-                  break;
-              case 3:
-                  EndModal(0);
-                  break;
-              }
-          }
-          if ((mask & EPBM_UP) || (mask & EPBM_DOWN)) {
-              // Toggle keyboard mode with A+UP or A+DOWN
-              if (selected_ == 0) {
-                  keyboardMode_ = !keyboardMode_;
-                  // When entering keyboard mode, jump to current character
-                  if (keyboardMode_) {
-                      char currentCh = name_[currentChar_];
-                      if (currentCh != ' ') {
-                          findCharacterInKeyboard(currentCh, keyboardRow_, keyboardCol_);
-                      }
-                  }
-                  isDirty_ = true;
-              }
-          }
+        // A modifier
+        if (mask & EPBM_A) {
+            if (mask == EPBM_A) {
+                std::string randomName = getRandomName();
+                switch (selected_) {
+                case 0:
+                    if (name_[currentChar_] == ' ') {
+                        name_[currentChar_] = lastChar_;
+                    }
+                    isDirty_ = true;
+                    break;
+                case 1:
+                    std::fill(name_ + randomName.length(),
+                              name_ + sizeof(name_) / sizeof(name_[0]), ' ');
+                    strncpy(name_, randomName.c_str(), randomName.length());
+                    lastChar_ = currentChar_ = randomName.length() - 1;
+                    isDirty_ = true;
+                    break;
+                case 2:
+                    EndModal(1);
+                    break;
+                case 3:
+                    EndModal(0);
+                    break;
+                }
+            }
+            if ((mask & EPBM_UP) || (mask & EPBM_DOWN)) {
+                // Toggle keyboard mode with A+UP or A+DOWN
+                if (selected_ == 0) {
+                    keyboardMode_ = !keyboardMode_;
+                    // When entering keyboard mode, jump to current character
+                    if (keyboardMode_) {
+                        char currentCh = name_[currentChar_];
+                        if (currentCh != ' ') {
+                            findCharacterInKeyboard(currentCh, keyboardRow_,
+                                                    keyboardCol_);
+                        }
+                    }
+                    isDirty_ = true;
+                }
+            }
       } else {
 
           // R Modifier
@@ -329,7 +331,6 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
       }
     }
 };
-
 
 std::string NewProjectDialog::GetName() {
     for (int i = MAX_NAME_LENGTH; i >= 0; i--) {
