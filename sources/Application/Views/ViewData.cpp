@@ -17,6 +17,8 @@ ViewData::ViewData(Project *project) {
 	currentGroove_=0 ;
 	mixerCol_=0 ;
 	mixerRow_=0 ;
+    renderMode_ = 0;
+    isRendering_ = false;
 } ;
 
 ViewData::~ViewData() {
