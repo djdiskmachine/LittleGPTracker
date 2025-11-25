@@ -279,8 +279,8 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
     int fourcc = (unsigned int)data;
 #endif
 
-    UIField *focus=GetFocus() ;
-	if (fourcc!=ACTION_TEMPO_CHANGED) {
+    UIField *focus = GetFocus();
+    if (fourcc!= ACTION_TEMPO_CHANGED) {
 		focus->ClearFocus() ;
 		focus->Draw(w_) ;
 		w_.Flush() ;

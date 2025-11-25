@@ -55,7 +55,7 @@ public:
 	virtual void RestoreContent(TiXmlElement *element);
 
 	void LoadFirstGen(const char *root) ;
-    const unsigned int MAX_RENDER_MODE = 3;
+    static const unsigned int MAX_RENDER_MODE = 3;
 
   protected:
     void buildMidiDeviceList() ;
