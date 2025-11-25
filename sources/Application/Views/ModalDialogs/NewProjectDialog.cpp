@@ -200,22 +200,22 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 				int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
 				if (keyboardCol_ > maxCol) keyboardCol_ = maxCol;
 			}
-			isDirty_ = true;
-			return;
+            isDirty_ = true;
+            return;
         }
         if (mask == EPBM_LEFT) {
-			if (keyboardRow_ == 6) {
-				// Special row: toggle between [____] and <-
+            if (keyboardRow_ == 6) {
+                // Special row: toggle between [____] and <-
 				keyboardCol_ = (keyboardCol_ < 8) ? 8 : 0;
-			} else {
-				int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
+            } else {
+                int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
 				keyboardCol_ = (keyboardCol_ - 1 + maxCol + 1) % (maxCol + 1);
-			}
-			isDirty_ = true;
+            }
+            isDirty_ = true;
 			return;
 		}
-		if (mask == EPBM_RIGHT) {
-			if (keyboardRow_ == 6) {
+        if (mask == EPBM_RIGHT) {
+            if (keyboardRow_ == 6) {
 				// Special row: toggle between [____] and <-
 				keyboardCol_ = (keyboardCol_ < 8) ? 8 : 0;
 			} else {
@@ -224,15 +224,15 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 			}
 			isDirty_ = true;
 			return;
-		}
-		// Exit keyboard mode with B
-		if (mask == EPBM_B) {
+        }
+        // Exit keyboard mode with B
+        if (mask == EPBM_B) {
 			keyboardMode_ = false;
 			isDirty_ = true;
 			return;
 		}
-		return;
-	}
+        return;
+    }
 
     if (mask & EPBM_B) {
 
