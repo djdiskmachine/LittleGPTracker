@@ -439,7 +439,7 @@ jobs:
           files: ./projects/*.zip
 
   macos:
-    runs-on: macos-13
+    runs-on: macos-15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.7
