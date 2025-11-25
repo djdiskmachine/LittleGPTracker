@@ -69,6 +69,6 @@ private:
   MixBus bus_[MAX_BUS_COUNT];
   MixerServiceRenderMode mode_;
   SDL_mutex *sync_;
-  bool isRendering_ = false;
+  bool isRendering_;
 } ;
 #endif

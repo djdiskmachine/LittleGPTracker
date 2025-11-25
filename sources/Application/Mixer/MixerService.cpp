@@ -8,7 +8,9 @@
 #include "Services/Midi/MidiService.h"
 #include "System/Console/Trace.h"
 
-MixerService::MixerService() : out_(0), sync_(0) { mode_ = MSRM_PLAYBACK; };
+MixerService::MixerService() : out_(0), sync_(0), isRendering_(false) {
+    mode_ = MSRM_PLAYBACK;
+};
 
 MixerService::~MixerService(){};
 
