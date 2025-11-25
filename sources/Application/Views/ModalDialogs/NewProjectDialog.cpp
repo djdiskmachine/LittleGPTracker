@@ -44,8 +44,9 @@ char NewProjectDialog::getKeyAtPosition(int row, int col) {
 	return rowStr[col];
 }
 
-void NewProjectDialog::findCharacterInKeyboard(char ch, int &outRow, int &outCol) {
-	// Search for character in keyboard layout
+void NewProjectDialog::findCharacterInKeyboard(char ch, int &outRow,
+                                               int &outCol) {
+    // Search for character in keyboard layout
 	for (int row = 0; row < keyboardRows - 1; row++) { // Exclude special row
 		const char* rowStr = keyboardLayout[row];
 		int len = strlen(rowStr);
