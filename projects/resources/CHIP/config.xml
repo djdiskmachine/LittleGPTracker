@@ -1,5 +1,6 @@
 <!-- CONFIG-CHIP.xml-->
 <CONFIG>
+	<AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
 	<KEY_A value="key:0:backspace" />
 	<KEY_B value="key:0:[-]" />
 	<KEY_LEFT value="key:0:left" />

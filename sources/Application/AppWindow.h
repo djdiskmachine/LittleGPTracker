@@ -28,6 +28,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
   public:
     static AppWindow *Create(GUICreateWindowParams &);
     void LoadProject(const Path &path);
+    void SaveLastProject(const Path &p);
     void CloseProject();
 
     virtual void Clear(bool all = false);
@@ -77,6 +78,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     bool _isDirty;
     bool _closeProject;
     bool _loadAfterSaveAsProject;
+    bool _loadAfterResume;
     bool _shouldQuit;
     unsigned short _mask;
     unsigned long _lastA;
@@ -102,6 +104,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     static GUIColor rownumberColor_;
     static GUIColor rownumber2Color_;
     static GUIColor majorbeatColor_;
+#define LAST_PROJECT_NAME "bin:last_project"
 
     ColorDefinition colorIndex_;
 
@@ -109,6 +112,8 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     static int charHeight_;
 
     SysMutex drawMutex_;
+
+    Path GetLastProjectPath();
 };
 
 #endif

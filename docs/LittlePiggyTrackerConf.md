@@ -9,27 +9,28 @@
 02. [`config.xml` Example](#configxml-example)
 03. [Config Values](#config-values)
 04. [Screen Size](#screen-size)
-05. [Screen Colors](#screen-colors)
-06. [Key and Button Mapping](#key-and-button-mapping)
-07. [Auto Repeat](#auto-repeat)
-08. [Path](#path)
-09. [Rendering](#rendering)
-10. [Volume](#volume)
-11. [Audio Configuration](#audio-configuration)
-12. [MIDI Configuration](#midi-configuration)
-13. [Log Dumping](#log-dumping)
+05. [Auto-Load Last Project](#auto-load-last-project)
+06. [Screen Colors](#screen-colors)
+07. [Key and Button Mapping](#key-and-button-mapping)
+08. [Auto Repeat](#auto-repeat)
+09. [Path](#path)
+10. [Rendering](#rendering)
+11. [Volume](#volume)
+12. [Audio Configuration](#audio-configuration)
+13. [MIDI Configuration](#midi-configuration)
+14. [Log Dumping](#log-dumping)
 ----------
-14. [`mapping.xml` Guide](#mappingxml-guide)
-15. [Mapping a Joystick](#mapping-a-joystick)
-16. [`mapping.xml` Example](#mappingxml-example)
-17. [Checking Your Work](#checking-your-work)
-18. [Recovering X,Y to work on GP2X.](#recovering-xy-to-work-on-gp2x)
-19. [MAC OSX mapping](#mac-osx-mapping-howto)
-20. [PSP key mapping](#psp-key-mapping)
-21. [GP2X key mapping](#gp2x-key-mapping)
-22. [Dingoo key mapping](#dingoo-key-mapping)
-23. [Caanoo key mapping](#caanoo-key-mapping)
-24. [Mapping a Midi Controller](#mapping-a-midi-controller)
+15. [`mapping.xml` Guide](#mappingxml-guide)
+16. [Mapping a Joystick](#mapping-a-joystick)
+17. [`mapping.xml` Example](#mappingxml-example)
+18. [Checking Your Work](#checking-your-work)
+19. [Recovering X,Y to work on GP2X.](#recovering-xy-to-work-on-gp2x)
+20. [MAC OSX mapping](#mac-osx-mapping-howto)
+21. [PSP key mapping](#psp-key-mapping)
+22. [GP2X key mapping](#gp2x-key-mapping)
+23. [Dingoo key mapping](#dingoo-key-mapping)
+24. [Caanoo key mapping](#caanoo-key-mapping)
+25. [Mapping a Midi Controller](#mapping-a-midi-controller)
 
 ----------
 
@@ -93,6 +94,20 @@ To have the screen bigger than the original GP2X resolution, use **SCREEMULT** t
 ```
 
 Be careful as large values take a lot of juice and interfere with sound playback.
+
+### Auto-Load Last Project
+
+By default, LittleGPTracker will automatically load the last project that was open on the previous session. To disable this behavior and show the project selection dialog instead, set:
+
+```xml
+<AUTO_LOAD_LAST value='NO' />
+```
+
+To explicitly enable (default behavior):
+
+```xml
+<AUTO_LOAD_LAST value='YES' />
+```
 
 ## Screen Colors
 
