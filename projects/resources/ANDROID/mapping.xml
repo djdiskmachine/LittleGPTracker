@@ -1,0 +1,20 @@
+<!--
+    MAPPING FOR ANDROID KEYBOARD/CONTROLLER
+    enable DUMPEVENT to help with mapping
+-->
+<MAPPINGS>
+        <!-- Arrow keys for navigation -->
+        <MAP src="key:0:up" dst="/event/i" />
+        <MAP src="key:0:down" dst="/event/k" />
+        <MAP src="key:0:left" dst="/event/j" />
+        <MAP src="key:0:right" dst="/event/l" />
+
+        <!-- Letter keys for buttons -->
+        <MAP src="key:0:a" dst="/event/b" />
+        <MAP src="key:0:s" dst="/event/a" />
+        <MAP src="key:0:space" dst="/event/start" />
+        
+        <!-- Q/W for shoulders -->
+        <MAP src="key:0:q" dst="/event/lshoulder" />
+        <MAP src="key:0:w" dst="/event/rshoulder" />
+</MAPPINGS>

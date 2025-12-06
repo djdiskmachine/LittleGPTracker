@@ -1,0 +1,98 @@
+-include $(PWD)/rules_base
+
+#---------------------------------------------------------------------------------
+# Android-specific Makefile for LittleGPTracker
+# This Makefile produces libmain.so for SDL2 Android apps
+#---------------------------------------------------------------------------------
+
+# Determine ABI and set toolchain accordingly
+ABI ?= arm64-v8a
+NDK_PATH ?= $(ANDROID_NDK_HOME)
+
+# Override BUILD directory to be ABI-specific
+BUILD := build$(PLATFORM)_$(ABI)
+
+ifeq ($(ABI),armeabi-v7a)
+    TOOLCHAIN_PREFIX := armv7a-linux-androideabi
+    ARCH_FLAGS := -march=armv7-a -mfloat-abi=softfp -mfpu=neon
+    ANDROID_API := 21
+else ifeq ($(ABI),arm64-v8a)
+    TOOLCHAIN_PREFIX := aarch64-linux-android
+    ARCH_FLAGS := -march=armv8-a
+    ANDROID_API := 21
+else
+    $(error Unsupported ABI: $(ABI))
+endif
+
+# Set up NDK toolchain
+TOOLCHAIN := $(NDK_PATH)/toolchains/llvm/prebuilt/linux-x86_64
+CC := $(TOOLCHAIN)/bin/$(TOOLCHAIN_PREFIX)$(ANDROID_API)-clang
+CXX := $(TOOLCHAIN)/bin/$(TOOLCHAIN_PREFIX)$(ANDROID_API)-clang++
+AR := $(TOOLCHAIN)/bin/llvm-ar
+STRIP := $(TOOLCHAIN)/bin/llvm-strip
+
+# Platform definition
+PLATFORM := ANDROID
+
+# Android-specific defines
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-DANDROID \
+	-D__ANDROID__ \
+	-DCPP_MEMORY \
+	-DSDL2 \
+	-DSDLAUDIO \
+	-DDUMMYMIDI
+
+# Android doesn't support RtMidi - use dummy MIDI instead
+# -DRTMIDI \
+# -D_FEAT_MIDI_MULTITHREAD
+
+# Add _64BIT for arm64-v8a builds
+ifeq ($(ABI),arm64-v8a)
+DEFINES += -D_64BIT
+endif
+# SDL2 paths (these should be set by Gradle)
+SDL_INCLUDE ?= /path/to/SDL2/include
+SDL_LIB ?= /path/to/SDL2/libs/$(ABI)
+
+# Optimization and compilation flags
+OPT_FLAGS := -O2 -fno-strict-aliasing
+# For debugging, use:
+# OPT_FLAGS := -g -O0
+
+INCLUDES := -I$(SDL_INCLUDE) -I$(PWD)/../sources
+
+# Android requires position-independent code
+CFLAGS := $(OPT_FLAGS) $(DEFINES) $(INCLUDES) $(ARCH_FLAGS) \
+	-fPIC \
+	-ffunction-sections \
+	-fdata-sections \
+	-Wall \
+	-Wno-unused-variable
+
+CXXFLAGS := $(CFLAGS) -std=gnu++11 -fexceptions -frtti
+
+# Linker flags for shared library
+LDFLAGS := -shared \
+	$(ARCH_FLAGS) \
+	-Wl,--gc-sections \
+	-Wl,--no-undefined \
+	-L$(SDL_LIB)
+
+# Libraries to link
+LIBS := -lSDL2 \
+	-lGLESv2 \
+	-lGLESv1_CM \
+	-llog \
+	-landroid \
+	-lOpenSLES
+
+# Output configuration
+OUTPUT := ../libmain_$(ABI)
+EXTENSION := so
+
+# Build rule for shared library
+%.so: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	$(STRIP) --strip-unneeded $@

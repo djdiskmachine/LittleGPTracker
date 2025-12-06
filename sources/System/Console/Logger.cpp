@@ -1,9 +1,16 @@
 #include "Logger.h"
 #include <iostream>
+#ifdef __ANDROID__
+#include <SDL2/SDL.h>
+#endif
 
 void StdOutLogger::AddLine(const char *line)
 {
+#ifdef __ANDROID__
+	SDL_Log("%s", line);
+#else
 	std::cout << line << std::endl ;
+#endif
 }
 
 // ----------------------------------------------
