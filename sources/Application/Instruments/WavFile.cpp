@@ -79,7 +79,7 @@ WavFile *WavFile::Open(const char *path) {
         file->Read(fileBuffer,filesize,1) ;
         uchar *ptr=fileBuffer ;*/
         
-//Trace::Dump("Loading sample from %s",path) ;
+	Trace::Log("WAV", "Loading sample from %s", path);
 
 	long position=0 ;
 

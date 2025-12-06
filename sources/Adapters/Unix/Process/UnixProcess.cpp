@@ -22,13 +22,23 @@ SysSemaphore *UnixProcessFactory::CreateNewSemaphore(int initialcount, int maxco
 } ;
 
 UnixSysSemaphore::UnixSysSemaphore(int initialcount,int maxcount) {
+#ifdef __ANDROID__
+	// Android doesn't reliably support named semaphores, use unnamed ones
+	sem_init(&unnamed_sem_, 0, initialcount);
+	sem_ = &unnamed_sem_;
+#else
 	sem_=sem_open("n0ssemaphore",O_CREAT,S_IRUSR|S_IWUSR , 0 );
-} ;
+#endif
+}
 
 UnixSysSemaphore::~UnixSysSemaphore() {
+#ifdef __ANDROID__
+	sem_destroy(&unnamed_sem_);
+#else
   sem_close(sem_) ;
   sem_unlink("n0ssemaphore") ;
-} ;
+#endif
+}
 
 SysSemaphoreResult UnixSysSemaphore::Wait() {
 	sem_wait(sem_) ;
