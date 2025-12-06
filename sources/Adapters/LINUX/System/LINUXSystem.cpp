@@ -84,7 +84,7 @@ void LINUXSystem::Boot(int argc, char **argv) {
 	}
 #else
 	char buff[1024];
-	ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff)-1);
+	ssize_t len = ::readlink("/proc/self/exe", buff,sizeof(buff)-1);
 	if (len != -1) {
 		buff[len] = 0;
 	} else {

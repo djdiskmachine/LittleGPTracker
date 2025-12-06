@@ -12,6 +12,10 @@
 
 SDLGUIWindowImp *instance_ ;
 
+#ifdef __ANDROID__
+unsigned short appWidth=240 ;
+unsigned short appHeight=320 ;
+#else
 unsigned short appWidth=320 ;
 unsigned short appHeight = 240;
 
@@ -48,8 +52,14 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 320; 
   int screenHeight = 240;
   windowed_ = false;
-#elif defined(__ANDROID__)
+ #elif defined(__ANDROID__)
   // Use full screen dimensions on Android
+  int screenWidth = displayMode.w;
+  int screenHeight = displayMode.h;
+  windowed_ = false;
+  
+  SDL_Log("DISPLAY: Android - using full display: %dx%d", screenWidth, screenHeight);
+ #else
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
   windowed_ = false;
@@ -85,8 +95,12 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   }
  
   #ifdef PLATFORM_PSP
-  mult_ = 1;
-#else
+  	mult_ = 1;
+  #elif __ANDROID__
+  	// Calculate multiplier based on screen size
+  	int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
+  	mult_ = multFromSize - 1;
+  #else
 	int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
 	const char *mult=Config::GetInstance()->GetValue("SCREENMULT") ;
 	if (mult)
