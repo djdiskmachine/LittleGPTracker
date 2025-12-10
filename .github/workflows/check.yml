@@ -11,11 +11,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Fetch all branches
-        run: git fetch
+        run: git fetch ; git checkout origin/master
 
       - name: Check formatting
         run: |
-            git fetch origin master:master
             CHANGED_FILES=$(git diff --name-only master --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
 
             if [ -z "$CHANGED_FILES" ]; then
