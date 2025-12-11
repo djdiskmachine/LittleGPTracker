@@ -448,11 +448,11 @@ jobs:
         shell: bash
         run: |
           TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          cd resources/packaging
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
-          mv lgpt-resources-${TAG}/* ./resources/packaging
           rm -rf lgpt-resources*
-          ./resources/packaging/lgpt_package.sh
+          cd - && ./resources/packaging/lgpt_package.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
