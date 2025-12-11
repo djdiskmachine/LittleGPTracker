@@ -14,7 +14,7 @@ jobs:
 
       - name: Check formatting
         run: |
-            CHANGED_FILES=$(git diff --name-only origin/master...HEAD --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$')
+            CHANGED_FILES=$(git diff --name-only origin/master...HEAD --diff-filter=ACM | grep -iE '\.(cpp|h|c|hpp)$' || true)
 
             if [ -z "$CHANGED_FILES" ]; then
                 echo "No C/C++ files changed."
@@ -26,7 +26,7 @@ jobs:
             # Run clang-format on the changed lines of each staged file
             for FILE in $CHANGED_FILES; do
                 # Get the changed lines in the file
-                CHANGED_LINES=$(git diff -U0 master -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+                CHANGED_LINES=$(git diff -U0 origin/master -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
 
                 # Format each changed line in the file
                 for LINE in $CHANGED_LINES; do
