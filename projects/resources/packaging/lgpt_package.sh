@@ -27,6 +27,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   elif [ "$1" == "MACOS" ]; then # .app is a folder
     zip -9 $PACKAGE -j $CONTENTS
     zip -9yr $PACKAGE LittleGPTracker.app/
+    cd ../../ # Since we had to go here in the first place because MacOS globbing something something..
   else # all the others go in the bin
     mkdir bin ; cp $CONTENTS bin
     zip -9 $PACKAGE bin/* && rm -r bin/
