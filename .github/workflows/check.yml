@@ -444,9 +444,12 @@ jobs:
           cp -R bin/LittleGPTracker.app projects/
 
       - name: Package build
-        working-directory: projects/resources/packaging
+        working-directory: projects
         shell: bash
         run: |
+          ls -la
+          cd resources/packaging
+          ls -la
           TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           ls -la
