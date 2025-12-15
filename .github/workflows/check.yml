@@ -448,13 +448,16 @@ jobs:
         shell: bash
         run: |
           ls -la
-          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
+          TAG=$(curl -s \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          https://api.github.com/repos/djdiskmachine/lgpt-resources/tags \
+          | jq -r '.[0].name')
           echo TAG=$TAG
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           ls -la lgpt-resources.zip 
           unzip lgpt-resources.zip
           ls -la
-          ./resources/packaging/lgpt_package.sh 
+          ./lgpt_package.sh 
           ls -la
 
       - name: Upload artifact

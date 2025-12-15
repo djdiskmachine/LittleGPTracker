@@ -456,15 +456,17 @@ jobs:
           cp -R bin/LittleGPTracker.app projects/
 
       - name: Package build
-        working-directory: projects
+        working-directory: projects/resources/packaging
         shell: bash
         run: |
-          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
-          cd resources/packaging
+          TAG=$(curl -s \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          https://api.github.com/repos/djdiskmachine/lgpt-resources/tags \
+          | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           rm -rf lgpt-resources*
-          cd - && ./resources/packaging/lgpt_package.sh
+          ./lgpt_package.sh
 
       - name: Extract Git tag name
         id: extract_tag
