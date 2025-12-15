@@ -444,18 +444,17 @@ jobs:
           cp -R bin/LittleGPTracker.app projects/
 
       - name: Package build
-        working-directory: projects
+        working-directory: projects/resources/packaging
         shell: bash
         run: |
           TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
-          cd resources/packaging
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           ls -la
           unzip lgpt-resources.zip
           ls -la
           rm -rf lgpt-resources*
           ls -la
-          cd - && ls -la && ./resources/packaging/lgpt_package.sh && ls -la
+          cd ../.. && ls -la && ./resources/packaging/lgpt_package.sh && ls -la
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
