@@ -91,7 +91,7 @@ jobs:
         shell: bash
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -124,7 +124,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -157,7 +157,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -196,7 +196,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -230,7 +230,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -272,7 +272,7 @@ jobs:
       - name: Package build
         working-directory: ./workspace/projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -307,7 +307,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -342,7 +342,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -378,7 +378,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -412,7 +412,7 @@ jobs:
       - name: Package build
         working-directory: projects
         run: |
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
           mv lgpt-resources-${TAG}/*/ ./resources/packaging
@@ -444,21 +444,15 @@ jobs:
           cp -R bin/LittleGPTracker.app projects/
 
       - name: Package build
-        working-directory: projects
+        working-directory: projects/resources/packaging
         shell: bash
         run: |
           ls -la
-          set +e
-          cd resources/packaging || true
-          echo "cd exit code: $?"
-          
-          ls -la
-          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
+          echo TAG=$TAG
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
-          ls -la
+          ls -la lgpt-resources.zip 
           unzip lgpt-resources.zip
-          ls -la
-          cd ../.. 
           ls -la
           ./resources/packaging/lgpt_package.sh 
           ls -la
