@@ -452,9 +452,10 @@ jobs:
           ls -la
           unzip lgpt-resources.zip
           ls -la
-          rm -rf lgpt-resources*
+          cd ../.. 
           ls -la
-          cd ../.. && ls -la && ./resources/packaging/lgpt_package.sh && ls -la
+          ./resources/packaging/lgpt_package.sh 
+          ls -la
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
