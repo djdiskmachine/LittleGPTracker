@@ -454,16 +454,12 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           https://api.github.com/repos/djdiskmachine/lgpt-resources/tags)
           echo TAG==$TAG
-          TAG2=$(echo $TAG | jq -r '.[0].name')
-          echo TAG2==$TAG2
-
+          TAG=$(echo $TAG | jq -r '.[0].name')
+          echo TAG==$TAG
           curl -fL -o lgpt-resources.zip \
-            https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG2}.zip
-          ls -la lgpt-resources.zip 
+            https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
-          ls -la
-          ./lgpt_package.sh 
-          ls -la
+          ./lgpt_package.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
