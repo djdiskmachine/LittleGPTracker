@@ -465,7 +465,6 @@ jobs:
           | jq -r '.[0].name')
           curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
           unzip lgpt-resources.zip
-          rm -rf lgpt-resources*
           ./lgpt_package.sh
 
       - name: Extract Git tag name

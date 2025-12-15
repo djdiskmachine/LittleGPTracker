@@ -446,14 +446,19 @@ jobs:
       - name: Package build
         working-directory: projects/resources/packaging
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ls -la
-          TAG=$(curl -s \
-          -H "Authorization: Bearer $GITHUB_TOKEN" \
-          https://api.github.com/repos/djdiskmachine/lgpt-resources/tags \
-          | jq -r '.[0].name')
-          echo TAG=$TAG
-          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
+          TAG=$(curl -fsSL \
+          -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+          -H "Accept: application/vnd.github+json" \
+          https://api.github.com/repos/djdiskmachine/lgpt-resources/tags)
+          echo TAG==$TAG
+          TAG2=$(echo $TAG | jq -r '.[0].name')
+          echo TAG2==$TAG2
+
+          curl -fL -o lgpt-resources.zip \
+            https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG2}.zip
           ls -la lgpt-resources.zip 
           unzip lgpt-resources.zip
           ls -la
