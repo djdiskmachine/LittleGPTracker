@@ -1,5 +1,12 @@
 1.6.0-bacon4
     QWERTY keyboard name entry for new projects
+    * Press A on the project name field to enter QWERTY keyboard mode
+    * Navigate the on-screen keyboard with D-PAD/arrows
+    * Press A to input the selected character
+    * Press B to backspace
+    * Press L/R to move the text cursor left/right
+    * Press START or select OK to exit keyboard mode
+    * All keyboard navigation logic extracted to reusable KeyboardLayout.h utility
 
 1.5.0-bacon3
     Contributions:
