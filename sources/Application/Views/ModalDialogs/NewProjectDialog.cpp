@@ -1,64 +1,23 @@
 
 #include "NewProjectDialog.h"
+#include "Application/Utils/KeyboardLayout.h"
 #include "Application/Utils/RandomNames.h"
 
 static char *buttonText[BUTTONS_LENGTH] = {(char *)"Random", (char *)"Ok",
                                            (char *)"Cancel"};
 
 #define DIALOG_WIDTH 20
-#define SPACE_ROW 7
-
-#define KEYBOARD_ROWS (SPACE_ROW + 1)
-
-#define SPCE_START 0
-#define SPCE_END 3
-#define BACK_START 4
-#define BACK_END 6
-#define DONE_START 8
-#define DONE_END 10
-
-static const char *keyboardLayout[] = {"1234567890", "QWERTYUIOP", "ASDFGHJKL@",
-                                       "ZXCVBNM,?>", "qwertyuiop", "asdfghjkl|",
-                                       "zxcvbnm-_<", "[_] <-  OK"};
 
 NewProjectDialog::NewProjectDialog(View &view):ModalView(view) {}
 
 NewProjectDialog::~NewProjectDialog() {}
 
-char NewProjectDialog::getKeyAtPosition(int row, int col) {
-    if (row < 0 || row >= KEYBOARD_ROWS)
-        return '\0';
-    const char *rowStr = keyboardLayout[row];
-
-    // Handle special row with SPC and <-
-	if (row == SPACE_ROW) {
-        if (col >= 0 && col < SPCE_END)
-            return ' ';                                       // [_] (space)
-        if (col >= BACK_START && col < BACK_END) return '\b'; // <- (backspace)
-        if (col >= DONE_START && col < DONE_END) return '\r'; // END (carriage return)
-		return '\0';
-    }
-
-    int len = strlen(rowStr);
-    if (col < 0 || col >= len) return '\0';
-	return rowStr[col];
-}
-
-void NewProjectDialog::findCharacterInKeyboard(char ch, int &outRow,
-                                               int &outCol) {
-    if (ch == ' ')
-        return; // Skip blankspace character
-                // Search for character in keyboard layout
-    for (int row = 0; row < SPACE_ROW; row++) { // Exclude special row
-		const char* rowStr = keyboardLayout[row];
-		int len = strlen(rowStr);
-		for (int col = 0; col < len; col++) {
-			if (rowStr[col] == ch) {
-				outRow = row;
-				outCol = col;
-                return;
-            }
-        }
+// Move text cursor left (-1) or right (+1) and update keyboard position
+void NewProjectDialog::moveCursor(int direction) {
+    int newPos = currentChar_ + direction;
+    if (newPos >= 0 && newPos < MAX_NAME_LENGTH) {
+        currentChar_ = newPos;
+		findCharacterInKeyboard(name_[currentChar_], keyboardRow_, keyboardCol_);
     }
 }
 
@@ -91,22 +50,25 @@ void NewProjectDialog::DrawView() {
             int startX = (DIALOG_WIDTH - len) / 2;
 
             // Special handling for last row with SPC and <-
-			if (row == SPACE_ROW) {
-				// Draw SPACE
-				props.invert_ = (row == keyboardRow_ && keyboardCol_ < SPCE_END);
-				DrawString(startX, 4 + row, "[_]", props);
+            if (row == SPACE_ROW) {
+                // Draw SPACE
+                props.invert_ =
+                    (row == keyboardRow_ && isInSpaceSection(keyboardCol_));
+                DrawString(startX, 4 + row, "[_]", props);
 
                 // Draw <-
-                props.invert_ = (row == keyboardRow_ && keyboardCol_ >= BACK_START && keyboardCol_ < BACK_END);
+                props.invert_ =
+                    (row == keyboardRow_ && isInBackSection(keyboardCol_));
                 DrawString(startX + 4, 4 + row, "<-", props);
 
                 // Draw END
                 props.invert_ =
-                    (row == keyboardRow_ && keyboardCol_ >= DONE_START);
+                    (row == keyboardRow_ && isInDoneSection(keyboardCol_));
                 DrawString(startX + 8, 4 + row, "OK", props);
             } else {
-				for (int col = 0; col < len; col++) {
-					props.invert_ = (row == keyboardRow_ && col == keyboardCol_);
+                for (int col = 0; col < len; col++) {
+                    props.invert_ =
+                        (row == keyboardRow_ && col == keyboardCol_);
                     buffer[0] = rowStr[col];
                     DrawString(startX + col, 4 + row, buffer, props);
                 }
@@ -146,20 +108,21 @@ void NewProjectDialog::OnFocus() {
     keyboardCol_ = 0;
 };
 
-void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
+void NewProjectDialog::ProcessButtonMask(unsigned short mask, bool pressed) {
 
-	if (!pressed) return ;
+    if (!pressed)
+        return;
 
     // Handle keyboard mode navigation first
     if (keyboardMode_) {
         if (mask == EPBM_A) {
             // Insert character at current position
             char ch = getKeyAtPosition(keyboardRow_, keyboardCol_);
-			if (ch == '\b') {
-				// Backspace: delete character and move cursor left
-				if (currentChar_ > 0) {
-					currentChar_--;
-					name_[currentChar_] = ' ';
+            if (ch == '\b') {
+                // Backspace: delete character and move cursor left
+                if (currentChar_ > 0) {
+                    currentChar_--;
+                    name_[currentChar_] = ' ';
                 }
             } else if (ch == '\r') {
                 // END key: exit keyboard mode (same as START)
@@ -169,8 +132,8 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
                 return;
             } else if (ch != '\0') {
                 name_[currentChar_] = ch;
-				lastChar_ = ch;
-				if (currentChar_ < MAX_NAME_LENGTH - 1) {
+                lastChar_ = ch;
+                if (currentChar_ < MAX_NAME_LENGTH - 1) {
                     currentChar_++;
                     findCharacterInKeyboard(name_[currentChar_], keyboardRow_,
                                             keyboardCol_);
@@ -185,96 +148,40 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
                 name_[currentChar_] = ' ';
                 isDirty_ = true;
             }
+            return;
         } else if (mask == EPBM_L) {
             // Move cursor left
-            if (currentChar_ > 0) {
-                currentChar_--;
-                findCharacterInKeyboard(name_[currentChar_], keyboardRow_, keyboardCol_);
-                isDirty_ = true;
-                return;
-            }
+            moveCursor(-1);
+            isDirty_ = true;
+            return;
         } else if (mask == EPBM_R) {
             // Move cursor right
-            if (currentChar_ < MAX_NAME_LENGTH - 1) {
-                currentChar_++;
-                findCharacterInKeyboard(name_[currentChar_], keyboardRow_, keyboardCol_);
-                isDirty_ = true;
-                return;
-            }
-        }
-        if (mask == EPBM_UP) {
+            moveCursor(1);
+            isDirty_ = true;
+            return;
+        } else if (mask == EPBM_UP) {
             keyboardRow_ = (keyboardRow_ - 1 + KEYBOARD_ROWS) % KEYBOARD_ROWS;
-            // Clamp column to valid range for new row
-            if (keyboardRow_ == SPACE_ROW) {
-				if (keyboardCol_ <  SPCE_END) keyboardCol_ = SPCE_START; // Move to [_]
-				if (keyboardCol_ >= SPCE_END && keyboardCol_ <= BACK_END) keyboardCol_ = BACK_START; // Move to <-
-				if (keyboardCol_ >  BACK_END) keyboardCol_ = DONE_START; // Move to DONE
-            } else {
-                int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
-                if (keyboardCol_ > maxCol) keyboardCol_ = 0;
-            }
+            clampKeyboardColumn(keyboardRow_, keyboardCol_);
             isDirty_ = true;
             return;
-        }
-        if (mask == EPBM_DOWN) {
+        } else if (mask == EPBM_DOWN) {
             keyboardRow_ = (keyboardRow_ + 1) % KEYBOARD_ROWS;
-            // Clamp column to valid range for new row
-            if (keyboardRow_ == SPACE_ROW) {
-				// Special row: SPC is 0-6, <- is 8-11
-                if (keyboardCol_ < SPCE_END)
-                    keyboardCol_ = SPCE_START; // Move to [_]
-                if (keyboardCol_ >= SPCE_END && keyboardCol_ <= BACK_END) keyboardCol_ = BACK_START; // Move to <-
-				if (keyboardCol_ >  BACK_END) keyboardCol_ = DONE_START; // Move to DONE
-            } else {
-                int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
-                if (keyboardCol_ > maxCol)
-                    keyboardCol_ = 0;
-            }
+            clampKeyboardColumn(keyboardRow_, keyboardCol_);
             isDirty_ = true;
             return;
-        }
-        if (mask == EPBM_LEFT) {
-            if (keyboardRow_ == SPACE_ROW) {
-                // Cycle backward: END -> BACK -> SPACE -> END ...
-                if (keyboardCol_ < SPCE_END) {
-                    keyboardCol_ = DONE_START; // Move to DONE
-                } else if (keyboardCol_ >= SPCE_END &&
-                           keyboardCol_ < DONE_START) {
-                    keyboardCol_ = SPCE_START; // Move to SPACE
-                } else if (keyboardCol_ >= DONE_START) {
-                    keyboardCol_ = BACK_START; // Move to BACK
-                }
-            } else {
-                int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
-                keyboardCol_ = (keyboardCol_ - 1 + maxCol + 1) % (maxCol + 1);
-            }
+        } else if (mask == EPBM_LEFT) {
+            cycleKeyboardColumn(keyboardRow_, -1, keyboardCol_);
             isDirty_ = true;
             return;
-        }
-        if (mask == EPBM_RIGHT) {
-            if (keyboardRow_ == SPACE_ROW) {
-                // Cycle forward: SPACE -> BACK -> END -> SPACE ...
-                if (keyboardCol_ >= BACK_START && keyboardCol_ < BACK_END) {
-                    keyboardCol_ = DONE_START; // Move to DONE
-                } else if (keyboardCol_ >= DONE_START) {
-                    keyboardCol_ = SPCE_START; // Move to SPACE
-                } else if (keyboardCol_ >= SPCE_START &&
-                           keyboardCol_ < BACK_END) {
-                    keyboardCol_ = BACK_START; // Move to BACK
-                }
-            } else {
-                int maxCol = strlen(keyboardLayout[keyboardRow_]) - 1;
-                keyboardCol_ = (keyboardCol_ + 1) % (maxCol + 1);
-            }
+        } else if (mask == EPBM_RIGHT) {
+            cycleKeyboardColumn(keyboardRow_, 1, keyboardCol_);
             isDirty_ = true;
             return;
-        } // Exit keyboard mode with Start
-        if (mask == EPBM_START) {
+        } else if (mask == EPBM_START) {
             keyboardMode_ = false;
             isDirty_ = true;
-            // EndModal(1); // We want to clear out the keyboard mode in the background too
-			return;
-		}
+            return;
+        }
         return;
     } else if ((mask == EPBM_A)) {
         // Toggle keyboard mode with A
