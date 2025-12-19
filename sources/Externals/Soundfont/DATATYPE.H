@@ -35,6 +35,7 @@
 ************/
 
 #include <limits.h>
+#include <stdint.h>
 
 
 /************
@@ -99,17 +100,22 @@ typedef short               SHORT;     /* 16 bit signed value was: INT */
   typedef WORD  huge* UINTPTR;
   typedef DWORD huge* DWORDPTR;
   typedef void  huge* VOIDPTR;
+  /* Pointer-sized type for runtime memory addresses (32 or 64-bit) */
+  typedef uintptr_t ADDR;
 #else
   typedef unsigned char       BYTE;    /*  8 bit unsigned value   */
 #ifndef BOOL
   typedef int               BOOL;    /* 16 bit signed value     */
 #endif
-  typedef unsigned short      WORD;    /* 16 bit signed value     */
-  typedef signed long         LONG;    /* 32 bit signed value     */
-  typedef unsigned long       DWORD;   /* 32 bit unsigned value   */
+  typedef unsigned short      WORD;    /* 16 bit unsigned value   */
+  typedef int32_t             LONG;    /* 32 bit signed value (fixed-size) */
+  typedef uint32_t            DWORD;   /* 32 bit unsigned value (fixed-size) */
   typedef float               FLOAT;   /* 32 bit floating point value */
   typedef double              DOUBLE;  /* 64 bit floating point value */
   typedef long double         LDOUBLE; /* 80 bit floating point value */
+
+  /* Pointer-sized type for runtime memory addresses (32 or 64-bit) */
+  typedef uintptr_t           ADDR;
 
   typedef BYTE*               BYTEPTR;
   typedef WORD*               UINTPTR;
