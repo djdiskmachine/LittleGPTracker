@@ -19,7 +19,7 @@
 #define VAR_SCALE 			MAKE_FOURCC('S', 'C', 'A', 'L')
 
 #define PROJECT_NUMBER "1"
-#define PROJECT_RELEASE "5"
+#define PROJECT_RELEASE "6"
 #define BUILD_COUNT "0"
 
 #define MAX_TAP 3
@@ -63,8 +63,7 @@ private:
 	int midiDeviceListSize_ ;
 	int tempoNudge_ ;
 	unsigned long lastTap_[MAX_TAP] ;
-	unsigned int tempoTapCount_ ; 
+    unsigned int tempoTapCount_;
 } ;
 
 #endif
-
