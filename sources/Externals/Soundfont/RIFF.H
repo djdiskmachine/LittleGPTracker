@@ -191,7 +191,7 @@ class RIFFClass
 
     DWORD    RIFFTell(void); 
     DWORD    RIFFTellAbs(void);
-    SHORT    RIFFOpen(ADDR);
+    SHORT RIFFOpen(ADDR);
     SHORT    RIFFClose(void);
 	
 

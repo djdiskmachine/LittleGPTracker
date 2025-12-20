@@ -53,10 +53,10 @@ typedef enum sfSampleFlagsTag
 typedef struct sfDataTag
 {
   //// Oscillator ////
-  ADDR dwStart;              //// sample start address (pointer-sized for 64-bit)
+  ADDR dwStart; //// sample start address (pointer-sized for 64-bit)
   ADDR dwEnd;
-  ADDR dwStartloop;          //// loop start address (pointer-sized for 64-bit)
-  ADDR dwEndloop;            //// loop end address (pointer-sized for 64-bit)
+  ADDR dwStartloop; //// loop start address (pointer-sized for 64-bit)
+  ADDR dwEndloop;   //// loop end address (pointer-sized for 64-bit)
   DWORD dwSampleRate; 
   SHORT shOrigKeyAndCorr;
   SHORT shSampleModes;

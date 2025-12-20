@@ -667,26 +667,27 @@ ReadSFBData (CHAR * pchReqdWaveTable)
   //// Sample Headers ////
   for (uiCount = 0; uiCount < hf->awStructSize[sampHdr]; uiCount++) {
 
-    // For ADDR fields, we need to swap using temporary 32-bit variables
-    // since the file format uses 32-bit values but we store in pointer-sized fields
-    {
-      DWORD tmp;
-      tmp = (DWORD)hf->pSHdr[uiCount].dwStart;
-      tRIFF.SwapDWORD(&tmp);
-      hf->pSHdr[uiCount].dwStart = tmp;
+      // For ADDR fields, we need to swap using temporary 32-bit variables
+      // since the file format uses 32-bit values but we store in pointer-sized
+      // fields
+      {
+          DWORD tmp;
+          tmp = (DWORD)hf->pSHdr[uiCount].dwStart;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwStart = tmp;
 
-      tmp = (DWORD)hf->pSHdr[uiCount].dwEnd;
-      tRIFF.SwapDWORD(&tmp);
-      hf->pSHdr[uiCount].dwEnd = tmp;
+          tmp = (DWORD)hf->pSHdr[uiCount].dwEnd;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwEnd = tmp;
 
-      tmp = (DWORD)hf->pSHdr[uiCount].dwStartloop;
-      tRIFF.SwapDWORD(&tmp);
-      hf->pSHdr[uiCount].dwStartloop = tmp;
+          tmp = (DWORD)hf->pSHdr[uiCount].dwStartloop;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwStartloop = tmp;
 
-      tmp = (DWORD)hf->pSHdr[uiCount].dwEndloop;
-      tRIFF.SwapDWORD(&tmp);
-      hf->pSHdr[uiCount].dwEndloop = tmp;
-    }
+          tmp = (DWORD)hf->pSHdr[uiCount].dwEndloop;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwEndloop = tmp;
+      }
 
     tRIFF.SwapDWORD(&hf->pSHdr[uiCount].dwSampleRate);
 
@@ -813,21 +814,22 @@ WORD       mono =        monoSample;
 
         rcnt = 0;
 
-        rcnt += tRIFF.RIFFRead((VOIDPTR)
-                               &((sfSampleHdr*)pData)[curHdr].achSampleName,
-				             1, SAMPLENAMESIZE);
+        rcnt += tRIFF.RIFFRead((VOIDPTR) &
+                                   ((sfSampleHdr *)pData)[curHdr].achSampleName,
+                               1, SAMPLENAMESIZE);
 
-        // Read 32-bit file values into temporaries, then assign to pointer-sized fields
+        // Read 32-bit file values into temporaries, then assign to
+        // pointer-sized fields
         uint32_t tmp_dwStart, tmp_dwEnd, tmp_dwStartloop, tmp_dwEndloop;
 
         rcnt += tRIFF.RIFFRead(&tmp_dwStart, 1, sizeof(uint32_t));
-        ((sfSampleHdr*)pData)[curHdr].dwStart = tmp_dwStart;
+        ((sfSampleHdr *)pData)[curHdr].dwStart = tmp_dwStart;
 
         rcnt += tRIFF.RIFFRead(&tmp_dwEnd, 1, sizeof(uint32_t));
-        ((sfSampleHdr*)pData)[curHdr].dwEnd = tmp_dwEnd;
+        ((sfSampleHdr *)pData)[curHdr].dwEnd = tmp_dwEnd;
 
         rcnt += tRIFF.RIFFRead(&tmp_dwStartloop, 1, sizeof(uint32_t));
-        ((sfSampleHdr*)pData)[curHdr].dwStartloop = tmp_dwStartloop;
+        ((sfSampleHdr *)pData)[curHdr].dwStartloop = tmp_dwStartloop;
 
         rcnt += tRIFF.RIFFRead(&tmp_dwEndloop, 1, sizeof(uint32_t));
         ((sfSampleHdr*)pData)[curHdr].dwEndloop = tmp_dwEndloop;
