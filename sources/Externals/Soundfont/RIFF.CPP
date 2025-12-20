@@ -235,7 +235,7 @@ WORD RIFFClass::OpenRIFF(CHAR* pName)
 {
   byWhereIsRIFFData = RIFF_ONDISK;
 
-  if ((RIFFOpen((LONG)pName) != SUCCESS ) || (pFile == NULL))
+  if ((RIFFOpen((ADDR)pName) != SUCCESS ) || (pFile == NULL))
   { 
      SetError(errno); // Set inside RIFFOpen
      return (uiErrorNdx = RIFF_OPENFILEERROR);
@@ -254,7 +254,7 @@ WORD RIFFClass::OpenRIFF(FSSpec* pSpecifier)
 {
   byWhereIsRIFFData = RIFF_ONMACDISK;
  
-  if (RIFFOpen((LONG)pSpecifier) != SUCCESS)
+  if (RIFFOpen((ADDR)pSpecifier) != SUCCESS)
     return (RIFF_OPENFILEERROR);
    
   return(InitRIFF());
@@ -443,7 +443,7 @@ DWORD  RIFFClass::GetCkFormID(void) { return (dwLastFormID); }
 //  is a pointer to the File System Specifier (FSSpec)
 //  data structure.
 //***************************************************
-SHORT RIFFClass::RIFFOpen(LONG lPointer)
+SHORT RIFFClass::RIFFOpen(ADDR lPointer)
 {
   //***************************************************
   // Keep in mind that whenever a system call is made and
