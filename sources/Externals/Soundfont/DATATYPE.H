@@ -35,7 +35,19 @@
 ************/
 
 #include <limits.h>
-#include <stdint.h>
+
+#if defined(_MSC_VER) && _MSC_VER < 1600
+  /* Workaround for MSVC 2008 and earlier */
+  typedef signed __int32    int32_t;
+  typedef unsigned __int32  uint32_t;
+  #ifdef _WIN64
+    typedef unsigned __int64 uintptr_t;
+  #else
+    typedef unsigned __int32 uintptr_t;
+  #endif
+#else
+  #include <stdint.h>
+#endif
 
      /************
       * Defines
