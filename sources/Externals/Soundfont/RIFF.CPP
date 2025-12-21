@@ -252,7 +252,7 @@ WORD RIFFClass::OpenRIFF(CHAR* pName)
 WORD RIFFClass::OpenRIFF(FSSpec* pSpecifier)
 {
   byWhereIsRIFFData = RIFF_ONMACDISK;
- 
+
   if (RIFFOpen((ADDR)pSpecifier) != SUCCESS)
       return (RIFF_OPENFILEERROR);
 
@@ -473,7 +473,7 @@ SHORT RIFFClass::RIFFOpen(ADDR lPointer) {
 
     default:
       return (1);
-  }
+    }
 }
 
 SHORT RIFFClass::RIFFClose()

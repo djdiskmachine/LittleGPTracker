@@ -65,8 +65,8 @@ sfBankID SoundFontManager::LoadBank(const char *path) {
         // ADDR is pointer-sized, works on both 32-bit and 64-bit
         current.dwStart = (ADDR)buffer;
 
-        sampleData_.push_back(buffer) ;
-	}
+        sampleData_.push_back(buffer);
+    }
 	fin->Close() ;
 	SAFE_DELETE(fin) ;
 

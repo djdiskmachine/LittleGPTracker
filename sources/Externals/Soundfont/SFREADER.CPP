@@ -810,7 +810,7 @@ WORD       mono =        monoSample;
     // Element for element read of data, to serve as an example of a possible
     // issue with cross platform code. See comments below.
     //
-    for(WORD curHdr=0; curHdr < hf->awStructSize[iHydraSymbol]; curHdr++) {
+    for (WORD curHdr = 0; curHdr < hf->awStructSize[iHydraSymbol]; curHdr++) {
 
         rcnt = 0;
 
@@ -832,7 +832,7 @@ WORD       mono =        monoSample;
         ((sfSampleHdr *)pData)[curHdr].dwStartloop = tmp_dwStartloop;
 
         rcnt += tRIFF.RIFFRead(&tmp_dwEndloop, 1, sizeof(uint32_t));
-        ((sfSampleHdr*)pData)[curHdr].dwEndloop = tmp_dwEndloop;
+        ((sfSampleHdr *)pData)[curHdr].dwEndloop = tmp_dwEndloop;
 
         rcnt += tRIFF.RIFFRead( &((sfSampleHdr*)pData)[curHdr].dwSampleRate,
                                                1, sizeof(DWORD));
@@ -857,7 +857,7 @@ WORD       mono =        monoSample;
           SetError(SF_INVALIDBANK);
           return (NULL);
         }
-     }// end for all elements
+    } // end for all elements
   }  // do sampleHdr reading, 
 
   else { 
