@@ -259,7 +259,8 @@ COMMONFILES := \
 	char.o n_assert.o fixed.o wildcard.o \
 	SyncMaster.o TablePlayback.o Player.o \
 	Table.o TableView.o\
-	InstrumentBank.o WavFileWriter.o WavFile.o MidiInstrument.o Filters.o SampleVariable.o SampleInstrument.o SamplePool.o CommandList.o FxPrinter.o\
+	InstrumentBank.o WavFileWriter.o WavFile.o MidiInstrument.o Filters.o \
+	SampleVariable.o SampleInstrument.o SamplePool.o CommandList.o FxPrinter.o\
 	PersistencyService.o Persistent.o \
 	Observable.o SingletonRegistry.o \
 	Audio.o AudioMixer.o AudioOutDriver.o AudioDriver.o \
@@ -273,6 +274,12 @@ COMMONFILES := \
 	ENAB.o HYDRA.o OMEGA.o RIFF.o SFDETECT.o SFLOOKUP.o SFNAV.o SFREADER.o WIN_MEM.o \
 	HexBuffers.o lz.o \
 	tinyxmlparser.o tinyxml.o tinyxmlerror.o tinystr.o Tiny2NosStub.o
+
+ifneq ($(FFMPEG_ENABLED), 0)
+ifneq ($(strip $(FFMPEG_LIBS)),)
+	COMMONFILES += LibavProcessor.o
+endif
+endif
 
 #---------------------------------------------------------------------------------
 # Linux

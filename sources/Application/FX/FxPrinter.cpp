@@ -8,11 +8,6 @@ FxPrinter::FxPrinter(ViewData* viewData)
     InstrumentBank* bank = viewData_->project_->GetInstrumentBank();
     instrument_ = static_cast<SampleInstrument *>(bank->GetInstrument(curInstr));
     notificationResult_ = "";
-    // Assume ffmpeg exists but swap for local ffmpig if it doesn't
-    ffmpeg_ = "ffmpeg";
-    Path pigPath("bin:ffmpig");
-    Path ffmpigPath(pigPath.GetPath().c_str());
-    if(ffmpigPath.Exists()) ffmpeg_ = pigPath.GetPath();
 }
 
 void FxPrinter::setParams() {
@@ -21,10 +16,11 @@ void FxPrinter::setParams() {
 }
 
 void FxPrinter::setPaths() {
-    fi_ = std::string(instrument_->GetName());
+    fi_ = std::string(instrument_->GetFullName());
+    fiPath_ = samples_dir.GetPath() + '/' + fi_;
 
-    foWav_ = fi_.substr(0, fi_.find_last_of('.')) + "_.wav";
-    fo_ = "\"" + samples_dir.GetPath() + '/' + foWav_ + "\"";
+    fo_ = fi_.substr(0, fi_.find_last_of('.')) + "_.wav";
+    foPath_ = samples_dir.GetPath() + '/' + fo_;
 
     ir_ = impulse_dir.GetPath() + "/IR-s/";
     ir_ += std::string(instrument_->FindVariable(SIP_PRINTFX)->GetString());
@@ -36,9 +32,9 @@ std::string FxPrinter::parseCommand() {
     float smplLength = static_cast<float>(instrument_->GetSampleSize()) / 44100;
 
     std::ostringstream cm1, cm2, cm3, cm4, cm5;
-    cm1 << ffmpeg_ << " -y -i "
-        << "\"" << samples_dir.GetPath() << "/" << fi_ << "\""
-        << " -i " << ir_ << " -filter_complex ";
+    // cm1 << ffmpeg_ << " -y -i "
+    //     << "\"" << fi_ << "\""
+    //     << " -i " << ir_ << " -filter_complex ";
     // bug in ffmpeg version 4.4.2
     // requires pad_dur to be over 0 or output will be infinitely long
     if (irPad_ > 0) {
@@ -64,17 +60,22 @@ bool FxPrinter::Run() {
     setParams();
     setPaths();
     // Are we overwriting an already imported sample?
-    bool imported = SamplePool::GetInstance()->IsImported(foWav_);
-    std::string cmd = parseCommand();
-    Trace::Log("Processed", cmd.c_str());
-    if (system(cmd.c_str()) == 0) {
-        int newIndex = SamplePool::GetInstance()->Reassign(foWav_, imported);
+    bool imported = SamplePool::GetInstance()->IsImported(fo_);
+    parseCommand();
+#ifdef FFMPEG_ENABLED
+    if (encode(fiPath_.c_str(), ir_.c_str(), foPath_.c_str(), irWet_, irPad_) == 0) {
+        int newIndex = SamplePool::GetInstance()->Reassign(fo_, imported);
         instrument_->AssignSample(newIndex);
-        notificationResult_ = "OK!";
+        notificationResult_ = "libav OK!";
         return true;
     } else {
         Trace::Log("PRINTFX", "Failed");
         notificationResult_ = "Failed, check lgpt.log";
         return false;
     }
+#else
+    Trace::Log("PRINTFX", "Failed");
+    notificationResult_ = "Failed, check lgpt.log";
+    return false;
+#endif
 }

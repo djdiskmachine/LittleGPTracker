@@ -9,7 +9,10 @@ DEFINES := \
 	-DCPP_MEMORY \
 	-D_NDEBUG \
 	-DHAVE_STDINT_H \
-	-D_NO_JACK_  
+	-D_NO_JACK_ \
+	-DFFMPEG_ENABLED \
+	-DFFMPEG_LEGACY_API
+
 
 # compiled using the https://github.com/shauninman/union-rg35xxplus-toolchain
 
@@ -23,13 +26,24 @@ SYSROOT     := $(shell $(CROSS_COMPILE)gcc --print-sysroot)
 SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
+FFMPEG_INCL=  libavformat \
+              libavfilter \
+              libavcodec  \
+              libavutil   \
+
+FFMPEG_CFLAGS := $(shell $(DEVKIT)/usr/bin/pkg-config --cflags $(FFMPEG_INCL))
+FFMPEG_LIBS := $(shell $(DEVKIT)/usr/bin/pkg-config --libs $(FFMPEG_INCL))
+
+$(info FFMPEG_CFLAGS: $(FFMPEG_CFLAGS))
+$(info FFMPEG_LIBS: $(FFMPEG_LIBS))
+
 # optimization
 OPT_FLAGS  = -O3 -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto -marm -mtune=cortex-a53 -mfpu=neon-vfpv4 -mfloat-abi=hard
 PREFIX	:=	arm-linux-gnueabihf-
-INCLUDES = -Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources
+INCLUDES = -Iinclude $(SDL_CFLAGS) $(FFMPEG_CFLAGS) -I$(PWD)/../sources
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
-LIBS	:=  -lSDL -lpthread
+LIBS	:=  -lSDL -lpthread $(FFMPEG_LIBS)
 LIBDIRS	:=	$(DEKVIT)/usr/lib
 LIBDIRS	+=	$(DEKVIT)/usr/include
 OUTPUT = ../lgpt-garlicplus
