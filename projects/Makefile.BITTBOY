@@ -1,4 +1,5 @@
 -include $(PWD)/rules_base
+
 STRIP = $(CROSS_COMPILE)strip
 
 DEFINES := \
@@ -8,6 +9,8 @@ DEFINES := \
 	-DHAVE_STDINT_H \
 	-D_NDEBUG \
 	-D__LINUX_ALSA__ \
+	-DFFMPEG_ENABLED \
+	-DFFMPEG_LEGACY_API \
 	-D_NO_JACK_
 
 DEVKIT=/opt/arm-buildroot-linux-musleabi_sdk-buildroot
@@ -19,15 +22,17 @@ SDL_CFLAGS  := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
 SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 SDL_BASE = $(DEVKIT)/arm-buildroot-linux-musleabi/sysroot/usr/bin/
 
+-include $(PWD)/rules_libav
+
 TOOLPATH=$(DEVKIT)/usr/bin
 PREFIX		:=	arm-linux-
 
 OPT_FLAGS  = -O3 -Ofast
-INCLUDES = -I$(PWD)/../sources -Iinclude $(SDL_CFLAGS)
+INCLUDES = -I$(PWD)/../sources -Iinclude $(SDL_CFLAGS) $(FFMPEG_CFLAGS)
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) $(SDL_CFLAGS) -Wall -DRS97
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03
-LIBS	:=	$(SDL_LIBS) -lSDL -lSDL_mixer -lasound -lpthread
-LIBDIRS	:=	$(DEKVIT)/usr/lib
+LIBS	:=	$(SDL_LIBS) -lSDL -lSDL_mixer -lasound -lpthread $(FFMPEG_LIBS)
+LIBDIRS	:=	$(SYSROOT)/usr/lib
 OUTPUT = ../lgpt-bittboy
 EXTENSION:= elf
 

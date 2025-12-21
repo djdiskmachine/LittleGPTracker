@@ -1,4 +1,5 @@
 -include $(PWD)/rules_base
+-include $(PWD)/rules_libav
 
 # config
 DEFINES := \
@@ -24,10 +25,10 @@ SDL_LIBS := $(shell pkg-config sdl2 --libs)
 OPT_FLAGS := -O3
 #For debugging
 OPT_FLAGS := -g
-INCLUDES := $(ALSA_CFLAGS) $(JACK_CFLAGS) $(SDL_CFLAGS) -I$(PWD)/../sources
+INCLUDES := $(ALSA_CFLAGS) $(JACK_CFLAGS) $(SDL_CFLAGS) $(FFMPEG_CFLAGS) -I$(PWD)/../sources
 CFLAGS := $(OPT_FLAGS) $(DEFINES) $(INCLUDES) -Wall
 CXXFLAGS := $(CFLAGS) -std=gnu++11
-LIBS := $(ALSA_LIBS) $(JACK_LIBS) $(SDL_LIBS)
+LIBS := $(ALSA_LIBS) $(JACK_LIBS) $(SDL_LIBS) $(FFMPEG_LIBS)
 OUTPUT := ../lgpt
 EXTENSION := x64
 

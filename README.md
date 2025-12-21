@@ -40,25 +40,24 @@ Recommended reading to get you started:
 
 ## Features per platform
 
-| Platform    | MIDI_Possible | MIDI_enabled | Soundfonts | Note                                 |
-|-------------|---------------|--------------|------------|--------------------------------------|
-| PSP         | NO            | NO           | YES        | [See notes](projects/resources/PSP/INSTALL_HOW_TO.txt) |
-| DEB         | YES           | YES          | YES        |                                      |
-| X64         | YES           | YES          | NO         |                                      |
-| X86         | YES           | YES          | YES        |                                      |
-| STEAM       | YES           | YES          | NO         |                                      |
-| MIYOO       | NO            | NO           | YES        | Port by [Nine-H](https://ninethehacker.xyz) |
-| W32         | YES           | YES          | YES        | Built in VS2008 with love            |
-| RASPI       | YES           | YES          | YES        | Versatile platform                   |
-| CHIP        | YES           | YES          | YES        | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
-| BITTBOY     | MAYBE         | NO           | YES        |                                      |
-| GARLIC      | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| GARLICPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| RG35XXPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| MACOS       | YES           | YES          | NO         | Port by [clsource](https://genserver.social/clsource) |
-
+| Platform    | MIDI_Possible | MIDI_enabled | Soundfonts | PrintFX | Note                                 |
+|-------------|---------------|--------------|------------|---------|--------------------------------------|
+| PSP         | NO            | NO           | YES        | NO      | [See notes](projects/resources/PSP/INSTALL_HOW_TO.txt) |
+| DEB         | YES           | YES          | YES        | YES     |                                      |
+| X64         | YES           | YES          | NO         | YES     |                                      |
+| X86         | YES           | YES          | YES        | YES     |                                      |
+| STEAM       | YES           | YES          | NO         | YES     |                                      |
+| MIYOO       | NO            | NO           | YES        | NO      | Port by [Nine-H](https://ninethehacker.xyz) |
+| W32         | YES           | YES          | YES        | YES     | Built in VS2008 with love            |
+| RASPI       | YES           | YES          | YES        | YES     | Versatile platform                   |
+| CHIP        | YES           | YES          | YES        | YES     | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
+| BITTBOY     | MAYBE         | NO           | YES        | YES     |                                      |
+| GARLIC      | MAYBE         | NO           | YES        | YES     | Port by [Simotek](http://simotek.net)|
+| GARLICPLUS  | MAYBE         | NO           | YES        | YES     | Port by [Simotek](http://simotek.net)|
+| RG35XXPLUS  | MAYBE         | NO           | YES        | NO      | Port by [Simotek](http://simotek.net)|
+| MACOS       | YES           | YES          | NO         | NO      | Port by [clsource](https://genserver.social/clsource) |
 
 * **Soundfont library is currently not ported for 64bit OS**
 * **MIDI functionality __greatly__ depends on kernel support, please feature request your favourite OS maintainer =)**
 * **Install ffmpeg by following install instructions for your platform [here](https://www.ffmpeg.org/download.html)**
-* **PrintFX requires full ffmpeg. If marked as TBA, it requires a redesign using [libav](https://trac.ffmpeg.org/wiki/Using%20libav*)**
+* **PrintFX requires toolchain support of ffmpeg libs, for all targets marked maybe contact the maintainer of your consoles toolchain**
