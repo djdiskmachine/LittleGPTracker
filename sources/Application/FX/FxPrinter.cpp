@@ -16,7 +16,7 @@ void FxPrinter::setParams() {
 }
 
 void FxPrinter::setPaths() {
-    fi_ = std::string(instrument_->GetName());
+    fi_ = std::string(instrument_->GetFullName());
     fiPath_ = samples_dir.GetPath() + '/' + fi_;
 
     fo_ = fi_.substr(0, fi_.find_last_of('.')) + "_.wav";

@@ -24,7 +24,7 @@ static AVCodecContext *enc_ctx = NULL;
 
 static int open_input_file(const char *filename)
 {
-    AVCodec *dec;
+    const AVCodec *dec;
     AVCodecContext *dec_ctx;
     AVStream *stream;
     int ret;
@@ -77,7 +77,7 @@ static int open_input_file(const char *filename)
 
 static int open_ir_file(const char *filename)
 {
-    AVCodec *dec;
+    const AVCodec *dec;
     AVCodecContext *dec_ctx;
     AVStream *stream;
     int ret;
@@ -131,7 +131,6 @@ static int open_ir_file(const char *filename)
 static int open_output_file(const char *filename)
 {
     AVStream *out_stream;
-    AVStream *in_stream;
     const AVCodec *encoder;
     int ret;
 
@@ -140,8 +139,6 @@ static int open_output_file(const char *filename)
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not create output context\n");
         return AVERROR_UNKNOWN;
     }
-
-    in_stream = ifmt_ctx->streams[0];
     out_stream = avformat_new_stream(ofmt_ctx, NULL);
     if (!out_stream) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Failed allocating output stream\n");
@@ -306,7 +303,8 @@ static int init_filters(int ir_wet, int ir_pad)
             snprintf(ch_layout_str, sizeof(ch_layout_str), "%dc", ifmt_ctx->streams[0]->codecpar->channels);
         }
     } else {
-        av_channel_layout_describe(&buffersink_ctx->inputs[0]->ch_layout,
+        // Use the input stream's channel layout
+        av_channel_layout_describe(&ifmt_ctx->streams[0]->codecpar->ch_layout,
                                    ch_layout_str, sizeof(ch_layout_str));
     }
 #endif
@@ -350,7 +348,8 @@ static int init_filters(int ir_wet, int ir_pad)
             snprintf(ir_ch_layout_str, sizeof(ir_ch_layout_str), "%dc", ir_fmt_ctx->streams[0]->codecpar->channels);
         }
     } else {
-        av_channel_layout_describe(&buffersink_ctx->inputs[0]->ch_layout,
+        // Use the IR stream's channel layout
+        av_channel_layout_describe(&ir_fmt_ctx->streams[0]->codecpar->ch_layout,
                                    ir_ch_layout_str, sizeof(ir_ch_layout_str));
     }
 #endif
@@ -429,12 +428,21 @@ static int init_filters(int ir_wet, int ir_pad)
 
     /* Apply convolution reverb using afir filter with format normalization */
     char filters_descr[512];
+    /* Scale ir_wet from 0-100 to 0-10 for afir filter */
+    int afir_wet = (ir_wet * 10) / 100;
+    if (afir_wet > 10) afir_wet = 10;
+    if (afir_wet < 0) afir_wet = 0;
+
     snprintf(filters_descr, sizeof(filters_descr),
-             "[ir_in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s[ir_norm];"
-             "[in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s,asplit[in_1][in_2];"
-             "[in_1][ir_norm]afir=dry=10:wet=10[reverb];"
-             "[in_2][reverb]amix=inputs=2:weights=100 %d,volume=1.5,aformat=sample_fmts=s16:channel_layouts=%s[out]",
-             target_sample_rate, target_layout, target_sample_rate, target_layout, ir_wet, target_layout);
+             "[ir_in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s["
+             "ir_norm];"
+             "[in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s,"
+             "asplit[in_1][in_2];"
+             "[in_1][ir_norm]afir=dry=10:wet=%d[reverb];"
+             "[in_2][reverb]amix=inputs=2:weights=1 "
+             "1,volume=2.5,aformat=sample_fmts=s16:channel_layouts=%s[out]",
+             target_sample_rate, target_layout, target_sample_rate,
+             target_layout, afir_wet, target_layout);
 
     av_log(NULL, AV_LOG_INFO, "Filter graph: %s\n", filters_descr);
 
@@ -558,13 +566,12 @@ static int filter_encode_write_frame(AVFrame *frame, AVFrame *ir_frame, unsigned
     return ret;
 }
 
-int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
-{
+int encode(const char *fi, const char *ir, const char *fo, int irWet,
+           int irPad) {
     int ret;
     AVPacket *packet = NULL, *ir_packet = NULL;
     AVFrame *frame = NULL, *ir_frame = NULL;
     AVCodecContext *dec_ctx = NULL, *ir_dec_ctx = NULL;
-    unsigned int stream_index;
     int ir_loaded = 0;
 
     if ((ret = open_input_file(fi)) < 0)
@@ -582,22 +589,45 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet, int irPad)
     ir_frame = av_frame_alloc();
     if (!packet || !ir_packet || !frame || !ir_frame) {
         fprintf(stderr, "Could not allocate frame or packet\n");
-        return(1);
+        ret = AVERROR(ENOMEM);
+        goto end;
     }
 
     /* Set up decoder contexts */
-    AVCodec *dec =
+    const AVCodec *dec =
         avcodec_find_decoder(ifmt_ctx->streams[0]->codecpar->codec_id);
-    AVCodec *ir_dec = avcodec_find_decoder(ir_fmt_ctx->streams[0]->codecpar->codec_id);
-    
+    const AVCodec *ir_dec =
+        avcodec_find_decoder(ir_fmt_ctx->streams[0]->codecpar->codec_id);
+
+    if (!dec || !ir_dec) {
+        fprintf(stderr, "Could not find decoders (dec=%p, ir_dec=%p)\n", dec, ir_dec);
+        ret = AVERROR_DECODER_NOT_FOUND;
+        goto end;
+    }
+
     dec_ctx = avcodec_alloc_context3(dec);
     ir_dec_ctx = avcodec_alloc_context3(ir_dec);
-    
+
+    if (!dec_ctx || !ir_dec_ctx) {
+        fprintf(stderr, "Could not allocate decoder contexts\n");
+        ret = AVERROR(ENOMEM);
+        goto end;
+    }
+
     avcodec_parameters_to_context(dec_ctx, ifmt_ctx->streams[0]->codecpar);
     avcodec_parameters_to_context(ir_dec_ctx, ir_fmt_ctx->streams[0]->codecpar);
-    
-    avcodec_open2(dec_ctx, dec, NULL);
-    avcodec_open2(ir_dec_ctx, ir_dec, NULL);
+
+    ret = avcodec_open2(dec_ctx, dec, NULL);
+    if (ret < 0) {
+        fprintf(stderr, "Could not open decoder: %s\n", av_err2str(ret));
+        goto end;
+    }
+
+    ret = avcodec_open2(ir_dec_ctx, ir_dec, NULL);
+    if (ret < 0) {
+        fprintf(stderr, "Could not open IR decoder: %s\n", av_err2str(ret));
+        goto end;
+    }
 
     /* Process both streams - load ALL IR data first, then process main audio */
     int ir_eof = 0, main_eof = 0;
