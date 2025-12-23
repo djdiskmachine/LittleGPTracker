@@ -254,7 +254,8 @@ void View::EnableNotification() {
 */
 void View::SetNotification(const char *notification) {
 	notificationTime_ = SDL_GetTicks();
-	displayNotification_ = (char*) notification;
+    size_t len = strlen(notification) + 1;
+    displayNotification_ = new char[len];
+    strcpy(displayNotification_, notification);
 	isDirty_ = true;
 }
-
