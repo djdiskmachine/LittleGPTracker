@@ -243,7 +243,8 @@ void View::EnableNotification() {
 	if ((SDL_GetTicks() - notificationTime_) <= NOTIFICATION_TIMEOUT) {
 		SetColor(CD_NORMAL);
 		GUITextProperties props;
-		DrawString(10, 2, displayNotification_, props);
+        int xOffset = displayNotification_.length() - 8;
+        DrawString(xOffset, 2, displayNotification_.c_str(), props);
 	} else {
 		displayNotification_ = "";
 	}
@@ -253,9 +254,7 @@ void View::EnableNotification() {
 	Set displayed notification and save the current time
 */
 void View::SetNotification(const char *notification) {
-	notificationTime_ = SDL_GetTicks();
-    size_t len = strlen(notification) + 1;
-    displayNotification_ = new char[len];
-    strcpy(displayNotification_, notification);
-	isDirty_ = true;
+    notificationTime_ = SDL_GetTicks();
+    displayNotification_ = notification;
+    isDirty_ = true;
 }

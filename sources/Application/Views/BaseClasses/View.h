@@ -161,7 +161,7 @@ class View : public Observable {
     bool locked_;
     uint32_t notificationTime_;
     uint16_t NOTIFICATION_TIMEOUT;
-    char *displayNotification_;
+    std::string displayNotification_;
     static bool initPrivate_;
     ModalView *modalView_;
     ModalViewCallback modalViewCallback_;
