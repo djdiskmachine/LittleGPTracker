@@ -243,7 +243,7 @@ void View::EnableNotification() {
 	if ((SDL_GetTicks() - notificationTime_) <= NOTIFICATION_TIMEOUT) {
 		SetColor(CD_NORMAL);
 		GUITextProperties props;
-        int xOffset = displayNotification_.length() - 8;
+        int xOffset = 4;
         DrawString(xOffset, notiDistY_, displayNotification_.c_str(), props);
     } else {
 		displayNotification_ = "";
