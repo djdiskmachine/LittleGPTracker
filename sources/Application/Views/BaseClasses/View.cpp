@@ -244,17 +244,21 @@ void View::EnableNotification() {
 		SetColor(CD_NORMAL);
 		GUITextProperties props;
         int xOffset = displayNotification_.length() - 8;
-        DrawString(xOffset, 2, displayNotification_.c_str(), props);
-	} else {
+        DrawString(xOffset, notiDistY_, displayNotification_.c_str(), props);
+    } else {
 		displayNotification_ = "";
 	}
 }
 
 /*
-	Set displayed notification and save the current time
+    Set displayed notification
+    Saves the current time
+    Optionally set display y offset if not in a project (default == 2)
+    Allows negative offsets, use with care!
 */
-void View::SetNotification(const char *notification) {
+void View::SetNotification(const char *notification, int yOffset) {
     notificationTime_ = SDL_GetTicks();
     displayNotification_ = notification;
+    notiDistY_ = yOffset;
     isDirty_ = true;
 }

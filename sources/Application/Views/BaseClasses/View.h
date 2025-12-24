@@ -119,7 +119,7 @@ class View : public Observable {
     void DoModal(ModalView *view, ModalViewCallback cb = 0);
 
     void EnableNotification();
-    void SetNotification(const char *notification);
+    void SetNotification(const char *notification, int offset = 2);
 
   protected:
     virtual void ProcessButtonMask(unsigned short mask, bool pressed) = 0;
@@ -162,6 +162,7 @@ class View : public Observable {
     uint32_t notificationTime_;
     uint16_t NOTIFICATION_TIMEOUT;
     std::string displayNotification_;
+    int notiDistY_;
     static bool initPrivate_;
     ModalView *modalView_;
     ModalViewCallback modalViewCallback_;
