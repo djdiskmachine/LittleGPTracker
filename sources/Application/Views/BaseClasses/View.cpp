@@ -256,9 +256,9 @@ void View::EnableNotification() {
     Optionally set display y offset if not in a project (default == 2)
     Allows negative offsets, use with care!
 */
-void View::SetNotification(const char *notification, int yOffset) {
+void View::SetNotification(const char *notification, int offset) {
     notificationTime_ = SDL_GetTicks();
     displayNotification_ = notification;
-    notiDistY_ = yOffset;
+    notiDistY_ = offset;
     isDirty_ = true;
 }
