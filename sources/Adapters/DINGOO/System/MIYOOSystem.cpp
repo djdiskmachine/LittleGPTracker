@@ -5,7 +5,11 @@
 #include "Adapters/SDL/GUI/SDLEventManager.h"
 #include "Adapters/SDL/Process/SDLProcess.h"
 #include "Adapters/SDL/Audio/SDLAudio.h"
+#ifdef _NO_MIDI_
 #include "Adapters/Dummy/Midi/DummyMidi.h"
+#elif RTMIDI
+#include "Adapters/RTMidi/RTMidiService.h"
+#endif
 #include "Externals/TinyXML/tinyxml.h"
 #include "Application/Model/Config.h"
 #include "Application/Controllers/ControlRoom.h"
@@ -72,9 +76,14 @@ void GPSDLSystem::Boot(int argc,char **argv) {
     Audio::Install(new SDLAudio(hint));
 
     // Install Midi
-    MidiService::Install(new DummyMidi());
-
-    // Install Threads
+#ifdef _NO_MIDI_
+    Trace::Log("System","Installing DUMMY MIDI") ;
+	MidiService::Install(new DummyMidi());
+#elif RTMIDI
+	Trace::Log("System","Installing RT MIDI") ;
+	MidiService::Install(new RTMidiService()) ;
+#endif
+// Install Threads
     SysProcessFactory::Install(new SDLProcessFactory());
     if (SDL_Init(SDL_INIT_EVENTTHREAD | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_TIMER) < 0) {
         return;

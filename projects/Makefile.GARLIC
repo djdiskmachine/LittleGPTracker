@@ -6,7 +6,10 @@ DEFINES := \
 	-DCPP_MEMORY \
 	-D_NDEBUG \
 	-DHAVE_STDINT_H \
-	-D_NO_JACK_  
+	-DRTMIDI \
+	-D_NO_JACK_ \
+	-D__LINUX_ALSA__ \
+	-D__LINUX_ALSASEQ__
 
 DEVKIT = /opt/miyoo/
 CROSS_COMPILE=$(DEVKIT)bin/arm-miyoo-linux-uclibcgnueabi-
@@ -25,7 +28,7 @@ PREFIX	:=	arm-linux-gnueabihf-
 INCLUDES:=	-Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources 
 CFLAGS	:=	$(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall  
 CXXFLAGS:=	$(CFLAGS) -std=gnu++03 
-LIBS	:=	$(SDL_LIBS) -lpthread
+LIBS	:=	$(SDL_LIBS) -lpthread -lasound
 LIBDIRS	:=	$(DEKVIT)/usr/lib
 LIBDIRS	+=	$(DEKVIT)/usr/include
 OUTPUT := ../lgpt-garlic
