@@ -1,7 +1,14 @@
 1.6.0-bacon2
     Interpolate values in tables and phrases
         R + B on single-column selection will fill values from lowest to highest
-        Good for plotting out fx rises or note scales
+
+    Contributions:
+    drbscl
+        Add 64 bit soundfont support (#211)
+
+    Fixes:
+    Add 64 bit soundfont support (#211)
+    Skip randomly generated project name if a directory with that name already exists (#175)
 
 1.5.0-bacon3
     Contributions:
@@ -20,9 +27,9 @@
         * instrumentation by clsource
 
     simotek
-        Add color options for Border Play and Mute (#143)    
+        Add color options for Border Play and Mute (#143)
         * Adds different color for the > play and _ mute indicators
-        Fix rg35xx mapping (#139)            
+        Fix rg35xx mapping (#139)
         * rshoulder and lshoulder were the wrong way
 
     kompadre
@@ -45,7 +52,7 @@
     Nudge functionality (#130)
     * In Project view, select tempo and hold B+LEFT/RIGHT to nudge slower/faster
     * In Song view, pressing LT+LEFT/RIGHT will do the same
-    
+
     Printable fx in InstrumentView (#155)
     * Uses ffmpeg to print reverb to currently selected sample
     * New sample with fx is created and assigned to the current instrument
@@ -68,7 +75,7 @@
     Set songview b jumping length to 16 rows in correspondence with LSDJ and M8
     Scales no longer affect instrument numbers ([djdiskmachine/LittleGPTracker#172](https://github.com/djdiskmachine/LittleGPTracker/issues/172))
     Bug in Variable:SetString [djdiskmachine/LittleGPTracker#169](https://github.com/djdiskmachine/LittleGPTracker/issues/169)
-    
+
     Issue in deep clone (#135)
     Was possible to accidentally deep clone position into another position
 
@@ -113,27 +120,27 @@
     Fixes:
         RG35XX no longer segfaults on boot
         USB MIDI disabled due to missing OS dependencies
-        
+
 1.4.0
     Adds:
         Automated build for bittboy, Win32, PSP, Miyoo, Deb32, RG35XX
         Shoutout to xquader for the initial RG35XX port (https://boosty.to/xquader)
         License changed from CC-BY-SA-NC to GPL-3
 
-    * MVEL cmd    
+    * MVEL cmd
         Set step velocity for MIDI instruments
         https://github.com/democloid/picoTracker/pull/163
-        
+
         Author: @maks@fluttercommunity.social
         Co-authored-by: djdiskmachine <djdiskmachine@proton.me>
 
     * Config option to set major beat color in phrase screen
 
         Author: koisignal <koitokakitsubata@gmail.com>
-        
+
     * Deep clone
         Clones selected chain and the phrases within
-        
+
         Author: koisignal <koitokakitsubata@gmail.com>
         Co-authored-by: djdiskmachine <djdiskmachine@proton.me>
 
@@ -195,29 +202,29 @@
 
 1.3o-beta-1
     Pingpong loop now stable
-        Courtesy of djdiskmachine 
+        Courtesy of djdiskmachine
 
     Add ability to change font
     USAGE: ./mkfont.py FONT_BMP [OUTPUT_FILE]
     FONT_BMP must be a black/white (#000000, #FFFFFF) 128x64px bmp
     if OUTPUT_FILE is omitted, will print to stdout
-        Courtesy of subnixr 
+        Courtesy of subnixr
 
     Adds Miyoo mini build
         Courtesy of Nine-H
 
     Changes filter attenuation to attenuation
-    Adjust volume post scream filter 
+    Adjust volume post scream filter
     https://github.com/Mdashdotdashn/LittleGPTracker/issues/22
 
     Missing wiki content dumped to repo
-        Courtesy of Peter Swimm 
+        Courtesy of Peter Swimm
 
 1.3o-alpha-5
     Adds native SteamOS build
     Adds Bittboy/RS97/RG350 builds
         Merge of Gameblaba, CalebCDE and RafaVicos work
-        Shoutouts!    
+        Shoutouts!
 1.3o-alpha-4
     Adds Save As menu item - save a copy of your project with a new name
         Courtesy of yoyz (https://github.com/yoyz), biggup!

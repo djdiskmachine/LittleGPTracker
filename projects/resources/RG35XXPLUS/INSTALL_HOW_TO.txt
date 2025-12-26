@@ -3,8 +3,8 @@ Installation:
   * https://win.anbernic.com/download/318.html (RG35XXPLUS-EN-240712 or later)
 2. Copy the following files, note `/mnt/mmc/Roms/` is the path when the SD-Card is mounted in the device. When viewing from your computer it will just be a partition with a `Roms` Directory
   a. lgpt-rg35xxplus.elf, config.xml, samplelib, mapping.xml to `/mnt/mmc/Roms/APPS/lgpt/`
-  b. Copy LittleGPTracker.png to /mnt/mmc/Roms/APPS/lgpt/Imgs/
-  c. Copy LittleGPTracker.sh to /mnt/mmc/Roms/APPS/lgpt/
+  b. Copy LittleGPTracker.png to /mnt/mmc/Roms/APPS/Imgs/
+  c. Copy LittleGPTracker.sh to /mnt/mmc/Roms/APPS/
 
 
 Usage:
