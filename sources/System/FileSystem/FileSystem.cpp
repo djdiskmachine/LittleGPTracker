@@ -219,7 +219,7 @@ int FileSystemService::Copy(const Path &src,const Path &dst)
 
 int FileSystemService::Delete(const Path &path) {
     int result = -1;
-    auto pathString = path.GetPath();
+    std::string pathString = path.GetPath();
     FileSystem * fs = FileSystem::GetInstance();
 
     if (fs->GetFileType(pathString.c_str()) != FT_UNKNOWN) {
