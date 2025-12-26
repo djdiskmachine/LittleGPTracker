@@ -216,3 +216,19 @@ int FileSystemService::Copy(const Path &src,const Path &dst)
   idst->Close();
   return nbwrite;
 }
+
+int FileSystemService::Delete(const Path &path) {
+    int result = -1;
+    auto pathString = path.GetPath();
+    FileSystem * fs = FileSystem::GetInstance();
+
+    if (fs->GetFileType(pathString.c_str()) != FT_UNKNOWN) {
+		fs->Delete(pathString.c_str());
+        result += 1;
+		Trace::Log("FileSystemService"," Delete %s ", pathString.c_str());
+    } else {
+        Trace::Log("FS Delete","path does not exist: %s", pathString.c_str());
+    }
+
+    return result;
+}

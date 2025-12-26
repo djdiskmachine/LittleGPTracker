@@ -6,6 +6,7 @@
     Fixes:
     Add 64 bit soundfont support (#211)
     Skip randomly generated project name if a directory with that name already exists (#175)
+    Save Song As" saves to current as well as new project (#212) 
 
 1.5.0-bacon3
     Contributions:
