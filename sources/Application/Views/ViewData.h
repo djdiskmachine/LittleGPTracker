@@ -74,6 +74,12 @@ public:
 
 	int mixerCol_ ;				//
 	int mixerRow_ ;
+
+    // Render Settings
+	
+	int renderMode_ ;           // Current render mode (0=audio, 1=mixdown, 2=split)
+	bool isRendering_ ;         // True when actively rendering (playing with mode > 0)
+	
 	// Player Settings
 
 	PlayMode playMode_ ;
