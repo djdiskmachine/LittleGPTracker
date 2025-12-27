@@ -8,7 +8,8 @@ static char *buttonText[BUTTONS_LENGTH] = {(char *)"Random", (char *)"Ok",
 
 #define DIALOG_WIDTH 20
 
-NewProjectDialog::NewProjectDialog(View &view):ModalView(view) {}
+NewProjectDialog::NewProjectDialog(View &view, Path currentPath)
+    : ModalView(view), currentPath_(currentPath) {}
 
 NewProjectDialog::~NewProjectDialog() {}
 
@@ -94,10 +95,11 @@ void NewProjectDialog::DrawView() {
         props.invert_=(selected_==i+1) ;
         DrawString(x, 4, text, props);
     }
-};
+    View::EnableNotification();
+}
 
-void NewProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick) {
-};
+void NewProjectDialog::OnPlayerUpdate(PlayerEventType,
+                                      unsigned int currentTick) {};
 
 void NewProjectDialog::OnFocus() {
 	selected_=currentChar_=0;
@@ -183,21 +185,53 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask, bool pressed) {
             return;
         }
         return;
-    } else if ((mask == EPBM_A)) {
-        // Toggle keyboard mode with A
-        if (selected_ == 0) {
-            keyboardMode_ = !keyboardMode_;
-            // When entering keyboard mode, jump to current character
-            if (keyboardMode_) {
-                findCharacterInKeyboard(name_[currentChar_], keyboardRow_,
-                                        keyboardCol_);
+    } else if (mask & EPBM_A) {
+        if (mask == EPBM_A) {
+            std::string randomName = "";
+            switch (selected_) {
+            case 0:
+                // Toggle keyboard mode
+                keyboardMode_ = !keyboardMode_;
+                // When entering keyboard mode, jump to current character
+                if (keyboardMode_) {
+                    findCharacterInKeyboard(name_[currentChar_], keyboardRow_,
+                                            keyboardCol_);
+                }
+                isDirty_ = true;
+                break;
+            case 1:
+                do {
+                    randomName = getRandomName();
+                    std::fill(name_ + randomName.length(),
+                              name_ + sizeof(name_) / sizeof(name_[0]), ' ');
+                    strncpy(name_, randomName.c_str(), randomName.length());
+                    lastChar_ = currentChar_ = randomName.length() - 1;
+                } while (currentPath_.Descend(GetName()).Exists());
+                isDirty_ = true;
+                break;
+            case 2:
+                if (currentPath_.Descend(GetName()).Exists()) {
+                    std::string res("Name " + std::string(name_) + " busy");
+                    View::SetNotification(res.c_str(), -6);
+                } else {
+                    EndModal(1);
+                }
+                break;
+            case 3:
+                EndModal(0);
+                break;
             }
-            isDirty_ = true;
         }
-    }
-
-    if (mask & EPBM_B) {
-
+        if (mask & EPBM_UP) {
+            name_[currentChar_]+=1;
+			lastChar_=name_[currentChar_] ;
+			isDirty_=true ;
+        }
+        if (mask&EPBM_DOWN) {
+			name_[currentChar_]-=1;
+			lastChar_=name_[currentChar_] ;
+			isDirty_=true ;
+		}
     } else {
 
         // A modifier

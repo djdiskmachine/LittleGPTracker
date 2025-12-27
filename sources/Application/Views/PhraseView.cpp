@@ -505,6 +505,72 @@ void PhraseView::extendSelection() {
         isDirty_ = true;
     }
 }
+
+/******************************************************
+ interpolateSelection:
+        expands the lowest value of selection to the highest
+ ******************************************************/
+void PhraseView::interpolateSelection() {
+    if (!clipboard_.active_) {
+        return;
+    }
+
+    GUIRect rect = getSelectionRect();
+    // Only interpolate if we're in note (0) or param (3, 5) columns
+    int col = rect.Left();
+    if (col != rect.Right() || (col != 0 && col != 3 && col != 5)) {
+        return;
+    }
+
+    int startRow = rect.Top();
+    int endRow = rect.Bottom();
+    // Need at least 2 rows to interpolate
+    if (endRow - startRow < 1) {
+        return;
+    }
+
+    // Select the appropriate data array based on column
+    if (col == 0) {
+        // Note column
+        uchar *noteData = phrase_->note_ + (16 * viewData_->currentPhrase_);
+
+        uchar startNote = noteData[startRow];
+        uchar endNote = noteData[endRow];
+
+        if (startNote == 0xFF || endNote == 0xFF) {
+            View::SetNotification("No note info");
+            return;
+        }
+
+        int numSteps = endRow - startRow;
+        int noteDiff = (int)endNote - (int)startNote;
+
+        for (int step = 0; step <= numSteps; step++) {
+            int row = startRow + step;
+            int value = startNote + (2 * noteDiff * step + numSteps) / (2 * numSteps);
+            noteData[row] = (uchar)value;
+        }
+    } else {
+        // Parameter columns (3 or 5)
+        ushort *paramData = (col == 3) ? 
+            phrase_->param1_ + (16 * viewData_->currentPhrase_) :
+            phrase_->param2_ + (16 * viewData_->currentPhrase_);
+
+        ushort startParam = paramData[startRow];
+        ushort endParam = paramData[endRow];
+
+        int numSteps = endRow - startRow;
+        int paramDiff = (int)endParam - (int)startParam;
+
+        for (int step = 0; step <= numSteps; step++) {
+            int row = startRow + step;
+            int value = startParam + (2 * paramDiff * step + numSteps) / (2 * numSteps);
+            paramData[row] = (ushort)value;
+        }
+    }
+    isDirty_ = true;
+}
+
 /******************************************************
  copySelection:
         copies data in the current selection to the
@@ -992,6 +1058,8 @@ void PhraseView::processSelectionButtonMask(unsigned short mask) {
     if (mask & EPBM_B) {
         if (mask & EPBM_L) {
             extendSelection();
+        } else if (mask & EPBM_R) {
+            interpolateSelection();
         } else {
             copySelection();
         }
@@ -1210,7 +1278,7 @@ void PhraseView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 2, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 2 || col_ == 3)) {
+        if (j == row_ && col_ == 2) {
             printHelpLegend(command, props);
         }
     }
@@ -1257,7 +1325,7 @@ void PhraseView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 4, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 4 || col_ == 5)) {
+        if (j == row_ && col_ == 4) {
             printHelpLegend(command, props);
         }
     }
