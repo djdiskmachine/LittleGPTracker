@@ -57,8 +57,9 @@ public:
 
   void LoadFirstGen(const char *root);
 
-  protected:
-    void buildMidiDeviceList() ;
+protected:
+  void buildMidiDeviceList();
+
 private:
 	InstrumentBank *instrumentBank_ ;
 	char **midiDeviceList_ ;
@@ -66,6 +67,6 @@ private:
 	int tempoNudge_ ;
 	unsigned long lastTap_[MAX_TAP] ;
     unsigned int tempoTapCount_;
-} ;
+};
 
 #endif
