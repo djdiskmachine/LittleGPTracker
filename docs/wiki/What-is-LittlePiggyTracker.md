@@ -51,7 +51,8 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 ## New project
 
-When creating a new project, use the regen button to generate a random name. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down
+When creating a new project, use the Random button to generate a random name. Generate a new name with Random or edit it manually selecting characters with A and pressing up/down
+Attempting to create a project with the same name in the same location produces a notification that this operation is denied 
 
 ## Multiple Projects
 
@@ -117,6 +118,7 @@ Note: CTRL Key mappings of RT and LT are inverted. Since the keyboard's Arrow Ke
   - B+LEFT/RIGHT: Next/Previous Channel in Chain/Phrase Screen. Navigation +/- 1 in Instrument/Table Screen. Switch between Song and Live Modes in Song Screen.
 - RT+ARROWS: Navigate between the Screens.
 - LT+UP/DOWN: Jump up/down to next populated row after a blank row (great for live mode entire row queuing!)
+- RT+B: in chains or tables, a single-column selection will fill values from lowest to highest
 
 ## Selections
 
@@ -135,6 +137,14 @@ once a selection is started you can do a few more things:
 And then:
 
 - LT+A: paste the clipboard content at current location
+
+- RT+B: in chains or tables, a single-column selection will fill values from lowest to highest
+
+00  01      00  01
+01  --  =>  01  02
+02  --      02  03
+03  04      03  04
+
 
 ## Playback Modes and Controls
 

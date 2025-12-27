@@ -21,41 +21,41 @@
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "6"
-#define BUILD_COUNT "0-bacon1"
+#define BUILD_COUNT "0-bacon2"
 
 #define MAX_TAP 3
 
 class Project: public Persistent,public VariableContainer,I_Observer  {
 public:
-	Project() ;
-	~Project() ;
-	void Purge() ;
-	void PurgeInstruments(bool removeFromDisk) ;
+  Project();
+  ~Project();
+  void Purge();
+  void PurgeInstruments(bool removeFromDisk);
 
-	Song *song_ ;
- 
-	int GetMasterVolume() ;
-	bool Wrap() ;
-	void OnTempoTap();
-	void NudgeTempo(int value) ;
-    int GetScale();
-    int GetTempo() ; // Takes nudging into account
-	int GetTranspose() ;
-    int GetSoftclip();
-    int GetSoftclipGain();
-    int GetPregain();
-    int GetRenderMode();
-    void Trigger();
+  Song *song_;
 
-    // I_Observer
-    virtual void Update(Observable &o,I_ObservableData *d);
- 
-	InstrumentBank* GetInstrumentBank() ;
-	virtual void SaveContent(TiXmlNode *node) ;
-	virtual void RestoreContent(TiXmlElement *element);
+  int GetMasterVolume();
+  bool Wrap();
+  void OnTempoTap();
+  void NudgeTempo(int value);
+  int GetScale();
+  int GetTempo(); // Takes nudging into account
+  int GetTranspose();
+  int GetSoftclip();
+  int GetSoftclipGain();
+  int GetPregain();
 
-	void LoadFirstGen(const char *root) ;
-    static const unsigned int MAX_RENDER_MODE = 3;
+  void Trigger();
+
+  static const unsigned int MAX_RENDER_MODE = 3;
+  // I_Observer
+  virtual void Update(Observable &o, I_ObservableData *d);
+
+  InstrumentBank *GetInstrumentBank();
+  virtual void SaveContent(TiXmlNode *node);
+  virtual void RestoreContent(TiXmlElement *element);
+
+  void LoadFirstGen(const char *root);
 
   protected:
     void buildMidiDeviceList() ;
@@ -65,8 +65,7 @@ private:
 	int midiDeviceListSize_ ;
 	int tempoNudge_ ;
 	unsigned long lastTap_[MAX_TAP] ;
-	unsigned int tempoTapCount_ ; 
+    unsigned int tempoTapCount_;
 } ;
 
 #endif
-

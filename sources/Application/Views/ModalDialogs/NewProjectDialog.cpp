@@ -2,18 +2,15 @@
 #include "NewProjectDialog.h"
 #include "Application/Utils/RandomNames.h"
 
-static char *buttonText[BUTTONS_LENGTH] = {
-	(char *)"Regen",
-	(char *)"Ok",
-	(char *)"Cancel"
-} ;
+static char *buttonText[BUTTONS_LENGTH] = {(char *)"Random", (char *)"Ok",
+                                           (char *)"Cancel"};
 
 #define DIALOG_WIDTH 20
 
-NewProjectDialog::NewProjectDialog(View &view):ModalView(view) {}
+NewProjectDialog::NewProjectDialog(View &view, Path currentPath)
+    : ModalView(view), currentPath_(currentPath) {}
 
-NewProjectDialog::~NewProjectDialog() {
-}
+NewProjectDialog::~NewProjectDialog() {}
 
 void NewProjectDialog::DrawView() {
 
@@ -49,10 +46,11 @@ void NewProjectDialog::DrawView() {
         props.invert_=(selected_==i+1) ;
 		DrawString(x,4,text,props) ;
     }
-};
+    View::EnableNotification();
+}
 
-void NewProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick) {
-};
+void NewProjectDialog::OnPlayerUpdate(PlayerEventType,
+                                      unsigned int currentTick) {};
 
 void NewProjectDialog::OnFocus() {
 	selected_=currentChar_=0;
@@ -71,7 +69,7 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 	  // A modifier
       if (mask & EPBM_A) {
           if (mask == EPBM_A) {
-              std::string randomName = getRandomName();
+              std::string randomName = "";
               switch (selected_) {
               case 0:
                   if (name_[currentChar_] == ' ') {
@@ -80,14 +78,22 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
                   isDirty_ = true;
                   break;
               case 1:
-                  std::fill(name_ + randomName.length(),
-                            name_ + sizeof(name_) / sizeof(name_[0]), ' ');
-                  strncpy(name_, randomName.c_str(), randomName.length());
-                  lastChar_ = currentChar_ = randomName.length() - 1;
+                  do {
+                      randomName = getRandomName();
+                      std::fill(name_ + randomName.length(),
+                      name_ + sizeof(name_) / sizeof(name_[0]), ' ');
+                      strncpy(name_, randomName.c_str(), randomName.length());
+                      lastChar_ = currentChar_ = randomName.length() - 1;
+                  } while (currentPath_.Descend(GetName()).Exists());
                   isDirty_ = true;
                   break;
               case 2:
-                  EndModal(1);
+                  if (currentPath_.Descend(GetName()).Exists()) {
+                      std::string res("Name " + std::string(name_) + " busy");
+                      View::SetNotification(res.c_str(), -6);
+                  } else {
+                      EndModal(1);
+                  }
                   break;
               case 3:
                   EndModal(0);

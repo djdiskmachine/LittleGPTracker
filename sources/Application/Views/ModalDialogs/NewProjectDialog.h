@@ -9,20 +9,22 @@
 
 class NewProjectDialog:public ModalView {
 public:
-	NewProjectDialog(View &view) ;
-	virtual ~NewProjectDialog() ;
+  NewProjectDialog(View &view, Path currentPath = "");
+  virtual ~NewProjectDialog();
 
-	virtual void DrawView() ;
-	virtual void OnPlayerUpdate(PlayerEventType ,unsigned int currentTick) ;
-	virtual void OnFocus() ;
-	virtual void ProcessButtonMask(unsigned short mask,bool pressed) ;
+  virtual void DrawView();
+  virtual void OnPlayerUpdate(PlayerEventType, unsigned int currentTick);
+  virtual void OnFocus();
+  virtual void ProcessButtonMask(unsigned short mask, bool pressed);
 
-	std::string GetName() ;
+  std::string GetName();
+
 private:
-	int selected_ ;
-	int lastChar_ ;
-	char name_[MAX_NAME_LENGTH+1] ;
-	int currentChar_ ;
+  Path currentPath_;
+  int selected_;
+  int lastChar_;
+  char name_[MAX_NAME_LENGTH + 1];
+  int currentChar_;
 } ;
 
 #endif
