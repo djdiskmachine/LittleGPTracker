@@ -13,7 +13,6 @@
 06. [Key and Button Mapping](#key-and-button-mapping)
 07. [Auto Repeat](#auto-repeat)
 08. [Path](#path)
-09. [Rendering](#rendering)
 10. [Volume](#volume)
 11. [Audio Configuration](#audio-configuration)
 12. [MIDI Configuration](#midi-configuration)
@@ -243,18 +242,6 @@ You can tweak two different path:
 <CONFIG>
     <ROOTFOLDER value="c:/files/tracks/" />
     <SAMPLELIB value="root:" />
-</CONFIG>
-```
-
-## Rendering
-
-Additionally to playing the song, LittleGPTracker can be used to render the audio to file. To control file rendering, the variable `RENDER` can be set to either `FILE`,`FILESPLIT`,`FILERT`,`FILESPLITRT`. Note that there's a small issue with the speed when using `FILE`/`FILESPLIT` so the xxRT seem like the best choice at the moment
-The xxRT options render in real time
-The xSPLITx options render separate files for the channels (stems)
-
-```xml
-<CONFIG>
-    <RENDER value='FILERT' />
 </CONFIG>
 ```
 

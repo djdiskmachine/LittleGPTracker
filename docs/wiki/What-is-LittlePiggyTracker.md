@@ -51,8 +51,24 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 ## New project
 
-When creating a new project, use the Random button to generate a random name. Generate a new name with Random or edit it manually selecting characters with A and pressing up/down
-Attempting to create a project with the same name in the same location produces a notification that this operation is denied 
+When creating a new project, you have several options for naming:
+
+**Random Name Generation:**
+- Select the "Random" button and press A to generate a random name
+
+**QWERTY Keyboard Entry:**
+- Move to the name field and press A to enter QWERTY keyboard mode
+- An on-screen keyboard will appear with these controls:
+  - **D-PAD/Arrows:** Navigate the keyboard
+  - **A:** Input the selected character
+  - **B:** Backspace (delete character)
+  - **L/R:** Move the text cursor left/right within your project name
+  - **START or OK key:** Exit keyboard mode and return to the dialog
+- The keyboard includes:
+  - Numbers (0-9)
+  - Uppercase and lowercase letters (A-Z, a-z)
+  - Special characters (@ | - _ < > ? ,)
+  - Space bar, backspace, and OK (done) buttons on the bottom row
 
 ## Multiple Projects
 
@@ -591,20 +607,11 @@ RTRG 0101: does not do anything because after looping one tick, you move forward
 # Rendering
 
 Some people exploit the analog gap between their device's headphone output and whatever they are recording with. Alternately, you can start piggy in rendering mode so it will output 16bit, 44100Hz .WAV files.
-Please note that RENDER mode is not intended to be functional on the GP2X Builds.
-The following values can set for RENDER in the config.xml:
+The following values can set for RENDER in the project view
 
-- Standard mode: audio is played; no render.
-- FILE: File rendering: Full speed (no audio) rendering of the stereo mixdown.
-- FILESPLIT: File split rendering: Full speed (no audio) rendering of each channel separately.
-- FILERT: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
-- FILESPLITRT: Real Time file split: same except all channels are rendered separately.
-
-Here is an example of the proper XML syntax: (See [The config.xml setup guide](../LittlePiggyTrackerConf.md))
-
-```xml
-<RENDER value = "FILERT" />
-```
+- Off: audio is played; no render.
+- Stereo: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
+- Stems: Real Time file split: same except all channels are rendered separately.
 
 Remember, any of the config.xml parameters can be specified to lgpt on the command line in this fashion:
 

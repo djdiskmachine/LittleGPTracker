@@ -17,10 +17,11 @@
 #define VAR_SOFTCLIP_GAIN 	MAKE_FOURCC('S', 'F', 'G', 'N')
 #define VAR_PREGAIN   		MAKE_FOURCC('P', 'R', 'G', 'N')
 #define VAR_SCALE 			MAKE_FOURCC('S', 'C', 'A', 'L')
+#define VAR_RENDER MAKE_FOURCC('R', 'N', 'D', 'R')
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "6"
-#define BUILD_COUNT "0-bacon2"
+#define BUILD_COUNT "0-bacon4"
 
 #define MAX_TAP 3
 
@@ -43,9 +44,10 @@ public:
   int GetSoftclip();
   int GetSoftclipGain();
   int GetPregain();
-
+  int GetRenderMode();
   void Trigger();
 
+  static const unsigned int MAX_RENDER_MODE = 3;
   // I_Observer
   virtual void Update(Observable &o, I_ObservableData *d);
 
@@ -56,14 +58,14 @@ public:
   void LoadFirstGen(const char *root);
 
 protected:
-	void buildMidiDeviceList() ;
-private:
-	InstrumentBank *instrumentBank_ ;
-	char **midiDeviceList_ ;
-	int midiDeviceListSize_ ;
-	int tempoNudge_ ;
-	unsigned long lastTap_[MAX_TAP] ;
-    unsigned int tempoTapCount_;
-} ;
+  void buildMidiDeviceList();
 
+private:
+  InstrumentBank *instrumentBank_;
+  char **midiDeviceList_;
+  int midiDeviceListSize_;
+  int tempoNudge_;
+  unsigned long lastTap_[MAX_TAP];
+  unsigned int tempoTapCount_;
+};
 #endif

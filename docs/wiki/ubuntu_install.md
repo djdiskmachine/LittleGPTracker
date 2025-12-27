@@ -58,4 +58,3 @@ Please remember:
 
 ##### Use Piggy as your Midi Sequencer
 
-##### Script piggy to run in render mode from a simple xterm command

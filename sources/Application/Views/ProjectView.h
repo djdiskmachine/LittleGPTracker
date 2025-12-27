@@ -27,10 +27,10 @@ public:
 
 protected:
 private:
-	Project *project_ ;
-// Debug
-	unsigned long lastTick_ ;
-	unsigned long lastClock_ ;
-	UIField *tempoField_ ;
+  Project *project_;
+  // Debug
+  unsigned long lastTick_;
+  unsigned long lastClock_;
+  UIField *tempoField_;
 } ;
 #endif
