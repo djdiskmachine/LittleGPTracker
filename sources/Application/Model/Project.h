@@ -21,7 +21,7 @@
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "6"
-#define BUILD_COUNT "0-bacon2"
+#define BUILD_COUNT "0-bacon4"
 
 #define MAX_TAP 3
 
@@ -61,12 +61,11 @@ protected:
   void buildMidiDeviceList();
 
 private:
-	InstrumentBank *instrumentBank_ ;
-	char **midiDeviceList_ ;
-	int midiDeviceListSize_ ;
-	int tempoNudge_ ;
-	unsigned long lastTap_[MAX_TAP] ;
-    unsigned int tempoTapCount_;
+  InstrumentBank *instrumentBank_;
+  char **midiDeviceList_;
+  int midiDeviceListSize_;
+  int tempoNudge_;
+  unsigned long lastTap_[MAX_TAP];
+  unsigned int tempoTapCount_;
 };
-
 #endif

@@ -1,6 +1,7 @@
 #ifndef _NEW_PROJECT_DIALOG_H_
 #define _NEW_PROJECT_DIALOG_H_
 
+#include "Application/Utils/KeyboardLayout.h"
 #include "Application/Views/BaseClasses/ModalView.h"
 #include <string>
 
@@ -25,6 +26,9 @@ private:
   int lastChar_;
   char name_[MAX_NAME_LENGTH + 1];
   int currentChar_;
-} ;
-
+  bool keyboardMode_;
+  int keyboardRow_;
+  int keyboardCol_ ;
+    void moveCursor(int direction);
+};
 #endif

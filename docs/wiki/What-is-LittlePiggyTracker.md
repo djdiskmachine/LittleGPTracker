@@ -51,8 +51,24 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 ## New project
 
-When creating a new project, use the Random button to generate a random name. Generate a new name with Random or edit it manually selecting characters with A and pressing up/down
-Attempting to create a project with the same name in the same location produces a notification that this operation is denied 
+When creating a new project, you have several options for naming:
+
+**Random Name Generation:**
+- Select the "Random" button and press A to generate a random name
+
+**QWERTY Keyboard Entry:**
+- Move to the name field and press A to enter QWERTY keyboard mode
+- An on-screen keyboard will appear with these controls:
+  - **D-PAD/Arrows:** Navigate the keyboard
+  - **A:** Input the selected character
+  - **B:** Backspace (delete character)
+  - **L/R:** Move the text cursor left/right within your project name
+  - **START or OK key:** Exit keyboard mode and return to the dialog
+- The keyboard includes:
+  - Numbers (0-9)
+  - Uppercase and lowercase letters (A-Z, a-z)
+  - Special characters (@ | - _ < > ? ,)
+  - Space bar, backspace, and OK (done) buttons on the bottom row
 
 ## Multiple Projects
 
