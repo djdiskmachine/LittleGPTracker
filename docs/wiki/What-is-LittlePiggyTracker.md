@@ -591,20 +591,11 @@ RTRG 0101: does not do anything because after looping one tick, you move forward
 # Rendering
 
 Some people exploit the analog gap between their device's headphone output and whatever they are recording with. Alternately, you can start piggy in rendering mode so it will output 16bit, 44100Hz .WAV files.
-Please note that RENDER mode is not intended to be functional on the GP2X Builds.
-The following values can set for RENDER in the config.xml:
+The following values can set for RENDER in the project view
 
-- Standard mode: audio is played; no render.
-- FILE: File rendering: Full speed (no audio) rendering of the stereo mixdown.
-- FILESPLIT: File split rendering: Full speed (no audio) rendering of each channel separately.
-- FILERT: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
-- FILESPLITRT: Real Time file split: same except all channels are rendered separately.
-
-Here is an example of the proper XML syntax: (See [The config.xml setup guide](../LittlePiggyTrackerConf.md))
-
-```xml
-<RENDER value = "FILERT" />
-```
+- Off: audio is played; no render.
+- Stereo: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
+- Stems: Real Time file split: same except all channels are rendered separately.
 
 Remember, any of the config.xml parameters can be specified to lgpt on the command line in this fashion:
 
