@@ -44,7 +44,7 @@ public:
   int GetSoftclip();
   int GetSoftclipGain();
   int GetPregain();
-
+  int GetRenderMode();
   void Trigger();
 
   static const unsigned int MAX_RENDER_MODE = 3;
