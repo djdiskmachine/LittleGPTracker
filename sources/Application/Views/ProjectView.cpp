@@ -274,7 +274,7 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
         case ACTION_SAVE_AS: {
             PersistencyService *service = PersistencyService::GetInstance();
             service->Save("project:lgptsav_tmp.dat");
-            NewProjectDialog *mb = new NewProjectDialog(*this);
+            NewProjectDialog *mb = new NewProjectDialog(*this, "root:");
             DoModal(mb, SaveAsProjectCallback);
             break;
         }

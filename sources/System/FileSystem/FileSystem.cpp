@@ -76,9 +76,8 @@ std::string Path::GetCanonicalPath() {
 Path Path::Descend(const std::string& leaf)
 {
   std::string currentPath = GetPath();
-  if (currentPath[currentPath.size()-1] != '/')
-  {
-    currentPath += "/";
+  if (!currentPath.empty() && currentPath[currentPath.size() - 1] != '/') {
+      currentPath += "/";
   }
   return Path(currentPath+leaf);
 }
