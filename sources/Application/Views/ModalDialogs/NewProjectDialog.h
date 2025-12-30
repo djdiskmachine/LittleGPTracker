@@ -9,7 +9,7 @@
 
 class NewProjectDialog:public ModalView {
 public:
-  NewProjectDialog(View &view, Path currentPath = "");
+  NewProjectDialog(View &view, Path currentPath = "root:");
   virtual ~NewProjectDialog();
 
   virtual void DrawView();
