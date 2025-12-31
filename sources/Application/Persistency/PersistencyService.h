@@ -8,8 +8,8 @@
 class PersistencyService: public Service,public T_Singleton<PersistencyService> {
 public:
 	PersistencyService() ;
-	void Save() ;
-	bool Load() ;
+    void Save(const char *name = "project:lgptsav.dat");
+    bool Load() ;
 } ;
 
 class PersistencyDocument: public TiXmlDocument {
