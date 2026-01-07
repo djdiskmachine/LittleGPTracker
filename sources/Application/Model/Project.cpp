@@ -41,6 +41,9 @@ tempoNudge_(0)
         new Variable("scale", VAR_SCALE, scaleNames, scaleCount, 0);
     this->Insert(scale);
     scale->SetInt(0);
+    Variable *renderMode =
+        new Variable("renderMode", VAR_RENDER, renderModes, MAX_RENDER_MODE, 0);
+    this->Insert(renderMode);
 
 // Reload the midi device list
 
@@ -106,6 +109,12 @@ int Project::GetSoftclipGain() {
 
 int Project::GetPregain() {
     Variable *v = FindVariable(VAR_PREGAIN);
+    NAssert(v);
+	return v->GetInt();
+}
+
+int Project::GetRenderMode() {
+    Variable *v = FindVariable(VAR_RENDER);
     NAssert(v);
 	return v->GetInt();
 }
