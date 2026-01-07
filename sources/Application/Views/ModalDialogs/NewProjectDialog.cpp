@@ -231,35 +231,7 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask, bool pressed) {
 			name_[currentChar_]-=1;
 			lastChar_=name_[currentChar_] ;
 			isDirty_=true ;
-		}
-    } else {
-
-        // A modifier
-        if (mask & EPBM_A) {
-            if (mask == EPBM_A) {
-                std::string randomName = getRandomName();
-                switch (selected_) {
-                case 0:
-                    if (name_[currentChar_] == ' ') {
-                        name_[currentChar_] = lastChar_;
-                    }
-                    isDirty_ = true;
-                    break;
-                case 1:
-                    std::fill(name_ + randomName.length(),
-                              name_ + sizeof(name_) / sizeof(name_[0]), ' ');
-                    strncpy(name_, randomName.c_str(), randomName.length());
-                    lastChar_ = currentChar_ = randomName.length() - 1;
-                    isDirty_ = true;
-                    break;
-                case 2:
-                    EndModal(1);
-                    break;
-                case 3:
-                    EndModal(0);
-                    break;
-                }
-            }
+        }
         } else {
 
             // R Modifier
@@ -309,7 +281,6 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask, bool pressed) {
                     isDirty_ = true;
                 }
             }
-        }
     }
 };
 
