@@ -656,16 +656,32 @@ Path AppWindow::GetLastProjectPath() {
         return Path();
     }
 
-    char buffer[256];
-    memset(buffer, 0, 256);
-    int bytes = file->Read(buffer, 1, 255);
+    // Get file size
+    file->Seek(0, SEEK_END);
+    int length = file->Tell();
+    
+    if (length <= 0) {
+        file->Close();
+        delete file;
+        return Path();
+    }
+
+    // Allocate buffer and seek back to start
+    char *buffer = (char *)SYS_MALLOC(length + 1);
+    memset(buffer, 0, length + 1);
+
+    file->Seek(0, SEEK_SET); // Seek back to start
+    int bytes = file->Read(buffer, 1, length); // Read full length
     file->Close();
     delete file;
 
     if (bytes <= 0) {
-        Trace::Error("AppWindow", "Failed to read last project file");
+        Trace::Error("GetLastProject: Failed to read last project file");
+        SYS_FREE(buffer);
         return Path();
     }
+
+    buffer[bytes] = 0; // Null terminate
 
     // Remove newline if present
     int len = strlen(buffer);
@@ -673,16 +689,21 @@ Path AppWindow::GetLastProjectPath() {
         buffer[len-1] = 0;
     }
 
+    Path result;
     if (strlen(buffer) > 0) {
         if (strstr(buffer, "lgpt_") != NULL) { // Ensure it's an lgpt project
-            Trace::Log("AppWindow", "Loaded last project: %s", buffer);
-            return Path(buffer);
+            result = Path(buffer);
         } else {
-            Trace::Error("AppWindow", "Invalid project path format: %s", buffer);
+            Trace::Error("GetLastProject: Invalid project path format: %s",
+                         buffer);
         }
     }
+    if (!result.IsDirectory()) {
+        Trace::Error("GetLastProject: path does not exist: %s", result.GetPath().c_str());
+    }
 
-    return Path();
+    SYS_FREE(buffer);
+    return result;
 }
 
 void AppWindow::SaveLastProject(const Path &p) {
@@ -691,7 +712,7 @@ void AppWindow::SaveLastProject(const Path &p) {
     I_File *file = fs->Open(lastProjectFile.GetPath().c_str(), "w");
 
     if (!file) {
-        Trace::Error("AppWindow", "Failed to open %s for writing",
+        Trace::Error("SaveLastProject: Failed to open %s for writing",
                      LAST_PROJECT_NAME);
         return;
     }
@@ -702,5 +723,6 @@ void AppWindow::SaveLastProject(const Path &p) {
     file->Close();
     delete file;
 
-    Trace::Log("AppWindow", "Saved last project: %s", p.GetPath().c_str());
+    Trace::Log("SaveLastProject", "Saved last project: %s",
+               p.GetPath().c_str());
 }
