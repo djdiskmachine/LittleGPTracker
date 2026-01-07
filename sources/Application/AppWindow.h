@@ -84,7 +84,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     unsigned long _lastA;
     unsigned long _lastB;
     char _statusLine[80];
-    char _newProjectToLoad[80];
+    std::string _newProjectToLoad;
     unsigned char _charScreen[1200];
     unsigned char _charScreenProp[1200];
     unsigned char _preScreen[1200];

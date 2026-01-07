@@ -86,6 +86,7 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
     _grooveView = 0;
     _closeProject = 0;
     _loadAfterSaveAsProject = 0;
+    _loadAfterResume = 0;
     _lastA = 0;
     _lastB = 0;
     _mask = 0;
@@ -121,15 +122,18 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
 
     Config *config = Config::GetInstance(); // Possible to disable autoloading
     const char *autoLoadEnabled = config->GetValue("AUTO_LOAD_LAST");
-    bool shouldAutoLoad = (autoLoadEnabled && strcmp(autoLoadEnabled, "YES") == 0);
+    bool shouldAutoLoad =
+        (!autoLoadEnabled || // Default to yes if not in config
+         strcmp(autoLoadEnabled, "YES") == 0);
 
     SelectProjectDialog *spd = new SelectProjectDialog(*_currentView);
     Path lastProjectPath = GetLastProjectPath();
-    if (shouldAutoLoad && lastProjectPath.Exists()) { // Try to load the last project from previous session
-        Trace::Log("AppWindow", "Auto-loading last project: %s", lastProjectPath.GetPath().c_str()) ;
-        // Store the path to load after initialization completes
-        strcpy(_newProjectToLoad, lastProjectPath.GetPath().c_str());
+    if (shouldAutoLoad && lastProjectPath.Exists()) {
+        Trace::Log("AppWindow", "Auto-loading last project: %s",
+                   lastProjectPath.GetPath().c_str());
+        _newProjectToLoad = lastProjectPath.GetPath().c_str();
         _loadAfterResume = true;
+        delete spd;
     } else { // Show project selection dialog
         _currentView->DoModal(spd, ProjectSelectCallback);
     }
@@ -501,7 +505,7 @@ bool AppWindow::onEvent(GUIEvent &event) {
     if (_loadAfterSaveAsProject) {
         CloseProject();
         _isDirty = true;
-        LoadProject(_newProjectToLoad);
+        LoadProject(_newProjectToLoad.c_str());
     }
 #ifdef _SHOW_GP2X_
     Redraw();
@@ -516,7 +520,7 @@ void AppWindow::onUpdate() {
     if (_loadAfterResume) {
         _loadAfterResume = false;
         _isDirty = true;
-        LoadProject(_newProjectToLoad);
+        LoadProject(_newProjectToLoad.c_str());
         return;
     }
     Flush();
@@ -595,7 +599,7 @@ void AppWindow::Update(Observable &o, I_ObservableData *d) {
     case VET_SAVEAS_PROJECT: {
         char *name = (char *)ve->GetData();
         _loadAfterSaveAsProject = true;
-        strcpy(_newProjectToLoad, name);
+        _newProjectToLoad = name;
         break;
     }
 
@@ -654,9 +658,14 @@ Path AppWindow::GetLastProjectPath() {
 
     char buffer[256];
     memset(buffer, 0, 256);
-    file->Read(buffer, 1, 255);
+    int bytes = file->Read(buffer, 1, 255);
     file->Close();
     delete file;
+
+    if (bytes <= 0) {
+        Trace::Error("AppWindow", "Failed to read last project file");
+        return Path();
+    }
 
     // Remove newline if present
     int len = strlen(buffer);
@@ -665,8 +674,12 @@ Path AppWindow::GetLastProjectPath() {
     }
 
     if (strlen(buffer) > 0) {
-        Trace::Log("SelectProjectDialog", "Loaded last project: %s", buffer);
-        return Path(buffer);
+        if (strstr(buffer, "lgpt_") != NULL) { // Ensure it's an lgpt project
+            Trace::Log("AppWindow", "Loaded last project: %s", buffer);
+            return Path(buffer);
+        } else {
+            Trace::Error("AppWindow", "Invalid project path format: %s", buffer);
+        }
     }
 
     return Path();
@@ -678,7 +691,8 @@ void AppWindow::SaveLastProject(const Path &p) {
     I_File *file = fs->Open(lastProjectFile.GetPath().c_str(), "w");
 
     if (!file) {
-        Trace::Error("SelectProjectDialog", "Failed to open %s for writing", LAST_PROJECT_NAME);
+        Trace::Error("AppWindow", "Failed to open %s for writing",
+                     LAST_PROJECT_NAME);
         return;
     }
 
@@ -688,5 +702,5 @@ void AppWindow::SaveLastProject(const Path &p) {
     file->Close();
     delete file;
 
-    Trace::Log("SelectProjectDialog", "Saved last project: %s", p.GetPath().c_str());
+    Trace::Log("AppWindow", "Saved last project: %s", p.GetPath().c_str());
 }
