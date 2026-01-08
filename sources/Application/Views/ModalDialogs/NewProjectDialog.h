@@ -29,6 +29,6 @@ private:
   bool keyboardMode_;
   int keyboardRow_;
   int keyboardCol_ ;
-    void moveCursor(int direction);
+  void moveCursor(int direction);
 };
 #endif

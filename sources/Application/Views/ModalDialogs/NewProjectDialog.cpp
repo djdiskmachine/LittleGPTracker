@@ -18,7 +18,8 @@ void NewProjectDialog::moveCursor(int direction) {
     int newPos = currentChar_ + direction;
     if (newPos >= 0 && newPos < MAX_NAME_LENGTH) {
         currentChar_ = newPos;
-		findCharacterInKeyboard(name_[currentChar_], keyboardRow_, keyboardCol_);
+        findCharacterInKeyboard(name_[currentChar_], keyboardRow_,
+                                keyboardCol_);
     }
 }
 
@@ -130,7 +131,6 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask, bool pressed) {
                 // END key: exit keyboard mode (same as START)
                 keyboardMode_ = false;
                 isDirty_ = true;
-                // EndModal(0);
                 return;
             } else if (ch != '\0') {
                 name_[currentChar_] = ch;

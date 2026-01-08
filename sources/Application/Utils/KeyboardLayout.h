@@ -7,8 +7,8 @@
 #define SPACE_ROW 7
 #define KEYBOARD_ROWS (SPACE_ROW + 1)
 
-#define SPCE_START 0
-#define SPCE_END 3
+#define SPACE_START 0
+#define SPACE_END 3
 #define BACK_START 4
 #define BACK_END 6
 #define DONE_START 8
@@ -26,7 +26,7 @@ static const char* keyboardLayout[] = {
 };
 
 // Helper functions for special row section detection
-inline bool isInSpaceSection(int col) { return col < SPCE_END; }
+inline bool isInSpaceSection(int col) { return col < SPACE_END; }
 inline bool isInBackSection(int col) { return col >= BACK_START && col < BACK_END; }
 inline bool isInDoneSection(int col) { return col >= DONE_START; }
 
@@ -37,8 +37,9 @@ inline char getKeyAtPosition(int row, int col) {
 	
 	// Handle special row with SPC, BACK, and DONE
 	if (row == SPACE_ROW) {
-		if (col >= 0 && col < SPCE_END) return ' ';        // [_] (space)
-		if (col >= BACK_START && col < BACK_END) return '\b'; // <- (backspace)
+        if (col >= 0 && col < SPACE_END)
+            return ' ';                                       // [_] (space)
+        if (col >= BACK_START && col < BACK_END) return '\b'; // <- (backspace)
 		if (col >= DONE_START && col < DONE_END) return '\r'; // OK (carriage return)
 		return '\0';
 	}
@@ -69,29 +70,30 @@ inline void findCharacterInKeyboard(char ch, int &outRow, int &outCol) {
 
 // Clamp keyboard column to valid range for current row
 inline void clampKeyboardColumn(int row, int& col) {
-	if (row == SPACE_ROW) {
-		if (col < SPCE_END) col = SPCE_START;
+    if (row == SPACE_ROW) {
+        if (col < SPACE_END) col = SPACE_START;
 		else if (col <= BACK_END) col = BACK_START;
 		else col = DONE_START;
-	} else {
-		int maxCol = strlen(keyboardLayout[row]) - 1;
+    } else {
+        int maxCol = strlen(keyboardLayout[row]) - 1;
 		if (col > maxCol) col = 0;
-	}
+    }
 }
 
 // Cycle keyboard column left (-1) or right (+1) within current row
 inline void cycleKeyboardColumn(int row, int direction, int& col) {
 	if (row == SPACE_ROW) {
 		if (direction < 0) { // LEFT
-			if (isInSpaceSection(col)) col = DONE_START;
-			else if (isInBackSection(col)) col = SPCE_START;
+            if (isInSpaceSection(col))
+                col = DONE_START;
+            else if (isInBackSection(col)) col = SPACE_START;
 			else col = BACK_START;
-		} else { // RIGHT
-			if (isInBackSection(col)) col = DONE_START;
-			else if (isInDoneSection(col)) col = SPCE_START;
+        } else { // RIGHT
+            if (isInBackSection(col)) col = DONE_START;
+			else if (isInDoneSection(col)) col = SPACE_START;
 			else col = BACK_START;
-		}
-	} else {
+        }
+    } else {
 		int maxCol = strlen(keyboardLayout[row]) - 1;
 		col = (col + direction + maxCol + 1) % (maxCol + 1);
 	}
