@@ -1,5 +1,6 @@
 <CONFIG>
 	<DUMPEVENT value="YES"/>
+	<AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
 	<SCREENMULT value="2"/> <!-- increase screen size -->
 <!--
 	<KEY_A value="key:0:x"/>

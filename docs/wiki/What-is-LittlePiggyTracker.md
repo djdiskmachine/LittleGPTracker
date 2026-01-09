@@ -72,13 +72,16 @@ When creating a new project, you have several options for naming:
 
 ## Multiple Projects
 
-The Piggy supports multiple projects! Just create multiple directories in the root folder (where lgptNew and lgpt10k were found). Examples: “lgptProject1”, “lgpt*Author*Name”, “lgptSomethingElse”, “lgptWhatever”, etc. Each project directory must contain its own samples which must be stored in a sub-directory called “samples”. Lgpt will prompt you to choose one of the projects found in the root (lgpt- directories) when starting up.
+The Piggy supports multiple projects! Just create multiple directories in the root folder (where lgptNew and lgpt10k were found). Examples: "lgptProject1", "lgpt*Author*Name", "lgptSomethingElse", "lgptWhatever", etc. Each project directory must contain its own samples which must be stored in a sub-directory called "samples".
+
+By default, Lgpt will automatically load the last project that was open on the previous session. If you prefer to see the project selection screen on startup, you can disable this behavior by setting `AUTO_LOAD_LAST=NO` in your `config.xml`.
+
 Important Points to Remember:
 
 - Project directories **must** start with “lgpt”.
 - Project directories **must** go in the root folder.
 - You can reuse a previously made lgptsav.dat file.
-- Lgpt will list all the projects available on startup.
+- Lgpt will list all the projects available on startup if autoloading is disabled in config.xml
 - The lgptsav.dat file is created automatically the project's folder using the piggy's save function (see Controls & Moves). You should not create tah file manually.
 - Save often :)
 

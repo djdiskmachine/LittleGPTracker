@@ -3,6 +3,7 @@ Bittboy config
 Re-assigned layout since no shoulder buttons
 -->
 <CONFIG>
+  <AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
   <!--
   <ROOTFOLDER value="/mnt/SDCARD/Tracks"/>
   <SAMPLELIB value="/mnt/SDCARD/Samples"/>
