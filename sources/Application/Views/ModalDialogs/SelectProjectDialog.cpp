@@ -9,11 +9,7 @@
 #define LIST_SIZE 20
 #define LIST_WIDTH 32
 
-static char *buttonText[3]= {
-	"Load",
-	"New",
-	"Exit"	
-} ;
+static char *buttonText[3] = {"Load", "New", "Exit"};
 
 Path SelectProjectDialog::lastFolder_("root:") ;
 int SelectProjectDialog::lastProject_ = 0 ;
@@ -25,12 +21,11 @@ static void NewProjectCallback(View &v,ModalView &dialog) {
 		std::string selected=npd.GetName() ;
 		SelectProjectDialog &spd=(SelectProjectDialog&)v ;
 		Result result = spd.OnNewProject(selected) ;
-    if (result.Failed())
-    {
-      Trace::Error(result.GetDescription().c_str());
+        if (result.Failed()) {
+            Trace::Error(result.GetDescription().c_str());
+        }
     }
-	} 
-} ;
+};
 
 SelectProjectDialog::SelectProjectDialog(View &view):ModalView(view),content_(true) {
 }
@@ -45,16 +40,17 @@ void SelectProjectDialog::DrawView() {
 	GUITextProperties props ;
 
 	SetColor(CD_NORMAL) ;
+    View::EnableNotification();
 
-// Draw projects
+    // Draw projects
 
-	int x=1 ;
-	int y=1 ;
+    int x = 1;
+    int y = 1;
 
-	if (currentProject_<topIndex_) {
-		topIndex_=currentProject_ ;
-	} ;
-	if (currentProject_>=topIndex_+LIST_SIZE) {
+    if (currentProject_ < topIndex_) {
+        topIndex_ = currentProject_;
+    };
+    if (currentProject_>=topIndex_+LIST_SIZE) {
 		topIndex_=currentProject_-LIST_SIZE+1 ;
 	} ;
 
@@ -113,12 +109,11 @@ void SelectProjectDialog::DrawView() {
 		x=offset*(i+1)-strlen(text)/2 ;
 		props.invert_=(i==selected_)?true:false ;
 		DrawString(x,y,text,props) ;
-	}	
-
+    }
 };
 
-void SelectProjectDialog::OnPlayerUpdate(PlayerEventType ,unsigned int currentTick) {
-};
+void SelectProjectDialog::OnPlayerUpdate(PlayerEventType,
+                                         unsigned int currentTick) {};
 
 void SelectProjectDialog::OnFocus() {
 
@@ -129,29 +124,30 @@ void SelectProjectDialog::OnFocus() {
 
 void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 	if (!pressed) return ;
-	
-	if (mask&EPBM_B) {         
-		if (mask&EPBM_UP) warpToNextProject(-LIST_SIZE) ;
-		if (mask&EPBM_DOWN) warpToNextProject(LIST_SIZE) ;
-	} else {
 
-	  // A modifier
-	  if (mask&EPBM_A) { 
-		switch(selected_) {
+    if (mask&EPBM_B) {
+        if (mask & EPBM_UP)
+            warpToNextProject(-LIST_SIZE);
+        if (mask&EPBM_DOWN) warpToNextProject(LIST_SIZE) ;
+    } else {
+
+        // A modifier
+        if (mask & EPBM_A) {
+            switch (selected_) {
 			case 0: // load
 				{
-					//locate folder user had selected when they hit a
-					int count=0 ;
-					Path *current=0 ;
+                // locate folder user had selected when they hit a
+                int count = 0;
+                Path *current = 0;
 
-					IteratorPtr<Path> it(content_.GetIterator()) ;
-					for(it->Begin();!it->IsDone();it->Next()) {
-						if (count==currentProject_) {
-							current=&it->CurrentItem() ;
-							break ;
-						}
-						count++ ;
-					}
+                IteratorPtr<Path> it(content_.GetIterator());
+                for (it->Begin(); !it->IsDone(); it->Next()) {
+                    if (count == currentProject_) {
+                        current = &it->CurrentItem();
+                        break;
+                    }
+                    count++;
+                }
 
 					//check if folder is a project, indicated by 'lgpt' being the first 4 characters of the folder name
 					std::string name = current->GetName() ;
@@ -178,20 +174,21 @@ void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 			}
 			case 1: // new
 			{
-				NewProjectDialog *npd=new NewProjectDialog(*this) ;
-				DoModal(npd,NewProjectCallback) ;
+                NewProjectDialog *npd =
+                    new NewProjectDialog(*this, currentPath_);
+                DoModal(npd,NewProjectCallback) ;
 				break ;
-			}
-			case 2: // Exit ;
-				EndModal(0) ;
+            }
+            case 2: // Exit ;
+                EndModal(0) ;
 				break ;
 		}
-	  } else {
+        } else {
 
-		  // R Modifier
+            // R Modifier
 
-          	if (mask&EPBM_R) {
-	    	} else {
+            if (mask & EPBM_R) {
+            } else {
                 // No modifier
 				if (mask==EPBM_UP) warpToNextProject(-1) ;
 				if (mask==EPBM_DOWN) warpToNextProject(1) ;
@@ -204,16 +201,16 @@ void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 					selected_=(selected_+1)%3 ;
 					isDirty_=true ;
 				}
-		    }
-	  } 
-	}
+            }
+        }
+    }
 };
 
 void SelectProjectDialog::warpToNextProject(int amount) {
 
-	int offset=currentProject_-topIndex_ ;
-	int size=content_.Size() ;
-	currentProject_+=amount ;
+    int offset = currentProject_ - topIndex_;
+    int size = content_.Size();
+    currentProject_+=amount ;
 	if (currentProject_<0) currentProject_+=size ;
 	if (currentProject_>=size) currentProject_-=size ;
 
@@ -223,8 +220,7 @@ void SelectProjectDialog::warpToNextProject(int amount) {
 			topIndex_=0 ;
 		} ;
 	}
-	isDirty_=true ;
-
+    isDirty_ = true;
 }
 
 Path SelectProjectDialog::GetSelection() {
@@ -233,8 +229,14 @@ Path SelectProjectDialog::GetSelection() {
 
 Result SelectProjectDialog::OnNewProject(std::string &name) {
 
-	Path path = currentPath_.Descend(name);
-	Trace::Log("TMP","creating project at %s",path.GetPath().c_str());
+    Path path = currentPath_.Descend(name);
+    if (path.Exists()) {
+        Trace::Log("SelectProjectDialog:OnNewProj","path already exists %s", path.GetPath().c_str());
+		std::string res("Name " + name + " busy");
+		View::SetNotification(res.c_str(), 0);
+        return Result(res);
+    }
+    Trace::Log("TMP","creating project at %s",path.GetPath().c_str());
 	selection_ = path ;
 	Result result = FileSystem::GetInstance()->MakeDir(path.GetPath().c_str()) ;
 	RETURN_IF_FAILED(result, ("Failed to create project dir for '%s", path.GetPath().c_str()));
@@ -289,7 +291,5 @@ void SelectProjectDialog::setCurrentFolder(Path &path) {
 	//reset & redraw screen
 	topIndex_=0 ;
 	currentProject_=0 ;
-	isDirty_=true ;
+    isDirty_ = true;
 }
-
-

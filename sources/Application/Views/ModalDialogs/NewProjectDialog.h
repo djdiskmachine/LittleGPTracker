@@ -1,6 +1,7 @@
 #ifndef _NEW_PROJECT_DIALOG_H_
 #define _NEW_PROJECT_DIALOG_H_
 
+#include "Application/Utils/KeyboardLayout.h"
 #include "Application/Views/BaseClasses/ModalView.h"
 #include <string>
 
@@ -9,26 +10,25 @@
 
 class NewProjectDialog:public ModalView {
 public:
-	NewProjectDialog(View &view) ;
-	virtual ~NewProjectDialog() ;
+  NewProjectDialog(View &view, Path currentPath = "root:");
+  virtual ~NewProjectDialog();
 
-	virtual void DrawView() ;
-	virtual void OnPlayerUpdate(PlayerEventType ,unsigned int currentTick) ;
-	virtual void OnFocus() ;
-	virtual void ProcessButtonMask(unsigned short mask,bool pressed) ;
+  virtual void DrawView();
+  virtual void OnPlayerUpdate(PlayerEventType, unsigned int currentTick);
+  virtual void OnFocus();
+  virtual void ProcessButtonMask(unsigned short mask, bool pressed);
 
-	std::string GetName() ;
+  std::string GetName();
+
 private:
-	int selected_ ;
-	int lastChar_ ;
-	char name_[MAX_NAME_LENGTH+1] ;
-	int currentChar_ ;
-    bool keyboardMode_;
-    int keyboardRow_ ;
-	int keyboardCol_ ;
-	
-	char getKeyAtPosition(int row, int col) ;
-	void findCharacterInKeyboard(char ch, int &outRow, int &outCol) ;
-} ;
-
+  Path currentPath_;
+  int selected_;
+  int lastChar_;
+  char name_[MAX_NAME_LENGTH + 1];
+  int currentChar_;
+  bool keyboardMode_;
+  int keyboardRow_;
+  int keyboardCol_ ;
+  void moveCursor(int direction);
+};
 #endif

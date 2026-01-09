@@ -468,8 +468,8 @@ void  SoundFontNavigator::Navigate(WORD uiSFID, WORD uiKey, WORD uiVel)
 
 	      // This step necessary for Big Endian systems
 	      if (uiInstGenOper <= endloopAddrsOffset)
-		*(LONG*)((BYTE*)&(psfVectorCurrOsc->dwStart) +
-                   soundFontLookup[uiInstGenOper]) = (LONG)iInstGenAmt;
+              *(ADDR *)((BYTE *)&(psfVectorCurrOsc->dwStart) +
+                        soundFontLookup[uiInstGenOper]) = (ADDR)iInstGenAmt;
               else
 	        *(SHORT*)((BYTE*)&(psfVectorCurrOsc->dwStart) +
                    soundFontLookup[uiInstGenOper]) = iInstGenAmt;
@@ -520,8 +520,8 @@ void  SoundFontNavigator::Navigate(WORD uiSFID, WORD uiKey, WORD uiVel)
 
         // Necessary for 'byte-incoherent' systems
         if (uiGenOper <= endloopAddrsOffset)
-          *(LONG*)((BYTE*)&sfCurrPreset.dwStart +
-            soundFontLookup[uiGenOper]) = (LONG)iGenAmt;
+            *(ADDR *)((BYTE *)&sfCurrPreset.dwStart +
+                      soundFontLookup[uiGenOper]) = (ADDR)iGenAmt;
         else
           *(SHORT*)((BYTE*)&sfCurrPreset.dwStart +
             soundFontLookup[uiGenOper]) = iGenAmt;
@@ -815,8 +815,13 @@ SoundFontNavigator::AddSoundFonts(sfData * sfSoundFontReturned,
   {
     uiOffset = (WORD) soundFontLookup[wCount];
 
-    *(SHORT*)((BYTE*)&(sfSoundFontReturned->dwStart) + uiOffset) +=
-	*(SHORT*)((BYTE*)&(sfSFPresetAdd->dwStart) + uiOffset);
+    if (wCount <= endloopAddrsOffset) {
+        *(ADDR *)((BYTE *)&(sfSoundFontReturned->dwStart) + uiOffset) +=
+            *(ADDR *)((BYTE *)&(sfSFPresetAdd->dwStart) + uiOffset);
+    } else {
+        *(SHORT *)((BYTE *)&(sfSoundFontReturned->dwStart) + uiOffset) +=
+            *(SHORT *)((BYTE *)&(sfSFPresetAdd->dwStart) + uiOffset);
+    }
   }
 }
 

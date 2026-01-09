@@ -26,45 +26,44 @@
 
 class Project: public Persistent,public VariableContainer,I_Observer  {
 public:
-	Project() ;
-	~Project() ;
-	void Purge() ;
-	void PurgeInstruments(bool removeFromDisk) ;
+  Project();
+  ~Project();
+  void Purge();
+  void PurgeInstruments(bool removeFromDisk);
 
-	Song *song_ ;
- 
-	int GetMasterVolume() ;
-	bool Wrap() ;
-	void OnTempoTap();
-	void NudgeTempo(int value) ;
-    int GetScale();
-    int GetTempo() ; // Takes nudging into account
-	int GetTranspose() ;
-    int GetSoftclip();
-    int GetSoftclipGain();
-    int GetPregain();
+  Song *song_;
 
-    void Trigger();
+  int GetMasterVolume();
+  bool Wrap();
+  void OnTempoTap();
+  void NudgeTempo(int value);
+  int GetScale();
+  int GetTempo(); // Takes nudging into account
+  int GetTranspose();
+  int GetSoftclip();
+  int GetSoftclipGain();
+  int GetPregain();
 
-    // I_Observer
-    virtual void Update(Observable &o,I_ObservableData *d);
- 
-	InstrumentBank* GetInstrumentBank() ;
-	virtual void SaveContent(TiXmlNode *node) ;
-	virtual void RestoreContent(TiXmlElement *element);
+  void Trigger();
 
-	void LoadFirstGen(const char *root) ;
+  // I_Observer
+  virtual void Update(Observable &o, I_ObservableData *d);
+
+  InstrumentBank *GetInstrumentBank();
+  virtual void SaveContent(TiXmlNode *node);
+  virtual void RestoreContent(TiXmlElement *element);
+
+  void LoadFirstGen(const char *root);
 
 protected:
-	void buildMidiDeviceList() ;
+  void buildMidiDeviceList();
+
 private:
-	InstrumentBank *instrumentBank_ ;
-	char **midiDeviceList_ ;
-	int midiDeviceListSize_ ;
-	int tempoNudge_ ;
-	unsigned long lastTap_[MAX_TAP] ;
-	unsigned int tempoTapCount_ ; 
-} ;
-
+  InstrumentBank *instrumentBank_;
+  char **midiDeviceList_;
+  int midiDeviceListSize_;
+  int tempoNudge_;
+  unsigned long lastTap_[MAX_TAP];
+  unsigned int tempoTapCount_;
+};
 #endif
-
