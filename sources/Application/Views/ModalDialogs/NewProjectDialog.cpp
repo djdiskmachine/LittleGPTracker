@@ -23,45 +23,6 @@ void NewProjectDialog::moveCursor(int direction) {
     }
 }
 
-char NewProjectDialog::getKeyAtPosition(int row, int col) {
-    if (row < 0 || row >= keyboardRows) return '\0';
-	const char* rowStr = keyboardLayout[row];
-	
-	// Handle special row with [____] and <-
-	if (row == 6) {
-		if (col >= 0 && col < 7) return ' '; // [____] (space)
-		if (col >= 8 && col < 12) return '\b'; // <- (backspace)
-		return '\0';
-	}
-	
-	int len = strlen(rowStr);
-	if (col < 0 || col >= len) return '\0';
-	return rowStr[col];
-}
-
-void NewProjectDialog::findCharacterInKeyboard(char ch, int &outRow,
-                                               int &outCol) {
-    // Search for character in keyboard layout
-	for (int row = 0; row < keyboardRows - 1; row++) { // Exclude special row
-		const char* rowStr = keyboardLayout[row];
-		int len = strlen(rowStr);
-		for (int col = 0; col < len; col++) {
-			if (rowStr[col] == ch) {
-				outRow = row;
-				outCol = col;
-				return;
-			}
-		}
-	}
-	// Handle space specially
-	if (ch == ' ') {
-		outRow = 6;
-		outCol = 0;
-		return;
-	}
-	// Character not found, don't change position
-}
-
 void NewProjectDialog::DrawView() {
 
     SetWindow(DIALOG_WIDTH, keyboardMode_ ? 15 : 5);
@@ -321,6 +282,7 @@ void NewProjectDialog::ProcessButtonMask(unsigned short mask, bool pressed) {
                 }
             }
     }
+};
 
 std::string NewProjectDialog::GetName() {
     for (int i = MAX_NAME_LENGTH; i >= 0; i--) {
