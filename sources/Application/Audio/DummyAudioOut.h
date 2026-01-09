@@ -28,8 +28,6 @@ public:
 
     virtual void Trigger();
 
-    virtual bool Clipped() { return false; };
-
     virtual int GetPlayedBufferPercentage() { return 0; };
 
     void SendPulse();
@@ -39,8 +37,7 @@ public:
 	virtual int GetAudioBufferSize() ;
 	virtual int GetAudioRequestedBufferSize() ;
 	virtual int GetAudioPreBufferCount() ;
-	virtual double GetStreamTime() ;
-    virtual void SetSoftclip(int, int);
+    virtual double GetStreamTime();
     virtual void SetMasterVolume(int);
 
   private:
