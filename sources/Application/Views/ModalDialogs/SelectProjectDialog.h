@@ -26,15 +26,14 @@ public:
 	void setCurrentFolder(Path &path) ;
 
 private:
-	T_SimpleList<Path> content_ ;
-    bool deleteConfirmationPending_;
-    int topIndex_ ;
-	int currentProject_ ;
-	int selected_ ;
-	Path currentPath_ ;
-	Path selection_ ;
-	static Path lastFolder_ ;
-	static int lastProject_ ;
+  T_SimpleList<Path> content_;
+  int topIndex_;
+  int currentProject_;
+  int selected_;
+  Path currentPath_;
+  Path selection_;
+  static Path lastFolder_;
+  static int lastProject_;
 } ;
 
 #endif

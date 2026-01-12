@@ -5,7 +5,6 @@
 #include "Application/Views/ModalDialogs/MessageBox.h"
 
 #include <algorithm>
-#include <unistd.h>
 
 #define LIST_SIZE 20
 #define LIST_WIDTH 32
@@ -170,8 +169,7 @@ void SelectProjectDialog::OnPlayerUpdate(PlayerEventType,
 void SelectProjectDialog::OnFocus() {
 
 	setCurrentFolder(lastFolder_) ;
-	currentProject_=lastProject_ ;
-    deleteConfirmationPending_ = false;
+    currentProject_ = lastProject_;
 };
 
 void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
@@ -180,28 +178,28 @@ void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
     if (mask&EPBM_B) {
         // Handle A + B combination for delete
         if (mask & EPBM_A) {
-			if (!deleteConfirmationPending_) {
-				// First press of A+B: show confirmation dialog
-				int count = 0;
-				Path *current = 0;
+            int count = 0;
+            Path *current = 0;
 
-				IteratorPtr<Path> it(content_.GetIterator());
-				for (it->Begin(); !it->IsDone(); it->Next()) {
-					if (count == currentProject_) {
-						current = &it->CurrentItem();
-						break;
-					}
-					count++;
-				}
+            IteratorPtr<Path> it(content_.GetIterator());
+            for (it->Begin(); !it->IsDone(); it->Next()) {
+                if (count == currentProject_) {
+                    current = &it->CurrentItem();
+                    break;
+                }
+                count++;
+            }
 
-				if (current != 0) {
-					std::string message = "Delete project '" + current->GetName() + "' ?";
-					MessageBox *mb = new MessageBox(*this, message.c_str(), MBBF_YES | MBBF_NO);
-					DoModal(mb, DeleteProjectCallback);
-					DrawView();
-				}
-			}
-			return;
+            if (current != 0) {
+                std::string message =
+                    "Delete project '" + current->GetName() + "' ?";
+                MessageBox *mb =
+                    new MessageBox(*this, message.c_str(), MBBF_YES | MBBF_NO);
+                DoModal(mb, DeleteProjectCallback);
+                DrawView();
+            }
+        }
+            return;
 		}
         if (mask & EPBM_UP)
             warpToNextProject(-LIST_SIZE);
@@ -335,14 +333,13 @@ Result SelectProjectDialog::OnDeleteProject(const Path &projectPath) {
 	Path pathCopy = projectPath;
 	
 	// Check if project exists before deletion
-	if (!pathCopy.Exists()) {
-		std::string errMsg = "Project not found";
-		View::SetNotification(errMsg.c_str(), 0);
-		deleteConfirmationPending_ = false ;
-		return Result("Project not found");
-	}
-	
-	// Recursively delete the project directory and all contents
+    if (!pathCopy.Exists()) {
+        std::string errMsg = "Project not found";
+        View::SetNotification(errMsg.c_str(), 0);
+        return Result("Project not found");
+    }
+
+    // Recursively delete the project directory and all contents
 	RecursiveDeleteDirectory(projectPath);
 	
 	// Project deleted successfully, refresh the project list
@@ -362,11 +359,9 @@ Result SelectProjectDialog::OnDeleteProject(const Path &projectPath) {
 	} else if (listSize > 0) {
 		currentProject_ = savedProject;
 	}
-	topIndex_ = savedTopIndex;
-	isDirty_ = true;
-	
-	deleteConfirmationPending_ = false ;
-	
+    topIndex_ = savedTopIndex;
+    isDirty_ = true;
+		
 	return Result::NoError;
 };
 
