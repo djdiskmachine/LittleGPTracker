@@ -27,11 +27,11 @@ static void NewProjectCallback(View &v,ModalView &dialog) {
     }
 }
 
-static void DeleteProjectCallback(View &v,ModalView &dialog) {
-	SelectProjectDialog &spd=(SelectProjectDialog&)v ;
-	if (dialog.GetReturnCode()==MBL_YES) {
-		Path projectPath = spd.GetCurrentProjectPath() ;
-		Result result = spd.OnDeleteProject(projectPath) ;
+static void DeleteProjectCallback(View &v, ModalView &dialog) {
+    SelectProjectDialog &spd = (SelectProjectDialog&) v;
+	if (dialog.GetReturnCode() == MBL_YES) {
+        Path projectPath = spd.GetCurrentProjectPath();
+        Result result = spd.OnDeleteProject(projectPath);
 		if (result.Failed()) {
 			Trace::Error(result.GetDescription().c_str());
 		}
@@ -73,9 +73,8 @@ static void RecursiveDeleteDirectory(const Path &dirPath) {
 			}
 		}
 	}
-	
-	// Delete file or directory
-	fs->Delete(dirPath.GetPath().c_str());
+
+    fs->Delete(dirPath.GetPath().c_str());
 }
 
 SelectProjectDialog::SelectProjectDialog(View &view)
