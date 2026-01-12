@@ -198,9 +198,8 @@ void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
                 DoModal(mb, DeleteProjectCallback);
                 DrawView();
             }
-        }
             return;
-		}
+        }
         if (mask & EPBM_UP)
             warpToNextProject(-LIST_SIZE);
         if (mask&EPBM_DOWN) warpToNextProject(LIST_SIZE) ;
