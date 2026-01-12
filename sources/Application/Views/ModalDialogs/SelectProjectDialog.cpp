@@ -5,6 +5,7 @@
 #include "Application/Views/ModalDialogs/MessageBox.h"
 
 #include <algorithm>
+#include <unistd.h>
 
 #define LIST_SIZE 20
 #define LIST_WIDTH 32
@@ -25,10 +26,61 @@ static void NewProjectCallback(View &v,ModalView &dialog) {
             Trace::Error(result.GetDescription().c_str());
         }
     }
-};
-
-SelectProjectDialog::SelectProjectDialog(View &view):ModalView(view),content_(true) {
 }
+
+static void DeleteProjectCallback(View &v,ModalView &dialog) {
+	SelectProjectDialog &spd=(SelectProjectDialog&)v ;
+	if (dialog.GetReturnCode()==MBL_YES) {
+		Path projectPath = spd.GetCurrentProjectPath() ;
+		Result result = spd.OnDeleteProject(projectPath) ;
+		if (result.Failed()) {
+			Trace::Error(result.GetDescription().c_str());
+		}
+	}
+}
+
+// Recursive helper to delete directory and all contents
+static void RecursiveDeleteDirectory(const Path &dirPath) {
+	FileSystem *fs = FileSystem::GetInstance();
+	FileType type = fs->GetFileType(dirPath.GetPath().c_str());
+	
+	if (type == FT_DIR) {
+		I_Dir *dir = fs->Open(dirPath.GetPath().c_str());
+		if (dir) {
+			dir->GetContent("*");
+			
+			// Collect all items first to avoid iterator invalidation
+			T_SimpleList<Path> itemsToDelete(false);
+			IteratorPtr<Path> it(dir->GetIterator());
+			
+			for (it->Begin(); !it->IsDone(); it->Next()) {
+				Path itemCopy = it->CurrentItem();
+				std::string name = itemCopy.GetName();
+				
+				// Skip . and .. entries
+				if (name != "." && name != "..") {
+					Path *ptrCopy = new Path(itemCopy);
+					itemsToDelete.Insert(ptrCopy);
+				}
+			}
+			
+			delete dir;
+			
+			// Now delete all collected items
+			IteratorPtr<Path> deleteIt(itemsToDelete.GetIterator());
+			for (deleteIt->Begin(); !deleteIt->IsDone(); deleteIt->Next()) {
+				const Path &item = deleteIt->CurrentItem();
+				RecursiveDeleteDirectory(item);
+			}
+		}
+	}
+	
+	// Delete file or directory
+	fs->Delete(dirPath.GetPath().c_str());
+}
+
+SelectProjectDialog::SelectProjectDialog(View &view)
+    : ModalView(view), content_(true) {}
 
 SelectProjectDialog::~SelectProjectDialog() {
 }
@@ -119,13 +171,38 @@ void SelectProjectDialog::OnFocus() {
 
 	setCurrentFolder(lastFolder_) ;
 	currentProject_=lastProject_ ;
-
+    deleteConfirmationPending_ = false;
 };
 
 void SelectProjectDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 	if (!pressed) return ;
 
     if (mask&EPBM_B) {
+        // Handle A + B combination for delete
+        if (mask & EPBM_A) {
+			if (!deleteConfirmationPending_) {
+				// First press of A+B: show confirmation dialog
+				int count = 0;
+				Path *current = 0;
+
+				IteratorPtr<Path> it(content_.GetIterator());
+				for (it->Begin(); !it->IsDone(); it->Next()) {
+					if (count == currentProject_) {
+						current = &it->CurrentItem();
+						break;
+					}
+					count++;
+				}
+
+				if (current != 0) {
+					std::string message = "Delete project '" + current->GetName() + "' ?";
+					MessageBox *mb = new MessageBox(*this, message.c_str(), MBBF_YES | MBBF_NO);
+					DoModal(mb, DeleteProjectCallback);
+					DrawView();
+				}
+			}
+			return;
+		}
         if (mask & EPBM_UP)
             warpToNextProject(-LIST_SIZE);
         if (mask&EPBM_DOWN) warpToNextProject(LIST_SIZE) ;
@@ -250,6 +327,49 @@ Result SelectProjectDialog::OnNewProject(std::string &name) {
   return Result::NoError;
 } ;
 
+Result SelectProjectDialog::OnDeleteProject(const Path &projectPath) {
+
+    Trace::Log("SelectProjectDialog:OnDelProj","deleting project at %s", projectPath.GetPath().c_str());
+	
+	// Make a non-const copy to check existence
+	Path pathCopy = projectPath;
+	
+	// Check if project exists before deletion
+	if (!pathCopy.Exists()) {
+		std::string errMsg = "Project not found";
+		View::SetNotification(errMsg.c_str(), 0);
+		deleteConfirmationPending_ = false ;
+		return Result("Project not found");
+	}
+	
+	// Recursively delete the project directory and all contents
+	RecursiveDeleteDirectory(projectPath);
+	
+	// Project deleted successfully, refresh the project list
+	std::string successMsg = "Project deleted: " + pathCopy.GetName();
+	View::SetNotification(successMsg.c_str(), 0);
+	
+	// Refresh current folder to update the list while preserving position
+	int savedProject = currentProject_;
+	int savedTopIndex = topIndex_;
+	Path currentPathCopy = currentPath_;
+	setCurrentFolder(currentPathCopy);
+	
+	// Restore position (adjust if necessary if we're at the end of list)
+	int listSize = content_.Size();
+	if (savedProject >= listSize && listSize > 0) {
+		currentProject_ = listSize - 1;
+	} else if (listSize > 0) {
+		currentProject_ = savedProject;
+	}
+	topIndex_ = savedTopIndex;
+	isDirty_ = true;
+	
+	deleteConfirmationPending_ = false ;
+	
+	return Result::NoError;
+};
+
 //copy-paste-mutilate'd from ImportSampleDialog
 void SelectProjectDialog::setCurrentFolder(Path &path) {
 
@@ -292,4 +412,16 @@ void SelectProjectDialog::setCurrentFolder(Path &path) {
 	topIndex_=0 ;
 	currentProject_=0 ;
     isDirty_ = true;
+}
+
+Path SelectProjectDialog::GetCurrentProjectPath() {
+	int count = 0;
+	IteratorPtr<Path> it(content_.GetIterator());
+	for (it->Begin(); !it->IsDone(); it->Next()) {
+		if (count == currentProject_) {
+			return it->CurrentItem();
+		}
+		count++;
+	}
+	return Path();
 }

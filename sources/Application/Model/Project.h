@@ -20,7 +20,7 @@
 
 #define PROJECT_NUMBER "1"
 #define PROJECT_RELEASE "6"
-#define BUILD_COUNT "0-bacon5"
+#define BUILD_COUNT "0-bacon6"
 
 #define MAX_TAP 3
 

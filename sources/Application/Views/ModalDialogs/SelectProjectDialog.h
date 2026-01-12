@@ -16,16 +16,19 @@ public:
 	virtual void ProcessButtonMask(unsigned short mask,bool pressed) ;
 
 	Result OnNewProject(std::string &name) ;
+    Result OnDeleteProject(const Path &projectPath);
 
-	Path GetSelection() ;
+    Path GetSelection();
+    Path GetCurrentProjectPath();
 
-protected:
-	void warpToNextProject(int amount) ;
+  protected:
+    void warpToNextProject(int amount) ;
 	void setCurrentFolder(Path &path) ;
 
 private:
 	T_SimpleList<Path> content_ ;
-	int topIndex_ ;
+    bool deleteConfirmationPending_;
+    int topIndex_ ;
 	int currentProject_ ;
 	int selected_ ;
 	Path currentPath_ ;
