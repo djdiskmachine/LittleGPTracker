@@ -13,6 +13,8 @@
     * All keyboard navigation logic extracted to reusable KeyboardLayout.h utility
 
 1.6.0-bacon2
+    ProjectView Render item
+        When in project view, it's now possible to initiate rendering
     Interpolate values in tables and phrases
         R + B on single-column selection will fill values from lowest to highest
 

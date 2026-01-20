@@ -261,18 +261,6 @@ You can tweak two different path:
 </CONFIG>
 ```
 
-## Rendering
-
-Additionally to playing the song, LittleGPTracker can be used to render the audio to file. To control file rendering, the variable `RENDER` can be set to either `FILE`,`FILESPLIT`,`FILERT`,`FILESPLITRT`. Note that there's a small issue with the speed when using `FILE`/`FILESPLIT` so the xxRT seem like the best choice at the moment
-The xxRT options render in real time
-The xSPLITx options render separate files for the channels (stems)
-
-```xml
-<CONFIG>
-    <RENDER value='FILERT' />
-</CONFIG>
-```
-
 ## Volume
 
 For \[**GP2X**/**Dingoo**\] only
