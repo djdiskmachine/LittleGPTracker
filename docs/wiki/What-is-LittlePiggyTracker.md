@@ -51,18 +51,37 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 ## New project
 
-When creating a new project, use the Random button to generate a random name. Generate a new name with Random or edit it manually selecting characters with A and pressing up/down
-Attempting to create a project with the same name in the same location produces a notification that this operation is denied 
+When creating a new project, you have several options for naming:
+
+**Random Name Generation:**
+- Select the "Random" button and press A to generate a random name
+
+**QWERTY Keyboard Entry:**
+- Move to the name field and press A to enter QWERTY keyboard mode
+- An on-screen keyboard will appear with these controls:
+  - **D-PAD/Arrows:** Navigate the keyboard
+  - **A:** Input the selected character
+  - **B:** Backspace (delete character)
+  - **L/R:** Move the text cursor left/right within your project name
+  - **START or OK key:** Exit keyboard mode and return to the dialog
+- The keyboard includes:
+  - Numbers (0-9)
+  - Uppercase and lowercase letters (A-Z, a-z)
+  - Special characters (@ | - _ < > ? ,)
+  - Space bar, backspace, and OK (done) buttons on the bottom row
 
 ## Multiple Projects
 
-The Piggy supports multiple projects! Just create multiple directories in the root folder (where lgptNew and lgpt10k were found). Examples: “lgptProject1”, “lgpt*Author*Name”, “lgptSomethingElse”, “lgptWhatever”, etc. Each project directory must contain its own samples which must be stored in a sub-directory called “samples”. Lgpt will prompt you to choose one of the projects found in the root (lgpt- directories) when starting up.
+The Piggy supports multiple projects! Just create multiple directories in the root folder (where lgptNew and lgpt10k were found). Examples: "lgptProject1", "lgpt*Author*Name", "lgptSomethingElse", "lgptWhatever", etc. Each project directory must contain its own samples which must be stored in a sub-directory called "samples".
+
+By default, Lgpt will automatically load the last project that was open on the previous session. If you prefer to see the project selection screen on startup, you can disable this behavior by setting `AUTO_LOAD_LAST=NO` in your `config.xml`.
+
 Important Points to Remember:
 
 - Project directories **must** start with “lgpt”.
 - Project directories **must** go in the root folder.
 - You can reuse a previously made lgptsav.dat file.
-- Lgpt will list all the projects available on startup.
+- Lgpt will list all the projects available on startup if autoloading is disabled in config.xml
 - The lgptsav.dat file is created automatically the project's folder using the piggy's save function (see Controls & Moves). You should not create tah file manually.
 - Save often :)
 

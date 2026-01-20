@@ -1,3 +1,20 @@
+# Project Naming with QWERTY Keyboard
+
+Since version 1.6.0, you can use an on-screen QWERTY keyboard when creating new projects:
+
+**Quick Tips:**
+- Press A on the project name to enter keyboard mode
+- The keyboard cursor will jump to the character under your text cursor unless it's a space
+- Use L/R shoulder buttons to move through your project name
+- Erase with B and exit with Start
+
+**Keyboard Layout:**
+The on-screen keyboard is organized like this:
+- Numbers
+- Uppercase (A-Q + extra characters)
+- Lowercase (a-q + extra characters)
+- Special [Space] [Erase] [Done]
+
 # Delays and Echoes
 ## Simulating LSDj's D command
 

@@ -40,8 +40,8 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 		Path path_dstprjdir = Path(str_dstprjdir);
 		Path path_dstsmpdir = Path(str_dstsmpdir);
 
-		Path path_srclgptdatsav = path_srcprjdir.GetPath() + "lgptsav.dat";
-		Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
+        Path path_srclgptdatsav = path_srcprjdir.GetPath() + "lgptsav_tmp.dat";
+        Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
 
 		if (path_dstprjdir.Exists()) {
 			Trace::Log("ProjectView", "Dst Dir '%s' Exist == true",
@@ -57,10 +57,13 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 			return;
 		};
 
-		FSS.Copy(path_srclgptdatsav,path_dstlgptdatsav);
+        if (FSS.Copy(path_srclgptdatsav, path_dstlgptdatsav) > -1) {
+            FSS.Delete(path_srclgptdatsav);
+        }
 
-		I_Dir *idir_srcsmpdir=FileSystem::GetInstance()->Open(path_srcsmpdir.GetPath().c_str());
-		if (idir_srcsmpdir) {
+        I_Dir *idir_srcsmpdir =
+            FileSystem::GetInstance()->Open(path_srcsmpdir.GetPath().c_str());
+        if (idir_srcsmpdir) {
 				idir_srcsmpdir->GetContent("*");
 				idir_srcsmpdir->Sort();
 				IteratorPtr<Path>it(idir_srcsmpdir->GetIterator());
@@ -307,8 +310,8 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
         }
         case ACTION_SAVE_AS: {
             PersistencyService *service = PersistencyService::GetInstance();
-            service->Save();
-            NewProjectDialog *mb = new NewProjectDialog(*this);
+            service->Save("project:lgptsav_tmp.dat");
+            NewProjectDialog *mb = new NewProjectDialog(*this, "root:");
             DoModal(mb, SaveAsProjectCallback);
             break;
         }
