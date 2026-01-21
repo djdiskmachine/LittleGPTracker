@@ -56,14 +56,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload win release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -95,14 +95,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -134,14 +134,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -172,14 +172,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -217,14 +217,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -257,14 +257,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -297,14 +297,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -345,14 +345,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./workspace/projects/*.zip
 
@@ -386,14 +386,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -427,14 +427,14 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
@@ -475,13 +475,13 @@ jobs:
 
       - name: Extract Git tag name
         id: extract_tag
-        run: echo "::set-output name=tag_name::${GITHUB_REF#refs/tags/}"
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Upload build release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.4.2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: projects/*.zip
