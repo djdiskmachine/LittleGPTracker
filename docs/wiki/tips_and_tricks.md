@@ -15,6 +15,20 @@ The on-screen keyboard is organized like this:
 - Lowercase (a-q + extra characters)
 - Special [Space] [Erase] [Done]
 
+# Project Management
+
+## Safely Deleting Projects
+
+Since version 1.6.0, you can delete projects directly from the Project Selection screen by pressing `A+B`. This is a convenient way to clean up old or unwanted projects.
+
+**Best Practices:**
+- **Always back up important projects** before deleting. Use your operating system's file manager to copy project directories to an external drive or backup location.
+- The deletion will remove the entire project directory permanently - this cannot be undone!
+- A confirmation dialog will appear showing the project name before deletion proceeds, giving you a chance to cancel if you selected the wrong project.
+- After deletion, the project list will refresh automatically and the cursor will stay near its previous position for your convenience.
+
+**Pro Tip:** Use Save As to store a duplicate of the project if you're uncertain if you should delete something
+
 # Delays and Echoes
 ## Simulating LSDj's D command
 
