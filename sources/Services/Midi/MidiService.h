@@ -84,6 +84,9 @@ class MidiService : public T_Factory<MidiService>,
     T_SimpleList<MidiMessage> *queues_[MIDI_MAX_BUFFERS];
     int currentPlayQueue_;
     int currentOutQueue_;
+#ifdef _FEAT_MIDI_LOCK
+    SysMutex queueMutex_;
+#endif
 #endif
 
     MidiInMerger *merger_;

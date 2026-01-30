@@ -57,19 +57,18 @@ bool MidiService::Start() {
 	return true;
 } ;
 
-
-void MidiService::Stop() {
-	stopDevice();
-} ;
+void MidiService::Stop() { stopDevice(); };
 
 void MidiService::QueueMessage(MidiMessage &m) {
-    if (!device_)
-        return;
-
-    T_SimpleList<MidiMessage> *queue = queues_[currentPlayQueue_];
-    MidiMessage *ms = new MidiMessage(m.status_, m.data1_, m.data2_);
-    queue->Insert(ms);
-}
+    if (device_) {
+#ifdef _FEAT_MIDI_LOCK
+        SysMutexLocker locker(queueMutex_);
+#endif
+        T_SimpleList<MidiMessage> *queue = queues_[currentPlayQueue_];
+        MidiMessage *ms = new MidiMessage(m.status_, m.data1_, m.data2_);
+        queue->Insert(ms);
+    }
+};
 #endif
 
 void MidiService::Trigger() {
@@ -100,6 +99,9 @@ void MidiService::Trigger() {
 }
 
 void MidiService::AdvancePlayQueue() {
+#ifdef _FEAT_MIDI_LOCK
+    SysMutexLocker locker(queueMutex_);
+#endif
     int next = (currentPlayQueue_ + 1) % MIDI_MAX_BUFFERS;
     if (queueMutex_.TryLock()) {
         // Only clear AFTER successful lock — avoids data loss
@@ -150,6 +152,9 @@ void MidiService::flushOutQueue() {
 }
 #else
 void MidiService::flushOutQueue() {
+#ifdef _FEAT_MIDI_LOCK
+    SysMutexLocker locker(queueMutex_);
+#endif
     int next = (currentOutQueue_ + 1) % MIDI_MAX_BUFFERS;
 
     flushQueue->Empty();
