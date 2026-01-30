@@ -59,7 +59,7 @@ bool MidiService::Start() {
     return true;
 }
 
-void MidiService::Stop() { stopDevice(); }
+void MidiService::Stop() { stopDevice(); };
 
 #ifdef _FEAT_MIDI_MULTITHREAD
 // For multi-threaded systems we use a concurrentqueue
@@ -73,13 +73,15 @@ void MidiService::QueueMessage(MidiMessage &m) {
 #else
 // For single-threaded systems we do it the old way
 void MidiService::QueueMessage(MidiMessage &m) {
-    if (!device_)
-        return;
-
-    T_SimpleList<MidiMessage> *queue = queues_[currentPlayQueue_];
-    MidiMessage *ms = new MidiMessage(m.status_, m.data1_, m.data2_);
-    queue->Insert(ms);
-}
+    if (device_) {
+#ifdef _FEAT_MIDI_LOCK
+        SysMutexLocker locker(queueMutex_);
+#endif
+        T_SimpleList<MidiMessage> *queue = queues_[currentPlayQueue_];
+        MidiMessage *ms = new MidiMessage(m.status_, m.data1_, m.data2_);
+        queue->Insert(ms);
+    }
+};
 #endif
 
 void MidiService::Trigger() {
@@ -98,6 +100,9 @@ void MidiService::Trigger() {
 
 #ifndef _FEAT_MIDI_MULTITHREAD
 void MidiService::AdvancePlayQueue() {
+#ifdef _FEAT_MIDI_LOCK
+    SysMutexLocker locker(queueMutex_);
+#endif
     int next = (currentPlayQueue_ + 1) % MIDI_MAX_BUFFERS;
     queues_[next]->Empty();
     currentPlayQueue_ = next;
@@ -145,6 +150,9 @@ void MidiService::flushOutQueue() {
 }
 #else
 void MidiService::flushOutQueue() {
+#ifdef _FEAT_MIDI_LOCK
+    SysMutexLocker locker(queueMutex_);
+#endif
     int next = (currentOutQueue_ + 1) % MIDI_MAX_BUFFERS;
     T_SimpleList<MidiMessage> *flushQueue = queues_[next];
     if (device_) {
