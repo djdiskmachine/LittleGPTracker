@@ -153,17 +153,21 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
         new UIIntVarField(position, *v, "Scale: %s", 0, scaleCount - 1, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
-    position._y += 2;
-    UIActionField *a1 =
-        new UIActionField("Compact Sequencer", ACTION_PURGE, position);
+	position._y+=2 ;
+	UIStaticField *sf=new UIStaticField(position,"Compact:") ;
+	T_SimpleList<UIField>::Insert(sf) ;
+
+    position._x += 9;
+    UIActionField *a1 = new UIActionField("Sequencer", ACTION_PURGE, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
 
-    position._y += 1;
-    a1 = new UIActionField("Compact Instruments", ACTION_PURGE_INSTRUMENT,
+    position._x += 10;
+    a1 = new UIActionField("Instruments", ACTION_PURGE_INSTRUMENT,
                            position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
+    position._x -= 19;
 
     position._y += 2;
     a1 = new UIActionField("Load Song", ACTION_LOAD, position);
