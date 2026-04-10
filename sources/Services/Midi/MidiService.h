@@ -2,16 +2,15 @@
 #ifndef _MIDI_SERVICE_H_
 #define _MIDI_SERVICE_H_
 
-#include "Foundation/Observable.h"
+#include <string>
 #include "Foundation/T_Factory.h"
+#include "Foundation/Observable.h"
+#include "System/Timer/Timer.h"
+#include "System/Process/SysMutex.h"
+#include "MidiOutDevice.h"
+#include "MidiInDevice.h"
 #include "MidiInDevice.h"
 #include "MidiInMerger.h"
-#include "MidiOutDevice.h"
-#include "System/Timer/Timer.h"
-#include <string>
-#ifdef _FEAT_MIDI_MULTITHREAD
-#include "System/Process/ConcurrentQueue.h"
-#endif
 
 #define MIDI_MAX_BUFFERS 20
 
@@ -45,19 +44,20 @@ public:
 
 	//! Time chunk trigger
 
-    void Trigger();
-#ifndef _FEAT_MIDI_MULTITHREAD
-    void AdvancePlayQueue();
-#endif
+	void Trigger() ;
+  void AdvancePlayQueue();
+
 	//! Flush current queue to the output
 
-    void Flush();
+	void Flush() ;
+  
 
-  protected:
-    T_SimpleList<MidiInDevice> inList_ ;
+protected:
 
-    virtual void Update(Observable &o, I_ObservableData *d);
-    void onAudioTick();
+	T_SimpleList<MidiInDevice> inList_ ;
+
+  virtual void Update(Observable &o,I_ObservableData *d) ;
+  void onAudioTick();
 
 	//! start the selected midi device
 
@@ -74,20 +74,17 @@ public:
 private:
   void flushOutQueue();
 private:
-  std::string deviceName_;
-  MidiOutDevice *device_;
+	std::string deviceName_ ;
+	MidiOutDevice *device_ ;
 
-#ifdef _FEAT_MIDI_MULTITHREAD
-  moodycamel::ConcurrentQueue<MidiMessage> midiQueue_;
-#else
-  T_SimpleList<MidiMessage> *queues_[MIDI_MAX_BUFFERS];
-  int currentPlayQueue_;
-  int currentOutQueue_;
-#endif
+	T_SimpleList<MidiMessage> *queues_[MIDI_MAX_BUFFERS] ;
+	int currentPlayQueue_ ;
+	int currentOutQueue_ ;
 
-  MidiInMerger *merger_;
-  int midiDelay_;
-  int tickToFlush_;
-  bool sendSync_;
-};
+	MidiInMerger *merger_ ;
+	int midiDelay_ ;
+  int tickToFlush_ ;
+	bool sendSync_ ;
+    SysMutex queueMutex_ ;    
+} ;
 #endif
