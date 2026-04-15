@@ -667,11 +667,27 @@ ReadSFBData (CHAR * pchReqdWaveTable)
   //// Sample Headers ////
   for (uiCount = 0; uiCount < hf->awStructSize[sampHdr]; uiCount++) {
 
+      // For ADDR fields, we need to swap using temporary 32-bit variables
+      // since the file format uses 32-bit values but we store in pointer-sized
+      // fields
+      {
+          DWORD tmp;
+          tmp = (DWORD)hf->pSHdr[uiCount].dwStart;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwStart = tmp;
 
-    tRIFF.SwapDWORD(&hf->pSHdr[uiCount].dwStart);
-    tRIFF.SwapDWORD(&hf->pSHdr[uiCount].dwEnd);
-    tRIFF.SwapDWORD(&hf->pSHdr[uiCount].dwStartloop);
-    tRIFF.SwapDWORD(&hf->pSHdr[uiCount].dwEndloop);
+          tmp = (DWORD)hf->pSHdr[uiCount].dwEnd;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwEnd = tmp;
+
+          tmp = (DWORD)hf->pSHdr[uiCount].dwStartloop;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwStartloop = tmp;
+
+          tmp = (DWORD)hf->pSHdr[uiCount].dwEndloop;
+          tRIFF.SwapDWORD(&tmp);
+          hf->pSHdr[uiCount].dwEndloop = tmp;
+      }
 
     tRIFF.SwapDWORD(&hf->pSHdr[uiCount].dwSampleRate);
 
@@ -794,25 +810,29 @@ WORD       mono =        monoSample;
     // Element for element read of data, to serve as an example of a possible
     // issue with cross platform code. See comments below.
     //
-    for(WORD curHdr=0; curHdr < hf->awStructSize[iHydraSymbol]; curHdr++) { 
+    for (WORD curHdr = 0; curHdr < hf->awStructSize[iHydraSymbol]; curHdr++) {
 
-        rcnt = 0; 
+        rcnt = 0;
 
-        rcnt += tRIFF.RIFFRead((VOIDPTR)
-                               &((sfSampleHdr*)pData)[curHdr].achSampleName, 
-				             1, SAMPLENAMESIZE);
+        rcnt += tRIFF.RIFFRead((VOIDPTR) &
+                                   ((sfSampleHdr *)pData)[curHdr].achSampleName,
+                               1, SAMPLENAMESIZE);
 
-        rcnt += tRIFF.RIFFRead( &((sfSampleHdr*)pData)[curHdr].dwStart,       
-	                                     1, sizeof(DWORD));
+        // Read 32-bit file values into temporaries, then assign to
+        // pointer-sized fields
+        uint32_t tmp_dwStart, tmp_dwEnd, tmp_dwStartloop, tmp_dwEndloop;
 
-        rcnt += tRIFF.RIFFRead( &((sfSampleHdr*)pData)[curHdr].dwEnd, 
-	 	 		             1, sizeof(DWORD));
+        rcnt += tRIFF.RIFFRead(&tmp_dwStart, 1, sizeof(uint32_t));
+        ((sfSampleHdr *)pData)[curHdr].dwStart = tmp_dwStart;
 
-        rcnt += tRIFF.RIFFRead( &((sfSampleHdr*)pData)[curHdr].dwStartloop, 
- 					     1, sizeof(DWORD));
+        rcnt += tRIFF.RIFFRead(&tmp_dwEnd, 1, sizeof(uint32_t));
+        ((sfSampleHdr *)pData)[curHdr].dwEnd = tmp_dwEnd;
 
-        rcnt += tRIFF.RIFFRead( &((sfSampleHdr*)pData)[curHdr].dwEndloop,  
- 					     1, sizeof(DWORD));
+        rcnt += tRIFF.RIFFRead(&tmp_dwStartloop, 1, sizeof(uint32_t));
+        ((sfSampleHdr *)pData)[curHdr].dwStartloop = tmp_dwStartloop;
+
+        rcnt += tRIFF.RIFFRead(&tmp_dwEndloop, 1, sizeof(uint32_t));
+        ((sfSampleHdr *)pData)[curHdr].dwEndloop = tmp_dwEndloop;
 
         rcnt += tRIFF.RIFFRead( &((sfSampleHdr*)pData)[curHdr].dwSampleRate,
                                                1, sizeof(DWORD));
@@ -837,7 +857,7 @@ WORD       mono =        monoSample;
           SetError(SF_INVALIDBANK);
           return (NULL);
         }
-     }// end for all elements
+    } // end for all elements
   }  // do sampleHdr reading, 
 
   else { 

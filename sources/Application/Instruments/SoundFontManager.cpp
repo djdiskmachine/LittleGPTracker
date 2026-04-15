@@ -2,10 +2,6 @@
 #include "System/System/System.h"
 #include "System/FileSystem/FileSystem.h"
 
-#ifdef _64BIT
-#include <stdint.h>
-#endif
-
 SoundFontManager::SoundFontManager() {
 } ;
 
@@ -66,14 +62,11 @@ sfBankID SoundFontManager::LoadBank(const char *path) {
 		current.dwEnd=(current.dwEnd-current.dwStart) ;
 		current.dwStartloop=(current.dwStartloop-current.dwStart) ;
 		current.dwEndloop=(current.dwEndloop-current.dwStart) ;
-#ifdef _64BIT
-		current.dwStart=(intptr_t)buffer ;
-#else
-		current.dwStart=(DWORD)buffer ;
-#endif
+        // ADDR is pointer-sized, works on both 32-bit and 64-bit
+        current.dwStart = (ADDR)buffer;
 
-		sampleData_.push_back(buffer) ;
-	}
+        sampleData_.push_back(buffer);
+    }
 	fin->Close() ;
 	SAFE_DELETE(fin) ;
 

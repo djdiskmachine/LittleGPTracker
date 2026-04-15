@@ -111,6 +111,7 @@ public:
 class FileSystemService {
  public:
   int Copy(const Path &src,const Path &dst);
+  int Delete(const Path &path);
 };
 
 #endif
