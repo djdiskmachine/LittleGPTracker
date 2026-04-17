@@ -266,9 +266,13 @@ jobs:
             wget -qO ./debian-archive-keyring.deb "$BASE$LATEST"
             dpkg -i ./debian-archive-keyring.deb
 
-            apt update && apt install -y python3 python3-pillow
+            apt update && apt install -y python3 python3-pillow 
             cd projects
             make PLATFORM=GARLIC
+            # copy libav deps to the .zip
+            echo copy files from usr/lib to lib
+            mkdir lib && find /usr/lib -name "*libav*so*" -type f -exec cp {} lib/ \;
+            ls -la lib
           '
           sudo chmod -R 777 ./workspace/projects
           sudo chown -R root:root ./workspace/projects
