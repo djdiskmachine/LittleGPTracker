@@ -43,9 +43,7 @@ class MidiService : public T_Factory<MidiService>,
     //! Time chunk trigger
 
     void Trigger();
-#ifndef _FEAT_MIDI_MULTITHREAD
     void AdvancePlayQueue();
-#endif
     //! Flush current queue to the output
 
 	void Flush() ;
@@ -54,10 +52,8 @@ class MidiService : public T_Factory<MidiService>,
   protected:
     T_SimpleList<MidiInDevice> inList_;
 
-	T_SimpleList<MidiInDevice> inList_ ;
-
-  virtual void Update(Observable &o,I_ObservableData *d) ;
-  void onAudioTick();
+    virtual void Update(Observable &o,I_ObservableData *d) ;
+    void onAudioTick();
 
     //! start the selected midi device
 
@@ -71,27 +67,20 @@ class MidiService : public T_Factory<MidiService>,
 
     virtual void buildDriverList() = 0;
 
-  private:
-    void flushOutQueue();
+private:
+  void flushOutQueue();
+private:
+	std::string deviceName_ ;
+	MidiOutDevice *device_ ;
 
-  private:
-    std::string deviceName_;
-    MidiOutDevice *device_;
+	T_SimpleList<MidiMessage> *queues_[MIDI_MAX_BUFFERS] ;
+	int currentPlayQueue_ ;
+	int currentOutQueue_ ;
 
-#ifdef _FEAT_MIDI_MULTITHREAD
-    moodycamel::ConcurrentQueue<MidiMessage> midiQueue_;
-#else
-    T_SimpleList<MidiMessage> *queues_[MIDI_MAX_BUFFERS];
-    int currentPlayQueue_;
-    int currentOutQueue_;
-#ifdef _FEAT_MIDI_LOCK
-    SysMutex queueMutex_;
-#endif
-#endif
-
-    MidiInMerger *merger_;
-    int midiDelay_;
-    int tickToFlush_;
-    bool sendSync_;
-};
+	MidiInMerger *merger_ ;
+	int midiDelay_ ;
+  int tickToFlush_ ;
+	bool sendSync_ ;
+    SysMutex queueMutex_ ;    
+} ;
 #endif
