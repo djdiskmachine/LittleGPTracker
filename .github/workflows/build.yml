@@ -329,6 +329,8 @@ jobs:
             apt update && apt install -y python3 python3-pillow 
             cd projects
             make PLATFORM=GARLIC
+            # copy libav deps to the .zip
+            mkdir lib && find /usr/lib -name "*libav*so*" -type f -exec cp {} lib/ \;
           '
           sudo chmod -R 777 ./workspace/projects
           sudo chown -R root:root ./workspace/projects
