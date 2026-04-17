@@ -19,9 +19,6 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   CONTENTS="./resources/$1/*"
   CONTENTS+=" ./custom_font.xml"
   CONTENTS+=" $BINARY"
-  if [ -d lib ]; then
-    CONTENTS+=" lib/" # Used for libav and other dependencies
-  fi
   if [ "$1" == "PSP" ] ||
   [ "$1" == "GARLIC" ] ||
   [ "$1" == "RG35XXPLUS" ] ||
@@ -38,6 +35,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   CONTENTS="../../../README.md ../../../CHANGELOG ../../../LICENSE"
   CONTENTS+=" $(find . -name "samplelib" -type d)"
   CONTENTS+=" $(find . -name "lgpt_*" -type d)"
+  [ -d ../../lib ] && CONTENTS+=" ../../lib"
   zip -9 -r ../../$PACKAGE $CONTENTS
   CONTENTS="../../../docs/wiki/What-is-LittlePiggyTracker.md"
   CONTENTS+=" ../../../docs/wiki/config_xml.md"
