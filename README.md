@@ -52,7 +52,8 @@ Recommended reading to get you started:
 | RASPI       | YES           | YES          | YES        | YES     | Versatile platform                   |
 | CHIP        | YES           | YES          | YES        | YES     | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
 | BITTBOY     | MAYBE         | NO           | YES        | YES     |                                      |
-| GARLIC      | MAYBE         | NO           | YES        | YES     | Port by [Simotek](http://simotek.net)|
+| PORTMASTER  | MAYBE         | NO           | YES        | YES     | |
+| GARLIC      | MAYBE         | NO           | YES        | NO      | Port by [Simotek](http://simotek.net)|
 | GARLICPLUS  | MAYBE         | NO           | YES        | YES     | Port by [Simotek](http://simotek.net)|
 | RG35XXPLUS  | MAYBE         | NO           | YES        | NO      | Port by [Simotek](http://simotek.net)|
 | MACOS       | YES           | YES          | MAYBE      | NO      | Port by [clsource](https://genserver.social/clsource) |
