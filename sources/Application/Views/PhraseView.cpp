@@ -4,6 +4,7 @@
 #include "Application/Model/Table.h"
 #include "Application/Utils/HelpLegend.h"
 #include "Application/Utils/char.h"
+#include "Application/Views/CommandSelectorCommon.h"
 #include "System/Console/Trace.h"
 #include "UIController.h"
 #include <stdlib.h>
@@ -25,6 +26,8 @@ PhraseView::PhraseView(GUIWindow &w, ViewData *viewData)
     lastInstr_ = 0;
     lastCmd_ = I_CMD_NONE;
     lastParam_ = 0;
+    commandSelectorActive_ = false;
+    commandSelectorOriginal_ = I_CMD_NONE;
 
     clipboard_.active_ = false;
     clipboard_.width_ = 0;
@@ -40,6 +43,10 @@ PhraseView::PhraseView(GUIWindow &w, ViewData *viewData)
 PhraseView::~PhraseView() { delete cmdEditField_; };
 
 void PhraseView::updateCursor(int dx, int dy) {
+
+    if (commandSelectorActive_ && (dx != 0 || dy != 0)) {
+        leaveCommandSelector(true);
+    }
 
     col_ += dx;
     row_ += dy;
@@ -108,6 +115,51 @@ void PhraseView::stopAudition() {
     Player *player = Player::GetInstance();
     if (viewData_->playMode_ == PM_AUDITION)
         player->Stop();
+}
+
+bool PhraseView::isCommandColumn() const { return col_ == 2 || col_ == 4; }
+
+FourCC *PhraseView::getCurrentCommandPointer() {
+    return CommandSelectorCommon::getCommandPointerByCol(
+        col_, 2, phrase_->cmd1_ + (16 * viewData_->currentPhrase_ + row_), 4,
+        phrase_->cmd2_ + (16 * viewData_->currentPhrase_ + row_));
+}
+
+void PhraseView::enterCommandSelector() {
+    CommandSelectorCommon::enterSelector(
+        isCommandColumn(), [this]() { return getCurrentCommandPointer(); },
+        commandSelectorActive_, commandSelectorOriginal_, isDirty_);
+}
+
+void PhraseView::leaveCommandSelector(bool commit) {
+    CommandSelectorCommon::leaveSelector(
+        commit, [this]() { return getCurrentCommandPointer(); },
+        commandSelectorActive_, commandSelectorOriginal_, lastCmd_, isDirty_);
+}
+
+void PhraseView::stepCommandSelector(ViewUpdateDirection direction) {
+    CommandSelectorCommon::stepSelector(
+        direction, [this]() { return getCurrentCommandPointer(); },
+        commandSelectorActive_, lastCmd_, isDirty_);
+}
+
+void PhraseView::drawCommandSelector(GUITextProperties &props) {
+    if (!commandSelectorActive_) {
+        return;
+    }
+    FourCC *command = getCurrentCommandPointer();
+    if (!command) {
+        return;
+    }
+
+    GUIPoint anchor = GetAnchor();
+    CommandSelectorCommon::drawPopup(
+        *command, anchor, props,
+        [this](ColorDefinition color) { SetColor(color); },
+        [this](int x, int y, const char *txt, GUITextProperties &textProps) {
+            DrawString(x, y, txt, textProps);
+        });
+    props.invert_ = false;
 }
 
 void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
@@ -759,6 +811,7 @@ void PhraseView::switchSoloMode() {
 void PhraseView::OnFocus() {
     clipboard_.active_ = false;
     viewMode_ = VM_NORMAL;
+    commandSelectorActive_ = false;
     updateCursor(0, 0);
 };
 
@@ -908,6 +961,29 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
 
     Player *player = Player::GetInstance();
 
+    if (commandSelectorActive_) {
+        if (mask & EPBM_B) {
+            leaveCommandSelector(false);
+            return;
+        }
+        if (mask == EPBM_A) {
+            leaveCommandSelector(true);
+            return;
+        }
+        if (mask & EPBM_A) {
+            if (mask & EPBM_LEFT)
+                stepCommandSelector(VUD_LEFT);
+            if (mask & EPBM_RIGHT)
+                stepCommandSelector(VUD_RIGHT);
+            if (mask & EPBM_UP)
+                stepCommandSelector(VUD_UP);
+            if (mask & EPBM_DOWN)
+                stepCommandSelector(VUD_DOWN);
+            return;
+        }
+        leaveCommandSelector(true);
+    }
+
     if (mask & EPBM_B) {
         if (mask & EPBM_LEFT)
             warpToNeighbour(-1);
@@ -939,9 +1015,11 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
                 player->OnStartButton(PM_AUDITION, viewData_->songX_, false, viewData_->chainRow_);
             }
             if (mask & EPBM_DOWN)
-                updateCursorValue(VUD_DOWN);
+                isCommandColumn() ? enterCommandSelector()
+                                  : updateCursorValue(VUD_DOWN);
             if (mask & EPBM_UP)
-                updateCursorValue(VUD_UP);
+                isCommandColumn() ? enterCommandSelector()
+                                  : updateCursorValue(VUD_UP);
             if (mask & EPBM_LEFT)
                 updateCursorValue(VUD_LEFT);
             if (mask & EPBM_RIGHT)
@@ -1370,21 +1448,26 @@ void PhraseView::DrawView() {
         cmdEditField_->SetFocus();
         cmdEditField_->Draw(w_);
     };
+
+    drawCommandSelector(props);
 };
 
 void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
+    GUITextProperties props;
     drawNotes();
 
     GUIPoint anchor = GetAnchor();
     GUIPoint pos = anchor;
     pos._x -= 1;
 
-    GUITextProperties props;
     SetColor(CD_NORMAL);
 
     pos._y = anchor._y + lastPlayingPos_;
-    DrawString(pos._x, pos._y, " ", props);
+    if (!commandSelectorActive_ ||
+        !CommandSelectorCommon::popupContainsPoint(anchor, pos._x, pos._y)) {
+        DrawString(pos._x, pos._y, " ", props);
+    }
 
     Player *player = Player::GetInstance();
 
@@ -1399,12 +1482,16 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
                         viewData_->currentPhrase_ &&
                     viewData_->playMode_ != PM_AUDITION) {
                     pos._y = anchor._y + viewData_->phrasePlayPos_[i];
-                    if (!player->IsChannelMuted(i)) {
-                        SetColor(CD_PLAY);
-                        DrawString(pos._x, pos._y, ">", props);
-                    } else {
-                        SetColor(CD_MUTE);
-                        DrawString(pos._x, pos._y, "-", props);
+                    if (!commandSelectorActive_ ||
+                        !CommandSelectorCommon::popupContainsPoint(
+                            anchor, pos._x, pos._y)) {
+                        if (!player->IsChannelMuted(i)) {
+                            SetColor(CD_PLAY);
+                            DrawString(pos._x, pos._y, ">", props);
+                        } else {
+                            SetColor(CD_MUTE);
+                            DrawString(pos._x, pos._y, "-", props);
+                        }
                     }
                     SetColor(CD_NORMAL);
                     lastPlayingPos_ = viewData_->phrasePlayPos_[i];
@@ -1416,7 +1503,11 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
         // clear any live indicator
 
         pos._y = anchor._y;
-        DrawString(pos._x, pos._y, " ", props);
+        if (!commandSelectorActive_ ||
+            !CommandSelectorCommon::popupContainsPoint(anchor, pos._x,
+                                                       pos._y)) {
+            DrawString(pos._x, pos._y, " ", props);
+        }
 
         // Loop on all channels to see if one has queued current chain
         if (player->GetSequencerMode() == SM_LIVE) {
@@ -1430,12 +1521,20 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
                         viewData_->song_->data_ + i + 8 * songPos;
                     if (*chain == viewData_->currentChain_) {
                         char *indicator = player->GetLiveIndicator(i);
-                        DrawString(pos._x, pos._y, indicator, props);
+                        if (!commandSelectorActive_ ||
+                            !CommandSelectorCommon::popupContainsPoint(
+                                anchor, pos._x, pos._y)) {
+                            DrawString(pos._x, pos._y, indicator, props);
+                        }
                         break;
                     }
                 }
             }
         }
+    }
+
+    if (commandSelectorActive_) {
+        drawCommandSelector(props);
     }
 
     pos = anchor;

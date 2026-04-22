@@ -23,6 +23,12 @@ class PhraseView : public View {
     void stopAudition();
     void updateCursorValue(ViewUpdateDirection offset, int xOffset = 0,
                            int yOffset = 0);
+    bool isCommandColumn() const;
+    FourCC *getCurrentCommandPointer();
+    void enterCommandSelector();
+    void leaveCommandSelector(bool commit);
+    void stepCommandSelector(ViewUpdateDirection direction);
+    void drawCommandSelector(GUITextProperties &props);
     void updateSelectionValue(ViewUpdateDirection direction);
     void warpToNeighbour(int offset);
     void warpInChain(int offset);
@@ -54,6 +60,8 @@ class PhraseView : public View {
     int lastInstr_;
     int lastCmd_;
     int lastParam_;
+    bool commandSelectorActive_;
+    FourCC commandSelectorOriginal_;
     Phrase *phrase_;
     int lastPlayingPos_;
     Variable cmdEdit_;

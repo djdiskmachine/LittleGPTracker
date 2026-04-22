@@ -31,6 +31,12 @@ class TableView : public View {
 
     void updateCursor(int dx, int dy);
     void updateCursorValue(int offset);
+    bool isCommandColumn() const;
+    FourCC *getCurrentCommandPointer();
+    void enterCommandSelector();
+    void leaveCommandSelector(bool commit);
+    void stepCommandSelector(ViewUpdateDirection direction);
+    void drawCommandSelector(GUITextProperties &props);
     void setTextProps(GUITextProperties &props, int row, int col, bool restore);
     void warpToNeighbour(int dir);
 
@@ -44,6 +50,8 @@ class TableView : public View {
     uchar lastTsp_;
     int lastCmd_;
     int lastParam_;
+    bool commandSelectorActive_;
+    FourCC commandSelectorOriginal_;
 
     Variable cmdEdit_;
     UIBigHexVarField *cmdEditField_;
