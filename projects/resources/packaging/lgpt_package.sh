@@ -40,7 +40,9 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   CONTENTS+=" ../../../docs/wiki/config_xml.md"
   CONTENTS+=" ../../../docs/wiki/tips_and_tricks.md"
   CONTENTS+=" ../$1/*.txt"
-  zip -9 ../../$PACKAGE -jq $CONTENTS && cd -
+  zip -9 ../../$PACKAGE -jq $CONTENTS
+  [ -d ../../lib ] && cd ../.. && zip -9 -r -y $PACKAGE lib && cd -
+  cd -
 }
 
 collect_resources PSP EBOOT.PBP
