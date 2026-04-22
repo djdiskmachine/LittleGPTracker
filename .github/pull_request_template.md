@@ -8,26 +8,28 @@ All PR:s are run through line-by-line clang-format and builds for all supported 
 clang-format can be applied locally on commit by installing pre-commit from repo root:
     cp pre-commit .git/hooks/
 
-Fixes # (issue)
-
+In section below, delete any option that isn't relevant.
 ## Type of change
-
-Please delete option that isn't relevant.
+- Fixes #(issue number)
+- Feature
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 
 # How Has This Been Tested?
 
-Please describe the tests that you ran to verify your changes. Provide instructions on how to reproduce.
+Please describe the tests procedure by which you verified your changes.
+Provide instructions on how to reproduce.
 
 **Test Configuration**:
 * Hardware:
-* OS version:
+* Test steps:
 
 # Checklist:
 
 - [ ] I have performed a self-review of my code
 - [ ] I have commented particularly in hard-to-understand areas
-- [ ] I have updated documentation regarding my changes
-- [ ] My changes generate no new warnings
+- [ ] I have updated CHANGELOG
+- [ ] I have updated docs/wiki/What-is-LittlePiggyTracker.md reflecting my changes
+- [ ] I have version bumped in `sources/Application/Model/Project.h`
+- [ ] My changes generate no new warnings (build without your change then apply your change to check this)

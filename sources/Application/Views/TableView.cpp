@@ -119,6 +119,57 @@ void TableView::extendSelection() {
     }
 }
 
+/******************************************************
+ interpolateSelection:
+        expands the lowest value of selection to the highest
+ ******************************************************/
+void TableView::interpolateSelection() {
+    if (!clipboard_.active_) {
+        return;
+    }
+
+    GUIRect rect = getSelectionRect();
+    
+    // Only interpolate if we're in param columns (1, 3, 5)
+    int col = rect.Left();
+    if (col != rect.Right() || (col != 1 && col != 3 && col != 5)) {
+        return;
+    }
+
+    int startRow = rect.Top();
+    int endRow = rect.Bottom();
+    
+    // Need at least 2 rows to interpolate
+    if (endRow - startRow < 1) {
+        return;
+    }
+
+    Table &table = TableHolder::GetInstance()->GetTable(viewData_->currentTable_);
+
+    ushort *paramData;
+    if (col == 1) {
+        paramData = table.param1_;
+    } else if (col == 3) {
+        paramData = table.param2_;
+    } else {
+        paramData = table.param3_;
+    }
+
+    ushort startParam = paramData[startRow];
+    ushort endParam = paramData[endRow];
+
+    int numSteps = endRow - startRow;
+    int paramDiff = (int)endParam - (int)startParam;
+
+    for (int step = 0; step <= numSteps; step++) {
+        int row = startRow + step;
+        int value = startParam + (2 * paramDiff * step + numSteps) / (2 * numSteps);
+        paramData[row] = (ushort)value;
+    }
+
+    isDirty_ = true;
+}
+
 void TableView::copySelection() {
 
     // Keep up with row,col of selection coz
@@ -619,6 +670,8 @@ void TableView::processSelectionButtonMask(unsigned short mask) {
     if (mask & EPBM_B) {
         if (mask & EPBM_L) {
             extendSelection();
+        } else if (mask & EPBM_R) {
+            interpolateSelection();
         } else {
             copySelection();
         }
@@ -750,7 +803,7 @@ void TableView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 0, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 0 || col_ == 1)) {
+        if (j == row_ && col_ == 0) {
             printHelpLegend(command, props);
         }
     }
@@ -788,7 +841,7 @@ void TableView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 2, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 2 || col_ == 3)) {
+        if (j == row_ && col_ == 2) {
             printHelpLegend(command, props);
         }
     }
@@ -826,7 +879,7 @@ void TableView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 4, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 4 || col_ == 5)) {
+        if (j == row_ && col_ == 5) {
             printHelpLegend(command, props);
         }
     }

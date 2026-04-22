@@ -1410,6 +1410,17 @@ const char *SampleInstrument::GetName() {
     return src;
 }
 
+/*
+    Get full name, don't shorten it for
+    display width limitation purposes
+*/
+const char *SampleInstrument::GetFullName() {
+    Variable *v = FindVariable(SIP_SAMPLE);
+    const char *src = v->GetString();
+
+    return src;
+}
+
 void SampleInstrument::Purge() {
 	IteratorPtr<Variable> it(GetIterator()) ;
 	for (it->Begin();!it->IsDone();it->Next()) {

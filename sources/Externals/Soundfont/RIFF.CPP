@@ -235,10 +235,9 @@ WORD RIFFClass::OpenRIFF(CHAR* pName)
 {
   byWhereIsRIFFData = RIFF_ONDISK;
 
-  if ((RIFFOpen((LONG)pName) != SUCCESS ) || (pFile == NULL))
-  { 
-     SetError(errno); // Set inside RIFFOpen
-     return (uiErrorNdx = RIFF_OPENFILEERROR);
+  if ((RIFFOpen((ADDR)pName) != SUCCESS) || (pFile == NULL)) {
+      SetError(errno); // Set inside RIFFOpen
+      return (uiErrorNdx = RIFF_OPENFILEERROR);
   }
 
   return (InitRIFF()); 
@@ -253,10 +252,10 @@ WORD RIFFClass::OpenRIFF(CHAR* pName)
 WORD RIFFClass::OpenRIFF(FSSpec* pSpecifier)
 {
   byWhereIsRIFFData = RIFF_ONMACDISK;
- 
-  if (RIFFOpen((LONG)pSpecifier) != SUCCESS)
-    return (RIFF_OPENFILEERROR);
-   
+
+  if (RIFFOpen((ADDR)pSpecifier) != SUCCESS)
+      return (RIFF_OPENFILEERROR);
+
   return(InitRIFF());
 }
 #endif // USE_MACINTOSH
@@ -443,28 +442,26 @@ DWORD  RIFFClass::GetCkFormID(void) { return (dwLastFormID); }
 //  is a pointer to the File System Specifier (FSSpec)
 //  data structure.
 //***************************************************
-SHORT RIFFClass::RIFFOpen(LONG lPointer)
-{
-  //***************************************************
-  // Keep in mind that whenever a system call is made and
-  // _no_ error takes place, errno is _not_ set to 0.
-  // Obviously, this means that any previous system call
-  // will set errno upon an error, one which is innocuous,
-  // but will cause fopen to _appear_ as though it failed.
-  // For example, open a temporary file which might not
-  // exist:
-  //
-  //   fopen("tempfile", "wb");
-  //
-  // If it doesn't exist, errno become 2 (in DOS, at
-  // least).  Now call the fopen below for a preexisting
-  // RIFF file.  Guess what!  If you didn't reset errno
-  // to 0, your return value will be 2, an apparent error.
-  //***************************************************
-  errno = 0;
+SHORT RIFFClass::RIFFOpen(ADDR lPointer) {
+    //***************************************************
+    // Keep in mind that whenever a system call is made and
+    // _no_ error takes place, errno is _not_ set to 0.
+    // Obviously, this means that any previous system call
+    // will set errno upon an error, one which is innocuous,
+    // but will cause fopen to _appear_ as though it failed.
+    // For example, open a temporary file which might not
+    // exist:
+    //
+    //   fopen("tempfile", "wb");
+    //
+    // If it doesn't exist, errno become 2 (in DOS, at
+    // least).  Now call the fopen below for a preexisting
+    // RIFF file.  Guess what!  If you didn't reset errno
+    // to 0, your return value will be 2, an apparent error.
+    //***************************************************
+    errno = 0;
 
-  switch (byWhereIsRIFFData)
-  {
+    switch (byWhereIsRIFFData) {
     case RIFF_ONDISK:
       pFile = fopen((CHAR *)lPointer, "rb");
       return (errno);
@@ -476,7 +473,7 @@ SHORT RIFFClass::RIFFOpen(LONG lPointer)
 
     default:
       return (1);
-  }
+    }
 }
 
 SHORT RIFFClass::RIFFClose()

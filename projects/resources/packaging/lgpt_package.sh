@@ -32,13 +32,17 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
     zip -9 $PACKAGE bin/* && rm -r bin/
   fi
   cd ./resources/packaging 
-  CONTENTS="../../../README.md ../../../CHANGELOG ../../../LICENSE samplelib/ lgpt_BETA/"
+  CONTENTS="../../../README.md ../../../CHANGELOG ../../../LICENSE"
+  CONTENTS+=" $(find . -name "samplelib" -type d)"
+  CONTENTS+=" $(find . -name "lgpt_*" -type d)"
   zip -9 -r ../../$PACKAGE $CONTENTS
   CONTENTS="../../../docs/wiki/What-is-LittlePiggyTracker.md"
   CONTENTS+=" ../../../docs/wiki/config_xml.md"
   CONTENTS+=" ../../../docs/wiki/tips_and_tricks.md"
   CONTENTS+=" ../$1/*.txt"
-  zip -9 ../../$PACKAGE -jq $CONTENTS && cd -
+  zip -9 ../../$PACKAGE -jq $CONTENTS
+  [ -d ../../lib ] && cd ../.. && zip -9 -r -y $PACKAGE lib && cd -
+  cd -
 }
 
 collect_resources PSP EBOOT.PBP

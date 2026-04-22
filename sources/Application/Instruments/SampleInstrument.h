@@ -92,16 +92,16 @@ public:
        int GetLoopEnd();
        virtual const char *GetName() ; // returns sample name until real
 	                                   // namer is implemented
- 
-  static void EnableDownsamplingLegacy();
+       virtual const char *GetFullName();
+       static void EnableDownsamplingLegacy();
 
-protected:
-		void updateInstrumentData(bool search) ;
-		void doTickUpdate(int channel) ;
-		void doKRateUpdate(int channel) ;
-		void updateFeedback(renderParams *rp) ;
+     protected:
+       void updateInstrumentData(bool search);
+       void doTickUpdate(int channel);
+       void doKRateUpdate(int channel);
+       void updateFeedback(renderParams *rp);
 
-private:
+     private:
        SoundSource *source_ ;
        struct renderParams renderParams_[SONG_CHANNEL_COUNT] ;
        bool running_ ;

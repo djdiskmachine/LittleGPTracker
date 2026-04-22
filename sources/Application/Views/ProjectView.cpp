@@ -1,4 +1,6 @@
 #include "ProjectView.h"
+#include "Application/Mixer/MixerService.h"
+#include "Application/Model/ProjectDatas.h"
 #include "Application/Model/Scale.h"
 #include "Application/Persistency/PersistencyService.h"
 #include "Application/Views/ModalDialogs/MessageBox.h"
@@ -38,8 +40,8 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 		Path path_dstprjdir = Path(str_dstprjdir);
 		Path path_dstsmpdir = Path(str_dstsmpdir);
 
-		Path path_srclgptdatsav = path_srcprjdir.GetPath() + "lgptsav.dat";
-		Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
+        Path path_srclgptdatsav = path_srcprjdir.GetPath() + "lgptsav_tmp.dat";
+        Path path_dstlgptdatsav = path_dstprjdir.GetPath() + "/lgptsav.dat";
 
 		if (path_dstprjdir.Exists()) {
 			Trace::Log("ProjectView", "Dst Dir '%s' Exist == true",
@@ -55,10 +57,13 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 			return;
 		};
 
-		FSS.Copy(path_srclgptdatsav,path_dstlgptdatsav);
+        if (FSS.Copy(path_srclgptdatsav, path_dstlgptdatsav) > -1) {
+            FSS.Delete(path_srclgptdatsav);
+        }
 
-		I_Dir *idir_srcsmpdir=FileSystem::GetInstance()->Open(path_srcsmpdir.GetPath().c_str());
-		if (idir_srcsmpdir) {
+        I_Dir *idir_srcsmpdir =
+            FileSystem::GetInstance()->Open(path_srcsmpdir.GetPath().c_str());
+        if (idir_srcsmpdir) {
 				idir_srcsmpdir->GetContent("*");
 				idir_srcsmpdir->Sort();
 				IteratorPtr<Path>it(idir_srcsmpdir->GetIterator());
@@ -78,13 +83,15 @@ static void SaveAsProjectCallback(View &v,ModalView &dialog) {
 }
 
 static void LoadCallback(View &v,ModalView &dialog) {
-	if (dialog.GetReturnCode()==MBL_YES) {
+    MixerService::GetInstance()->SetRenderMode(0);
+    if (dialog.GetReturnCode()==MBL_YES) {
 		((ProjectView &)v).OnLoadProject() ;
 	}
 } ;
 
 static void QuitCallback(View &v,ModalView &dialog) {
-	if (dialog.GetReturnCode()==MBL_YES) {
+    MixerService::GetInstance()->SetRenderMode(0);
+    if (dialog.GetReturnCode()==MBL_YES) {
 		((ProjectView &)v).OnQuit() ;
 	}
 } ;
@@ -95,8 +102,8 @@ static void PurgeCallback(View &v,ModalView &dialog) {
 
 ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
-	lastClock_=0 ;
-	lastTick_=0 ;
+    lastClock_ = 0;
+    lastTick_ = 0;
 
 	project_=data->project_ ;
 
@@ -181,6 +188,13 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     T_SimpleList<UIField>::Insert(field);
 
     position._y += 2;
+    v = project_->FindVariable(VAR_RENDER);
+    NAssert(v);
+    field = new UIIntVarField(position, *v, "Render: %s", 0,
+                              project_->MAX_RENDER_MODE - 1, 1, 2);
+    T_SimpleList<UIField>::Insert(field);
+
+    position._y += 2;
     a1 = new UIActionField("Exit", ACTION_QUIT, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
@@ -192,23 +206,34 @@ ProjectView::~ProjectView() {
 
 void ProjectView::ProcessButtonMask(unsigned short mask,bool pressed) {
 
-	if (!pressed) return ;
+    if (!pressed)
+        return;
 
-	FieldView::ProcessButtonMask(mask) ;
+    FieldView::ProcessButtonMask(mask);
 
-	if (mask&EPBM_R) {
-		if (mask&EPBM_DOWN) {
+    if (mask & EPBM_R) {
+        if (mask&EPBM_DOWN) {
 			ViewType vt=VT_SONG;
 			ViewEvent ve(VET_SWITCH_VIEW,&vt) ;
 			SetChanged();
-			NotifyObservers(&ve) ;
-		}
-	} else {
-		if (mask&EPBM_START) {
-   			Player *player=Player::GetInstance() ;
+            NotifyObservers(&ve);
+        }
+    } else {
+        if (mask&EPBM_START) {
+            Player *player = Player::GetInstance();
+
+            int renderMode = viewData_->renderMode_;
+			if (renderMode > 0 && !player->IsRunning()) {
+				viewData_->isRendering_ = true;
+				View::SetNotification("Rendering started!");
+			} else if (viewData_->isRendering_ && player->IsRunning()) {
+				viewData_->isRendering_ = false;
+				View::SetNotification("Rendering done!");
+			}
+
 			player->OnStartButton(PM_SONG,viewData_->songX_,false,viewData_->songX_) ;
 		}
-	} ;
+    };
 } ;
 
 void ProjectView::DrawView() {
@@ -227,8 +252,22 @@ void ProjectView::DrawView() {
     SetColor(CD_NORMAL);
     DrawString(pos._x,pos._y,projectString,props) ;
 
-	FieldView::Redraw() ;
-	drawMap() ;
+    FieldView::Redraw();
+    drawMap();
+
+    int currentMode = project_->GetRenderMode();
+    if ((viewData_->renderMode_ != currentMode) && !MixerService::GetInstance()->IsRendering()) {
+        // Mode changed
+        if (currentMode > 0 && viewData_->renderMode_ == 0) {
+            View::SetNotification("Rendering on, press start");
+        } else if (currentMode == 0 && viewData_->renderMode_ > 0) {
+            View::SetNotification("Rendering off");
+        }
+        viewData_->renderMode_ = currentMode;
+        MixerService::GetInstance()->SetRenderMode(currentMode);
+    }
+
+    View::EnableNotification();
 } ;
 
 void ProjectView::Update(Observable &,I_ObservableData *data) {
@@ -240,11 +279,11 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 # ifdef _64BIT
 	int fourcc=*((int*)data);
 #else
-	int fourcc=(unsigned int)data ;
+    int fourcc = (unsigned int)data;
 #endif
 
-	UIField *focus=GetFocus() ;
-	if (fourcc!=ACTION_TEMPO_CHANGED) {
+    UIField *focus = GetFocus();
+    if (fourcc!= ACTION_TEMPO_CHANGED) {
 		focus->ClearFocus() ;
 		focus->Draw(w_) ;
 		w_.Flush() ;
@@ -264,13 +303,14 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			break ;
 		}
         case ACTION_SAVE: {
+            MixerService::GetInstance()->SetRenderMode(0);
             PersistencyService *service = PersistencyService::GetInstance();
             service->Save();
             break;
         }
         case ACTION_SAVE_AS: {
             PersistencyService *service = PersistencyService::GetInstance();
-            service->Save();
+            service->Save("project:lgptsav_tmp.dat");
             NewProjectDialog *mb = new NewProjectDialog(*this);
             DoModal(mb, SaveAsProjectCallback);
             break;
