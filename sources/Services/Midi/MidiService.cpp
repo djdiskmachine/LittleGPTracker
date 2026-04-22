@@ -50,10 +50,10 @@ I_Iterator<MidiInDevice> *MidiService::GetInIterator() {
 void MidiService::SelectDevice(const std::string &name) { deviceName_ = name; };
 
 bool MidiService::Start() {
-	currentPlayQueue_ = 0;
-	currentOutQueue_ = 0;
-	return true;
-} ;
+    currentPlayQueue_ = 0;
+    currentOutQueue_ = 0;
+    return true;
+};
 
 void MidiService::Stop() { stopDevice(); };
 
@@ -123,15 +123,15 @@ void MidiService::flushOutQueue() {
 
     if (queueMutex_.TryLock()) {
         T_SimpleList<MidiMessage> *flushQueue = queues_[next];
- 
+
         if (device_) {
-             device_->SendQueue(*flushQueue);
-         }
- 
-         flushQueue->Empty();
-         currentOutQueue_ = next;  // Advance only after safe flush
-         queueMutex_.Unlock();
-     }
+            device_->SendQueue(*flushQueue);
+        }
+
+        flushQueue->Empty();
+        currentOutQueue_ = next; // Advance only after safe flush
+        queueMutex_.Unlock();
+    }
 }
 
 /*
