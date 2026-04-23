@@ -17,6 +17,8 @@ class PhraseView : public View {
     virtual void DrawView();
     virtual void OnPlayerUpdate(PlayerEventType, unsigned int tick = 0);
     virtual void OnFocus();
+    void onCommandSelectorResult(ModalView &d);
+    void onCommandSelectorPreview(ModalView &d);
 
   protected:
     void updateCursor(int dx, int dy);
@@ -25,10 +27,6 @@ class PhraseView : public View {
                            int yOffset = 0);
     bool isCommandColumn() const;
     FourCC *getCurrentCommandPointer();
-    void enterCommandSelector();
-    void leaveCommandSelector(bool commit);
-    void stepCommandSelector(ViewUpdateDirection direction);
-    void drawCommandSelector(GUITextProperties &props);
     void updateSelectionValue(ViewUpdateDirection direction);
     void warpToNeighbour(int offset);
     void warpInChain(int offset);
@@ -60,13 +58,13 @@ class PhraseView : public View {
     int lastInstr_;
     int lastCmd_;
     int lastParam_;
-    bool commandSelectorActive_;
-    FourCC commandSelectorOriginal_;
+    bool commandSelectorModalActive_;
     Phrase *phrase_;
     int lastPlayingPos_;
     Variable cmdEdit_;
     UIBigHexVarField *cmdEditField_;
     void printHelpLegend(FourCC command, GUITextProperties props);
+    void enterCommandSelector();
 
     struct clipboard {
         bool active_;

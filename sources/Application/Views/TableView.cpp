@@ -4,8 +4,17 @@
 #include "Application/Utils/HelpLegend.h"
 #include "Application/Utils/char.h"
 #include "Application/Views/CommandSelectorCommon.h"
+#include "Application/Views/ModalDialogs/CommandSelectorModal.h"
 
 #define FCC_EDIT MAKE_FOURCC('T', 'B', 'E', 'D')
+
+static void CommandSelectorCallback(View &v, ModalView &d) {
+    ((TableView &)v).onCommandSelectorResult(d);
+}
+
+static void CommandSelectorPreviewCallback(View &v, ModalView &d) {
+    ((TableView &)v).onCommandSelectorPreview(d);
+}
 
 TableView::TableView(GUIWindow &w, ViewData *viewData)
     : View(w, viewData), cmdEdit_("edit", FCC_EDIT, 0) {
@@ -20,8 +29,7 @@ TableView::TableView(GUIWindow &w, ViewData *viewData)
     lastTsp_ = 0;
     lastCmd_ = I_CMD_NONE;
     lastParam_ = 0;
-    commandSelectorActive_ = false;
-    commandSelectorOriginal_ = I_CMD_NONE;
+    commandSelectorModalActive_ = false;
 
     clipboard_.active_ = false;
     clipboard_.width_ = 0;
@@ -34,7 +42,6 @@ void TableView::OnFocus() {
     clipboard_.active_ = false;
     viewMode_ = VM_NORMAL;
     lastPosition_[0] = lastPosition_[1] = lastPosition_[2] = 0;
-    commandSelectorActive_ = false;
     updateCursor(0, 0);
 };
 
@@ -314,10 +321,6 @@ void TableView::pasteClipboard() {
 
 void TableView::updateCursor(int dx, int dy) {
 
-    if (commandSelectorActive_ && (dx != 0 || dy != 0)) {
-        leaveCommandSelector(true);
-    }
-
     col_ += dx;
     row_ += dy;
     if (col_ > 5)
@@ -525,41 +528,26 @@ FourCC *TableView::getCurrentCommandPointer() {
 }
 
 void TableView::enterCommandSelector() {
-    CommandSelectorCommon::enterSelector(
-        isCommandColumn(), [this]() { return getCurrentCommandPointer(); },
-        commandSelectorActive_, commandSelectorOriginal_, isDirty_);
+    FourCC *cmdPtr = getCurrentCommandPointer();
+    if (!cmdPtr) return;
+    commandSelectorModalActive_ = true;
+    DoModal(new CommandSelectorModal(*this, cmdPtr, CommandSelectorPreviewCallback),
+            CommandSelectorCallback);
 }
 
-void TableView::leaveCommandSelector(bool commit) {
-    CommandSelectorCommon::leaveSelector(
-        commit, [this]() { return getCurrentCommandPointer(); },
-        commandSelectorActive_, commandSelectorOriginal_, lastCmd_, isDirty_);
-}
-
-void TableView::stepCommandSelector(ViewUpdateDirection direction) {
-    CommandSelectorCommon::stepSelector(
-        direction, [this]() { return getCurrentCommandPointer(); },
-        commandSelectorActive_, lastCmd_, isDirty_);
-}
-
-void TableView::drawCommandSelector(GUITextProperties &props) {
-    if (!commandSelectorActive_) {
-        return;
+void TableView::onCommandSelectorResult(ModalView &d) {
+    commandSelectorModalActive_ = false;
+    CommandSelectorModal &modal = (CommandSelectorModal &)d;
+    if (modal.GetReturnCode() == 1) {
+        FourCC *cmd = getCurrentCommandPointer();
+        if (cmd) {
+            lastCmd_ = *cmd;
+        }
     }
-    FourCC *command = getCurrentCommandPointer();
-    if (!command) {
-        return;
-    }
-
-    GUIPoint anchor = GetAnchor();
-    CommandSelectorCommon::drawPopup(
-        *command, anchor, props,
-        [this](ColorDefinition color) { SetColor(color); },
-        [this](int x, int y, const char *txt, GUITextProperties &textProps) {
-            DrawString(x, y, txt, textProps);
-        });
-    props.invert_ = false;
+    isDirty_ = true;
 }
+
+void TableView::onCommandSelectorPreview(ModalView &) { isDirty_ = true; }
 
 void TableView::pasteLast() {
     uint *i = 0;
@@ -632,29 +620,6 @@ void TableView::processNormalButtonMask(unsigned short mask) {
 
     Player *player = Player::GetInstance();
 
-    if (commandSelectorActive_) {
-        if (mask & EPBM_B) {
-            leaveCommandSelector(false);
-            return;
-        }
-        if (mask == EPBM_A) {
-            leaveCommandSelector(true);
-            return;
-        }
-        if (mask & EPBM_A) {
-            if (mask & EPBM_LEFT)
-                stepCommandSelector(VUD_LEFT);
-            if (mask & EPBM_RIGHT)
-                stepCommandSelector(VUD_RIGHT);
-            if (mask & EPBM_UP)
-                stepCommandSelector(VUD_UP);
-            if (mask & EPBM_DOWN)
-                stepCommandSelector(VUD_DOWN);
-            return;
-        }
-        leaveCommandSelector(true);
-    }
-
     if (mask & EPBM_B) {
         if (mask & EPBM_LEFT)
             warpToNeighbour(-1);
@@ -674,12 +639,18 @@ void TableView::processNormalButtonMask(unsigned short mask) {
         // A modifier
 
         if (mask & EPBM_A) {
-            if (mask & EPBM_DOWN)
-                isCommandColumn() ? enterCommandSelector()
-                                  : updateCursorValue(-0x10);
-            if (mask & EPBM_UP)
-                isCommandColumn() ? enterCommandSelector()
-                                  : updateCursorValue(0x10);
+            if (mask & EPBM_DOWN) {
+                if (isCommandColumn())
+                    enterCommandSelector();
+                else
+                    updateCursorValue(-0x10);
+            }
+            if (mask & EPBM_UP) {
+                if (isCommandColumn())
+                    enterCommandSelector();
+                else
+                    updateCursorValue(0x10);
+            }
             if (mask & EPBM_LEFT)
                 updateCursorValue(-0x01);
             if (mask & EPBM_RIGHT)
@@ -998,8 +969,6 @@ void TableView::DrawView() {
     if (player->IsRunning()) {
         OnPlayerUpdate(PET_UPDATE);
     };
-
-    drawCommandSelector(props);
 }
 
 void TableView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
@@ -1010,21 +979,21 @@ void TableView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
     pos._x = anchor._x - 1;
     pos._y = anchor._y + lastPosition_[0];
-    if (!commandSelectorActive_ ||
+    if (!commandSelectorModalActive_ ||
         !CommandSelectorCommon::popupContainsPoint(anchor, pos._x, pos._y)) {
         DrawString(pos._x, pos._y, " ", props);
     }
 
     pos._x += 10;
     pos._y = anchor._y + lastPosition_[1];
-    if (!commandSelectorActive_ ||
+    if (!commandSelectorModalActive_ ||
         !CommandSelectorCommon::popupContainsPoint(anchor, pos._x, pos._y)) {
         DrawString(pos._x, pos._y, " ", props);
     }
 
     pos._x += 10;
     pos._y = anchor._y + lastPosition_[2];
-    if (!commandSelectorActive_ ||
+    if (!commandSelectorModalActive_ ||
         !CommandSelectorCommon::popupContainsPoint(anchor, pos._x, pos._y)) {
         DrawString(pos._x, pos._y, " ", props);
     }
@@ -1045,7 +1014,7 @@ void TableView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
         pos._x = anchor._x - 1;
         pos._y = anchor._y + lastPosition_[0];
-        if (!commandSelectorActive_ ||
+        if (!commandSelectorModalActive_ ||
             !CommandSelectorCommon::popupContainsPoint(anchor, pos._x,
                                                        pos._y)) {
             SetColor(CD_PLAY);
@@ -1054,7 +1023,7 @@ void TableView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
         pos._x += 10;
         pos._y = anchor._y + lastPosition_[1];
-        if (!commandSelectorActive_ ||
+        if (!commandSelectorModalActive_ ||
             !CommandSelectorCommon::popupContainsPoint(anchor, pos._x,
                                                        pos._y)) {
             DrawString(pos._x, pos._y, ">", props);
@@ -1062,16 +1031,13 @@ void TableView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
         pos._x += 10;
         pos._y = anchor._y + lastPosition_[2];
-        if (!commandSelectorActive_ ||
+        if (!commandSelectorModalActive_ ||
             !CommandSelectorCommon::popupContainsPoint(anchor, pos._x,
                                                        pos._y)) {
             DrawString(pos._x, pos._y, ">", props);
         }
     };
     drawNotes();
-    if (commandSelectorActive_) {
-        drawCommandSelector(props);
-    }
 }
 
 void TableView::printHelpLegend(FourCC command, GUITextProperties props) {
