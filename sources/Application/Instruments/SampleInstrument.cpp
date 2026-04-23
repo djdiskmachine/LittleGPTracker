@@ -1395,6 +1395,20 @@ void SampleInstrument::ProcessCommand(int channel,FourCC cc,ushort value) {
 	} ;
 } ;
 
+/*
+ * Return whole file name
+ * Intended for file operations where a complete name is necessary
+ */
+const char *SampleInstrument::GetFileName() {
+    Variable *v = FindVariable(SIP_SAMPLE);
+    const char *src = v->GetString();
+    return src;
+}
+
+/*
+* Return cropped name
+* Intended for printing where the whole name doesn't fit on screen
+*/
 const char *SampleInstrument::GetName() {
     Variable *v = FindVariable(SIP_SAMPLE);
     const char *src = v->GetString();
