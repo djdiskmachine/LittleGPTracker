@@ -230,7 +230,7 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 	 }*/
 	 rp->reverse_=false ;
 
-     float driverRate=float(Audio::GetInstance()->GetSampleRate()) ;
+     float driverRate = float(Audio::GetInstance()->GetSampleRate());
      int isSliced = slices_->GetInt() > 1;
      if (isSliced) {
 		 if (rp->midiNote_ > slices_->GetInt() - 1) return false; // No sound outside of slice range
@@ -314,11 +314,11 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
   
 	// Compute octave & note difference from root
 
-	float fineTune=float(fineTune_->GetInt()-0x7F) ;
-	fineTune/=float(0x80) ;
-	int offset=midinote-rootNote ;
-    if (isSliced) {
-        offset = rootNote-source_->GetRootNote(rp->midiNote_);
+     float fineTune = float(fineTune_->GetInt() - 0x7F);
+     fineTune /= float(0x80);
+     int offset = midinote - rootNote;
+     if (isSliced) {
+         offset = rootNote - source_->GetRootNote(rp->midiNote_);
     }
     while (offset>127)
   {
