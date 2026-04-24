@@ -230,12 +230,28 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 	 }*/
 	 rp->reverse_=false ;
 
-     float driverRate = float(Audio::GetInstance()->GetSampleRate());
+     float driverRate=float(Audio::GetInstance()->GetSampleRate()) ;
+     int isSliced = slices_->GetInt() > 1;
+     if (isSliced) {
+		 if (rp->midiNote_ > slices_->GetInt() - 1) return false; // No sound outside of slice range
+		 int slice = rp->rendLoopEnd_ / slices_->GetInt();
+		 rp->rendLoopStart_ = rp->midiNote_ * slice;
+		 rp->rendLoopEnd_ = (rp->midiNote_ + 1) * slice;
+	 }
 
-     switch (loopmode) {
-     case SILM_ONESHOT:
-     case SILM_LOOP:
-     case SILM_LOOP_PINGPONG:
+	 switch (loopmode) {
+		 case SILM_ONESHOT:
+		 case SILM_LOOP:
+		 case SILM_LOOP_PINGPONG:
+
+			// Compute speed factor
+			// if instrument sampled below 44.1Khz, should
+			// travel slower in sample
+
+            rp->rendFirst_ = (isSliced) ? rp->rendLoopStart_ : start_->GetInt();
+            rp->position_= float(rp->rendFirst_);
+			rp->baseSpeed_=fl2fp(source_->GetSampleRate(rp->midiNote_)/driverRate) ;
+			rp->reverse_=(rp->rendLoopEnd_<rp->position_) ;
 
          // Compute speed factor
          // if instrument sampled below 44.1Khz, should
@@ -287,33 +303,24 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
         rp->position_= float(rp->rendFirst_);
       }
       break ;
-		}
-	case SILM_SLICE: {
-		if (rp->midiNote_ > slices_->GetInt()-1) break; // No sound outside of slice range
-		int note = rp->midiNote_;
-		int wavSize=rp->rendLoopEnd_;
-		int slice = wavSize/slices_->GetInt();
-
-		rp->position_= float(note*slice);
-		rp->baseSpeed_=fl2fp(source_->GetSampleRate(rp->midiNote_)/driverRate) ;
-		rp->speed_ = rp->baseSpeed_;
-		rp->rendLoopEnd_ = (note+1)*slice;
-		break ;
-	}
-		case SILM_LAST:
+        }
+        case SILM_LAST:
 			NAssert(0) ;
 			break ;
         }
 
         // Compute octave & note difference from root
 
-        float fineTune = float(fineTune_->GetInt() - 0x7F);
-        fineTune /= float(0x80);
-        int offset = midinote - rootNote;
-        if (loopmode == SILM_SLICE) {
-            offset = rootNote - source_->GetRootNote(rp->midiNote_);
-	}
-	while (offset>127)
+  
+	// Compute octave & note difference from root
+
+	float fineTune=float(fineTune_->GetInt()-0x7F) ;
+	fineTune/=float(0x80) ;
+	int offset=midinote-rootNote ;
+    if (isSliced) {
+        offset = rootNote-source_->GetRootNote(rp->midiNote_);
+    }
+    while (offset>127)
   {
 		offset-=12 ;
 	}
@@ -427,9 +434,8 @@ void SampleInstrument::updateFeedback(renderParams *rp) {
 		switch(loopMode) {
 			case SILM_ONESHOT:
 			case SILM_LOOP:
-			case SILM_LOOP_PINGPONG:
-			case SILM_SLICE:
-			case SILM_LOOPSYNC:
+            case SILM_LOOP_PINGPONG:
+            case SILM_LOOPSYNC:
 				rp->feedbackMode_=FB_ADD ;
 				if (offset<0x80) {
 					offset=FB_BUFFER_LENGTH-offset-1 ;
@@ -662,99 +668,97 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 			if (!rpReverse) { //Looping forward 
 				if (input>=lastSample/*-((loopMode==SILM_OSCFINE)?1:0)*/) {
 					switch(loopMode) {
-						case SILM_ONESHOT:
-						case SILM_SLICE:
-							*rpFinished=true ;
-							break ;
-						case SILM_LOOP:
-						case SILM_OSC:
-						case SILM_LOOPSYNC:
-							input=loopPosition ;
-							rpReverse=(loopPosition>lastSample) ;
-							if (rpReverse) {
-								fpSpeed=-rp->speed_ ; 
-							} else {
-								fpSpeed=rp->speed_ ; 
-							}
-							break ;
-						case SILM_LOOP_PINGPONG:
-							if ((loopPosition > lastSample)) {
-								if (input <= lastSample || input >= loopPosition) {
-									rpReverse = !rpReverse;
-									fpSpeed = -fpSpeed;
-								}
-							} else {
-								if (input>=lastSample || input <= loopPosition) {
-									rpReverse = !rpReverse;
-									fpSpeed = -fpSpeed;
-								}
-							}
-							break;
-/*						case SILM_OSCFINE:
-						{
-							int offset=(input-lastSample)/channelCount ;
-							rpReverse=(loopPosition>lastSample) ;
-							if (rpReverse) {
-								fpSpeed=-rp->speed_ ; 
-								input=loopPosition-offset ;
-							} else {
-								fpSpeed=rp->speed_ ; 
-								input=loopPosition+offset ;
-							}
-							break ;
-						}*/
-						case SILM_LAST:
-							NAssert(0) ;
-							break ;
+                    case SILM_ONESHOT:
+                        *rpFinished = true;
+                        break;
+                    case SILM_LOOP:
+                    case SILM_OSC:
+                    case SILM_LOOPSYNC:
+                        input = loopPosition;
+                        rpReverse = (loopPosition > lastSample);
+                        if (rpReverse) {
+                            fpSpeed = -rp->speed_;
+                        } else {
+                            fpSpeed = rp->speed_;
+                        }
+                        break;
+                    case SILM_LOOP_PINGPONG:
+                        if ((loopPosition > lastSample)) {
+                            if (input <= lastSample || input >= loopPosition) {
+                                rpReverse = !rpReverse;
+                                fpSpeed = -fpSpeed;
+                            }
+                        } else {
+                            if (input >= lastSample || input <= loopPosition) {
+                                rpReverse = !rpReverse;
+                                fpSpeed = -fpSpeed;
+                            }
+                        }
+                        break;
+                        /*						case SILM_OSCFINE:
+                                                {
+                                                    int
+                           offset=(input-lastSample)/channelCount ;
+                                                    rpReverse=(loopPosition>lastSample)
+                           ; if (rpReverse) { fpSpeed=-rp->speed_ ;
+                                                        input=loopPosition-offset
+                           ; } else { fpSpeed=rp->speed_ ;
+                                                        input=loopPosition+offset
+                           ;
+                                                    }
+                                                    break ;
+                                                }*/
+                    case SILM_LAST:
+                        NAssert(0);
+                        break;
 					} ;
 				}
 			} else { // Looping backward
 				if (input<lastSample) {
 					switch(loopMode) {
-						case SILM_ONESHOT:
-						case SILM_SLICE:
-							*rpFinished=true ;
-							break ;
-						case SILM_LOOP:
-						case SILM_OSC:
-						case SILM_LOOPSYNC:
-							input=loopPosition ;
-							rpReverse=(loopPosition>lastSample) ;
-							if (rpReverse) {
-								fpSpeed=-rp->speed_ ; 
-							} else {
-								fpSpeed=rp->speed_ ; 
-							}
-							break ;
-						case SILM_LOOP_PINGPONG:
-							if ((loopPosition > lastSample)) {
-								if (input <= lastSample || input >= loopPosition) {
-									rpReverse = !rpReverse;
-									fpSpeed = -fpSpeed;
-								}
-							} else {
-								if (input>=lastSample || input <= loopPosition) {
-									rpReverse = !rpReverse;
-									fpSpeed = -fpSpeed;
-								}
-							}
-							break;
-/*						case SILM_OSCFINE:
-						{
-							int offset=(lastSample-input)/channelCount ;
-							rpReverse=(loopPosition>lastSample) ;
-							if (rpReverse) {
-								fpSpeed=-rp->speed_ ; 
-								input=loopPosition-offset ;
-							} else {
-								fpSpeed=rp->speed_ ; 
-								input=loopPosition+offset ;
-							}
-							break ;
-						}*/
-						case SILM_LAST:
-							NAssert(0) ;
-							break ;
+                    case SILM_ONESHOT:
+                        *rpFinished = true;
+                        break;
+                    case SILM_LOOP:
+                    case SILM_OSC:
+                    case SILM_LOOPSYNC:
+                        input = loopPosition;
+                        rpReverse = (loopPosition > lastSample);
+                        if (rpReverse) {
+                            fpSpeed = -rp->speed_;
+                        } else {
+                            fpSpeed = rp->speed_;
+                        }
+                        break;
+                    case SILM_LOOP_PINGPONG:
+                        if ((loopPosition > lastSample)) {
+                            if (input <= lastSample || input >= loopPosition) {
+                                rpReverse = !rpReverse;
+                                fpSpeed = -fpSpeed;
+                            }
+                        } else {
+                            if (input >= lastSample || input <= loopPosition) {
+                                rpReverse = !rpReverse;
+                                fpSpeed = -fpSpeed;
+                            }
+                        }
+                        break;
+                        /*						case SILM_OSCFINE:
+                                                {
+                                                    int
+                           offset=(lastSample-input)/channelCount ;
+                                                    rpReverse=(loopPosition>lastSample)
+                           ; if (rpReverse) { fpSpeed=-rp->speed_ ;
+                                                        input=loopPosition-offset
+                           ; } else { fpSpeed=rp->speed_ ;
+                                                        input=loopPosition+offset
+                           ;
+                                                    }
+                                                    break ;
+                                                }*/
+                    case SILM_LAST:
+                        NAssert(0);
+                        break;
 					} ;
 				}
 			};
