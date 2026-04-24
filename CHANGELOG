@@ -10,6 +10,12 @@
 1.6.0-bacon10
     Allow greater granular stretching using LPOF
     Documentation in tips and tricks
+1.6.0-bacon10
+    Slices decoupled from loop mode
+        * Slices are no longer a loop mode — they are now an independent parameter
+        * Set slices > 1 to enable slicing; loop mode (none/loop/ping pong/etc.) applies within each slice
+        * Enables looped slices, e.g. for amen breaks and other timed loops
+        * Old projects with "slicer" loop mode load correctly: slices count is preserved, loop mode resets to "none"
 1.6.0-bacon5
     Auto-load last project on startup
         * Application can now load the last project automatically on startup
