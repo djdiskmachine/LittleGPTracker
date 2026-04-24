@@ -391,7 +391,7 @@ In oscillator modes, under 0x80 the feedback of specified length is added to the
   - pingpong will start at "start" and bounce the loop between loop start and loop end.
   - oscillator is a special mode where the loop selection (from loop start to loop end) is taken as oscillator data and automatically tuned. Experiment with different settings, do not forget 'root note' is your friend to tune the oscillator back in a useful range
   - looper sync will automatically tune a loop so that it plays exactly 16 bars. Use the root note to play twice faster/slower
-  - slicer will cut the sample into "slices" amount of samples, mapped from C-2 (the lowest possible note) up to amount of slices. Example: slices == 4 will give you four slices mapped to C-2, C#-2, D-2, D#-2
+- **slices:** divides the sample into equal slices, mapped chromatically from C-2 upward. Set to 1 to disable. Example: slices == 4 gives four slices on C-2, C#-2, D-2, D#-2. When slices > 1, the active loop mode applies within each slice — use "loop" for looped slices, "none" for one-shot.
 - **start:** start point of the sample regardless of if loop is enabled; in hex
 - **loop Start:** start point of the sample when loop is enabled; in hex
 - **loop End:** end point of the sample; in hex. You can play samples backwards by setting the end value lower than the start!
