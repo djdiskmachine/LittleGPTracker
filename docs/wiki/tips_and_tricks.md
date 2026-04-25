@@ -100,12 +100,14 @@ Here's a nice example, courtesy of jonbro, chopping drums he had recorded previo
 
 [Jonbro - the thing is the thing](https://battleofthebits.com/arena/Entry/the+thing+is+the+thing/1479/)
 
-### Slice! (new chopping method)
-Since version 1.3o there is a new loop mode called Slice
-Using this, you can assign up to 256 individual slices from C-2 (C minus two) up to the amount of slices you set. How handy!
+### Slices (sample chopping)
+Set the **slices** parameter in the instrument to divide a sample into equal parts,
+mapped chromatically from C-2 (the lowest note, not C2) upward. The **loop mode** parameter then applies
+independently within each slice — set it to "loop" or "ping pong" to get looped
+slices, great for amen breaks and timed loops. Set to Oscillator for very grainy rhythmic noises
 
-Of course, you are not limited to drum loops. Just chop anything away !
-The example project BETA uses Slice mode to chop up a dank AF sample by Basscarrier
+You can assign up to 256 individual slices. Of course, you are not limited to drum
+loops — just chop anything away!
 
 ### Granular timestretching with LPOF
 
