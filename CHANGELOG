@@ -1,3 +1,25 @@
+Various additions
+
+    FX Command Box selector (#238)
+        * In phrase and table views a selection box appears when editing FX commands
+        * Navigate in all directions using D-PAD
+        * Displays help legend and previews FX during playback
+
+    Preview notes by pressing A (#237)
+        * Press A on any step in phrase view to audition the note
+
+    Remove GARLIC build target
+        * Use Portmaster-compatible distro instead
+
+    Fixes:
+    Fixed incorrect interpolation (#248)
+        * Fixed not getting correct interpolation results between row 1 and 16
+    Don't audition note when song is playing (#247)
+    Reset chain offset when switching to SongView (#239)
+        * Prevents accidentally triggering playback with chain offset when returning to song screen
+    Fix audio dying on multithreaded systems (#236)
+        * MIDI queue protected by mutex lock on X64
+        * Fixes "audio suddenly dies" error
 
 1.6.0-bacon11
     Slices decoupled from loop mode
