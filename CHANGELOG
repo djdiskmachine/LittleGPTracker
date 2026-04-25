@@ -1,3 +1,15 @@
+
+1.6.0-bacon11
+    Slices decoupled from loop mode
+        * Slices are no longer a loop mode — they are now an independent parameter
+        * Set slices > 1 to enable slicing; loop mode (none/loop/ping pong/etc.) applies within each slice
+        * Enables looped slices, e.g. for amen breaks and other timed loops
+        * Old projects with "slicer" loop mode load correctly: slices count is preserved, loop mode resets to "none"
+
+1.6.0-bacon10
+    Allow greater granular stretching using LPOF
+    Documentation in tips and tricks
+
 1.6.0-bacon6
     Delete project from SelectProjectDialog
         * Press A + B on a project in the project selection screen to delete it
@@ -90,7 +102,6 @@
         Update to github actions checkout@v4.1.7 (#136)
 
     Fixes:
-    Fix audio randomly dying (#194)
     Long sample names causing crashes in InstrumentView (#189)
     Sample names that start with the same characters get mixed up InstrumentView (#199)
     Bug in chainview: column warping (#134)
@@ -108,7 +119,6 @@
     Restore 32bit linux config
 
     Crash when nudging below 0 BPM (shoutout @merumerutho) https://github.com/djdiskmachine/LittleGPTracker/issues/127
-    Fixed Garlic docker being outdated (#194)
 
 
 1.4.2

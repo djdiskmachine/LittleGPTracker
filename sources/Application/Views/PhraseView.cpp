@@ -4,12 +4,22 @@
 #include "Application/Model/Table.h"
 #include "Application/Utils/HelpLegend.h"
 #include "Application/Utils/char.h"
+#include "Application/Views/CommandSelectorCommon.h"
+#include "Application/Views/ModalDialogs/CommandSelectorModal.h"
 #include "System/Console/Trace.h"
 #include "UIController.h"
 #include <stdlib.h>
 #include <string.h>
 
 short PhraseView::offsets_[2][4] = {-1, 1, 12, -12, -1, 1, 16, -16};
+
+static void CommandSelectorCallback(View &v, ModalView &d) {
+    ((PhraseView &)v).onCommandSelectorResult(d);
+}
+
+static void CommandSelectorPreviewCallback(View &v, ModalView &d) {
+    ((PhraseView &)v).onCommandSelectorPreview(d);
+}
 
 PhraseView::PhraseView(GUIWindow &w, ViewData *viewData)
     : View(w, viewData), cmdEdit_("edit", FCC_EDIT, 0) {
@@ -25,6 +35,7 @@ PhraseView::PhraseView(GUIWindow &w, ViewData *viewData)
     lastInstr_ = 0;
     lastCmd_ = I_CMD_NONE;
     lastParam_ = 0;
+    commandSelectorModalActive_ = false;
 
     clipboard_.active_ = false;
     clipboard_.width_ = 0;
@@ -108,6 +119,43 @@ void PhraseView::stopAudition() {
     Player *player = Player::GetInstance();
     if (viewData_->playMode_ == PM_AUDITION)
         player->Stop();
+}
+
+bool PhraseView::isCommandColumn() const { return col_ == 2 || col_ == 4; }
+
+FourCC *PhraseView::getCurrentCommandPointer() {
+    return CommandSelectorCommon::getCommandPointerByCol(
+        col_, 2, phrase_->cmd1_ + (16 * viewData_->currentPhrase_ + row_), 4,
+        phrase_->cmd2_ + (16 * viewData_->currentPhrase_ + row_));
+}
+
+void PhraseView::enterCommandSelector() {
+    FourCC *cmdPtr = getCurrentCommandPointer();
+    if (!cmdPtr) return;
+    commandSelectorModalActive_ = true;
+    DoModal(new CommandSelectorModal(*this, cmdPtr, CommandSelectorPreviewCallback),
+            CommandSelectorCallback);
+}
+
+void PhraseView::onCommandSelectorResult(ModalView &d) {
+    commandSelectorModalActive_ = false;
+    CommandSelectorModal &modal = (CommandSelectorModal &)d;
+    if (modal.GetReturnCode() == 1) {
+        FourCC *cmd = getCurrentCommandPointer();
+        if (cmd) {
+            lastCmd_ = *cmd;
+        }
+    }
+    isDirty_ = true;
+}
+
+void PhraseView::onCommandSelectorPreview(ModalView &) {
+    isDirty_ = true;
+    Player *player = Player::GetInstance();
+    if (!player->IsRunning()) {
+        player->OnStartButton(PM_AUDITION, viewData_->songX_, false,
+                              viewData_->chainRow_);
+    }
 }
 
 void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
@@ -938,10 +986,19 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
                 Player *player = Player::GetInstance();
                 player->OnStartButton(PM_AUDITION, viewData_->songX_, false, viewData_->chainRow_);
             }
-            if (mask & EPBM_DOWN)
-                updateCursorValue(VUD_DOWN);
-            if (mask & EPBM_UP)
-                updateCursorValue(VUD_UP);
+
+            if (mask & EPBM_DOWN) {
+                if (isCommandColumn())
+                    enterCommandSelector();
+                else
+                    updateCursorValue(VUD_DOWN);
+            }
+            if (mask & EPBM_UP) {
+                if (isCommandColumn())
+                    enterCommandSelector();
+                else
+                    updateCursorValue(VUD_UP);
+            }
             if (mask & EPBM_LEFT)
                 updateCursorValue(VUD_LEFT);
             if (mask & EPBM_RIGHT)
@@ -1374,17 +1431,20 @@ void PhraseView::DrawView() {
 
 void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
+    GUITextProperties props;
     drawNotes();
 
     GUIPoint anchor = GetAnchor();
     GUIPoint pos = anchor;
     pos._x -= 1;
 
-    GUITextProperties props;
     SetColor(CD_NORMAL);
 
     pos._y = anchor._y + lastPlayingPos_;
-    DrawString(pos._x, pos._y, " ", props);
+    if (!commandSelectorModalActive_ ||
+        !CommandSelectorCommon::popupContainsPoint(anchor, pos._x, pos._y)) {
+        DrawString(pos._x, pos._y, " ", props);
+    }
 
     Player *player = Player::GetInstance();
 
@@ -1394,17 +1454,20 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
         for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
             if (player->IsChannelPlaying(i)) {
-
                 if (viewData_->currentPlayPhrase_[i] ==
                         viewData_->currentPhrase_ &&
                     viewData_->playMode_ != PM_AUDITION) {
                     pos._y = anchor._y + viewData_->phrasePlayPos_[i];
-                    if (!player->IsChannelMuted(i)) {
-                        SetColor(CD_PLAY);
-                        DrawString(pos._x, pos._y, ">", props);
-                    } else {
-                        SetColor(CD_MUTE);
-                        DrawString(pos._x, pos._y, "-", props);
+                    if (!commandSelectorModalActive_ ||
+                        !CommandSelectorCommon::popupContainsPoint(
+                            anchor, pos._x, pos._y)) {
+                        if (!player->IsChannelMuted(i)) {
+                            SetColor(CD_PLAY);
+                            DrawString(pos._x, pos._y, ">", props);
+                        } else {
+                            SetColor(CD_MUTE);
+                            DrawString(pos._x, pos._y, "-", props);
+                        }
                     }
                     SetColor(CD_NORMAL);
                     lastPlayingPos_ = viewData_->phrasePlayPos_[i];
@@ -1414,9 +1477,7 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
         }
 
         // clear any live indicator
-
         pos._y = anchor._y;
-        DrawString(pos._x, pos._y, " ", props);
 
         // Loop on all channels to see if one has queued current chain
         if (player->GetSequencerMode() == SM_LIVE) {
@@ -1430,7 +1491,11 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
                         viewData_->song_->data_ + i + 8 * songPos;
                     if (*chain == viewData_->currentChain_) {
                         char *indicator = player->GetLiveIndicator(i);
-                        DrawString(pos._x, pos._y, indicator, props);
+                        if (!commandSelectorModalActive_ ||
+                            !CommandSelectorCommon::popupContainsPoint(
+                                anchor, pos._x, pos._y)) {
+                            DrawString(pos._x, pos._y, indicator, props);
+                        }
                         break;
                     }
                 }

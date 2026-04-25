@@ -252,7 +252,7 @@ COMMONFILES := \
 	View.o ModalView.o FieldView.o UIField.o UIIntField.o \
 	UIIntVarOffField.o UIIntVarField.o ViewEvent.o I_Action.o\
 	UITempoField.o UIActionField.o \
-	MessageBox.o \
+	MessageBox.o CommandSelectorModal.o \
 	GrooveView.o UINoteVarField.o UIBigHexVarField.o \
 	SRPUpdaters.o UIStaticField.o \
 	Song.o Chain.o Phrase.o Project.o Scale.o \

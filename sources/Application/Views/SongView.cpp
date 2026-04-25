@@ -479,6 +479,8 @@ void SongView::switchSoloMode() {
 };
 
 void SongView::onStart() {
+    // Always play with zero offset in chains when in SongView
+    viewData_->chainRow_ = 0;
     Player *player = Player::GetInstance();
     unsigned char from = viewData_->songX_;
     unsigned char to = from;
@@ -513,6 +515,8 @@ void SongView::startImmediate() {
 }
 
 void SongView::onStop() {
+    // Always play with zero offset in chains when in SongView
+    viewData_->chainRow_ = 0;
     Player *player = Player::GetInstance();
     unsigned char from = viewData_->songX_;
     unsigned char to = from;
@@ -780,9 +784,6 @@ void SongView::processNormalButtonMask(unsigned int mask) {
                         updateCursor(1, 0);
 
                     if (mask & EPBM_START) {
-                        // Always play with zero offset in chains when in
-                        // songview
-                        viewData_->chainRow_ = 0;
                         onStart();
                     }
                 }
