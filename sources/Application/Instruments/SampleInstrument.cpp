@@ -301,22 +301,17 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
         }
 
         // Compute octave & note difference from root
-
-  
-	// Compute octave & note difference from root
-
-     float fineTune = float(fineTune_->GetInt() - 0x7F);
-     fineTune /= float(0x80);
-     int offset = midinote - rootNote;
-     if (isSliced) {
-         offset = rootNote - source_->GetRootNote(rp->midiNote_);
+        float fineTune = float(fineTune_->GetInt() - 0x7F);
+        fineTune /= float(0x80);
+        int offset = midinote - rootNote;
+        if (isSliced) {
+            offset = rootNote - source_->GetRootNote(rp->midiNote_);
     }
-    while (offset>127)
-  {
-		offset-=12 ;
-	}
-  
-	fixed freqFactor=fl2fp(float(pow(2.0,(offset+fineTune)/12.0))) ;
+    while (offset > 127) {
+        offset -= 12;
+    }
+
+    fixed freqFactor=fl2fp(float(pow(2.0,(offset+fineTune)/12.0))) ;
 	rp->baseSpeed_=fp_mul(rp->baseSpeed_,freqFactor) ;
     rp->speed_=rp->baseSpeed_ ;
     
@@ -427,13 +422,13 @@ void SampleInstrument::updateFeedback(renderParams *rp) {
 			case SILM_LOOP:
             case SILM_LOOP_PINGPONG:
             case SILM_LOOPSYNC:
-				rp->feedbackMode_=FB_ADD ;
-				if (offset<0x80) {
-					offset=FB_BUFFER_LENGTH-offset-1 ;
-				} else {
-					offset=FB_BUFFER_LENGTH-offset*10-1 ;
-				} ;
-				break ;
+                rp->feedbackMode_ = FB_ADD;
+                if (offset < 0x80) {
+                    offset = FB_BUFFER_LENGTH - offset - 1;
+                } else {
+                    offset = FB_BUFFER_LENGTH - offset * 10 - 1;
+                }
+                break;
 			case SILM_OSC:
 //			case SILM_OSCFINE:
 				if (offset<0x80) {
