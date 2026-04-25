@@ -242,51 +242,42 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
 	 switch (loopmode) {
 		 case SILM_ONESHOT:
 		 case SILM_LOOP:
-		 case SILM_LOOP_PINGPONG:
+         case SILM_LOOP_PINGPONG:
+             // Compute speed factor
+             // if instrument sampled below 44.1Khz, should
+             // travel slower in sample
 
-			// Compute speed factor
-			// if instrument sampled below 44.1Khz, should
-			// travel slower in sample
+             rp->rendFirst_ =
+                 (isSliced) ? rp->rendLoopStart_ : start_->GetInt();
+             rp->position_ = float(rp->rendFirst_);
+             rp->baseSpeed_ =
+                 fl2fp(source_->GetSampleRate(rp->midiNote_) / driverRate);
+             rp->reverse_ = (rp->rendLoopEnd_ < rp->position_);
 
-            rp->rendFirst_ = (isSliced) ? rp->rendLoopStart_ : start_->GetInt();
-            rp->position_= float(rp->rendFirst_);
-			rp->baseSpeed_=fl2fp(source_->GetSampleRate(rp->midiNote_)/driverRate) ;
-			rp->reverse_=(rp->rendLoopEnd_<rp->position_) ;
+             break;
 
-         // Compute speed factor
-         // if instrument sampled below 44.1Khz, should
-         // travel slower in sample
+         case SILM_OSC:
+             //		case SILM_OSCFINE:
+             {
 
-         rp->rendFirst_ = start_->GetInt();
-         rp->position_ = float(rp->rendFirst_);
-         rp->baseSpeed_ =
-             fl2fp(source_->GetSampleRate(rp->midiNote_) / driverRate);
-         rp->reverse_ = (rp->rendLoopEnd_ < rp->position_);
-
-         break;
-
-     case SILM_OSC:
-         //		case SILM_OSCFINE:
-         {
-
-             float freq = 261.6255653006f; // C3
-                                           /*			if (loopmode==SILM_OSCFINE) {
-                                                           freq=float(pow(2.0,-0.75))*440; // C3
-                                                       }*/
-             int length = rp->rendLoopEnd_ - rp->rendLoopStart_;
-             if (length == 0)
-                 length = 1;
-             if (length < 0) {
-				 rp->reverse_=true ;
-				 length=-length ;
-			 } ;
-			 rp->baseSpeed_=fl2fp((freq*length)/driverRate) ;
-       rp->rendFirst_ = rp->rendLoopStart_;
-       if (cleanstart) {
-        rp->position_= float(rp->rendFirst_);
-       }
-       break ;
-		}
+                 float freq = 261.6255653006f; // C3
+                 /*			if (loopmode==SILM_OSCFINE) {
+                                 freq=float(pow(2.0,-0.75))*440; // C3
+                             }*/
+                 int length = rp->rendLoopEnd_ - rp->rendLoopStart_;
+                 if (length == 0)
+                     length = 1;
+                 if (length < 0) {
+                     rp->reverse_ = true;
+                     length = -length;
+                 };
+                 rp->baseSpeed_ = fl2fp((freq * length) / driverRate);
+                 rp->rendFirst_ = rp->rendLoopStart_;
+                 if (cleanstart) {
+                     rp->position_ = float(rp->rendFirst_);
+                 }
+                 break;
+             }
 		case SILM_LOOPSYNC:
 		{
 			int length=rp->rendLoopEnd_-rp->rendLoopStart_ ;
