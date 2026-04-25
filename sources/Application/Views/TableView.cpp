@@ -174,7 +174,7 @@ void TableView::interpolateSelection() {
 
     for (int step = 0; step <= numSteps; step++) {
         int row = startRow + step;
-        int value = startParam + (2 * paramDiff * step + numSteps) / (2 * numSteps);
+        int value = startParam + (paramDiff * step) / (numSteps);
         paramData[row] = (ushort)value;
     }
 
