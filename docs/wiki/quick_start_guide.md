@@ -168,6 +168,23 @@ to save, piggy playback must be stopped (so hit `start` if need be). navigate to
 
 don't forget to come back later and keep butchering the pig :)
 
+## managing your projects
+
+### deleting a project
+
+If you ever need to delete an entire project, you can do so from the Project Selection screen.
+
+To delete a project:
+
+1. from the Project Selection screen, position your cursor on the project you wish to delete
+2. press `A + B`
+3. a confirmation dialog will appear showing the project name and asking you to confirm the deletion
+4. select `yes` to delete the project permanently, or `no` to cancel
+
+**be careful!** deletion is permanent and cannot be undone. make sure you have backed up your work if you wish to keep it. the entire project directory will be removed, including all songs, chains, phrases, and any associated data.
+
+it's always a good idea to keep backups of important projects before deleting anything!
+
 ## live mode & muting
 
 ![](https://web.archive.org/web/20190513041654im_/http://wiki.littlegptracker.com/lib/exe/fetch.php?media=quick:start14_1.1f.png)

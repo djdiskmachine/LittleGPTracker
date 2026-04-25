@@ -1,25 +1,27 @@
-1.6.0-bacon10
-    Allow greater granular stretching using LPOF
-    Documentation in tips and tricks
+
 1.6.0-bacon11
     Slices decoupled from loop mode
         * Slices are no longer a loop mode — they are now an independent parameter
         * Set slices > 1 to enable slicing; loop mode (none/loop/ping pong/etc.) applies within each slice
         * Enables looped slices, e.g. for amen breaks and other timed loops
         * Old projects with "slicer" loop mode load correctly: slices count is preserved, loop mode resets to "none"
+
 1.6.0-bacon10
     Allow greater granular stretching using LPOF
     Documentation in tips and tricks
-1.6.0-bacon10
-    Slices decoupled from loop mode
-        * Slices are no longer a loop mode — they are now an independent parameter
-        * Set slices > 1 to enable slicing; loop mode (none/loop/ping pong/etc.) applies within each slice
-        * Enables looped slices, e.g. for amen breaks and other timed loops
-        * Old projects with "slicer" loop mode load correctly: slices count is preserved, loop mode resets to "none"
+
+1.6.0-bacon6
+    Delete project from SelectProjectDialog
+        * Press A + B on a project in the project selection screen to delete it
+        * A confirmation dialog will appear asking to confirm deletion
+        * The entire project directory and all contents will be removed
+        * List position is preserved after deletion
+
 1.6.0-bacon5
     Auto-load last project on startup
         * Application can now load the last project automatically on startup
         * Disable by setting AUTO_LOAD_LAST=NO in config.xml
+    
 1.6.0-bacon4
     QWERTY keyboard name entry for new projects
     * Press A on the project name field to enter QWERTY keyboard mode
