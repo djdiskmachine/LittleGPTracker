@@ -984,7 +984,10 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
         if (mask & EPBM_A) {
             if ((col_ == 0) || (col_ == 1)) { // Preview when pressing A
                 Player *player = Player::GetInstance();
-                player->OnStartButton(PM_AUDITION, viewData_->songX_, false, viewData_->chainRow_);
+                if (!player->IsRunning()) {
+                    player->OnStartButton(PM_AUDITION, viewData_->songX_, false,
+                                          viewData_->chainRow_);
+                }
             }
 
             if (mask & EPBM_DOWN) {
