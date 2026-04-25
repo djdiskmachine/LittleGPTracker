@@ -107,6 +107,47 @@ Using this, you can assign up to 256 individual slices from C-2 (C minus two) up
 Of course, you are not limited to drum loops. Just chop anything away !
 The example project BETA uses Slice mode to chop up a dank AF sample by Basscarrier
 
+### Granular timestretching with LPOF
+
+You can use `LPOF` in a looping table to scroll a short loop window through a sample independently of playback pitch — a form of granular timestretching. Set a short loop on the instrument, then add a table that advances the loop position every tick:
+
+```
+00 LPOF xxxx ---- ----
+01 HOP  0000 ---- ----
+```
+
+Each tick, the loop window shifts forward by `xxxx` samples. The note's pitch is still determined by the loop length and oscillator tuning; the *content* of the loop changes as it travels through the sample. This lets you play a sample at a different speed than its pitch — stretching or compressing its duration without affecting the note you hear.
+
+**Sync to BPM (V_sync)**
+
+To advance the window in lock-step with the song tempo, you want the total shift per beat to equal the sample length. With 6 ticks per row (default), the per-tick shift is:
+
+```
+V_sync = (fileSampleRate × 10) / BPM
+```
+
+This gives the `LPOF` value (in decimal; convert to hex to enter it) that moves the window in sync with your BPM.
+
+**Reference table — V_sync values**
+
+| BPM | 44100 Hz | 22050 Hz | 11025 Hz | 8000 Hz |
+|-----|----------|----------|----------|---------|
+| 90  | `1388` (5000) | `09C4` (2500) | `04E2` (1250) | `038E` (910) |
+| 160 | `0AC4` (2756) | `0562` (1378) | `02B1` (689)  | `01F4` (500) |
+| 175 | `09D8` (2520) | `04EC` (1260) | `0276` (630)  | `01C7` (455) |
+
+To stretch to *half speed* (two bars to traverse), halve the V_sync value. To double speed, double it.
+
+**Speeding up vs. slowing down**
+
+- **Speeding up** (forward `LPOF` values `0001`–`7FFF`): The window travels through the sample faster than realtime. Once it reaches the end it clamps there — no artefacts.
+- **Slowing down**: Use a smaller V_sync value. The loop replays more cycles of each grain, effectively stretching time. Works best with long source samples.
+- **Backward scrolling**: Values `8001`–`FFFF` shift the loop window backward (two's complement: `FFFF` = −1, `FF00` = −256, etc.).
+
+**Amen break example (160 BPM, 44100 Hz)**
+
+The classic Amen break is ~136 BPM. To play it in sync at 160 BPM, use `LPOF 0CB4` (3252 samples/tick). The window advances ~18% faster than its natural rate, stretching it up to 160 BPM without retuning the sample.
+
 #Autorun your Pig on GP2X
 
 Let's face it, playing live is a busy affair, and god help you if you have to reboot the gp2x for whatever reason. Luckily the GP2X allows you to drop a simple text file in the SD card root that will automatically boot any program. Here's how to get a piggy running [midi](./dfs_midi_cable.md) to Autorun.

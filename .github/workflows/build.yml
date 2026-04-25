@@ -308,48 +308,6 @@ jobs:
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
-  build-garlic:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Clone and build LGPT
-        run: |
-          ln -s /home/runner/work/LittleGPTracker/LittleGPTracker workspace
-          docker run -d --name rg35xx-container -v "$(pwd)/workspace:/root/workspace" aveferrum/rg35xx-toolchain sleep infinity
-          docker exec rg35xx-container bash -c "
-            apt update && apt install -y python3 python3-pillow
-            cd projects
-            make PLATFORM=GARLIC
-          "
-          sudo chmod -R 777 ./workspace/projects
-          sudo chown -R root:root ./workspace/projects
-
-      - name: Package build
-        working-directory: ./workspace/projects
-        run: |
-          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
-          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
-          unzip lgpt-resources.zip
-          mv lgpt-resources-${TAG}/*/ ./resources/packaging
-          rm -rf lgpt-resources*
-          ./resources/packaging/lgpt_package.sh
-
-      - name: Extract Git tag name
-        id: extract_tag
-        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_REF: ${{ github.ref }}
-
-      - name: Upload build release
-        uses: softprops/action-gh-release@v2.4.2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
-          files: ./workspace/projects/*.zip
-
   build-garlicplus:
     runs-on: ubuntu-latest
 
