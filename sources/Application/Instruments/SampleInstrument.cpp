@@ -1087,31 +1087,63 @@ void SampleInstrument::ProcessCommand(int channel,FourCC cc,ushort value) {
 	if (!source_) return ;
 
 	switch(cc) {
-    case I_CMD_LPOF:
+    case I_CMD_LPOF: {
+        // LPOF (Loop Offset) shifts the loop window (rendLoopStart_,
+        // rendLoopEnd_) within the sample. Two coexisting use cases:
+        //
+        // 1) Wavetable / single-cycle synthesis (SILM_OSC):
+        //    The loop length defines the oscillator's pitch (freq * length /
+        //    driverRate). LPOF is used to scan across stored waveforms or
+        //    modulate timbre (e.g. PWM) WITHOUT changing pitch. We must NOT
+        //    move the playhead here — doing so makes pitch glide as the bounds
+        //    shift mid-cycle, producing unwanted microtonal artifacts.
+        //
+        // 2) Granular stretching (every other mode — loop, ping-pong, loopsync,
+        //    oneshot, sliced or not):
+        //    Advancing the playhead alongside the loop window drags playback
+        //    through the source faster than the note's natural rate, decoupling
+        //    stretch speed from pitch. With short loops + LPOF + HOP in a
+        //    table, this produces timestretch / breakbeat-style scrubbing.
+        //
+        //    In oneshot or slice modes the playhead may cross into territory
+        //    the user didn't anticipate (notes ending early, slices bleeding
+        //    into neighbors). That's intentional — these are useful artifacts,
+        //    not bugs.
+
+        SampleInstrumentLoopMode loopmode =
+            (SampleInstrumentLoopMode)loopMode_->GetInt();
+        bool dragPlayhead = (loopmode != SILM_OSC);
+
         if (value > 0x8000) {
+            // Backward shift (two's complement): 0xFFFF = -1, 0x8001 = -32767
             int shift = (int)(0x10000 - value);
-            if (shift >
-                rp->rendLoopStart_) { // Clamp so to not back out of sample
+            if (shift > rp->rendLoopStart_) { // Don't push start below sample 0
                 shift = rp->rendLoopStart_;
             }
             rp->rendLoopEnd_ -= shift;
             rp->rendLoopStart_ -= shift;
-            rp->position_ -= shift;
-        } else if (value > 0) { // LPOF 0000 is a no-op, this is not that
+            if (dragPlayhead) {
+                rp->position_ -= shift;
+            }
+        } else if (value > 0) { // LPOF 0000 is a no-op
             int sampleSize = source_->GetSize(rp->midiNote_);
             int shift = (int)value;
-            if (rp->rendLoopEnd_ + shift >=
-                sampleSize) { // Clamp so to not play outside sample
+            // Clamp so rendLoopEnd_ doesn't escape the sample. When the window
+            // hits the end, further forward LPOFs become no-ops — the loop is
+            // parked at the boundary until something resets it.
+            if (rp->rendLoopEnd_ + shift >= sampleSize) {
                 shift = sampleSize - rp->rendLoopEnd_;
             }
             if (shift > 0) {
                 rp->rendLoopEnd_ += shift;
                 rp->rendLoopStart_ += shift;
-                rp->position_ += shift;
+                if (dragPlayhead) {
+                    rp->position_ += shift;
+                }
             }
         }
         break;
-
+    }
     case I_CMD_PLOF: {
         if (!source_)
             return;
