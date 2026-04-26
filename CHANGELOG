@@ -20,6 +20,8 @@ Various additions
     Fix audio dying on multithreaded systems (#236)
         * MIDI queue protected by mutex lock on X64
         * Fixes "audio suddenly dies" error
+    Fix regression caused in https://github.com/djdiskmachine/LittleGPTracker/pull/245
+        Fix introduced microtonality for single cycle osc, thank you @INFU-AV <3
 
 1.6.0-bacon11
     Slices decoupled from loop mode

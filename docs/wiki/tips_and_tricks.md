@@ -128,11 +128,14 @@ loops — just chop anything away!
 You can use `LPOF` in a looping table to scroll a short loop window through a sample independently of playback pitch — a form of granular timestretching. Set a short loop on the instrument, then add a table that advances the loop position every tick:
 
 ```
-00 LPOF xxxx ---- ----
-01 HOP  0000 ---- ----
+00 LPOF xyzq 
+01 HOP  0000  
 ```
 
-Each tick, the loop window shifts forward by `xxxx` samples. The note's pitch is still determined by the loop length and oscillator tuning; the *content* of the loop changes as it travels through the sample. This lets you play a sample at a different speed than its pitch — stretching or compressing its duration without affecting the note you hear.
+Each tick, the loop window shifts forward by `xyzq` samples. The note's pitch is still determined by the loop length and note tuning tuning; the *content* of the loop changes as it travels through the sample. This lets you play a sample at a different speed than its pitch — stretching or compressing its duration without affecting the note you hear.
+This technique works in `LOOP`, `LOOP_PINGPONG`, `LOOPSYNC` and`ONESHOT` modes.
+In `OSCILLATOR` mode (wavetable) — `LPOF` only shifts the waveform
+window without advancing playback, preserving pitch stability for timbre scanning using monowave or single-cycle waveforms.
 
 **Sync to BPM (V_sync)**
 
