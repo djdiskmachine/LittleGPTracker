@@ -298,8 +298,9 @@ void ProjectView::Update(Observable &,I_ObservableData *data) {
 			break ;
 		case ACTION_PURGE_INSTRUMENT:
 		{
-			MessageBox *mb=new MessageBox(*this,"Purge unused samples from disk ?",MBBF_YES|MBBF_NO) ;
-			DoModal(mb,PurgeCallback) ;
+            MessageBox *mb = new MessageBox(*this, "Purge unused samples?",
+                                            MBBF_YES | MBBF_NO);
+            DoModal(mb,PurgeCallback) ;
 			break ;
 		}
         case ACTION_SAVE: {
