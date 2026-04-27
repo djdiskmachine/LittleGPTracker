@@ -244,10 +244,7 @@ void Project::Purge() {
  
 void Project::PurgeInstruments(bool removeFromDisk) {
 
-	bool used[MAX_INSTRUMENT_COUNT] ;
-	for (int i=0;i<MAX_INSTRUMENT_COUNT;i++) {
-		used[i]=false ;
-	}
+    bool used[MAX_INSTRUMENT_COUNT] = {false};
 
     unsigned char *data=song_->phrase_->instr_ ;
 
@@ -275,34 +272,33 @@ void Project::PurgeInstruments(bool removeFromDisk) {
 
 		// clear used flag
 
-		bool iUsed[MAX_PIG_SAMPLES] ;
-		for (int i=0;i<MAX_PIG_SAMPLES;i++) {
-			iUsed[i]=false ;
-		}
+        bool used[MAX_PIG_SAMPLES] = {false};
 
-		// flag all samples actually used
+        // flag all samples actually used
 
-		for (int i=0;i<MAX_INSTRUMENT_COUNT;i++) {
-			I_Instrument *instrument=bank->GetInstrument(i) ;
+        for (int i = 0; i < MAX_INSTRUMENT_COUNT; i++) {
+            I_Instrument *instrument=bank->GetInstrument(i) ;
 			if (instrument->GetType()==IT_SAMPLE) {
 				SampleInstrument *si=(SampleInstrument *)instrument ;
 				int index=si->GetSampleIndex() ;
-				if (index>=0) iUsed[index]=true ;
-			};
-		}
+                if (index >= 0)
+                    used[index] = true;
+            };
+        }
 
-		// Now effectively purge all unused sample from disk
+        // Now effectively purge all unused sample from disk
 
-		int purged=0 ;
-		SamplePool *sp=SamplePool::GetInstance() ;
-		for (int i=0;i<MAX_PIG_SAMPLES;i++) {
-			if ((!iUsed[i])&&(sp->GetSource(i-purged))) {
-				sp->PurgeSample(i-purged) ;
-				purged++;
-			} ;
-		} ;
-	}
-} ;
+        int purged = 0;
+        SamplePool *sp = SamplePool::GetInstance();
+        for (int i = 0; i < MAX_PIG_SAMPLES; i++) {
+            if ((!used[i])&&(sp->GetSource(i-purged))) {
+                sp->PurgeSample(i - purged);
+                Trace::Debug("Purged sample [%d]", i - purged);
+        		purged++;
+				}
+        }
+    }
+}
 
 void Project::RestoreContent(TiXmlElement *element) {
 

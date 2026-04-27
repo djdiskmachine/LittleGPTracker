@@ -29,6 +29,12 @@ Since version 1.6.0, you can delete projects directly from the Project Selection
 
 **Pro Tip:** Use Save As to store a duplicate of the project if you're uncertain if you should delete something
 
+## Compact Instruments
+
+Use "Compact Instruments" from the project screen to remove any samples from disk that used in any instruments. A confirmation dialog will appear before anything is deleted.
+
+**Pro Tip:** Run this before sharing your project before sending it over ICQ
+
 # Delays and Echoes
 ## Simulating LSDj's D command
 
