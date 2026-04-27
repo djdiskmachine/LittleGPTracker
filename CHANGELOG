@@ -10,6 +10,10 @@ Various additions
 
     Remove GARLIC build target
         * Use Portmaster-compatible distro instead
+    
+    Find closest instrument
+        * In PhraseView, select the closest instrument from the top
+        * Less often edit the wrong instrument hopefully
 
     Fixes:
     Fixed incorrect interpolation (#248)

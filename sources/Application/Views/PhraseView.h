@@ -65,7 +65,7 @@ class PhraseView : public View {
     UIBigHexVarField *cmdEditField_;
     void printHelpLegend(FourCC command, GUITextProperties props);
     void enterCommandSelector();
-
+    int findClosestInstrumentFor(int);
     struct clipboard {
         bool active_;
         int col_;
