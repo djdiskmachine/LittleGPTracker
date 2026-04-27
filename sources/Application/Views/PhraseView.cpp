@@ -1035,7 +1035,10 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
                     if (*c != 0xFF) {
                         viewData_->currentInstrument_ = *c;
                     } else {
-                        viewData_->currentInstrument_ = lastInstr_;
+                        int nearest = findClosestInstrumentFor(row_);
+                        if (nearest >= 0) {
+                            viewData_->currentInstrument_ = nearest;
+                        } else viewData_->currentInstrument_= lastInstr_;
                     }
                     if (viewData_->currentInstrument_ != 0xFF) {
                         ViewType vt = VT_INSTRUMENT;
@@ -1113,6 +1116,21 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
     }
 };
 
+/*
+ * For currently selected row, find nearest instrument from the top
+ */
+int PhraseView::findClosestInstrumentFor(int row) {
+    unsigned char *instr = phrase_->instr_ + (16 * viewData_->currentPhrase_);
+    if (instr[row] != 0xFF) return instr[row];
+    for (int d = 1; d < 16; ++d) {
+        int up = row - d;
+        int down = row + d;
+        if (up >= 0 && instr[up] != 0xFF) return instr[up];
+        if (down < 16 && instr[down] != 0xFF) return instr[down];
+    }
+    return -1; // none found in phrase
+}
+
 void PhraseView::processSelectionButtonMask(unsigned short mask) {
 
     Player *player = Player::GetInstance();
@@ -1163,7 +1181,10 @@ void PhraseView::processSelectionButtonMask(unsigned short mask) {
                     if (*c != 0xFF) {
                         viewData_->currentInstrument_ = *c;
                     } else {
-                        viewData_->currentInstrument_ = lastInstr_;
+                        int nearest = findClosestInstrumentFor(row_);
+                        if (nearest >= 0) {
+                            viewData_->currentInstrument_ = nearest;
+                        } else viewData_->currentInstrument_= lastInstr_;
                     }
                     ViewType vt = VT_INSTRUMENT;
                     ViewEvent ve(VET_SWITCH_VIEW, &vt);
