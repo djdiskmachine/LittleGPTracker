@@ -152,7 +152,8 @@ void PhraseView::onCommandSelectorResult(ModalView &d) {
 void PhraseView::onCommandSelectorPreview(ModalView &) {
     isDirty_ = true;
     Player *player = Player::GetInstance();
-    if (!player->IsRunning()) {
+    // Don't audition when in playback, allow when browsing around
+    if (!player->IsRunning() || viewData_->playMode_ == PM_AUDITION) {
         player->OnStartButton(PM_AUDITION, viewData_->songX_, false,
                               viewData_->chainRow_);
     }
@@ -194,7 +195,6 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
             break;
         }
         lastCmd_ = *cc;
-        // Set legend
         break;
     case 3:
         switch (direction) {
@@ -275,7 +275,8 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
     }
     Player *player = Player::GetInstance();
     // Phrase FX params are currently not applied to preview
-    if (col_ == 0 || col_ == 1) { // || col_ == 3 || col_ == 5) {
+    if (col_ == 0 || col_ == 1 || col_ == 2 || col_ == 3 || col_ == 4 ||
+        col_ == 5) {
         if (player->IsRunning()) {
             if ((viewData_->playMode_ == PM_AUDITION)) {
                 player->Stop();
@@ -951,7 +952,10 @@ void PhraseView::ProcessButtonMask(unsigned short mask, bool pressed) {
 }
 
 void PhraseView::processNormalButtonMask(unsigned short mask) {
-
+    // Stop audition when pressing any button except A
+    if (!(mask & EPBM_A)) {
+        stopAudition();
+    }
     // B Modifier
 
     Player *player = Player::GetInstance();
@@ -966,7 +970,6 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
         if (mask & EPBM_DOWN)
             warpInChain(1);
         if (mask & EPBM_A) {
-            stopAudition();
             cutPosition();
         }
         if (mask & EPBM_L) {
@@ -974,9 +977,6 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
         };
         if (mask & EPBM_R)
             toggleMute();
-        if (mask & EPBM_B)
-            stopAudition();
-
     } else {
 
         // A Modifer
@@ -1022,14 +1022,12 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
 
             if (mask & EPBM_R) {
                 if (mask & EPBM_LEFT) {
-                    stopAudition();
                     ViewType vt = VT_CHAIN;
                     ViewEvent ve(VET_SWITCH_VIEW, &vt);
                     SetChanged();
                     NotifyObservers(&ve);
                 }
                 if (mask & EPBM_RIGHT) {
-                    stopAudition();
                     unsigned char *c = phrase_->instr_ +
                                        (16 * viewData_->currentPhrase_ + row_);
                     if (*c != 0xFF) {
@@ -1047,7 +1045,6 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
                 if (mask & EPBM_DOWN) {
 
                     // Go to table view
-                    stopAudition();
 
                     ViewType vt = VT_TABLE;
 
@@ -1073,7 +1070,6 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
                 if (mask & EPBM_UP) {
 
                     // Go to groove view
-                    stopAudition();
 
                     ViewType vt = VT_GROOVE;
                     ViewEvent ve(VET_SWITCH_VIEW, &vt);
