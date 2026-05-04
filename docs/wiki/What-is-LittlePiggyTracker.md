@@ -47,7 +47,7 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 **Use 8 or 16 Bit wav files, any sampling frequency, mono or stereo**. 8bit samples are converted to 16bit at load time for compatibility with the engine (you can save space in storage but not in RAM).
 
-**Piggy now supports .sf2 Soundfonts. You must add these by hand to your SAMPLES directory, use PROGRAM CHANGE commands to load different patches. Loop points are automatically loaded, but you'll need to make VOLM setting to adjust decay.**
+**Piggy now supports .sf2 Soundfonts.** You must add these by hand to your SAMPLES directory, use PROGRAM CHANGE commands to load different patches. Loop points are automatically loaded, but you'll need to make VOLM setting to adjust decay. By default, at most 3 are loaded per project; this limit may be increased by recompiling LittleGPTracker with the compiler flag `-DMAXLOADEDBANKS=X`, where `X` is the desired limit.
 
 ## New project
 
