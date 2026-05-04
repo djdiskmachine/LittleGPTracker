@@ -5,6 +5,8 @@
 #include "Externals/Soundfont/ENAB.H"
 #include <vector>
 
+#define MAX_SOUNDFONTS MAXLOADEDBANKS
+
 class SoundFontManager:public T_Singleton<SoundFontManager> {
 public:
 	SoundFontManager() ;
