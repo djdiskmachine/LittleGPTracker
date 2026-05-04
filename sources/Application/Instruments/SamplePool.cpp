@@ -72,15 +72,21 @@ void SamplePool::Load() {
 
 	dir->GetContent("*.sf2") ;
 	IteratorPtr<Path> it2(dir->GetIterator()) ;
+    int sf_idx = 0;
 
-	for(it2->Begin();!it2->IsDone();it2->Next()) {
-		Path &path=it2->CurrentItem() ;
-		loadSoundFont(path.GetPath().c_str()) ;
-	} ;
+    for (it2->Begin(); !it2->IsDone(); it2->Next(), sf_idx++) {
+        Path &path=it2->CurrentItem() ;
+        Trace::Log("Load", "%s", path.GetCanonicalPath().c_str());
+        loadSoundFont(path.GetPath().c_str()) ;
+		if (sf_idx == MAX_SOUNDFONTS) {
+                  Trace::Error("Warning maximum soundfont count reached") ;
+		  break ;
+		} ;
+    };
 
-	delete dir ;
+    delete dir;
 
-	// now sort the samples
+    // now sort the samples
     Sort();
 } ;
 
@@ -323,9 +329,10 @@ bool SamplePool::loadSoundFont(const char *path) {
 			sfPresetHdr current=pHeaders[i] ;
 			wav_[count_]=new SoundFontPreset(id,i) ;
 			const char *name=pHeaders[i].achPresetName ;
-			names_[count_]=(char*)SYS_MALLOC(strlen(name)+1) ;
-			strcpy(names_[count_],name) ;
-			count_++ ;
+            Trace::Log("loadSoundFont", "%s", name);
+            names_[count_] = (char *)SYS_MALLOC(strlen(name) + 1);
+            strcpy(names_[count_], name);
+            count_++;
 		}
 	}
 /*
