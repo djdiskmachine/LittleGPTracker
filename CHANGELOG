@@ -26,6 +26,7 @@ Various additions
     Fix regression caused in https://github.com/djdiskmachine/LittleGPTracker/pull/245
         Fix introduced microtonality for single cycle osc, thank you @INFU-AV <3
     Purge samples actually purges samples [author: maks](https://github.com/xiphonics/picoTracker/pull/313)
+    Clear SoundFonts on SamplePool reset
 
 1.6.0-bacon11
     Slices decoupled from loop mode
