@@ -158,12 +158,14 @@ void ImportSampleDialog::ProcessButtonMask(unsigned short mask,bool pressed) {
 
 		switch(selected_) {
 			case 0: // preview
-				if(!element->IsDirectory()) { // Don't browse preview folders
-					preview(*element);
-				}
-				break ;
-			case 1: // import
-				if(!element->IsDirectory()) { // Don't browse import folders
+                if (!(element->IsDirectory() ||
+                      element->Matches(
+                          "*.sf2"))) { // Don't preview folders or SoundFonts
+                    preview(*element);
+                }
+                break;
+            case 1: // import
+				if(!element->IsDirectory()) { // Don't import folders
 					import(*element);
 				}
 				break ;
@@ -273,9 +275,9 @@ void ImportSampleDialog::setCurrentFolder(Path *path) {
 				}
 			}
 			for (it->Begin();!it->IsDone();it->Next()) {
-				Path &current=it->CurrentItem() ;
-		 		if (!current.IsDirectory()) {
-					if (current.Matches("*.wav") && current.GetName()[0]!='.') {
+                Path &current = it->CurrentItem();
+                if (!current.IsDirectory()) {
+                                  if ((current.Matches("*.wav") || current.Matches("*.sf2")) && current.GetName()[0]!='.') {
 						Path *sample=new Path(current) ;
 						sampleList_.Insert(sample) ;
 					}
