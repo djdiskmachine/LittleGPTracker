@@ -21,7 +21,7 @@ for FILE in $STAGED_FILES; do
   done
 
   # clang-format can cascade into adjacent lines; loop until the file stabilises
-  MAX_ITER=5
+  MAX_ITER=10
   ITER=0
   while [ $ITER -lt $MAX_ITER ]; do
     PREV=$(cksum "$FILE")
