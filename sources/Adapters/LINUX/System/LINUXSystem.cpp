@@ -65,8 +65,9 @@ void LINUXSystem::Boot(int argc,char **argv) {
 
   // Install aliases
 #ifdef __ANDROID__
-	// On Android, we MUST use external storage so users can access files via file manager
-	const char* storagePath = SDL_AndroidGetExternalStoragePath();
+    // On Android, we MUST use external storage so users can access files via
+    // file manager
+    const char* storagePath = SDL_AndroidGetExternalStoragePath();
 	if (storagePath) {
 		Trace::Log("ANDROID", "External storage path: %s", storagePath);
 		Path::SetAlias("bin", storagePath);
@@ -96,17 +97,17 @@ void LINUXSystem::Boot(int argc,char **argv) {
 	Path::SetAlias("root",".") ;
 #endif
 
-  // always use stdout, user can capture in launch script
-  Trace::GetInstance()->SetLogger(*(new StdOutLogger()));
+    // always use stdout, user can capture in launch script
+    Trace::GetInstance()->SetLogger(*(new StdOutLogger()));
 
-  // Process arguments
-  Config::GetInstance()->ProcessArguments(argc,argv) ;
+    // Process arguments
+    Config::GetInstance()->ProcessArguments(argc, argv);
 
-  // Install GUI Factory
-  I_GUIWindowFactory::Install(new GUIFactory()) ;
+    // Install GUI Factory
+    I_GUIWindowFactory::Install(new GUIFactory());
 
-  // Install Timers
-  TimerService::GetInstance()->Install(new SDLTimerService()) ;
+    // Install Timers
+    TimerService::GetInstance()->Install(new SDLTimerService());
 
 #ifdef JACKAUDIO
 	Trace::Log("System","Installing JACK audio") ;

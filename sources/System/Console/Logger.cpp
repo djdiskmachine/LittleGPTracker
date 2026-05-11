@@ -7,7 +7,7 @@
 void StdOutLogger::AddLine(const char *line)
 {
 #ifdef __ANDROID__
-	SDL_Log("%s", line);
+    SDL_Log("%s", line);
 #else
 	std::cout << line << std::endl ;
 #endif

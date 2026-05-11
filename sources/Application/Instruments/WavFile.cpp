@@ -72,16 +72,15 @@ WavFile *WavFile::Open(const char *path) {
 
 	WavFile *wav=new WavFile(file) ;
 
-        
-        // Get data
-        
-/*        file->Seek(0,SEEK_SET) ;
-        file->Read(fileBuffer,filesize,1) ;
-        uchar *ptr=fileBuffer ;*/
-        
-	Trace::Log("WAV", "Loading sample from %s", path);
+    // Get data
 
-	long position=0 ;
+    /*        file->Seek(0,SEEK_SET) ;
+            file->Read(fileBuffer,filesize,1) ;
+            uchar *ptr=fileBuffer ;*/
+
+    Trace::Log("WAV", "Loading sample from %s", path);
+
+    long position=0 ;
 
 	// Read 'RIFF'
 
