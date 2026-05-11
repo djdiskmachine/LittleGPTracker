@@ -21,7 +21,7 @@ public:
 private:
 	sem_t *sem_ ;
 #ifdef __ANDROID__
-	sem_t unnamed_sem_;  // Storage for unnamed semaphore on Android
+    sem_t unnamed_sem_; // Storage for unnamed semaphore on Android
 #endif
 } ;
 #endif

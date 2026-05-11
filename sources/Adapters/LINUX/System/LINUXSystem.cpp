@@ -65,8 +65,9 @@ void LINUXSystem::Boot(int argc, char **argv) {
 
   // Install aliases
 #ifdef __ANDROID__
-	// On Android, we MUST use external storage so users can access files via file manager
-	const char* storagePath = SDL_AndroidGetExternalStoragePath();
+    // On Android, we MUST use external storage so users can access files via
+    // file manager
+    const char* storagePath = SDL_AndroidGetExternalStoragePath();
 	if (storagePath) {
 		Trace::Log("ANDROID", "External storage path: %s", storagePath);
 		Path::SetAlias("bin", storagePath);
