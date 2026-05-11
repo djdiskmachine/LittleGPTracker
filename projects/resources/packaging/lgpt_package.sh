@@ -32,7 +32,9 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
     zip -9 $PACKAGE bin/* && rm -r bin/
   fi
   cd ./resources/packaging 
-  CONTENTS="../../../README.md ../../../CHANGELOG ../../../LICENSE samplelib/ lgpt_BETA/"
+  CONTENTS="../../../README.md ../../../CHANGELOG ../../../LICENSE"
+  CONTENTS+=" $(find . -name "samplelib" -type d)"
+  CONTENTS+=" $(find . -name "lgpt_*" -type d)"
   zip -9 -r ../../$PACKAGE $CONTENTS
   CONTENTS="../../../docs/wiki/What-is-LittlePiggyTracker.md"
   CONTENTS+=" ../../../docs/wiki/config_xml.md"
@@ -50,7 +52,6 @@ collect_resources W32 lgpt-W32.exe
 collect_resources RASPI lgpt.rpi-exe
 collect_resources CHIP lgpt.chip-exe
 collect_resources BITTBOY lgpt-bittboy.elf
-collect_resources GARLIC lgpt-garlic.elf
 collect_resources GARLICPLUS lgpt-garlicplus.elf
 collect_resources RG35XXPLUS lgpt-rg35xxplus.elf
 collect_resources MACOS LittleGPTracker.app

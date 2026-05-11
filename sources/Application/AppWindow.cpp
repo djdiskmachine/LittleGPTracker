@@ -43,6 +43,7 @@ static void ProjectSelectCallback(View &v, ModalView &dialog) {
     SelectProjectDialog &spd = (SelectProjectDialog &)dialog;
     if (dialog.GetReturnCode() > 0) {
         Path selected = spd.GetSelection();
+        instance->SaveLastProject(selected);
         instance->LoadProject(selected.GetPath().c_str());
     } else {
         System::GetInstance()->PostQuitMessage();
@@ -85,6 +86,7 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
     _grooveView = 0;
     _closeProject = 0;
     _loadAfterSaveAsProject = 0;
+    _loadAfterResume = 0;
     _lastA = 0;
     _lastB = 0;
     _mask = 0;
@@ -118,8 +120,23 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
     _currentView = _nullView;
     _nullView->SetDirty(true);
 
+    Config *config = Config::GetInstance(); // Possible to disable autoloading
+    const char *autoLoadEnabled = config->GetValue("AUTO_LOAD_LAST");
+    bool shouldAutoLoad =
+        (!autoLoadEnabled || // Default to yes if not in config
+         strcmp(autoLoadEnabled, "YES") == 0);
+
     SelectProjectDialog *spd = new SelectProjectDialog(*_currentView);
-    _currentView->DoModal(spd, ProjectSelectCallback);
+    Path lastProjectPath = GetLastProjectPath();
+    if (shouldAutoLoad && lastProjectPath.Exists()) {
+        Trace::Log("AppWindow", "Auto-loading last project: %s",
+                   lastProjectPath.GetPath().c_str());
+        _newProjectToLoad = lastProjectPath.GetPath().c_str();
+        _loadAfterResume = true;
+        delete spd;
+    } else { // Show project selection dialog
+        _currentView->DoModal(spd, ProjectSelectCallback);
+    }
 
     memset(_charScreen, ' ', 1200);
     memset(_preScreen, ' ', 1200);
@@ -488,7 +505,7 @@ bool AppWindow::onEvent(GUIEvent &event) {
     if (_loadAfterSaveAsProject) {
         CloseProject();
         _isDirty = true;
-        LoadProject(_newProjectToLoad);
+        LoadProject(_newProjectToLoad.c_str());
     }
 #ifdef _SHOW_GP2X_
     Redraw();
@@ -500,7 +517,12 @@ bool AppWindow::onEvent(GUIEvent &event) {
 };
 
 void AppWindow::onUpdate() {
-    //	Redraw() ;
+    if (_loadAfterResume) {
+        _loadAfterResume = false;
+        _isDirty = true;
+        LoadProject(_newProjectToLoad.c_str());
+        return;
+    }
     Flush();
 };
 
@@ -577,7 +599,7 @@ void AppWindow::Update(Observable &o, I_ObservableData *d) {
     case VET_SAVEAS_PROJECT: {
         char *name = (char *)ve->GetData();
         _loadAfterSaveAsProject = true;
-        strcpy(_newProjectToLoad, name);
+        _newProjectToLoad = name;
         break;
     }
 
@@ -624,3 +646,83 @@ void AppWindow::Print(char *line) {
 };
 
 void AppWindow::SetColor(ColorDefinition cd) { colorIndex_ = cd; };
+
+Path AppWindow::GetLastProjectPath() {
+    Path lastProjectFile(LAST_PROJECT_NAME);
+    FileSystem *fs = FileSystem::GetInstance();
+    I_File *file = fs->Open(lastProjectFile.GetPath().c_str(), "r");
+
+    if (!file) {
+        return Path();
+    }
+
+    // Get file size
+    file->Seek(0, SEEK_END);
+    int length = file->Tell();
+    
+    if (length <= 0) {
+        file->Close();
+        delete file;
+        return Path();
+    }
+
+    // Allocate buffer and seek back to start
+    char *buffer = (char *)SYS_MALLOC(length + 1);
+    memset(buffer, 0, length + 1);
+
+    file->Seek(0, SEEK_SET); // Seek back to start
+    int bytes = file->Read(buffer, 1, length); // Read full length
+    file->Close();
+    delete file;
+
+    if (bytes <= 0) {
+        Trace::Error("GetLastProject: Failed to read last project file");
+        SYS_FREE(buffer);
+        return Path();
+    }
+
+    buffer[bytes] = 0; // Null terminate
+
+    // Remove newline if present
+    int len = strlen(buffer);
+    if (len > 0 && buffer[len-1] == '\n') {
+        buffer[len-1] = 0;
+    }
+
+    Path result;
+    if (strlen(buffer) > 0) {
+        if (strstr(buffer, "lgpt_") != NULL) { // Ensure it's an lgpt project
+            result = Path(buffer);
+        } else {
+            Trace::Error("GetLastProject: Invalid project path format: %s",
+                         buffer);
+        }
+    }
+    if (!result.IsDirectory()) {
+        Trace::Error("GetLastProject: path does not exist: %s", result.GetPath().c_str());
+    }
+
+    SYS_FREE(buffer);
+    return result;
+}
+
+void AppWindow::SaveLastProject(const Path &p) {
+    Path lastProjectFile(LAST_PROJECT_NAME);
+    FileSystem *fs = FileSystem::GetInstance();
+    I_File *file = fs->Open(lastProjectFile.GetPath().c_str(), "w");
+
+    if (!file) {
+        Trace::Error("SaveLastProject: Failed to open %s for writing",
+                     LAST_PROJECT_NAME);
+        return;
+    }
+
+    std::string pathStr = p.GetPath();
+    file->Write(pathStr.c_str(), 1, pathStr.length());
+    file->Write("\n", 1, 1);
+    file->Close();
+    delete file;
+
+    Trace::Log("SaveLastProject", "Saved last project: %s",
+               p.GetPath().c_str());
+}

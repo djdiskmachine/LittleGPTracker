@@ -1051,6 +1051,14 @@
 							RelativePath="..\sources\Application\Views\ModalDialogs\SelectProjectDialog.h"
 							>
 						</File>
+						<File
+							RelativePath="..\sources\Application\Views\ModalDialogs\CommandSelectorModal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\sources\Application\Views\ModalDialogs\CommandSelectorModal.cpp"
+							>
+					</File>
 					</Filter>
 				</Filter>
 				<Filter

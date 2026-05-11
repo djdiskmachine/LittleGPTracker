@@ -14,6 +14,8 @@ class TableView : public View {
     virtual void DrawView();
     virtual void OnPlayerUpdate(PlayerEventType, unsigned int tick = 0);
     virtual void OnFocus();
+    void onCommandSelectorResult(ModalView &d);
+    void onCommandSelectorPreview(ModalView &d);
 
   protected:
     void processNormalButtonMask(unsigned short mask);
@@ -21,6 +23,7 @@ class TableView : public View {
 
     void cutPosition();
     void pasteLast();
+    void interpolateSelection();
     void copySelection();
     void cutSelection();
     void pasteClipboard();
@@ -30,6 +33,9 @@ class TableView : public View {
 
     void updateCursor(int dx, int dy);
     void updateCursorValue(int offset);
+    bool isCommandColumn() const;
+    FourCC *getCurrentCommandPointer();
+    void enterCommandSelector();
     void setTextProps(GUITextProperties &props, int row, int col, bool restore);
     void warpToNeighbour(int dir);
 
@@ -43,6 +49,7 @@ class TableView : public View {
     uchar lastTsp_;
     int lastCmd_;
     int lastParam_;
+    bool commandSelectorModalActive_;
 
     Variable cmdEdit_;
     UIBigHexVarField *cmdEditField_;

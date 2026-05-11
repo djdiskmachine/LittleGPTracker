@@ -31,23 +31,54 @@ static FourCC _all[]= {
 	I_CMD_VOLM
 } ;
 
+int CommandList::GetCount() { return sizeof(_all) / sizeof(FourCC); }
+
+FourCC CommandList::GetAt(int index) {
+	int count = GetCount() ;
+	if (count <= 0) {
+		return I_CMD_NONE ;
+	}
+	while (index < 0) {
+		index += count;
+	}
+	index %= count;
+	return _all[index] ;
+}
+
+int CommandList::IndexOf(FourCC current) {
+	for (int i=0;i<GetCount();i++) {
+		if (_all[i] == current) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 FourCC CommandList::GetNext(FourCC current) {
 	for (uint i=0;i<sizeof(_all)/sizeof(FourCC)-1;i++) {
 		if (_all[i]==current) {
 			return _all[i+1] ;
 		} ;
 	} ;
-	return current ;
+    // Wrap around: if current is last, return first
+    if (_all[sizeof(_all)/sizeof(FourCC)-1] == current) {
+        return _all[0];
+    }
+	return _all[0] ;
 } ;
 
 FourCC CommandList::GetPrev(FourCC current) {
     uint count=sizeof(_all)/sizeof(FourCC) ;
-	for (uint i=2;i<count;i++) {
-		if (_all[i]==current) {
-			return _all[i-1] ;
-		} ;
-	} ;
-	return current ;
+    for (uint i = 1; i < count; i++) {
+        if (_all[i]==current) {
+            return _all[i - 1];
+        } ;
+    };
+    // Wrap around: if current is first, return last
+    if (_all[0] == current) {
+        return _all[count - 1];
+    }
+	return _all[count-1] ;
 } ;
 
 FourCC CommandList::GetNextAlpha(FourCC current) {
@@ -100,3 +131,19 @@ FourCC CommandList::GetPrevAlpha(FourCC current) {
 	} 
 	return current ;
 } ;
+
+FourCC CommandList::GetFirst() { return _all[0]; }
+
+FourCC CommandList::GetLast() {
+	uint count = sizeof(_all)/sizeof(FourCC) ;
+	return _all[count-1] ;
+}
+
+bool CommandList::IsFirst(FourCC current) {
+	return current == _all[0] ;
+}
+
+bool CommandList::IsLast(FourCC current) {
+	uint count = sizeof(_all)/sizeof(FourCC) ;
+	return current == _all[count-1] ;
+}

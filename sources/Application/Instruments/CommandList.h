@@ -40,6 +40,14 @@ public:
 	static FourCC GetNext(FourCC current) ;
 	static FourCC GetPrev(FourCC current) ;
 	static FourCC GetNextAlpha(FourCC current) ;
-	static FourCC GetPrevAlpha(FourCC current) ;};
+    static FourCC GetPrevAlpha(FourCC current);
+    static int GetCount() ;
+	static FourCC GetAt(int index) ;
+	static int IndexOf(FourCC current) ;
+	static FourCC GetFirst() ;
+	static FourCC GetLast() ;
+	static bool IsFirst(FourCC current) ;
+	static bool IsLast(FourCC current) ;
+};
 #endif
 

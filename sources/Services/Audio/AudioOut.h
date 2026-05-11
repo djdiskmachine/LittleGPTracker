@@ -18,12 +18,9 @@ public:
    virtual bool Start()=0 ;
    virtual void Stop()=0 ;
 
-   virtual void SetSoftclip(int clip, int gain) = 0;
    virtual void SetMasterVolume(int volume) = 0;
 
    virtual void Trigger()=0 ;
-
-   virtual bool Clipped()=0 ;
 
    virtual int GetPlayedBufferPercentage()=0 ;
 

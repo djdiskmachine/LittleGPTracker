@@ -199,16 +199,6 @@ You can tweak two different path:
 </CONFIG>
 ```
 
-## Rendering
-
-Additionally to playing the song, LittleGPTracker can be used to render the audio to file. To control file rendering, the variable RENDER can be set to either FILE,FILESPLIT,FILERT,FILESPLITRT. Note that there's a small issue with the speed when using FILE/FILESPLIT so the xxRT seem like the best choice at the moment
-
-```xml
-<CONFIG>
-    <RENDER value='FILERT'/>
-</CONFIG>
-```
-
 ## Volume
 
 This setting is for GP2X and Dingoo only. It is used to set the volume of the hardware at startup. In decimal (base 10).

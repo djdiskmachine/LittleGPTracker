@@ -531,13 +531,12 @@ void Player::Update(Observable &o,I_ObservableData *d) {
 			}
 		}
 
-		// Process commands in current phrase
-	   if (viewData_->playMode_ != PM_AUDITION)
-			ProcessCommands() ;
-		
-	   // Initialise retrigger table
-	   int instrRetrigger[SONG_CHANNEL_COUNT] ;
-	   memset(instrRetrigger,-1,SONG_CHANNEL_COUNT*sizeof(int)) ;
+        // Process commands in current phrase
+        ProcessCommands();
+
+        // Initialise retrigger table
+        int instrRetrigger[SONG_CHANNEL_COUNT];
+        memset(instrRetrigger, -1, SONG_CHANNEL_COUNT * sizeof(int));
 
 		// Process any table commands now
 

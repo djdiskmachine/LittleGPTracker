@@ -1,3 +1,80 @@
+Various additions
+    FX Command Box selector (#238)
+        * In phrase and table views a selection box appears when editing FX commands
+        * Navigate in all directions using D-PAD
+        * Displays help legend and previews FX during playback
+
+    Preview notes by pressing A (#237)
+        * Press A on any step in phrase view to audition the note
+
+    Remove GARLIC build target
+        * Use Portmaster-compatible distro instead
+    
+    Find closest instrument
+        * In PhraseView, select the closest instrument from the top
+        * Less often edit the wrong instrument hopefully
+
+    Fixes:
+    Fixed incorrect interpolation (#248)
+        * Fixed not getting correct interpolation results between row 1 and 16
+    Don't audition note when song is playing (#247)
+    Reset chain offset when switching to SongView (#239)
+        * Prevents accidentally triggering playback with chain offset when returning to song screen
+    Fix audio dying on multithreaded systems (#236)
+        * MIDI queue protected by mutex lock on X64
+        * Fixes "audio suddenly dies" error
+    Fix regression caused in https://github.com/djdiskmachine/LittleGPTracker/pull/245
+        Fix introduced microtonality for single cycle osc, thank you @INFU-AV <3
+    Purge samples actually purges samples [author: maks](https://github.com/xiphonics/picoTracker/pull/313)
+
+1.6.0-bacon11
+    Slices decoupled from loop mode
+        * Slices are no longer a loop mode — they are now an independent parameter
+        * Set slices > 1 to enable slicing; loop mode (none/loop/ping pong/etc.) applies within each slice
+        * Enables looped slices, e.g. for amen breaks and other timed loops
+        * Old projects with "slicer" loop mode load correctly: slices count is preserved, loop mode resets to "none"
+
+1.6.0-bacon10
+    Allow greater granular stretching using LPOF
+    Documentation in tips and tricks
+
+1.6.0-bacon6
+    Delete project from SelectProjectDialog
+        * Press A + B on a project in the project selection screen to delete it
+        * A confirmation dialog will appear asking to confirm deletion
+        * The entire project directory and all contents will be removed
+        * List position is preserved after deletion
+
+1.6.0-bacon5
+    Auto-load last project on startup
+        * Application can now load the last project automatically on startup
+        * Disable by setting AUTO_LOAD_LAST=NO in config.xml
+    
+1.6.0-bacon4
+    QWERTY keyboard name entry for new projects
+    * Press A on the project name field to enter QWERTY keyboard mode
+    * Navigate the on-screen keyboard with D-PAD/arrows
+    * Press A to input the selected character
+    * Press B to backspace
+    * Press L/R to move the text cursor left/right
+    * Press START or select OK to exit keyboard mode
+    * All keyboard navigation logic extracted to reusable KeyboardLayout.h utility
+
+1.6.0-bacon2
+    ProjectView Render item
+        When in project view, it's now possible to initiate rendering
+    Interpolate values in tables and phrases
+        R + B on single-column selection will fill values from lowest to highest
+
+    Contributions:
+    drbscl
+        Add 64 bit soundfont support (#211)
+
+    Fixes:
+    Add 64 bit soundfont support (#211)
+    Skip randomly generated project name if a directory with that name already exists (#175)
+    Save Song As" saves to current as well as new project (#212) 
+
 1.5.0-bacon3
     Contributions:
     purelygrey
@@ -15,9 +92,9 @@
         * instrumentation by clsource
 
     simotek
-        Add color options for Border Play and Mute (#143)    
+        Add color options for Border Play and Mute (#143)
         * Adds different color for the > play and _ mute indicators
-        Fix rg35xx mapping (#139)            
+        Fix rg35xx mapping (#139)
         * rshoulder and lshoulder were the wrong way
 
     kompadre
@@ -40,7 +117,7 @@
     Nudge functionality (#130)
     * In Project view, select tempo and hold B+LEFT/RIGHT to nudge slower/faster
     * In Song view, pressing LT+LEFT/RIGHT will do the same
-    
+
     Printable fx in InstrumentView (#155)
     * Uses ffmpeg to print reverb to currently selected sample
     * New sample with fx is created and assigned to the current instrument
@@ -53,7 +130,6 @@
         Update to github actions checkout@v4.1.7 (#136)
 
     Fixes:
-    Fix audio randomly dying (#194)
     Long sample names causing crashes in InstrumentView (#189)
     Sample names that start with the same characters get mixed up InstrumentView (#199)
     Bug in chainview: column warping (#134)
@@ -63,7 +139,7 @@
     Set songview b jumping length to 16 rows in correspondence with LSDJ and M8
     Scales no longer affect instrument numbers ([djdiskmachine/LittleGPTracker#172](https://github.com/djdiskmachine/LittleGPTracker/issues/172))
     Bug in Variable:SetString [djdiskmachine/LittleGPTracker#169](https://github.com/djdiskmachine/LittleGPTracker/issues/169)
-    
+
     Issue in deep clone (#135)
     Was possible to accidentally deep clone position into another position
 
@@ -71,7 +147,6 @@
     Restore 32bit linux config
 
     Crash when nudging below 0 BPM (shoutout @merumerutho) https://github.com/djdiskmachine/LittleGPTracker/issues/127
-    Fixed Garlic docker being outdated (#194)
 
 
 1.4.2
@@ -108,27 +183,27 @@
     Fixes:
         RG35XX no longer segfaults on boot
         USB MIDI disabled due to missing OS dependencies
-        
+
 1.4.0
     Adds:
         Automated build for bittboy, Win32, PSP, Miyoo, Deb32, RG35XX
         Shoutout to xquader for the initial RG35XX port (https://boosty.to/xquader)
         License changed from CC-BY-SA-NC to GPL-3
 
-    * MVEL cmd    
+    * MVEL cmd
         Set step velocity for MIDI instruments
         https://github.com/democloid/picoTracker/pull/163
-        
+
         Author: @maks@fluttercommunity.social
         Co-authored-by: djdiskmachine <djdiskmachine@proton.me>
 
     * Config option to set major beat color in phrase screen
 
         Author: koisignal <koitokakitsubata@gmail.com>
-        
+
     * Deep clone
         Clones selected chain and the phrases within
-        
+
         Author: koisignal <koitokakitsubata@gmail.com>
         Co-authored-by: djdiskmachine <djdiskmachine@proton.me>
 
@@ -190,29 +265,29 @@
 
 1.3o-beta-1
     Pingpong loop now stable
-        Courtesy of djdiskmachine 
+        Courtesy of djdiskmachine
 
     Add ability to change font
     USAGE: ./mkfont.py FONT_BMP [OUTPUT_FILE]
     FONT_BMP must be a black/white (#000000, #FFFFFF) 128x64px bmp
     if OUTPUT_FILE is omitted, will print to stdout
-        Courtesy of subnixr 
+        Courtesy of subnixr
 
     Adds Miyoo mini build
         Courtesy of Nine-H
 
     Changes filter attenuation to attenuation
-    Adjust volume post scream filter 
+    Adjust volume post scream filter
     https://github.com/Mdashdotdashn/LittleGPTracker/issues/22
 
     Missing wiki content dumped to repo
-        Courtesy of Peter Swimm 
+        Courtesy of Peter Swimm
 
 1.3o-alpha-5
     Adds native SteamOS build
     Adds Bittboy/RS97/RG350 builds
         Merge of Gameblaba, CalebCDE and RafaVicos work
-        Shoutouts!    
+        Shoutouts!
 1.3o-alpha-4
     Adds Save As menu item - save a copy of your project with a new name
         Courtesy of yoyz (https://github.com/yoyz), biggup!

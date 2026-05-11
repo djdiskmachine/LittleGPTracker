@@ -1,3 +1,40 @@
+# Project Naming with QWERTY Keyboard
+
+Since version 1.6.0, you can use an on-screen QWERTY keyboard when creating new projects:
+
+**Quick Tips:**
+- Press A on the project name to enter keyboard mode
+- The keyboard cursor will jump to the character under your text cursor unless it's a space
+- Use L/R shoulder buttons to move through your project name
+- Erase with B and exit with Start
+
+**Keyboard Layout:**
+The on-screen keyboard is organized like this:
+- Numbers
+- Uppercase (A-Q + extra characters)
+- Lowercase (a-q + extra characters)
+- Special [Space] [Erase] [Done]
+
+# Project Management
+
+## Safely Deleting Projects
+
+Since version 1.6.0, you can delete projects directly from the Project Selection screen by pressing `A+B`. This is a convenient way to clean up old or unwanted projects.
+
+**Best Practices:**
+- **Always back up important projects** before deleting. Use your operating system's file manager to copy project directories to an external drive or backup location.
+- The deletion will remove the entire project directory permanently - this cannot be undone!
+- A confirmation dialog will appear showing the project name before deletion proceeds, giving you a chance to cancel if you selected the wrong project.
+- After deletion, the project list will refresh automatically and the cursor will stay near its previous position for your convenience.
+
+**Pro Tip:** Use Save As to store a duplicate of the project if you're uncertain if you should delete something
+
+## Compact Instruments
+
+Use "Compact Instruments" from the project screen to remove any samples from disk that used in any instruments. A confirmation dialog will appear before anything is deleted.
+
+**Pro Tip:** Run this before sharing your project before sending it over ICQ
+
 # Delays and Echoes
 ## Simulating LSDj's D command
 
@@ -83,12 +120,58 @@ Here's a nice example, courtesy of jonbro, chopping drums he had recorded previo
 
 [Jonbro - the thing is the thing](https://battleofthebits.com/arena/Entry/the+thing+is+the+thing/1479/)
 
-### Slice! (new chopping method)
-Since version 1.3o there is a new loop mode called Slice
-Using this, you can assign up to 256 individual slices from C-2 (C minus two) up to the amount of slices you set. How handy!
+### Slices (sample chopping)
+Set the **slices** parameter in the instrument to divide a sample into equal parts,
+mapped chromatically from C-2 (the lowest note, not C2) upward. The **loop mode** parameter then applies
+independently within each slice — set it to "loop" or "ping pong" to get looped
+slices, great for amen breaks and timed loops. Set to Oscillator for very grainy rhythmic noises
 
-Of course, you are not limited to drum loops. Just chop anything away !
-The example project BETA uses Slice mode to chop up a dank AF sample by Basscarrier
+You can assign up to 256 individual slices. Of course, you are not limited to drum
+loops — just chop anything away!
+
+### Granular timestretching with LPOF
+
+You can use `LPOF` in a looping table to scroll a short loop window through a sample independently of playback pitch — a form of granular timestretching. Set a short loop on the instrument, then add a table that advances the loop position every tick:
+
+```
+00 LPOF xyzq 
+01 HOP  0000  
+```
+
+Each tick, the loop window shifts forward by `xyzq` samples. The note's pitch is still determined by the loop length and note tuning tuning; the *content* of the loop changes as it travels through the sample. This lets you play a sample at a different speed than its pitch — stretching or compressing its duration without affecting the note you hear.
+This technique works in `LOOP`, `LOOP_PINGPONG`, `LOOPSYNC` and`ONESHOT` modes.
+In `OSCILLATOR` mode (wavetable) — `LPOF` only shifts the waveform
+window without advancing playback, preserving pitch stability for timbre scanning using monowave or single-cycle waveforms.
+
+**Sync to BPM (V_sync)**
+
+To advance the window in lock-step with the song tempo, you want the total shift per beat to equal the sample length. With 6 ticks per row (default), the per-tick shift is:
+
+```
+V_sync = (fileSampleRate × 10) / BPM
+```
+
+This gives the `LPOF` value (in decimal; convert to hex to enter it) that moves the window in sync with your BPM.
+
+**Reference table — V_sync values**
+
+| BPM | 44100 Hz | 22050 Hz | 11025 Hz | 8000 Hz |
+|-----|----------|----------|----------|---------|
+| 90  | `1388` (5000) | `09C4` (2500) | `04E2` (1250) | `038E` (910) |
+| 160 | `0AC4` (2756) | `0562` (1378) | `02B1` (689)  | `01F4` (500) |
+| 175 | `09D8` (2520) | `04EC` (1260) | `0276` (630)  | `01C7` (455) |
+
+To stretch to *half speed* (two bars to traverse), halve the V_sync value. To double speed, double it.
+
+**Speeding up vs. slowing down**
+
+- **Speeding up** (forward `LPOF` values `0001`–`7FFF`): The window travels through the sample faster than realtime. Once it reaches the end it clamps there — no artefacts.
+- **Slowing down**: Use a smaller V_sync value. The loop replays more cycles of each grain, effectively stretching time. Works best with long source samples.
+- **Backward scrolling**: Values `8001`–`FFFF` shift the loop window backward (two's complement: `FFFF` = −1, `FF00` = −256, etc.).
+
+**Amen break example (160 BPM, 44100 Hz)**
+
+The classic Amen break is ~136 BPM. To play it in sync at 160 BPM, use `LPOF 0CB4` (3252 samples/tick). The window advances ~18% faster than its natural rate, stretching it up to 160 BPM without retuning the sample.
 
 #Autorun your Pig on GP2X
 

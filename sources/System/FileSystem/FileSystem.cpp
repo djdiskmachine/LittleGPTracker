@@ -76,9 +76,8 @@ std::string Path::GetCanonicalPath() {
 Path Path::Descend(const std::string& leaf)
 {
   std::string currentPath = GetPath();
-  if (currentPath[currentPath.size()-1] != '/')
-  {
-    currentPath += "/";
+  if (!currentPath.empty() && currentPath[currentPath.size() - 1] != '/') {
+      currentPath += "/";
   }
   return Path(currentPath+leaf);
 }
@@ -215,4 +214,20 @@ int FileSystemService::Copy(const Path &src,const Path &dst)
   isrc->Close();
   idst->Close();
   return nbwrite;
+}
+
+int FileSystemService::Delete(const Path &path) {
+    int result = -1;
+    std::string pathString = path.GetPath();
+    FileSystem * fs = FileSystem::GetInstance();
+
+    if (fs->GetFileType(pathString.c_str()) != FT_UNKNOWN) {
+		fs->Delete(pathString.c_str());
+        result += 1;
+		Trace::Log("FileSystemService"," Delete %s ", pathString.c_str());
+    } else {
+        Trace::Log("FS Delete","path does not exist: %s", pathString.c_str());
+    }
+
+    return result;
 }

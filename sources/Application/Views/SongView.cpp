@@ -1,5 +1,7 @@
 #include "SongView.h"
 #include "Application/Commands/ApplicationCommandDispatcher.h"
+#include "Application/Mixer/MixerService.h"
+#include "Application/Model/ProjectDatas.h"
 #include "Application/Player/Player.h"
 #include "Application/Utils/char.h"
 #include "System/Console/Trace.h"
@@ -477,6 +479,8 @@ void SongView::switchSoloMode() {
 };
 
 void SongView::onStart() {
+    // Always play with zero offset in chains when in SongView
+    viewData_->chainRow_ = 0;
     Player *player = Player::GetInstance();
     unsigned char from = viewData_->songX_;
     unsigned char to = from;
@@ -484,6 +488,14 @@ void SongView::onStart() {
         GUIRect r = getSelectionRect();
         from = r.Left();
         to = r.Right();
+    }
+    int renderMode = viewData_->renderMode_;
+    if (renderMode > 0 && !player->IsRunning()) {
+        viewData_->isRendering_ = true;
+        View::SetNotification("Rendering started!");
+    } else if (viewData_->isRendering_ && player->IsRunning()) {
+        viewData_->isRendering_ = false;
+        View::SetNotification("Rendering done!");
     }
     player->OnSongStartButton(from, to, false, false);
 };
@@ -503,6 +515,8 @@ void SongView::startImmediate() {
 }
 
 void SongView::onStop() {
+    // Always play with zero offset in chains when in SongView
+    viewData_->chainRow_ = 0;
     Player *player = Player::GetInstance();
     unsigned char from = viewData_->songX_;
     unsigned char to = from;
@@ -511,6 +525,7 @@ void SongView::onStop() {
         from = r.Left();
         to = r.Right();
     }
+
     player->OnSongStartButton(from, to, true, false);
 };
 
@@ -769,9 +784,6 @@ void SongView::processNormalButtonMask(unsigned int mask) {
                         updateCursor(1, 0);
 
                     if (mask & EPBM_START) {
-                        // Always play with zero offset in chains when in
-                        // songview
-                        viewData_->chainRow_ = 0;
                         onStart();
                     }
                 }

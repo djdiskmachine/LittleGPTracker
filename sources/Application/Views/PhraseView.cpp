@@ -4,12 +4,22 @@
 #include "Application/Model/Table.h"
 #include "Application/Utils/HelpLegend.h"
 #include "Application/Utils/char.h"
+#include "Application/Views/CommandSelectorCommon.h"
+#include "Application/Views/ModalDialogs/CommandSelectorModal.h"
 #include "System/Console/Trace.h"
 #include "UIController.h"
 #include <stdlib.h>
 #include <string.h>
 
 short PhraseView::offsets_[2][4] = {-1, 1, 12, -12, -1, 1, 16, -16};
+
+static void CommandSelectorCallback(View &v, ModalView &d) {
+    ((PhraseView &)v).onCommandSelectorResult(d);
+}
+
+static void CommandSelectorPreviewCallback(View &v, ModalView &d) {
+    ((PhraseView &)v).onCommandSelectorPreview(d);
+}
 
 PhraseView::PhraseView(GUIWindow &w, ViewData *viewData)
     : View(w, viewData), cmdEdit_("edit", FCC_EDIT, 0) {
@@ -25,6 +35,7 @@ PhraseView::PhraseView(GUIWindow &w, ViewData *viewData)
     lastInstr_ = 0;
     lastCmd_ = I_CMD_NONE;
     lastParam_ = 0;
+    commandSelectorModalActive_ = false;
 
     clipboard_.active_ = false;
     clipboard_.width_ = 0;
@@ -110,6 +121,44 @@ void PhraseView::stopAudition() {
         player->Stop();
 }
 
+bool PhraseView::isCommandColumn() const { return col_ == 2 || col_ == 4; }
+
+FourCC *PhraseView::getCurrentCommandPointer() {
+    return CommandSelectorCommon::getCommandPointerByCol(
+        col_, 2, phrase_->cmd1_ + (16 * viewData_->currentPhrase_ + row_), 4,
+        phrase_->cmd2_ + (16 * viewData_->currentPhrase_ + row_));
+}
+
+void PhraseView::enterCommandSelector() {
+    FourCC *cmdPtr = getCurrentCommandPointer();
+    if (!cmdPtr) return;
+    commandSelectorModalActive_ = true;
+    DoModal(new CommandSelectorModal(*this, cmdPtr, CommandSelectorPreviewCallback),
+            CommandSelectorCallback);
+}
+
+void PhraseView::onCommandSelectorResult(ModalView &d) {
+    commandSelectorModalActive_ = false;
+    CommandSelectorModal &modal = (CommandSelectorModal &)d;
+    if (modal.GetReturnCode() == 1) {
+        FourCC *cmd = getCurrentCommandPointer();
+        if (cmd) {
+            lastCmd_ = *cmd;
+        }
+    }
+    isDirty_ = true;
+}
+
+void PhraseView::onCommandSelectorPreview(ModalView &) {
+    isDirty_ = true;
+    Player *player = Player::GetInstance();
+    // Don't audition when in playback, allow when browsing around
+    if (!player->IsRunning() || viewData_->playMode_ == PM_AUDITION) {
+        player->OnStartButton(PM_AUDITION, viewData_->songX_, false,
+                              viewData_->chainRow_);
+    }
+}
+
 void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
                                    int yOffset) {
 
@@ -146,7 +195,6 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
             break;
         }
         lastCmd_ = *cc;
-        // Set legend
         break;
     case 3:
         switch (direction) {
@@ -227,7 +275,8 @@ void PhraseView::updateCursorValue(ViewUpdateDirection direction, int xOffset,
     }
     Player *player = Player::GetInstance();
     // Phrase FX params are currently not applied to preview
-    if (col_ == 0 || col_ == 1) { // || col_ == 3 || col_ == 5) {
+    if (col_ == 0 || col_ == 1 || col_ == 2 || col_ == 3 || col_ == 4 ||
+        col_ == 5) {
         if (player->IsRunning()) {
             if ((viewData_->playMode_ == PM_AUDITION)) {
                 player->Stop();
@@ -505,6 +554,72 @@ void PhraseView::extendSelection() {
         isDirty_ = true;
     }
 }
+
+/******************************************************
+ interpolateSelection:
+        expands the lowest value of selection to the highest
+ ******************************************************/
+void PhraseView::interpolateSelection() {
+    if (!clipboard_.active_) {
+        return;
+    }
+
+    GUIRect rect = getSelectionRect();
+    // Only interpolate if we're in note (0) or param (3, 5) columns
+    int col = rect.Left();
+    if (col != rect.Right() || (col != 0 && col != 3 && col != 5)) {
+        return;
+    }
+
+    int startRow = rect.Top();
+    int endRow = rect.Bottom();
+    // Need at least 2 rows to interpolate
+    if (endRow - startRow < 1) {
+        return;
+    }
+
+    // Select the appropriate data array based on column
+    if (col == 0) {
+        // Note column
+        uchar *noteData = phrase_->note_ + (16 * viewData_->currentPhrase_);
+
+        uchar startNote = noteData[startRow];
+        uchar endNote = noteData[endRow];
+
+        if (startNote == 0xFF || endNote == 0xFF) {
+            View::SetNotification("No note info");
+            return;
+        }
+
+        int numSteps = endRow - startRow;
+        int noteDiff = (int)endNote - (int)startNote;
+
+        for (int step = 0; step <= numSteps; step++) {
+            int row = startRow + step;
+            int value = startNote + (noteDiff * step) / (numSteps);
+            noteData[row] = (uchar)value;
+        }
+    } else {
+        // Parameter columns (3 or 5)
+        ushort *paramData = (col == 3) ? 
+            phrase_->param1_ + (16 * viewData_->currentPhrase_) :
+            phrase_->param2_ + (16 * viewData_->currentPhrase_);
+
+        ushort startParam = paramData[startRow];
+        ushort endParam = paramData[endRow];
+
+        int numSteps = endRow - startRow;
+        int paramDiff = (int)endParam - (int)startParam;
+
+        for (int step = 0; step <= numSteps; step++) {
+            int row = startRow + step;
+            int value = startParam + (paramDiff * step) / (numSteps);
+            paramData[row] = (ushort)value;
+        }
+    }
+    isDirty_ = true;
+}
+
 /******************************************************
  copySelection:
         copies data in the current selection to the
@@ -837,7 +952,10 @@ void PhraseView::ProcessButtonMask(unsigned short mask, bool pressed) {
 }
 
 void PhraseView::processNormalButtonMask(unsigned short mask) {
-
+    // Stop audition when pressing any button except A
+    if (!(mask & EPBM_A)) {
+        stopAudition();
+    }
     // B Modifier
 
     Player *player = Player::GetInstance();
@@ -852,7 +970,6 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
         if (mask & EPBM_DOWN)
             warpInChain(1);
         if (mask & EPBM_A) {
-            stopAudition();
             cutPosition();
         }
         if (mask & EPBM_L) {
@@ -860,18 +977,31 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
         };
         if (mask & EPBM_R)
             toggleMute();
-        if (mask & EPBM_B)
-            stopAudition();
-
     } else {
 
         // A Modifer
 
         if (mask & EPBM_A) {
-            if (mask & EPBM_DOWN)
-                updateCursorValue(VUD_DOWN);
-            if (mask & EPBM_UP)
-                updateCursorValue(VUD_UP);
+            if ((col_ == 0) || (col_ == 1)) { // Preview when pressing A
+                Player *player = Player::GetInstance();
+                if (!player->IsRunning()) {
+                    player->OnStartButton(PM_AUDITION, viewData_->songX_, false,
+                                          viewData_->chainRow_);
+                }
+            }
+
+            if (mask & EPBM_DOWN) {
+                if (isCommandColumn())
+                    enterCommandSelector();
+                else
+                    updateCursorValue(VUD_DOWN);
+            }
+            if (mask & EPBM_UP) {
+                if (isCommandColumn())
+                    enterCommandSelector();
+                else
+                    updateCursorValue(VUD_UP);
+            }
             if (mask & EPBM_LEFT)
                 updateCursorValue(VUD_LEFT);
             if (mask & EPBM_RIGHT)
@@ -892,20 +1022,21 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
 
             if (mask & EPBM_R) {
                 if (mask & EPBM_LEFT) {
-                    stopAudition();
                     ViewType vt = VT_CHAIN;
                     ViewEvent ve(VET_SWITCH_VIEW, &vt);
                     SetChanged();
                     NotifyObservers(&ve);
                 }
                 if (mask & EPBM_RIGHT) {
-                    stopAudition();
                     unsigned char *c = phrase_->instr_ +
                                        (16 * viewData_->currentPhrase_ + row_);
                     if (*c != 0xFF) {
                         viewData_->currentInstrument_ = *c;
                     } else {
-                        viewData_->currentInstrument_ = lastInstr_;
+                        int nearest = findClosestInstrumentFor(row_);
+                        if (nearest >= 0) {
+                            viewData_->currentInstrument_ = nearest;
+                        } else viewData_->currentInstrument_= lastInstr_;
                     }
                     if (viewData_->currentInstrument_ != 0xFF) {
                         ViewType vt = VT_INSTRUMENT;
@@ -917,7 +1048,6 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
                 if (mask & EPBM_DOWN) {
 
                     // Go to table view
-                    stopAudition();
 
                     ViewType vt = VT_TABLE;
 
@@ -943,7 +1073,6 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
                 if (mask & EPBM_UP) {
 
                     // Go to groove view
-                    stopAudition();
 
                     ViewType vt = VT_GROOVE;
                     ViewEvent ve(VET_SWITCH_VIEW, &vt);
@@ -983,6 +1112,21 @@ void PhraseView::processNormalButtonMask(unsigned short mask) {
     }
 };
 
+/*
+ * For currently selected row, find nearest instrument from the top
+ */
+int PhraseView::findClosestInstrumentFor(int row) {
+    unsigned char *instr = phrase_->instr_ + (16 * viewData_->currentPhrase_);
+    if (instr[row] != 0xFF) return instr[row];
+    for (int d = 1; d < 16; ++d) {
+        int up = row - d;
+        int down = row + d;
+        if (up >= 0 && instr[up] != 0xFF) return instr[up];
+        if (down < 16 && instr[down] != 0xFF) return instr[down];
+    }
+    return -1; // none found in phrase
+}
+
 void PhraseView::processSelectionButtonMask(unsigned short mask) {
 
     Player *player = Player::GetInstance();
@@ -992,6 +1136,8 @@ void PhraseView::processSelectionButtonMask(unsigned short mask) {
     if (mask & EPBM_B) {
         if (mask & EPBM_L) {
             extendSelection();
+        } else if (mask & EPBM_R) {
+            interpolateSelection();
         } else {
             copySelection();
         }
@@ -1031,7 +1177,10 @@ void PhraseView::processSelectionButtonMask(unsigned short mask) {
                     if (*c != 0xFF) {
                         viewData_->currentInstrument_ = *c;
                     } else {
-                        viewData_->currentInstrument_ = lastInstr_;
+                        int nearest = findClosestInstrumentFor(row_);
+                        if (nearest >= 0) {
+                            viewData_->currentInstrument_ = nearest;
+                        } else viewData_->currentInstrument_= lastInstr_;
                     }
                     ViewType vt = VT_INSTRUMENT;
                     ViewEvent ve(VET_SWITCH_VIEW, &vt);
@@ -1210,7 +1359,7 @@ void PhraseView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 2, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 2 || col_ == 3)) {
+        if (j == row_ && col_ == 2) {
             printHelpLegend(command, props);
         }
     }
@@ -1257,7 +1406,7 @@ void PhraseView::DrawView() {
         DrawString(pos._x, pos._y, buffer, props);
         setTextProps(props, 4, j, true);
         pos._y++;
-        if (j == row_ && (col_ == 4 || col_ == 5)) {
+        if (j == row_ && col_ == 4) {
             printHelpLegend(command, props);
         }
     }
@@ -1302,17 +1451,20 @@ void PhraseView::DrawView() {
 
 void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
+    GUITextProperties props;
     drawNotes();
 
     GUIPoint anchor = GetAnchor();
     GUIPoint pos = anchor;
     pos._x -= 1;
 
-    GUITextProperties props;
     SetColor(CD_NORMAL);
 
     pos._y = anchor._y + lastPlayingPos_;
-    DrawString(pos._x, pos._y, " ", props);
+    if (!commandSelectorModalActive_ ||
+        !CommandSelectorCommon::popupContainsPoint(anchor, pos._x, pos._y)) {
+        DrawString(pos._x, pos._y, " ", props);
+    }
 
     Player *player = Player::GetInstance();
 
@@ -1322,17 +1474,20 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
 
         for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
             if (player->IsChannelPlaying(i)) {
-
                 if (viewData_->currentPlayPhrase_[i] ==
                         viewData_->currentPhrase_ &&
                     viewData_->playMode_ != PM_AUDITION) {
                     pos._y = anchor._y + viewData_->phrasePlayPos_[i];
-                    if (!player->IsChannelMuted(i)) {
-                        SetColor(CD_PLAY);
-                        DrawString(pos._x, pos._y, ">", props);
-                    } else {
-                        SetColor(CD_MUTE);
-                        DrawString(pos._x, pos._y, "-", props);
+                    if (!commandSelectorModalActive_ ||
+                        !CommandSelectorCommon::popupContainsPoint(
+                            anchor, pos._x, pos._y)) {
+                        if (!player->IsChannelMuted(i)) {
+                            SetColor(CD_PLAY);
+                            DrawString(pos._x, pos._y, ">", props);
+                        } else {
+                            SetColor(CD_MUTE);
+                            DrawString(pos._x, pos._y, "-", props);
+                        }
                     }
                     SetColor(CD_NORMAL);
                     lastPlayingPos_ = viewData_->phrasePlayPos_[i];
@@ -1342,9 +1497,7 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
         }
 
         // clear any live indicator
-
         pos._y = anchor._y;
-        DrawString(pos._x, pos._y, " ", props);
 
         // Loop on all channels to see if one has queued current chain
         if (player->GetSequencerMode() == SM_LIVE) {
@@ -1358,7 +1511,11 @@ void PhraseView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
                         viewData_->song_->data_ + i + 8 * songPos;
                     if (*chain == viewData_->currentChain_) {
                         char *indicator = player->GetLiveIndicator(i);
-                        DrawString(pos._x, pos._y, indicator, props);
+                        if (!commandSelectorModalActive_ ||
+                            !CommandSelectorCommon::popupContainsPoint(
+                                anchor, pos._x, pos._y)) {
+                            DrawString(pos._x, pos._y, indicator, props);
+                        }
                         break;
                     }
                 }

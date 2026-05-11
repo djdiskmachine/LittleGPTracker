@@ -8,7 +8,8 @@ DEFINES := \
 	-DHAVE_STDINT_H \
 	-D_NDEBUG \
 	-D__LINUX_ALSA__ \
-	-D_NO_JACK_
+	-D_NO_JACK_ \
+	-DFFMPEG_ENABLED
 
 DEVKIT=/opt/arm-buildroot-linux-musleabi_sdk-buildroot
 CROSS_COMPILE=$(DEVKIT)/bin/arm-buildroot-linux-musleabi-

@@ -146,6 +146,7 @@
 		73F8437916FF66480061161B /* MidiEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437316FF66480061161B /* MidiEvent.cpp */; };
 		73F8437A16FF66480061161B /* MidiInMerger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437516FF66480061161B /* MidiInMerger.cpp */; };
 		73F8437E16FF666A0061161B /* RTMidiInDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73F8437C16FF666A0061161B /* RTMidiInDevice.cpp */; };
+		7F3A46532F9BF9BE0051C795 /* CommandSelectorModal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F3A46522F9BF9BE0051C795 /* CommandSelectorModal.cpp */; };
 		7F4C76E42CC62DD200C03703 /* FxPrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F4C76E32CC62DD200C03703 /* FxPrinter.cpp */; };
 		7FBF05162C932165009B5828 /* FontConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FBF05142C932165009B5828 /* FontConfig.cpp */; };
 		87CA0E830F7E0FC4001D6BD0 /* PlayerChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87CA0E7F0F7E0FC4001D6BD0 /* PlayerChannel.cpp */; };
@@ -478,6 +479,8 @@
 		73F8437716FF66480061161B /* MidiMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MidiMessage.h; path = ../../LittleGPTracker/sources/Services/Midi/MidiMessage.h; sourceTree = SOURCE_ROOT; };
 		73F8437C16FF666A0061161B /* RTMidiInDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RTMidiInDevice.cpp; path = ../../LittleGPTracker/sources/Adapters/RTMidi/RTMidiInDevice.cpp; sourceTree = SOURCE_ROOT; };
 		73F8437D16FF666A0061161B /* RTMidiInDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RTMidiInDevice.h; path = ../../LittleGPTracker/sources/Adapters/RTMidi/RTMidiInDevice.h; sourceTree = SOURCE_ROOT; };
+		7F3A46512F9BF9BE0051C795 /* CommandSelectorModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommandSelectorModal.h; path = ../Views/ModalDialogs/CommandSelectorModal.h; sourceTree = "<group>"; };
+		7F3A46522F9BF9BE0051C795 /* CommandSelectorModal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandSelectorModal.cpp; path = ../Views/ModalDialogs/CommandSelectorModal.cpp; sourceTree = "<group>"; };
 		7F4C76E22CC62DD200C03703 /* FxPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FxPrinter.h; sourceTree = "<group>"; };
 		7F4C76E32CC62DD200C03703 /* FxPrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FxPrinter.cpp; sourceTree = "<group>"; };
 		7FBF05142C932165009B5828 /* FontConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontConfig.cpp; sourceTree = "<group>"; };
@@ -833,6 +836,8 @@
 		737D11CD0BCE66F000099CB3 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				7F3A46522F9BF9BE0051C795 /* CommandSelectorModal.cpp */,
+				7F3A46512F9BF9BE0051C795 /* CommandSelectorModal.h */,
 				87CA0E9D0F7E110D001D6BD0 /* MixerView.cpp */,
 				87CA0E9E0F7E110D001D6BD0 /* MixerView.h */,
 				73A4F1160DAB74B1006B1114 /* NullView.cpp */,
@@ -1616,6 +1621,7 @@
 				73F8437816FF66480061161B /* MidiChannel.cpp in Sources */,
 				73F8437916FF66480061161B /* MidiEvent.cpp in Sources */,
 				73F8437A16FF66480061161B /* MidiInMerger.cpp in Sources */,
+				7F3A46532F9BF9BE0051C795 /* CommandSelectorModal.cpp in Sources */,
 				73F8437E16FF666A0061161B /* RTMidiInDevice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

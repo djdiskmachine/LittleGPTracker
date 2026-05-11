@@ -7,12 +7,12 @@
 PersistencyService::PersistencyService():Service(MAKE_FOURCC('S','V','P','S')) {
 } ;
 
-void PersistencyService::Save() {
+void PersistencyService::Save(const char *name) {
 
-	Path filename("project:lgptsav.dat") ;
+    Path filename(name);
 
-	TiXmlDocument doc(filename.GetPath()) ;
-	TiXmlElement first("LITTLEGPTRACKER") ;
+    TiXmlDocument doc(filename.GetPath());
+    TiXmlElement first("LITTLEGPTRACKER") ;
 	TiXmlNode *node=doc.InsertEndChild(first) ;
 
 	// Loop on all registered service
@@ -25,7 +25,7 @@ void PersistencyService::Save() {
 	} ;
 
 	doc.SaveFile() ;
-} ;
+};
 
 bool PersistencyService::Load() {
 

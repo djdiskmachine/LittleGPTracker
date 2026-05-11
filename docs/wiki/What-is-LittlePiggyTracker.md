@@ -51,17 +51,37 @@ After that you can copy additional wavs to the lgptRoot/lgptProject/samples dire
 
 ## New project
 
-When creating a new project, use the regen button to generate a random name. Generate a new name with Regen or edit it manually selecting characters with A and pressing up/down
+When creating a new project, you have several options for naming:
+
+**Random Name Generation:**
+- Select the "Random" button and press A to generate a random name
+
+**QWERTY Keyboard Entry:**
+- Move to the name field and press A to enter QWERTY keyboard mode
+- An on-screen keyboard will appear with these controls:
+  - **D-PAD/Arrows:** Navigate the keyboard
+  - **A:** Input the selected character
+  - **B:** Backspace (delete character)
+  - **L/R:** Move the text cursor left/right within your project name
+  - **START or OK key:** Exit keyboard mode and return to the dialog
+- The keyboard includes:
+  - Numbers (0-9)
+  - Uppercase and lowercase letters (A-Z, a-z)
+  - Special characters (@ | - _ < > ? ,)
+  - Space bar, backspace, and OK (done) buttons on the bottom row
 
 ## Multiple Projects
 
-The Piggy supports multiple projects! Just create multiple directories in the root folder (where lgptNew and lgpt10k were found). Examples: “lgptProject1”, “lgpt*Author*Name”, “lgptSomethingElse”, “lgptWhatever”, etc. Each project directory must contain its own samples which must be stored in a sub-directory called “samples”. Lgpt will prompt you to choose one of the projects found in the root (lgpt- directories) when starting up.
+The Piggy supports multiple projects! Just create multiple directories in the root folder (where lgptNew and lgpt10k were found). Examples: "lgptProject1", "lgpt*Author*Name", "lgptSomethingElse", "lgptWhatever", etc. Each project directory must contain its own samples which must be stored in a sub-directory called "samples".
+
+By default, Lgpt will automatically load the last project that was open on the previous session. If you prefer to see the project selection screen on startup, you can disable this behavior by setting `AUTO_LOAD_LAST=NO` in your `config.xml`.
+
 Important Points to Remember:
 
 - Project directories **must** start with “lgpt”.
 - Project directories **must** go in the root folder.
 - You can reuse a previously made lgptsav.dat file.
-- Lgpt will list all the projects available on startup.
+- Lgpt will list all the projects available on startup if autoloading is disabled in config.xml
 - The lgptsav.dat file is created automatically the project's folder using the piggy's save function (see Controls & Moves). You should not create tah file manually.
 - Save often :)
 
@@ -117,6 +137,7 @@ Note: CTRL Key mappings of RT and LT are inverted. Since the keyboard's Arrow Ke
   - B+LEFT/RIGHT: Next/Previous Channel in Chain/Phrase Screen. Navigation +/- 1 in Instrument/Table Screen. Switch between Song and Live Modes in Song Screen.
 - RT+ARROWS: Navigate between the Screens.
 - LT+UP/DOWN: Jump up/down to next populated row after a blank row (great for live mode entire row queuing!)
+- RT+B: in chains or tables, a single-column selection will fill values from lowest to highest
 
 ## Selections
 
@@ -135,6 +156,14 @@ once a selection is started you can do a few more things:
 And then:
 
 - LT+A: paste the clipboard content at current location
+
+- RT+B: in chains or tables, a single-column selection will fill values from lowest to highest
+
+00  01      00  01
+01  --  =>  01  02
+02  --      02  03
+03  04      03  04
+
 
 ## Playback Modes and Controls
 
@@ -362,7 +391,7 @@ In oscillator modes, under 0x80 the feedback of specified length is added to the
   - pingpong will start at "start" and bounce the loop between loop start and loop end.
   - oscillator is a special mode where the loop selection (from loop start to loop end) is taken as oscillator data and automatically tuned. Experiment with different settings, do not forget 'root note' is your friend to tune the oscillator back in a useful range
   - looper sync will automatically tune a loop so that it plays exactly 16 bars. Use the root note to play twice faster/slower
-  - slicer will cut the sample into "slices" amount of samples, mapped from C-2 (the lowest possible note) up to amount of slices. Example: slices == 4 will give you four slices mapped to C-2, C#-2, D-2, D#-2
+- **slices:** divides the sample into equal slices, mapped chromatically from C-2 upward. Set to 1 to disable. Example: slices == 4 gives four slices on C-2, C#-2, D-2, D#-2. When slices > 1, the active loop mode applies within each slice — use "loop" for looped slices, "none" for one-shot.
 - **start:** start point of the sample regardless of if loop is enabled; in hex
 - **loop Start:** start point of the sample when loop is enabled; in hex
 - **loop End:** end point of the sample; in hex. You can play samples backwards by setting the end value lower than the start!
@@ -581,20 +610,11 @@ RTRG 0101: does not do anything because after looping one tick, you move forward
 # Rendering
 
 Some people exploit the analog gap between their device's headphone output and whatever they are recording with. Alternately, you can start piggy in rendering mode so it will output 16bit, 44100Hz .WAV files.
-Please note that RENDER mode is not intended to be functional on the GP2X Builds.
-The following values can set for RENDER in the config.xml:
+The following values can set for RENDER in the project view
 
-- Standard mode: audio is played; no render.
-- FILE: File rendering: Full speed (no audio) rendering of the stereo mixdown.
-- FILESPLIT: File split rendering: Full speed (no audio) rendering of each channel separately.
-- FILERT: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
-- FILESPLITRT: Real Time file split: same except all channels are rendered separately.
-
-Here is an example of the proper XML syntax: (See [The config.xml setup guide](../LittlePiggyTrackerConf.md))
-
-```xml
-<RENDER value = "FILERT" />
-```
+- Off: audio is played; no render.
+- Stereo: Real Time file rendering: Renders the mixdown to file WHILE playing audio. This allow to render live mode tweaks directly.
+- Stems: Real Time file split: same except all channels are rendered separately.
 
 Remember, any of the config.xml parameters can be specified to lgpt on the command line in this fashion:
 

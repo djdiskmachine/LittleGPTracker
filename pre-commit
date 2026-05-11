@@ -10,26 +10,39 @@ NEEDS_FORMATTING=0
 
 # Run clang-format on the changed lines of each staged file
 for FILE in $STAGED_FILES; do
-  # Get the changed lines in the file
-  CHANGED_LINES=$(git diff --cached -U0 -- $FILE | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+  echo Formatting "$FILE" ...
+  # Format the originally staged changed lines
+  CHANGED_LINES=$(git diff --cached -U0 -- "$FILE" | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
 
-  # Format each changed line in the file
   for LINE in $CHANGED_LINES; do
-    LINE_START=$(echo $LINE | cut -d'+' -f2)
-    if [ -z "$LINE_START" ]; then
-      continue
-    fi
-    clang-format -i --lines=$LINE_START:$LINE_START $FILE
+    LINE_START=$(echo "$LINE" | cut -d'+' -f2)
+    [ -z "$LINE_START" ] && continue
+    clang-format -i --lines="$LINE_START:$LINE_START" "$FILE"
   done
 
-  if ! git diff --quiet $FILE; then
+  # clang-format can cascade into adjacent lines; loop until the file stabilises
+  MAX_ITER=5
+  ITER=0
+  while [ $ITER -lt $MAX_ITER ]; do
+    PREV=$(cksum "$FILE")
+    NEW_LINES=$(git diff -U0 -- "$FILE" | grep -E '^@@' | awk '{print $3}' | cut -d',' -f1)
+    for LINE in $NEW_LINES; do
+      LINE_START=$(echo "$LINE" | cut -d'+' -f2)
+      [ -z "$LINE_START" ] && continue
+      clang-format -i --lines="$LINE_START:$LINE_START" "$FILE"
+    done
+    [ "$(cksum "$FILE")" = "$PREV" ] && break
+    ITER=$((ITER + 1))
+  done
+
+  if ! git diff --quiet "$FILE"; then
     NEEDS_FORMATTING=1
-    echo $FILE
+    echo "$FILE"
   fi
 done
 
 if [ $NEEDS_FORMATTING -eq 1 ]; then
-  echo "The above files were formatted. Please review and stage the changes before committing."
+  echo "The above files were auto-formatted. Please review and commit again."
   exit 1
 fi
 

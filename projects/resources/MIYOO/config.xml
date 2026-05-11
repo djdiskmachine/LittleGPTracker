@@ -4,6 +4,7 @@ create folders for your tracks and samples on the
 root of your sd card.
 -->
 <CONFIG>
+	<AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
     <ROOTFOLDER value="/mnt/SDCARD/Tracks"/>
     <SAMPLELIB value="/mnt/SDCARD/Samples"/>
     <!-- uncomment to dump events to stdout -->

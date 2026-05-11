@@ -206,10 +206,10 @@ typedef struct sfSampleHdrTag
 {
 
   CHAR          achSampleName[SAMPLENAMESIZE];
-  DWORD         dwStart;          // Sample addresses
-  DWORD         dwEnd;
-  DWORD         dwStartloop;
-  DWORD         dwEndloop;
+  ADDR dwStart; // Sample addresses
+  ADDR dwEnd;
+  ADDR dwStartloop;
+  ADDR dwEndloop;
   DWORD         dwSampleRate;     // In Hz, IE 44100, 22050, etc
   BYTE          byOriginalKey;    // MIDI Key, 0 to 127
   CHAR          chFineCorrection; // Tuning correction in cents

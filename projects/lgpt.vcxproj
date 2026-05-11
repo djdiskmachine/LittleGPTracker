@@ -440,6 +440,7 @@
     <ClInclude Include="..\sources\Application\utils\fixed.h" />
     <ClInclude Include="..\sources\Application\utils\HexBuffers.h" />
     <ClInclude Include="..\sources\Application\utils\RandomNames.h" />
+    <ClInclude Include="..\sources\Application\utils\KeyboardLayout.h" />
     <ClInclude Include="..\sources\Application\Player\FileEngine.h" />
     <ClInclude Include="..\sources\Application\Player\Player.h" />
     <ClInclude Include="..\sources\Application\Player\PlayerChannel.h" />
