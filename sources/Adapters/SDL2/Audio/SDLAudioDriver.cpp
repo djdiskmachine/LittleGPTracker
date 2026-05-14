@@ -10,7 +10,8 @@ void sdl_callback(void *userdata, Uint8 *stream, int len) {
 };
 
 SDLAudioDriverThread::SDLAudioDriverThread(SDLAudioDriver *driver) {
-    semaphore_ = SysSemaphore::Create(0, 4);
+    // Uncap the semaphore to prevent dropped requests during long OS stalls.
+    semaphore_=SysSemaphore::Create(0,1024);
     driver_ = driver;
 };
 
@@ -62,6 +63,9 @@ bool SDLAudioDriver::InitDriver() {
     input.samples = settings_.bufferSize_;
     input.userdata = this;
 
+    SDL_SetHint(SDL_HINT_APP_NAME, "LittleGPTracker");
+    SDL_SetHint(SDL_HINT_AUDIO_DEVICE_APP_NAME, "LittleGPTracker");
+
     // On my machine this wasn't working.
     // SDL_AudioDeviceID deviceId =
     // SDL_OpenAudioDevice(NULL,0,&input,&returned,0); The above may return 0
@@ -83,8 +87,8 @@ bool SDLAudioDriver::InitDriver() {
     mainBuffer_ = (char *)((((int)unalignedMain_) + 1) & (0xFFFFFFFC));
 #endif
 
-    Trace::Log("AUDIO", "%s successfully opened with %d samples", driverName,
-               fragSize_ / 4);
+    Trace::Log("AUDIO", "%s successfully opened with %d samples %d", driverName,
+               fragSize_ / 4, returned.freq);
 
     // Create mini blank buffer in case of underruns
 
@@ -153,22 +157,27 @@ void SDLAudioDriver::OnChunkDone(Uint8 *stream, int len) {
     while (bufferSize_ - bufferPos_ < len) {
 
         // First move remaining bytes at the front
-        memcpy(mainBuffer_, mainBuffer_ + bufferPos_, bufferSize_ - bufferPos_);
+        memmove(mainBuffer_, mainBuffer_ + bufferPos_,
+                bufferSize_ - bufferPos_);
 
         // then get next queued buffer and copy data from it
 
         if (pool_[poolPlayPosition_].buffer_ == 0) {
-            SYS_MEMCPY(mainBuffer_ + bufferSize_ - bufferPos_, miniBlank_, len);
-            bufferSize_ = bufferSize_ - bufferPos_ + len;
-
+            // Use fragSize_ instead of len! miniBlank_ is only allocated to
+            // fragSize_. Using len causes a buffer over-read if SDL requests a
+            // larger chunk.
+            SYS_MEMCPY(mainBuffer_+bufferSize_-bufferPos_, miniBlank_, fragSize_);
+            bufferSize_=bufferSize_-bufferPos_+fragSize_ ;
             bufferPos_ = 0;
+            // Wake the thread on underrun to prevent the pool from permanently
+            // drying up
+            if (thread_) thread_->Notify() ;
         } else {
 
             memcpy(mainBuffer_ + bufferSize_ - bufferPos_,
                    pool_[poolPlayPosition_].buffer_,
                    pool_[poolPlayPosition_].size_);
 
-            MidiService::GetInstance()->Flush();
             // Adapt buffer variables
 
             bufferSize_ =
@@ -181,6 +190,12 @@ void SDLAudioDriver::OnChunkDone(Uint8 *stream, int len) {
             poolPlayPosition_ = (poolPlayPosition_ + 1) % SOUND_BUFFER_COUNT;
             if (thread_)
                 thread_->Notify();
+            // Tick the engine and flush MIDI ONLY when a real logical block is
+            // processed! This keeps the sequencer perfectly in sync with the
+            // audio pool consumption, and prevents runaway MIDI generation on
+            // underruns which fills the ALSA buffer and freezes the thread.
+            onAudioBufferTick();
+            MidiService::GetInstance()->Flush() ;
         }
     }
     // Now dump audio to the device
