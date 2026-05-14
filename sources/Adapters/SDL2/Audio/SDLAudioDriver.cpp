@@ -63,8 +63,8 @@ bool SDLAudioDriver::InitDriver() {
     input.samples = settings_.bufferSize_;
     input.userdata = this;
 
-    SDL_SetHint(SDL_HINT_APP_NAME, "LittleGPTracker");
-    SDL_SetHint(SDL_HINT_AUDIO_DEVICE_APP_NAME, "LittleGPTracker");
+    SDL_SetHint("APP_NAME", "LittleGPTracker");
+    SDL_SetHint("AUDIO_DEVICE_APP_NAME", "LittleGPTracker");
 
     // On my machine this wasn't working.
     // SDL_AudioDeviceID deviceId =
