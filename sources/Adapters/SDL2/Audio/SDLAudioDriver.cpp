@@ -169,9 +169,6 @@ void SDLAudioDriver::OnChunkDone(Uint8 *stream, int len) {
             SYS_MEMCPY(mainBuffer_+bufferSize_-bufferPos_, miniBlank_, fragSize_);
             bufferSize_=bufferSize_-bufferPos_+fragSize_ ;
             bufferPos_ = 0;
-            // Wake the thread on underrun to prevent the pool from permanently
-            // drying up
-            if (thread_) thread_->Notify() ;
         } else {
 
             memcpy(mainBuffer_ + bufferSize_ - bufferPos_,
