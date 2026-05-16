@@ -1,3 +1,6 @@
+1.6.0-bacon15
+    Finally solve "Audio randomly dies" issue
+
 Various additions
     FX Command Box selector (#238)
         * In phrase and table views a selection box appears when editing FX commands
