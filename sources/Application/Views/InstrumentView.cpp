@@ -12,6 +12,10 @@
 #include "ModalDialogs/MessageBox.h"
 #include "System/System/System.h"
 
+void ImportSampleDialogCallback(View &v, ModalView &dialog) {
+    ((InstrumentView &)v).OnFocus();
+}
+
 InstrumentView::InstrumentView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 
 	project_=data->project_ ;
@@ -299,9 +303,9 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
 						// Go to import sample
 
 						 ImportSampleDialog *isd=new ImportSampleDialog(*this) ;
-						 DoModal(isd) ;
-					}
-					break ;
+                         DoModal(isd, ImportSampleDialogCallback);
+                     }
+                    break ;
 				 }
 				case SIP_TABLE:
 				 {
