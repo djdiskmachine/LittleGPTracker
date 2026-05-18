@@ -56,6 +56,6 @@ collect_resources BITTBOY lgpt-bittboy.elf
 collect_resources GARLICPLUS lgpt-garlicplus.elf
 collect_resources RG35XXPLUS lgpt-rg35xxplus.elf
 collect_resources MACOS LittleGPTracker.app
-collect_resources ANDROID LittleGPTracker.apk
+collect_resources ANDROID LittlePiggyTracker.apk
 # collect_resources RS97 lgpt.dge
 # collect_resources STEAM lgpt.steam-exe
