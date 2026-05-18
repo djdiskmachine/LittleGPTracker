@@ -436,6 +436,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Android SDK and NDK
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+          sdkmanager "ndk;27.2.12479018"
+
       - name: Build Android APK
         working-directory: android
         run: ./gradlew assembleDebug
