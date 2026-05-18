@@ -426,3 +426,34 @@ jobs:
           name: LGPT-${{ github.job }}-${{ github.sha }}.zip
           path: projects/*.zip
           if-no-files-found: error
+
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.7
+        with:
+          submodules: recursive
+
+      - name: Build Android APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          TAG=$(curl -s https://api.github.com/repos/djdiskmachine/lgpt-resources/releases/latest | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-${TAG}/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          mv ../android/app/build/outputs/apk/debug/app-debug.apk ./LittlePiggyTracker.apk
+          ./resources/packaging/lgpt_package.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LGPT-${{ github.job }}-${{ github.sha }}.zip
+          path: projects/*.zip
+          if-no-files-found: error
