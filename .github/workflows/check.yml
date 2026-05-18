@@ -439,8 +439,8 @@ jobs:
       - name: Setup Android SDK and NDK
         run: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "ndk;27.2.12479018"
-          echo "ndk.dir=$ANDROID_SDK_ROOT/ndk/27.2.12479018" >> android/local.properties
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "ndk;27.0.12077973"
+          echo "ndk.dir=$ANDROID_SDK_ROOT/ndk/27.0.12077973" >> android/local.properties
 
       - name: Build Android APK
         working-directory: android
