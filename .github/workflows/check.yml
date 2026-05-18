@@ -436,8 +436,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Android SDK and NDK
+      - name: Setup build environment
         run: |
+          sudo apt update
+          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "ndk;27.0.12077973"
           echo "ndk.dir=$ANDROID_SDK_ROOT/ndk/27.0.12077973" >> android/local.properties
