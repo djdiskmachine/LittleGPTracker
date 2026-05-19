@@ -526,6 +526,8 @@ void SDLGUIWindowImp::ProcessExpose()
 {
     // Expose and resize events will cause a new surface to be needed.
     surface_ = SDL_GetWindowSurface(window_);
+    _window->ForceFullRedraw(); // surface re-acquired: force full bitmap+char
+                                // redraw
     _window->Update() ;
 }
 

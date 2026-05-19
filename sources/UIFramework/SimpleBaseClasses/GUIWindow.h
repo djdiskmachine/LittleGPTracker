@@ -42,6 +42,8 @@ public:	// I_GUIGraphics implementation
 	virtual void Lock() ;
 	virtual void Unlock() ;
 	virtual void Update() ;
+    virtual void SetDirty() {};
+    virtual void ForceFullRedraw() {} ;
 	virtual void onUpdate()=0 ;
 //	virtual void Save() ;
 //	virtual void Restore() ;

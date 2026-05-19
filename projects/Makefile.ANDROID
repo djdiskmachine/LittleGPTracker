@@ -88,6 +88,10 @@ LIBS := -lSDL2 \
 	-landroid \
 	-lOpenSLES
 
+# Android-specific JNI extras
+ANDROIDJNIDIRS := ../sources/System/Android
+ANDROIDJNIFILES := AndroidJNI.o
+
 # Output configuration
 OUTPUT := ../libmain_$(ABI)
 EXTENSION := so

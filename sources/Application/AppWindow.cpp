@@ -445,6 +445,14 @@ AppWindow *AppWindow::Create(GUICreateWindowParams &params) {
 
 void AppWindow::SetDirty() { _isDirty = true; };
 
+void AppWindow::ForceFullRedraw() {
+    // Invalidate screen cache so Flush() redraws every character cell,
+    // not just changed ones. Needed after surface re-acquisition on resume.
+    memset(_preScreen, 0xFF, 1200);
+    memset(_preScreenProp, 0xFF, 1200);
+    _isDirty = true;
+};
+
 bool AppWindow::onEvent(GUIEvent &event) {
 
     // We need to tell the app to quit once we're out of the
@@ -522,6 +530,10 @@ void AppWindow::onUpdate() {
         _isDirty = true;
         LoadProject(_newProjectToLoad.c_str());
         return;
+    }
+    if (_isDirty) {
+        _isDirty = false;
+        Redraw();
     }
     Flush();
 };
