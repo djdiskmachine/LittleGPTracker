@@ -14,6 +14,11 @@ void SoundFontManager::Reset() {
 		SAFE_FREE(*it) ;
 		it=sampleData_.erase(it) ;
 	} ;
+
+        // Unload all SoundFonts
+        sfBankID i;
+        for(i = 0; i < MAX_SOUNDFONTS; i++)
+          sfUnloadSFBank(i);
 } ;
 
 sfBankID SoundFontManager::LoadBank(const char *path) {

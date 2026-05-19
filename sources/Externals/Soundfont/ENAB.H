@@ -91,7 +91,9 @@
 // the extent of the internal implementation, (array) of info nodes, one per
 // loaded banks. Need more than the default? Change this and you got 'em.
 
+#ifndef MAXLOADEDBANKS
 # define MAXLOADEDBANKS 3
+#endif
 
 // This is the type of a sfBankID, -1 is an error condition.
 typedef SHORT sfBankID; 
