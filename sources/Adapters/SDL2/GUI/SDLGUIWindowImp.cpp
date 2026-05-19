@@ -13,7 +13,7 @@
 SDLGUIWindowImp *instance_ ;
 
 unsigned short appWidth=320 ;
-unsigned short appHeight=240 ;
+unsigned short appHeight = 240;
 
 SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p) 
 {
@@ -37,7 +37,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   if (displayModeRet < 0) {
     Trace::Error("DISPLAY","No display mode found.  Error Code: %d.", displayModeRet);
   }
-    
+      
   NAssert(displayModeRet >= 0);
  
  #if defined(PLATFORM_PSP)
@@ -48,6 +48,13 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 320; 
   int screenHeight = 240;
   windowed_ = false;
+ #elif defined(__ANDROID__)
+  // Use full screen dimensions on Android
+  int screenWidth = displayMode.w;
+  int screenHeight = displayMode.h;
+  windowed_ = false;
+  
+  SDL_Log("DISPLAY: Android - using full display: %dx%d", screenWidth, screenHeight);
  #else
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
@@ -79,8 +86,8 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   }
  
   #ifdef PLATFORM_PSP
-  	mult_ = 1;
-  #else
+  mult_ = 1;
+#else
 	int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
 	const char *mult=Config::GetInstance()->GetValue("SCREENMULT") ;
 	if (mult)
@@ -519,6 +526,8 @@ void SDLGUIWindowImp::ProcessExpose()
 {
     // Expose and resize events will cause a new surface to be needed.
     surface_ = SDL_GetWindowSurface(window_);
+    _window->ForceFullRedraw(); // surface re-acquired: force full bitmap+char
+                                // redraw
     _window->Update() ;
 }
 

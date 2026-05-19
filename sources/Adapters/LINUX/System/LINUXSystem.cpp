@@ -64,6 +64,25 @@ void LINUXSystem::Boot(int argc,char **argv) {
 	FileSystem::Install(new UnixFileSystem());
 
   // Install aliases
+#ifdef __ANDROID__
+    // On Android, we MUST use external storage so users can access files via
+    // file manager
+    const char* storagePath = SDL_AndroidGetExternalStoragePath();
+	if (storagePath) {
+		Trace::Log("ANDROID", "External storage path: %s", storagePath);
+		Path::SetAlias("bin", storagePath);
+		Path::SetAlias("root", storagePath);
+	} else {
+		Trace::Error("Failed to get Android external storage - app won't be able to access files!");
+		// Still set internal storage as last resort, but warn user
+		storagePath = SDL_AndroidGetInternalStoragePath();
+		if (storagePath) {
+			Trace::Error("Using internal storage (not accessible via file manager): %s", storagePath);
+			Path::SetAlias("bin", storagePath);
+			Path::SetAlias("root", storagePath);
+		}
+	}
+#else
 	char buff[1024];
 	ssize_t len = ::readlink("/proc/self/exe",buff,sizeof(buff)-1);
 	if (len != -1)
@@ -76,18 +95,19 @@ void LINUXSystem::Boot(int argc,char **argv) {
 	}
 	Path::SetAlias("bin",dirname(buff)) ;
 	Path::SetAlias("root",".") ;
+#endif
 
-  // always use stdout, user can capture in launch script
-  Trace::GetInstance()->SetLogger(*(new StdOutLogger()));
+    // always use stdout, user can capture in launch script
+    Trace::GetInstance()->SetLogger(*(new StdOutLogger()));
 
-  // Process arguments
-  Config::GetInstance()->ProcessArguments(argc,argv) ;
+    // Process arguments
+    Config::GetInstance()->ProcessArguments(argc, argv);
 
-  // Install GUI Factory
-  I_GUIWindowFactory::Install(new GUIFactory()) ;
+    // Install GUI Factory
+    I_GUIWindowFactory::Install(new GUIFactory());
 
-  // Install Timers
-  TimerService::GetInstance()->Install(new SDLTimerService()) ;
+    // Install Timers
+    TimerService::GetInstance()->Install(new SDLTimerService());
 
 #ifdef JACKAUDIO
 	Trace::Log("System","Installing JACK audio") ;
