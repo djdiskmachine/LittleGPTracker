@@ -37,7 +37,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   if (displayModeRet < 0) {
     Trace::Error("DISPLAY","No display mode found.  Error Code: %d.", displayModeRet);
   }
-      
+
   NAssert(displayModeRet >= 0);
  
  #if defined(PLATFORM_PSP)
@@ -48,25 +48,25 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 320; 
   int screenHeight = 240;
   windowed_ = false;
- #elif defined(__ANDROID__)
+#elif defined(__ANDROID__)
   // Use full screen dimensions on Android
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
   windowed_ = false;
   
   SDL_Log("DISPLAY: Android - using full display: %dx%d", screenWidth, screenHeight);
- #else
+#else
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
- #endif
- 
- #if defined(RS97)
+#endif
+
+#if defined(RS97)
   /* Pick the best bitdepth for the RS97 as it will select 32 as its default, even though that's slow */
   bitDepth_ = 16;
- #else
+#else
   bitDepth_ = SDL_BITSPERPIXEL(displayMode.format);
- #endif
-  
+#endif
+
   const char * driverName = SDL_GetVideoDriver(0);
   
   Trace::Log("DISPLAY","Using driver %s. Screen (%d,%d) Bpp:%d",driverName,screenWidth,screenHeight,bitDepth_);
