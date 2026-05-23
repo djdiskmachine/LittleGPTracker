@@ -53,7 +53,6 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
   windowed_ = false;
-  
   SDL_Log("DISPLAY: Android - using full display: %dx%d", screenWidth, screenHeight);
 #else
   int screenWidth = displayMode.w;
