@@ -16,6 +16,10 @@
 #include <SDL/SDL.h>
 #endif
 
+#define VU_METER_HEIGHT 8
+#define VU_METER_CLIP_LEVEL 7
+#define VU_METER_WARN_LEVEL 5
+
 enum GUIEventPadButtonMasks {
     EPBM_LEFT = 1,
     EPBM_DOWN = 2,
@@ -100,6 +104,7 @@ class View : public Observable {
     virtual void DrawView() = 0;
     virtual void OnPlayerUpdate(PlayerEventType, unsigned int currentTick) = 0;
     virtual void OnFocus() = 0;
+    virtual void AnimationUpdate() {}
 
     void SetDirty(bool dirty);
 
@@ -145,6 +150,9 @@ class View : public Observable {
 
     void drawMap();
     void drawNotes();
+    void drawVUMeter(uint8_t leftBars, uint8_t rightBars, GUIPoint pos,
+                     GUITextProperties props, int vuIndex,
+                     bool forceRedraw = false);
 
   public: // temp hack for modl windo constructors
     GUIWindow &w_;
@@ -155,6 +163,8 @@ class View : public Observable {
     bool isDirty_; // .Do we need to redraw screeen
     ViewType viewType_;
     bool hasFocus_;
+    uint8_t prevLeftVU_[9]; // inertia tracking for VU (0-8 channels + master)
+    uint8_t prevRightVU_[9];
 
   private:
     unsigned short mask_;

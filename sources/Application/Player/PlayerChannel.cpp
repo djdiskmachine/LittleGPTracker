@@ -1,8 +1,10 @@
 
 #include "PlayerChannel.h"
-#include "Application/Player/SyncMaster.h"
 #include "Application/Mixer/MixerService.h"
 #include "Application/Model/Mixer.h"
+#include "Application/Player/SyncMaster.h"
+#include "Application/Utils/fixed.h"
+#include <math.h>
 
 PlayerChannel::PlayerChannel(int index) {             
     index_=index ;
@@ -10,6 +12,12 @@ PlayerChannel::PlayerChannel(int index) {
     muted_=false ;
 	mixBus_=0 ;
 	busIndex_=-1 ;
+    volume_ = i2fp(1);
+    hpfPrevInput_[0] = hpfPrevInput_[1] = i2fp(0);
+    hpfPrevOutput_[0] = hpfPrevOutput_[1] = i2fp(0);
+    hpfAlpha_ = i2fp(0);
+    hpfMode_ = 0;
+    peakLevel_ = i2fp(0);
 }
 
 PlayerChannel::~PlayerChannel() {
@@ -37,9 +45,49 @@ bool PlayerChannel::Render(fixed *buffer,int samplecount) {
    if (instr_) {
      bool tableSlice=SyncMaster::GetInstance()->TableSlice() ;
      bool status=instr_->Render(index_,buffer,samplecount,tableSlice) ;
-     return ((status)&&(!muted_)) ;
+     if (status && !muted_) {
+         // Apply HPF if enabled
+         if (hpfMode_ != 0) {
+             for (int n = 0; n < samplecount; n++) {
+                 int idx = n * 2;
+                 fixed in_l = buffer[idx];
+                 fixed in_r = buffer[idx + 1];
+                 fixed out_l =
+                     fp_mul(hpfAlpha_, fp_add(hpfPrevOutput_[0],
+                                              fp_sub(in_l, hpfPrevInput_[0])));
+                 fixed out_r =
+                     fp_mul(hpfAlpha_, fp_add(hpfPrevOutput_[1],
+                                              fp_sub(in_r, hpfPrevInput_[1])));
+                 buffer[idx] = out_l;
+                 buffer[idx + 1] = out_r;
+                 hpfPrevInput_[0] = in_l;
+                 hpfPrevInput_[1] = in_r;
+                 hpfPrevOutput_[0] = out_l;
+                 hpfPrevOutput_[1] = out_r;
+             }
+         }
+
+         // Apply per-channel volume
+         if (volume_ != i2fp(1)) {
+             for (int i = 0; i < samplecount * 2; i++) {
+                 buffer[i] = fp_mul(buffer[i], volume_);
+             }
+         }
+         // Track peak level
+         fixed peak = i2fp(0);
+         for (int i = 0; i < samplecount * 2; i++) {
+             fixed v = buffer[i]; if (v < 0) v = -v;
+             if (v > peak) peak = v;
+         }
+         if (peak > peakLevel_) peakLevel_ = peak;
+         else peakLevel_ = fp_mul(peakLevel_, fl2fp(0.9f));
+     } else {
+         peakLevel_ = fp_mul(peakLevel_, fl2fp(0.9f));
+     }
+     return (status && !muted_);
    } else {
-     return false ;
+       peakLevel_ = fp_mul(peakLevel_, fl2fp(0.9f));
+       return false;
    }
 } ;
 
@@ -51,8 +99,30 @@ void PlayerChannel::SetMute(bool muted) {
      muted_=muted ;
 }
 
-bool PlayerChannel::IsMuted() {
-     return muted_ ;
+bool PlayerChannel::IsMuted() { return muted_; }
+
+void PlayerChannel::SetVolume(fixed volume) { volume_ = volume; };
+
+void PlayerChannel::SetHPFMode(unsigned char mode) {
+    if (hpfMode_ == mode)
+        return;
+    hpfMode_ = mode;
+    // reset state
+    hpfPrevInput_[0] = hpfPrevInput_[1] = i2fp(0);
+    hpfPrevOutput_[0] = hpfPrevOutput_[1] = i2fp(0);
+    if (hpfMode_ == 0) {
+        hpfAlpha_ = i2fp(0);
+        return;
+    }
+    // compute alpha for one-pole HPF: alpha = RC/(RC+dt), RC=1/(2*pi*fc),
+    // dt=1/fs
+    float fc = (hpfMode_ == 1) ? 20.0f : 90.0f;
+    float fs = 44100.0f;
+    const float PI = 3.14159265358979323846f;
+    float RC = 1.0f / (2.0f * PI * fc);
+    float dt = 1.0f / fs;
+    float alpha = RC / (RC + dt);
+    hpfAlpha_ = fl2fp(alpha);
 }
 
 void PlayerChannel::SetMixBus(int i) {
@@ -62,16 +132,28 @@ void PlayerChannel::SetMixBus(int i) {
 	if (mixBus_) {
 		mixBus_->Remove(*this) ;
 	}
-	mixBus_=MixerService::GetInstance()->GetMixBus(i) ;
+    busIndex_ = i;
+    mixBus_=MixerService::GetInstance()->GetMixBus(i) ;
 	if (mixBus_) {
 		mixBus_->Insert(*this) ;
 	}
 } ;
 
 void PlayerChannel::Reset() {
-	if (mixBus_) {
-		mixBus_->Remove(*this) ;
-	}
-	muted_=false ;
-	busIndex_=-1 ;
+    if (mixBus_) {
+        mixBus_->Remove(*this) ;
+    }
+    muted_=false ;
+  busIndex_=-1 ;
+  hpfPrevInput_[0]=hpfPrevInput_[1]=i2fp(0);
+  hpfPrevOutput_[0]=hpfPrevOutput_[1]=i2fp(0);
+  hpfAlpha_ = i2fp(0);
+  hpfMode_ = 0;
+  peakLevel_ = i2fp(0);
 } ;
+
+float PlayerChannel::GetPeakLevel() const {
+    // Samples are i2fp(PCM) so full-scale = i2fp(32767); divide by 32767 to
+    // normalize to [0, 1].
+    return fp2fl(peakLevel_) / 32767.0f;
+}

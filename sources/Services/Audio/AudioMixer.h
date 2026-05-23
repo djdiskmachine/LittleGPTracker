@@ -21,6 +21,7 @@ public:
 	void SetFileRenderer(const char *path) ;
 	void EnableRendering(bool enable) ;
 	void SetVolume(fixed volume) ;
+    u_int32_t GetPeakLevel() const { return peakMixerLevel_; }
     virtual void SetSoftclip(int clip, int gain);
     virtual void SetMasterVolume(int volume) ;
 	virtual bool Clipped() ;
@@ -38,5 +39,6 @@ private:
   int softclipGain_;
   int masterVolume_;
   bool clipped_;
+  u_int32_t peakMixerLevel_;
 } ;
 #endif

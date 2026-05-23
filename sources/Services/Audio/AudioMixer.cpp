@@ -97,12 +97,31 @@ bool AudioMixer::Render(fixed *buffer,int samplecount) {
          fixed *c = buffer;
          float damp = pow((float)masterVolume_ / 100, 4.0f);
 
+         // Track peak levels (left and right channels)
+         fixed peakL = i2fp(0), peakR = i2fp(0);
+
          if (volume_ != i2fp(1)) {
              for (int i = 0; i < samplecount * 2; i++) {
                  fixed v = fp_mul(*c, volume_);
                  *c++ = v;
              }
          }
+
+         // Re-point c to buffer start for peak tracking
+         c = buffer;
+         
+         // Track peak levels for both channels
+         for (int i = 0; i < samplecount * 2; i += 2) {
+             fixed left = c[i];
+             fixed right = c[i + 1];
+             if (left < 0) left = -left;
+             if (right < 0) right = -right;
+             if (left > peakL) peakL = left;
+             if (right > peakR) peakR = right;
+         }
+         
+         // Store as uint32_t: left 16 bits | right 16 bits
+         peakMixerLevel_ = (fp2i(peakL) << 16) | fp2i(peakR);
 
          // Apply soft/hard clipping before recording
          c = buffer;

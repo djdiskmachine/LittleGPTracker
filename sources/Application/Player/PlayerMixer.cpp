@@ -106,7 +106,9 @@ void PlayerMixer::Update(Observable &o,I_ObservableData *d) {
   Mixer *mixer = Mixer::GetInstance();
 
   for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-    channel_[i]->SetMixBus(mixer->GetBus(i));
+      channel_[i]->SetMixBus(mixer->GetBus(i));
+      channel_[i]->SetVolume(fl2fp(mixer->GetChannelVolume(i) / 255.0f));
+      channel_[i]->SetHPFMode((unsigned char)mixer->GetChannelHPF(i));
   }
   MixerService *ms=MixerService::GetInstance();
   ms->SetPregain(project_->GetPregain());
@@ -143,6 +145,24 @@ void PlayerMixer::SetChannelMute(int channel,bool mode) {
 
 bool PlayerMixer::IsChannelMuted(int channel) {
      return channel_[channel]->IsMuted() ;
+}
+
+float PlayerMixer::GetChannelPeakLevel(int channel) {
+    if (channel < 0 || channel >= SONG_CHANNEL_COUNT) return 0.0f;
+    
+    // Get peak level from the mixer bus, not from the channel itself
+    MixerService *ms = MixerService::GetInstance();
+    MixBus *bus = ms->GetMixBus(channel);
+    if (!bus) return 0.0f;
+    
+    uint32_t level = bus->GetPeakLevel();
+    // Extract left and right peak values
+    int leftPeak = (level >> 16) & 0xFFFF;
+    int rightPeak = level & 0xFFFF;
+    int maxPeak = (leftPeak > rightPeak) ? leftPeak : rightPeak;
+    
+    // Normalize to 0-1 range (max sample value is 32767)
+    return (float)maxPeak / 32767.0f;
 }
 
 void PlayerMixer::StartStreaming(const Path &path) {

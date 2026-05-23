@@ -3,10 +3,12 @@
 #include "Application/Mixer/MixerService.h"
 #include "Application/Model/ProjectDatas.h"
 #include "Application/Player/Player.h"
+#include "Application/Player/PlayerMixer.h"
 #include "Application/Utils/char.h"
 #include "System/Console/Trace.h"
 #include "System/System/System.h"
 #include "UIController.h"
+#include "VuMeterUtil.h"
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
@@ -26,6 +28,8 @@ SongView::SongView(GUIWindow &w, ViewData *viewData, const char *song)
     for (int i = 0; i < 8; i++) {
         this->lastPlayedPosition_[i] = 0;
         this->lastQueuedPosition_[i] = 0;
+        this->vuBarHeightsL_[i] = 0;
+        this->vuBarHeightsR_[i] = 0;
     }
     clipboard_.active_ = false;
     clipboard_.data_ = 0;
@@ -891,6 +895,115 @@ void SongView::processSelectionButtonMask(unsigned int mask) {
 }
 
 /******************************************************
+ DrawVuBars:
+        Draw stereo L/R VU meters to the right of tracks
+        Called from both AnimationUpdate and DrawView to ensure
+        bars are always visible and never flicker
+ ******************************************************/
+
+void SongView::DrawVuBars() {
+    // NOTE: Common VU meter logic extracted to VuMeterUtil
+    // Uses: GetVuPeakLevelsStereo for L/R decay, GetVuBarColor for colors, DRAW_VU_BAR_ROW for rendering
+    // Draws stereo L/R columns side by side
+    
+    Player *player = Player::GetInstance();
+    
+    GUIPoint anchor = GetAnchor();
+    // VU meter positioned at: x = anchor._x + 25 (right of tracks)
+    //                          y = anchor._y + songRowCount_ (below all tracks)
+    GUIPoint vuPos = anchor;
+    vuPos._x += 25;
+    vuPos._y += View::songRowCount_ - 1;
+    
+    GUITextProperties vuProps;
+    vuProps.invert_ = true;
+    
+    MixerService *ms = MixerService::GetInstance();
+    
+    // When playback stops, immediately clear the bars instead of letting them decay
+    if (!player->IsRunning()) {
+        for (int i = 0; i < 8; i++) {
+            vuBarHeightsL_[i] = 0;
+            vuBarHeightsR_[i] = 0;
+        }
+    }
+    
+    // Extract L/R peak levels from all channels
+    float peakLevelsL[8];
+    float peakLevelsR[8];
+    for (int i = 0; i < 8; i++) {
+        MixBus *bus = ms->GetMixBus(i);
+        if (bus) {
+            uint32_t level = bus->GetPeakLevel();
+            // Extract L and R from packed format: (left_16bits << 16) | right_16bits
+            int leftPeak = (level >> 16) & 0xFFFF;
+            int rightPeak = level & 0xFFFF;
+            // Normalize to 0.0-1.0
+            peakLevelsL[i] = (float)leftPeak / 32767.0f;
+            peakLevelsR[i] = (float)rightPeak / 32767.0f;
+        } else {
+            peakLevelsL[i] = 0.0f;
+            peakLevelsR[i] = 0.0f;
+        }
+        // Force to 0 when not playing
+        if (!player->IsRunning()) {
+            peakLevelsL[i] = 0.0f;
+            peakLevelsR[i] = 0.0f;
+        }
+    }
+    
+    // Update bar heights with slew rate decay for both L and R
+    int displayHeightsL[8];
+    int displayHeightsR[8];
+    GetVuPeakLevelsStereo(vuBarHeightsL_, vuBarHeightsR_, 
+                          displayHeightsL, displayHeightsR,
+                          peakLevelsL, peakLevelsR);
+    
+    // Draw vertical VU bars for L and R channels (two columns side by side)
+    // Each bar is 8 rows tall, growing upward
+    for (int row = 0; row < VU_METER_HEIGHT; row++) {
+        // Set color based on level threshold
+        SetColor(GetVuBarColor(row));
+        
+        // Get max height from all channels for both L and R
+        int maxHeightL = 0;
+        int maxHeightR = 0;
+        for (int i = 0; i < 8; i++) {
+            if (displayHeightsL[i] > maxHeightL) {
+                maxHeightL = displayHeightsL[i];
+            }
+            if (displayHeightsR[i] > maxHeightR) {
+                maxHeightR = displayHeightsR[i];
+            }
+        }
+        
+        // Draw left channel at x
+        GUIPoint posL = vuPos;
+        posL._y -= row;
+        DRAW_VU_BAR_ROW(this, posL, row, maxHeightL, vuProps);
+        SetColor(GetVuBarColor(row));
+        
+        // Draw right channel at x+1 (one character to the right)
+        GUIPoint posR = vuPos;
+        posR._x += 1;
+        posR._y -= row;
+        DRAW_VU_BAR_ROW(this, posR, row, maxHeightR, vuProps);
+        SetColor(GetVuBarColor(row));
+    }
+    
+    SetColor(CD_NORMAL);
+}
+
+/******************************************************
+ AnimationUpdate:
+        Update animation and draw VU meters
+ ******************************************************/
+
+void SongView::AnimationUpdate() {
+    DrawVuBars();
+}
+
+/******************************************************
  Redraw:
         redraw completely the song view
  ******************************************************/
@@ -1025,6 +1138,10 @@ void SongView::DrawView() {
     if (player->IsRunning()) {
         OnPlayerUpdate(PET_UPDATE);
     };
+
+    // Draw VU bars at the end so they appear on top of everything
+    // They will always show the empty dashes and smoothly decay when paused
+    DrawVuBars();
 };
 
 /******************************************************

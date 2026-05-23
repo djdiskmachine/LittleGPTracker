@@ -39,6 +39,11 @@ View::View(GUIWindow &w,ViewData *viewData):
 	viewData_=viewData;
 	NOTIFICATION_TIMEOUT = 1000;
 	displayNotification_ = "";
+    // Initialize VU meter inertia tracking
+    for (int i = 0; i < 9; i++) {
+		prevLeftVU_[i] = 0;
+		prevRightVU_[i] = 0;
+	}
 } ;
 
 GUIPoint View::GetAnchor() {
@@ -88,7 +93,7 @@ void View::drawMap() {
         DrawString(pos._x,pos._y,buffer,props) ;
 		pos._y++ ;		
 		//row3
-		sprintf(buffer,"  TT");
+        sprintf(buffer, " MTT");
         DrawString(pos._x,pos._y,buffer,props) ;
 
 		//draw current screen on map
@@ -127,6 +132,11 @@ void View::drawMap() {
 		case VT_GROOVE:
 			pos._x+=2;
 	        DrawString(pos._x,pos._y,"G",props) ;
+			break;
+        case VT_MIXER:
+            pos._x+=1;
+			pos._y+=2;
+	        DrawString(pos._x,pos._y,"M",props) ;
 			break;
 		default: //VT_SONG
 			pos._y+=1;
@@ -244,7 +254,16 @@ void View::EnableNotification() {
 		SetColor(CD_NORMAL);
 		GUITextProperties props;
         int xOffset = 4;
-        DrawString(xOffset, notiDistY_, displayNotification_.c_str(), props);
+        // support single-line or two-line notifications separated by '\n'
+        size_t nl = displayNotification_.find('\n');
+		if (nl == std::string::npos) {
+			DrawString(xOffset, notiDistY_, displayNotification_.c_str(), props);
+		} else {
+			std::string line1 = displayNotification_.substr(0, nl);
+			std::string line2 = displayNotification_.substr(nl + 1);
+			DrawString(xOffset, notiDistY_, line1.c_str(), props);
+			DrawString(xOffset, notiDistY_ + 1, line2.c_str(), props);
+		}
     } else {
 		displayNotification_ = "";
 	}
@@ -261,4 +280,72 @@ void View::SetNotification(const char *notification, int offset) {
     displayNotification_ = notification;
     notiDistY_ = offset;
     isDirty_ = true;
+}
+
+void View::drawVUMeter(uint8_t leftBars, uint8_t rightBars, GUIPoint pos,
+                       GUITextProperties props, int vuIndex, bool forceRedraw) {
+    // Clamp bars to VU meter height
+    leftBars = (leftBars > VU_METER_HEIGHT) ? VU_METER_HEIGHT : leftBars;
+    rightBars = (rightBars > VU_METER_HEIGHT) ? VU_METER_HEIGHT : rightBars;
+
+    // Apply inertia effect: fast rise, slow fall
+    const int maxStepUp = 2;    // fast rise (up to 2 bars per update)
+    const int maxStepDown = 1;  // slow fall (only 1 bar per update)
+
+    // Left channel inertia
+    if (leftBars > prevLeftVU_[vuIndex]) {
+        // Rising: allow faster response (up to maxStepUp)
+        int diff = leftBars - prevLeftVU_[vuIndex];
+        if (diff > maxStepUp) {
+            leftBars = prevLeftVU_[vuIndex] + maxStepUp;
+        }
+    } else if (leftBars < prevLeftVU_[vuIndex]) {
+        // Falling: limit to maxStepDown for inertia
+        int diff = prevLeftVU_[vuIndex] - leftBars;
+        if (diff > maxStepDown) {
+            leftBars = prevLeftVU_[vuIndex] - maxStepDown;
+        }
+    }
+
+    // Right channel inertia
+    if (rightBars > prevRightVU_[vuIndex]) {
+        int diff = rightBars - prevRightVU_[vuIndex];
+        if (diff > maxStepUp) {
+            rightBars = prevRightVU_[vuIndex] + maxStepUp;
+        }
+    } else if (rightBars < prevRightVU_[vuIndex]) {
+        int diff = prevRightVU_[vuIndex] - rightBars;
+        if (diff > maxStepDown) {
+            rightBars = prevRightVU_[vuIndex] - maxStepDown;
+        }
+    }
+
+    // Skip redraw if values unchanged (unless forced)
+    if (!forceRedraw && leftBars == prevLeftVU_[vuIndex] &&
+        rightBars == prevRightVU_[vuIndex]) {
+        return;
+    }
+
+    // Store current values for next update
+    prevLeftVU_[vuIndex] = leftBars;
+    prevRightVU_[vuIndex] = rightBars;
+
+    // Draw the VU meter bars (simple bar representation)
+    std::string bar = "";
+    for (int i = 0; i < VU_METER_HEIGHT; i++) {
+        if (i < leftBars) {
+            bar += "|";
+        } else {
+            bar += " ";
+        }
+    }
+    bar += " ";
+    for (int i = 0; i < VU_METER_HEIGHT; i++) {
+        if (i < rightBars) {
+            bar += "|";
+        } else {
+            bar += " ";
+        }
+    }
+    DrawString(pos._x, pos._y, bar.c_str(), props);
 }
