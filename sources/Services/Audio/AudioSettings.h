@@ -9,6 +9,7 @@ struct AudioSettings {
     std::string audioDevice_;
     int bufferSize_;
     int preBufferCount_;
+    int sampleRate_;
 };
 
 #endif

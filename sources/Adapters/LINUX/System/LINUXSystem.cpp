@@ -104,6 +104,7 @@ void LINUXSystem::Boot(int argc, char **argv) {
     AudioSettings hint;
     hint.bufferSize_ = 1024;
     hint.preBufferCount_ = 8;
+    hint.sampleRate_ = 44100;
     Audio::Install(new SDLAudio(hint));
 #endif
 

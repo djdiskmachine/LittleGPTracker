@@ -1,4 +1,5 @@
 #include "WavFileWriter.h"
+#include "Services/Audio/Audio.h"
 #include "System/Console/Trace.h"
 
 WavFileWriter::WavFileWriter(const char *path)
@@ -30,10 +31,11 @@ WavFileWriter::WavFileWriter(const char *path)
         file_->Write(&ushort, 1, 2);
         ushort = Swap16(2); // nChannels
         file_->Write(&ushort, 1, 2);
-        unsigned int sampleRate = Swap32(44100);
+        unsigned int sampleRate = Swap32(Audio::GetInstance()->GetSampleRate());
         file_->Write(&sampleRate, 1, 4);
 
-        unsigned int byteRate = Swap32(4 * 44100);
+        unsigned int byteRate =
+            Swap32(4 * Audio::GetInstance()->GetSampleRate());
         file_->Write(&byteRate, 1, 4);
 
         ushort = Swap16(4); //  blockalign

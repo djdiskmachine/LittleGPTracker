@@ -16,12 +16,15 @@ Audio::Audio(AudioSettings &hints) : T_SimpleList<AudioOut>(true), settings_() {
     settings_.bufferSize_ = v ? atoi(v) : hints.bufferSize_;
     v = config->GetValue("AUDIOPREBUFFERCOUNT");
     settings_.preBufferCount_ = v ? atoi(v) : hints.preBufferCount_;
+    v = config->GetValue("AUDIOSAMPLERATE");
+    settings_.sampleRate_ = v ? atoi(v) : hints.sampleRate_;
 
     Trace::Log("AUDIO", "Audio object initialised with");
     Trace::Log("AUDIO", "Api:%s", settings_.audioAPI_.c_str());
     Trace::Log("AUDIO", "Device:%s", settings_.audioDevice_.c_str());
     Trace::Log("AUDIO", "Buffer size:%d", settings_.bufferSize_);
     Trace::Log("AUDIO", "Pre Buffer Count:%d", settings_.preBufferCount_);
+    Trace::Log("AUDIO", "Preferred Sample Rate:%d", settings_.sampleRate_);
 }
 
 Audio::~Audio() {}
@@ -33,3 +36,5 @@ const char *Audio::GetAudioDevice() { return settings_.audioDevice_.c_str(); };
 int Audio::GetAudioBufferSize() { return settings_.bufferSize_; };
 
 int Audio::GetAudioPreBufferCount() { return settings_.preBufferCount_; };
+
+int Audio::GetPreferredSampleRate() { return settings_.sampleRate_; };

@@ -21,6 +21,7 @@ class Audio : public T_Factory<Audio>, public T_SimpleList<AudioOut> {
     const char *GetAudioDevice();
     int GetAudioBufferSize();
     int GetAudioPreBufferCount();
+    int GetPreferredSampleRate();
 
   protected:
     AudioSettings settings_;

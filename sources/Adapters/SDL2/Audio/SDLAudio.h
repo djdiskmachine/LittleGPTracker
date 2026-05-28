@@ -3,6 +3,8 @@
 
 #include "Services/Audio/Audio.h"
 
+class SDLAudioDriver;
+
 class SDLAudio : public Audio {
   public:
     SDLAudio(AudioSettings &hints); // Allow for different default size for
@@ -10,10 +12,12 @@ class SDLAudio : public Audio {
     ~SDLAudio();
     virtual void Init();
     virtual void Close();
+    int GetSampleRate();
     virtual int GetMixerVolume();
     virtual void SetMixerVolume(int volume);
 
   private:
     AudioSettings hints_;
+    SDLAudioDriver *drv_;
 };
 #endif

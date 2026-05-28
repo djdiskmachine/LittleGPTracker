@@ -31,7 +31,7 @@ class SDLAudioDriver : public AudioDriver {
     virtual bool StartDriver();
     virtual void StopDriver();
     virtual int GetPlayedBufferPercentage();
-    virtual int GetSampleRate() { return 44100; };
+    virtual int GetSampleRate();
     virtual bool Interlaced() { return true; };
     virtual double GetStreamTime();
     // Additional
@@ -44,6 +44,7 @@ class SDLAudioDriver : public AudioDriver {
     char *miniBlank_;
     int bufferPos_;
     int bufferSize_;
+    int sampleRate_;
     SDLAudioDriverThread *thread_;
     Uint32 startTime_;
 };
