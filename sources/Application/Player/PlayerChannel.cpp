@@ -17,7 +17,6 @@ PlayerChannel::PlayerChannel(int index) {
     hpfPrevOutput_[0] = hpfPrevOutput_[1] = i2fp(0);
     hpfAlpha_ = i2fp(0);
     hpfMode_ = 0;
-    peakLevel_ = i2fp(0);
 }
 
 PlayerChannel::~PlayerChannel() {
@@ -73,20 +72,9 @@ bool PlayerChannel::Render(fixed *buffer,int samplecount) {
                  buffer[i] = fp_mul(buffer[i], volume_);
              }
          }
-         // Track peak level
-         fixed peak = i2fp(0);
-         for (int i = 0; i < samplecount * 2; i++) {
-             fixed v = buffer[i]; if (v < 0) v = -v;
-             if (v > peak) peak = v;
-         }
-         if (peak > peakLevel_) peakLevel_ = peak;
-         else peakLevel_ = fp_mul(peakLevel_, fl2fp(0.9f));
-     } else {
-         peakLevel_ = fp_mul(peakLevel_, fl2fp(0.9f));
      }
      return (status && !muted_);
    } else {
-       peakLevel_ = fp_mul(peakLevel_, fl2fp(0.9f));
        return false;
    }
 } ;
@@ -149,11 +137,4 @@ void PlayerChannel::Reset() {
   hpfPrevOutput_[0]=hpfPrevOutput_[1]=i2fp(0);
   hpfAlpha_ = i2fp(0);
   hpfMode_ = 0;
-  peakLevel_ = i2fp(0);
-} ;
-
-float PlayerChannel::GetPeakLevel() const {
-    // Samples are i2fp(PCM) so full-scale = i2fp(32767); divide by 32767 to
-    // normalize to [0, 1].
-    return fp2fl(peakLevel_) / 32767.0f;
-}
+};

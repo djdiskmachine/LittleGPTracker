@@ -163,8 +163,8 @@ class View : public Observable {
     bool isDirty_; // .Do we need to redraw screeen
     ViewType viewType_;
     bool hasFocus_;
-    uint8_t prevLeftVU_[9]; // inertia tracking for VU (0-8 channels + master)
-    uint8_t prevRightVU_[9];
+    uint8_t prevLeftVU_[8]; // inertia tracking for VU (8 channels)
+    uint8_t prevRightVU_[8];
 
   private:
     unsigned short mask_;

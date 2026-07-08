@@ -2,7 +2,6 @@
 #include "Application/Mixer/MixerService.h"
 #include "Application/Model/Mixer.h"
 #include "Application/Player/Player.h"
-#include "Application/Player/PlayerMixer.h"
 #include "Application/Utils/char.h"
 #include "UIController.h"
 #include "VuMeterUtil.h"
@@ -459,9 +458,9 @@ void MixerView::OnPlayerUpdate(PlayerEventType ,unsigned int tick) {
 
 void MixerView::DrawVuBars() {
     // NOTE: Common VU meter logic extracted to VuMeterUtil
-    // Uses: GetVuPeakLevelsStereo for L/R decay, GetVuBarColor for colors, DRAW_VU_BAR_ROW for rendering
-    // Draws stereo L/R for each of the 8 channels
-    
+    // Uses: GetVuPeakLevelsStereo for L/R decay, GetVuBarColor for colors,
+    // DrawVuBarRow for rendering Draws stereo L/R for each of the 8 channels
+
     Player *player = Player::GetInstance();
     
     GUIPoint vuPos = GetAnchor();
@@ -470,42 +469,13 @@ void MixerView::DrawVuBars() {
     
     GUITextProperties vuProps;
     vuProps.invert_ = true;
-    
-    MixerService *ms = MixerService::GetInstance();
+
     short dx = 3;  // 3 chars per channel (L and R + 1 space)
-    
-    // When playback stops, immediately clear the bars instead of letting them decay
-    if (!player->IsRunning()) {
-        for (int i = 0; i < 8; i++) {
-            vuBarHeightsL_[i] = 0;
-            vuBarHeightsR_[i] = 0;
-        }
-    }
-    
-    // Extract L/R peak levels from all channels
+
     float peakLevelsL[8];
     float peakLevelsR[8];
-    for (int i = 0; i < 8; i++) {
-        MixBus *bus = ms->GetMixBus(i);
-        if (bus) {
-            uint32_t level = bus->GetPeakLevel();
-            // Extract L and R from packed format: (left_16bits << 16) | right_16bits
-            int leftPeak = (level >> 16) & 0xFFFF;
-            int rightPeak = level & 0xFFFF;
-            // Normalize to 0.0-1.0
-            peakLevelsL[i] = (float)leftPeak / 32767.0f;
-            peakLevelsR[i] = (float)rightPeak / 32767.0f;
-        } else {
-            peakLevelsL[i] = 0.0f;
-            peakLevelsR[i] = 0.0f;
-        }
-        // Force to 0 when not playing
-        if (!player->IsRunning()) {
-            peakLevelsL[i] = 0.0f;
-            peakLevelsR[i] = 0.0f;
-        }
-    }
-    
+    ReadMixBusPeakLevels(player->IsRunning(), peakLevelsL, peakLevelsR);
+
     // Update bar heights with slew rate decay for both L and R
     int displayHeightsL[8];
     int displayHeightsR[8];
@@ -526,13 +496,13 @@ void MixerView::DrawVuBars() {
             pos._y -= row;     // Grow upward from the anchor position
             
             // Draw left channel
-            DRAW_VU_BAR_ROW(this, pos, row, displayHeightsL[i], vuProps);
-            SetColor(GetVuBarColor(row));
-            
+            DrawVuBarRow(this, pos, row, displayHeightsL[i], vuProps,
+                         GetVuBarColor(row));
+
             // Draw right channel at x+1 (one character to the right)
             pos._x += 1;
-            DRAW_VU_BAR_ROW(this, pos, row, displayHeightsR[i], vuProps);
-            SetColor(GetVuBarColor(row));
+            DrawVuBarRow(this, pos, row, displayHeightsR[i], vuProps,
+                         GetVuBarColor(row));
         }
     }
     

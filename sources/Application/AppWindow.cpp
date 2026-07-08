@@ -3,6 +3,7 @@
 #include "Application/Commands/EventDispatcher.h"
 #include "Application/Instruments/SamplePool.h"
 #include "Application/Mixer/MixerService.h"
+#include "Application/Model/Mixer.h"
 #include "Application/Persistency/PersistencyService.h"
 #include "Application/Player/TablePlayback.h"
 #include "Application/Utils/char.h"
@@ -335,6 +336,10 @@ void AppWindow::LoadProject(const Path &p) {
 
     Project *project = new Project();
 
+    // Reset Mixer to defaults before loading so stale values from a previous
+    // project do not carry over, and ensure it is registered before Load().
+    Mixer::GetInstance()->Clear();
+
     bool succeeded = persist->Load();
     if (!succeeded) {
         project->GetInstrumentBank()->AssignDefaults();
@@ -531,9 +536,8 @@ void AppWindow::onUpdate() {
             _currentView->AnimationUpdate();
         }
     }
-    
     Flush();
-};
+}
 
 void AppWindow::LayoutChildren() {};
 

@@ -21,7 +21,6 @@ public:
     void SetHPFMode(unsigned char mode);
     void ApplyHPF(fixed *buffer, int samplecount);
     void Reset();
-    float GetPeakLevel() const;
 
   private:
 	int index_ ;
@@ -34,7 +33,6 @@ public:
     fixed hpfPrevOutput_[2];
 	fixed hpfAlpha_;
 	unsigned char hpfMode_;
-    volatile fixed peakLevel_;
-} ;
+};
 
 #endif

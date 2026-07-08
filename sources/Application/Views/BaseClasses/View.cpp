@@ -40,10 +40,10 @@ View::View(GUIWindow &w,ViewData *viewData):
 	NOTIFICATION_TIMEOUT = 1000;
 	displayNotification_ = "";
     // Initialize VU meter inertia tracking
-    for (int i = 0; i < 9; i++) {
-		prevLeftVU_[i] = 0;
-		prevRightVU_[i] = 0;
-	}
+    for (int i = 0; i < 8; i++) {
+        prevLeftVU_[i] = 0;
+        prevRightVU_[i] = 0;
+    }
 } ;
 
 GUIPoint View::GetAnchor() {

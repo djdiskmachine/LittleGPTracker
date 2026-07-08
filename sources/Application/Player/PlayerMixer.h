@@ -49,8 +49,7 @@ public:
 	int GetPlayedBufferPercentage() ;   
 
 	void SetChannelMute(int channel,bool mute) ;
-	bool IsChannelMuted(int channel) ;
-    float GetChannelPeakLevel(int channel);
+    bool IsChannelMuted(int channel);
 
     char *GetPlayedNote(int channel);
     char *GetPlayedOctive(int channel) ;

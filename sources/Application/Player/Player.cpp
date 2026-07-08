@@ -582,15 +582,13 @@ void Player::Update(Observable &o,I_ObservableData *d) {
 
 		firstPlayCycle_=false ;
 		System *system=System::GetInstance() ;
-		now_=system->GetClock() ;
+        now_ = system->GetClock();
+    }
+    // Notify refresh
 
-		// Notify refresh
-
-		PlayerEvent pe(PET_UPDATE,0) ;
-		SetChanged() ;
-		NotifyObservers(&pe) ;
-
-	}
+    PlayerEvent pe(PET_UPDATE, 0);
+    SetChanged() ;
+	NotifyObservers(&pe) ;
 } ;
 
 /************************************************************
