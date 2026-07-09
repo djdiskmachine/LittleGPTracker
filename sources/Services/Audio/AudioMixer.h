@@ -39,6 +39,6 @@ private:
   int softclipGain_;
   int masterVolume_;
   bool clipped_;
-  unsigned int peakMixerLevel_ = 0;
-} ;
+  unsigned int peakMixerLevel_;
+};
 #endif
