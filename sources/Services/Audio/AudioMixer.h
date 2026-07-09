@@ -4,7 +4,6 @@
 #include "Application/Instruments/WavFileWriter.h"
 #include "AudioModule.h"
 #include "Foundation/T_SimpleList.h"
-#include <stdint.h>
 #include <string>
 
 struct SoftClipData {
@@ -22,7 +21,7 @@ public:
 	void SetFileRenderer(const char *path) ;
 	void EnableRendering(bool enable) ;
 	void SetVolume(fixed volume) ;
-    uint32_t GetPeakLevel() const { return peakMixerLevel_; }
+    unsigned int GetPeakLevel() const { return peakMixerLevel_; }
     virtual void SetSoftclip(int clip, int gain);
     virtual void SetMasterVolume(int volume) ;
 	virtual bool Clipped() ;
@@ -40,6 +39,6 @@ private:
   int softclipGain_;
   int masterVolume_;
   bool clipped_;
-  uint32_t peakMixerLevel_ = 0;
+  unsigned int peakMixerLevel_ = 0;
 } ;
 #endif

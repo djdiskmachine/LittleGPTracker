@@ -120,10 +120,9 @@ bool AudioMixer::Render(fixed *buffer,int samplecount) {
              if (right > peakR) peakR = right;
          }
 
-         // Store as uint32_t: left 16 bits | right 16 bits, clamped to 16-bit
-         // range
-         uint32_t packedL = (uint32_t)fp2i(peakL);
-         uint32_t packedR = (uint32_t)fp2i(peakR);
+         // left 16 bits | right 16 bits, clamped to 16-bit range
+         unsigned int packedL = (unsigned int)fp2i(peakL);
+         unsigned int packedR = (unsigned int)fp2i(peakR);
          if (packedL > 0xFFFF) packedL = 0xFFFF;
          if (packedR > 0xFFFF) packedR = 0xFFFF;
          peakMixerLevel_ = (packedL << 16) | packedR;
