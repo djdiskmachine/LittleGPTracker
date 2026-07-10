@@ -20,6 +20,7 @@ public:
     void SetVolume(fixed volume);
     void SetHPFMode(unsigned char mode);
     void ApplyHPF(fixed *buffer, int samplecount);
+    void SetLPFFreq(unsigned short freq);
     void Reset();
 
   private:
@@ -33,6 +34,9 @@ public:
     fixed hpfPrevOutput_[2];
 	fixed hpfAlpha_;
 	unsigned char hpfMode_;
+    fixed lpfPrevOutput_[2];
+    fixed lpfAlpha_;
+    unsigned short lpfFreq_;
 };
 
 #endif

@@ -24,7 +24,7 @@ protected:
 private:
 	const char *song_ ;
     int soloChannel_;
-    int mixerRow_; // 0=bus, 1=volume, 2=hpf
+    int mixerRow_; // 0=bus, 1=volume, 2=hpf, 3=lpf
 
     struct {                      // .Clipboard structure
         bool active_ ;            // .If currently making a selection

@@ -49,8 +49,12 @@ void MixerView::OnFocus() {
 
 void MixerView::updateCursor(int dx,int dy) {
     if (dy != 0) {
-        // UP/DOWN switches between rows
-		mixerRow_ = (mixerRow_ == 1) ? 2 : 1;
+        // UP/DOWN cycles between rows 1, 2, 3
+        if (dy < 0) {
+            mixerRow_ = (mixerRow_ == 1) ? 3 : mixerRow_ - 1;
+        } else {
+            mixerRow_ = (mixerRow_ == 3) ? 1 : mixerRow_ + 1;
+        }
 		isDirty_ = true;
     }
     if (dx != 0) {
@@ -78,23 +82,9 @@ void MixerView::toggleSolo() {
 	isDirty_=true ;
 } ;
 
-void MixerView::ProcessButtonMask(unsigned short mask,bool pressed) {
-	//if (!pressed) {
-	//	if (viewMode_==VM_MUTEON) {
-	//		if (mask&EPBM_R) {
-	//			toggleMute() ;
-	//		}
-	//	} ;
-	//	if (viewMode_==VM_SOLOON) {
-	//		if (mask&EPBM_R) {
-	//			switchSoloMode() ;
-	//		}
-	//	} ;
-	//	return ;
-	//} ;
-	//
-	
-	if (clipboard_.active_) {
+void MixerView::ProcessButtonMask(unsigned short mask, bool pressed) {
+
+    if (clipboard_.active_) {
 		viewMode_=VM_SELECTION ;
 	} ;
 	// Process selection related keys
@@ -117,8 +107,7 @@ void MixerView::ProcessButtonMask(unsigned short mask,bool pressed) {
         viewMode_=VM_NORMAL ;
         processNormalButtonMask(mask) ;
     }
-} ;
-
+};
 
 /******************************************************
  processNormalButtonMask:
@@ -143,18 +132,62 @@ void MixerView::processNormalButtonMask(unsigned int mask) {
 	  // A modifier
 
 	  if (mask&EPBM_A) {
-          if (mixerRow_ == 2) {
-              // On HPF row: A cycles HPF mode
-			  Mixer *m = Mixer::GetInstance();
-			  int col = viewData_->mixerCol_;
-			  int mode = m->GetChannelHPF(col);
-			  mode = (mode + 1) % 3;
-			  m->SetChannelHPF(col, mode);
-			  isDirty_ = true;
-			  
-			  const char *modeStr = (mode == 0) ? "OFF" : (mode == 1) ? "20Hz" : "90Hz";
-			  std::string notif = std::string("      High Pass Filter: ") + modeStr;
-			  SetNotification(notif.c_str());
+          if (mixerRow_ == 3) {
+              // On LPF row: A+Up/Down = coarse ×2/÷2, A+Left/Right = fine ±10Hz
+              // A alone (no direction) = toggle off/1000Hz
+              Mixer *m = Mixer::GetInstance();
+              int col = viewData_->mixerCol_;
+              unsigned short freq = m->GetChannelLPF(col);
+              unsigned short newFreq = freq;
+            if (mask & EPBM_UP) {
+                if (freq == 0) newFreq = 20;
+                else {
+                    unsigned short step = freq / 10 < 1 ? 1 : freq / 10;
+                    newFreq = (unsigned short)(freq + step > 20000 ? 0 : freq + step);
+                }
+            } else if (mask & EPBM_DOWN) {
+                if (freq == 0) newFreq = 20000;
+                else {
+                    unsigned short step = freq / 10 < 1 ? 1 : freq / 10;
+                    newFreq = (freq <= step) ? 0 : (unsigned short)(freq - step < 20 ? 0 : freq - step);
+                }
+            } else if (mask & EPBM_RIGHT) {
+                  if (freq == 0) newFreq = 20;
+                  else newFreq = (unsigned short)(freq + 10 > 20000 ? 0 : freq + 10);
+              } else if (mask & EPBM_LEFT) {
+                  if (freq == 0) newFreq = 20000;
+                  else newFreq = (freq <= 10) ? 0 : (unsigned short)(freq - 10 < 20 ? 0 : freq - 10);
+              }
+              if (newFreq != freq) {
+                  m->SetChannelLPF(col, newFreq);
+                  isDirty_ = true;
+              }
+              // show notification
+              if (newFreq == 0) {
+                  SetNotification("       Low Pass Filter: OFF");
+              } else {
+                  char notifBuf[40];
+                  sprintf(notifBuf, "       Low Pass Filter: %dHz", (int)newFreq);
+                  SetNotification(notifBuf);
+              }
+          } else if (mixerRow_ == 2) {
+              // On HPF row: A+Right cycles forward, A+Left cycles backward
+              if (mask & (EPBM_RIGHT | EPBM_LEFT)) {
+                  Mixer *m = Mixer::GetInstance();
+                  int col = viewData_->mixerCol_;
+                  int mode = m->GetChannelHPF(col);
+                  if (mask & EPBM_RIGHT) {
+                      mode = (mode + 1) % 3;
+                  } else {
+                      mode = (mode + 2) % 3;
+                  }
+                  m->SetChannelHPF(col, mode);
+                  isDirty_ = true;
+
+                  const char *modeStr = (mode == 0) ? "OFF" : (mode == 1) ? "20Hz" : "90Hz";
+                  std::string notif = std::string("      High Pass Filter: ") + modeStr;
+                  SetNotification(notif.c_str());
+              }
           } else if (mixerRow_ == 1) {
               // On volume row: A adjusts volume
 			  Mixer *mixer = Mixer::GetInstance();
@@ -162,23 +195,23 @@ void MixerView::processNormalButtonMask(unsigned int mask) {
 			  int currentVol = mixer->GetChannelVolume(col);
 			  int newVol = currentVol;
 
-			  // Fine adjustment (UP/DOWN)
-			  if (mask & EPBM_UP) {
-				  newVol = currentVol + 1;
-			  }
-			  if (mask&EPBM_DOWN) {
-				  newVol = currentVol - 1;
-			  }
-			  
-			  // Coarse adjustment (RIGHT/LEFT)
-			  if (mask&EPBM_RIGHT) {
-				  newVol = currentVol + 16;
-			  }
-			  if (mask&EPBM_LEFT) {
+              // Coarse adjustment (UP/DOWN)
+              if (mask & EPBM_UP) {
+                  newVol = currentVol + 16;
+              }
+              if (mask&EPBM_DOWN) {
 				  newVol = currentVol - 16;
-			  }
-			  
-			  // Clamp to valid range (0-255)
+              }
+
+              // Fine adjustment (RIGHT/LEFT)
+              if (mask & EPBM_RIGHT) {
+                  newVol = currentVol + 1;
+              }
+              if (mask&EPBM_LEFT) {
+				  newVol = currentVol - 1;
+              }
+
+              // Clamp to valid range (0-255)
 			  if (newVol < 0) newVol = 0;
 			  if (newVol > 255) newVol = 255;
 			  
@@ -367,13 +400,59 @@ void MixerView::DrawView() {
         int hpf = mixer->GetChannelHPF(i);
         char code[4];
         if (hpf == 0) {
-            code[0] = 'O'; code[1] = 'F'; code[2] = ' '; code[3] = '\0';
+            code[0] = '-';
+            code[1] = '-';
+            code[2] = ' ';
+            code[3] = '\0';
         } else if (hpf == 1) {
             code[0] = '2'; code[1] = '0'; code[2] = ' '; code[3] = '\0';
         } else {
             code[0] = '9'; code[1] = '0'; code[2] = ' '; code[3] = '\0';
         }
         DrawString(pos._x, pos._y, code, props);
+        pos._x += dx;
+    }
+
+    // Row 3: LPF frequency
+    pos = anchor;
+    pos._y += 4;
+    if (mixerRow_ == 3) {
+        rowLabelProps.invert_ = true;
+        SetColor(CD_HILITE2);
+    } else {
+        rowLabelProps.invert_ = false;
+        SetColor(CD_NORMAL);
+    }
+    DrawString(pos._x - 5, pos._y, "LPF", rowLabelProps);
+
+    pos._x = anchor._x;
+    for (int i = 0; i < 8; i++) {
+        props.invert_ = (i == viewData_->mixerCol_ && mixerRow_ == 3);
+        SetColor((i == viewData_->mixerCol_ && mixerRow_ == 3) ? CD_HILITE2 : CD_NORMAL);
+
+        unsigned short lpf = mixer->GetChannelLPF(i);
+        char lpfCode[5];
+        if (lpf == 0) {
+            lpfCode[0] = '-'; lpfCode[1] = '-'; lpfCode[2] = ' '; lpfCode[3] = '\0';
+        } else if (lpf < 100) {
+            lpfCode[0] = '0' + (lpf / 10);
+            lpfCode[1] = '0' + (lpf % 10);
+            lpfCode[2] = ' '; lpfCode[3] = '\0';
+        } else if (lpf < 1000) {
+            lpfCode[0] = '0' + (lpf / 100);
+            lpfCode[1] = 'h';
+            lpfCode[2] = ' '; lpfCode[3] = '\0';
+        } else if (lpf < 10000) {
+            lpfCode[0] = '0' + (lpf / 1000);
+            lpfCode[1] = 'k';
+            lpfCode[2] = ' '; lpfCode[3] = '\0';
+        } else {
+            lpfCode[0] = '0' + (lpf / 10000);
+            lpfCode[1] = '0' + (lpf % 10000) / 1000;
+            lpfCode[2] = 'k';
+            lpfCode[3] = ' '; lpfCode[4] = '\0';
+        }
+        DrawString(pos._x, pos._y, lpfCode, props);
         pos._x += dx;
     }
 

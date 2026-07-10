@@ -17,6 +17,9 @@ PlayerChannel::PlayerChannel(int index) {
     hpfPrevOutput_[0] = hpfPrevOutput_[1] = i2fp(0);
     hpfAlpha_ = i2fp(0);
     hpfMode_ = 0;
+    lpfPrevOutput_[0] = lpfPrevOutput_[1] = i2fp(0);
+    lpfAlpha_ = i2fp(0);
+    lpfFreq_ = 0;
 }
 
 PlayerChannel::~PlayerChannel() {
@@ -63,6 +66,24 @@ bool PlayerChannel::Render(fixed *buffer,int samplecount) {
                  hpfPrevInput_[1] = in_r;
                  hpfPrevOutput_[0] = out_l;
                  hpfPrevOutput_[1] = out_r;
+             }
+         }
+
+         // Apply LPF if enabled
+         if (lpfFreq_ != 0) {
+             fixed one_minus_alpha = fp_sub(i2fp(1), lpfAlpha_);
+             for (int n = 0; n < samplecount; n++) {
+                 int idx = n * 2;
+                 fixed in_l = buffer[idx];
+                 fixed in_r = buffer[idx + 1];
+                 fixed out_l = fp_add(fp_mul(lpfAlpha_, in_l),
+                                      fp_mul(one_minus_alpha, lpfPrevOutput_[0]));
+                 fixed out_r = fp_add(fp_mul(lpfAlpha_, in_r),
+                                      fp_mul(one_minus_alpha, lpfPrevOutput_[1]));
+                 buffer[idx] = out_l;
+                 buffer[idx + 1] = out_r;
+                 lpfPrevOutput_[0] = out_l;
+                 lpfPrevOutput_[1] = out_r;
              }
          }
 
@@ -113,6 +134,26 @@ void PlayerChannel::SetHPFMode(unsigned char mode) {
     hpfAlpha_ = fl2fp(alpha);
 }
 
+void PlayerChannel::SetLPFFreq(unsigned short freq) {
+    if (lpfFreq_ == freq)
+        return;
+    lpfFreq_ = freq;
+    lpfPrevOutput_[0] = lpfPrevOutput_[1] = i2fp(0);
+    if (lpfFreq_ == 0) {
+        lpfAlpha_ = i2fp(0);
+        return;
+    }
+    // compute alpha for one-pole LPF: alpha = dt/(RC+dt), RC=1/(2*pi*fc),
+    // dt=1/fs
+    float fc = (float)lpfFreq_;
+    float fs = 44100.0f;
+    const float PI = 3.14159265358979323846f;
+    float RC = 1.0f / (2.0f * PI * fc);
+    float dt = 1.0f / fs;
+    float alpha = dt / (RC + dt);
+    lpfAlpha_ = fl2fp(alpha);
+}
+
 void PlayerChannel::SetMixBus(int i) {
 
 	if (i==busIndex_) return ;
@@ -137,4 +178,7 @@ void PlayerChannel::Reset() {
   hpfPrevOutput_[0]=hpfPrevOutput_[1]=i2fp(0);
   hpfAlpha_ = i2fp(0);
   hpfMode_ = 0;
+  lpfPrevOutput_[0] = lpfPrevOutput_[1] = i2fp(0);
+  lpfAlpha_ = i2fp(0);
+  lpfFreq_ = 0;
 };

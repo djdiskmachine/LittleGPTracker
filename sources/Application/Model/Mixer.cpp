@@ -15,6 +15,7 @@ void Mixer::Clear() {
 		channelBus_[i]=i ;
         channelVolume_[i] = 0xFF;
         channelHPF_[i] = 0; // 0=OFF, 1=20Hz, 2=90Hz
+        channelLPF_[i] = 0; // 0=OFF, else frequency in Hz (20-20000)
     }
 } ;
 
@@ -23,6 +24,7 @@ void Mixer::SaveContent(TiXmlNode *node) {
                   SONG_CHANNEL_COUNT);
     saveHexBuffer(node, "VOL", channelVolume_, SONG_CHANNEL_COUNT);
     saveHexBuffer(node, "HPF", channelHPF_, SONG_CHANNEL_COUNT);
+    saveHexBuffer(node, "LPF", channelLPF_, SONG_CHANNEL_COUNT);
 } ;
 
 void Mixer::RestoreContent(TiXmlElement *element) {
@@ -35,6 +37,8 @@ void Mixer::RestoreContent(TiXmlElement *element) {
             restoreHexBuffer(current, channelVolume_);
         } else if (!strcmp("HPF", value)) {
             restoreHexBuffer(current, channelHPF_);
+        } else if (!strcmp("LPF", value)) {
+            restoreHexBuffer(current, (unsigned char *)channelLPF_);
         }
         current = current->NextSiblingElement();
     }
