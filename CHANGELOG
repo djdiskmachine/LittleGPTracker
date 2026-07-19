@@ -1,3 +1,9 @@
+1.6.0-psp-mixerview0
+    Contains:
+        Samplerate fix by simotek https://github.com/djdiskmachine/LittleGPTracker/pull/258
+        Samplerate clear fix by ax0 https://github.com/djdiskmachine/LittleGPTracker/pull/254
+        Adds mixer view https://github.com/djdiskmachine/LittleGPTracker/pull/259
+
 1.6.0-bacon15
     Finally solve "Audio randomly dies" issue
 
