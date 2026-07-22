@@ -68,8 +68,8 @@ void ImportSampleDialog::DrawView() {
 				props.invert_=true ;
 			} else {
 				SetColor(CD_NORMAL) ;
-				props.invert_=false ;
-			}
+                props.invert_ = current.Matches("*.sf2");
+            }
 			if (!current.IsDirectory()) {
 				strcpy(buffer,p.c_str()) ;
 			} else {
