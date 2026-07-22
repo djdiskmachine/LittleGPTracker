@@ -140,7 +140,7 @@ void TableView::interpolateSelection() {
     }
 
     GUIRect rect = getSelectionRect();
-    
+
     // Only interpolate if we're in param columns (1, 3, 5)
     int col = rect.Left();
     if (col != rect.Right() || (col != 1 && col != 3 && col != 5)) {
@@ -149,7 +149,7 @@ void TableView::interpolateSelection() {
 
     int startRow = rect.Top();
     int endRow = rect.Bottom();
-    
+
     // Need at least 2 rows to interpolate
     if (endRow - startRow < 1) {
         return;
@@ -674,6 +674,11 @@ void TableView::processNormalButtonMask(unsigned short mask) {
                 if (mask & EPBM_LEFT) {
                     if (viewType_ == VT_TABLE2) {
                         ViewType vt = VT_TABLE;
+                        ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                        SetChanged();
+                        NotifyObservers(&ve);
+                    } else if (VT_TABLE) {
+                        ViewType vt = VT_MIXER;
                         ViewEvent ve(VET_SWITCH_VIEW, &vt);
                         SetChanged();
                         NotifyObservers(&ve);

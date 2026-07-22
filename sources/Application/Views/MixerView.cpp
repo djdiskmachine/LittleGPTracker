@@ -21,9 +21,7 @@ MixerView::MixerView(GUIWindow &w,ViewData *viewData):View(w,viewData) {
     }
 }
 
-MixerView::~MixerView() {
-} 
-
+MixerView::~MixerView() {}
 
 void MixerView::onStart() {
 	Player *player=Player::GetInstance() ;
@@ -42,10 +40,10 @@ void MixerView::onStop() {
 	unsigned char from=viewData_->songX_ ;
 	unsigned char to=from ;
 	player->OnStartButton(PM_SONG,from,true,to) ;
-} ;
+}
 
-void MixerView::OnFocus() {
-} ;
+// Stay on the same column as SongView
+void MixerView::OnFocus() { viewData_->mixerCol_ = viewData_->songX_; }
 
 void MixerView::updateCursor(int dx,int dy) {
     if (dy != 0) {
@@ -88,11 +86,11 @@ void MixerView::ProcessButtonMask(unsigned short mask, bool pressed) {
 		viewMode_=VM_SELECTION ;
 	} ;
 	// Process selection related keys
-	
-	if (viewMode_==VM_SELECTION) {
+
+    if (viewMode_ == VM_SELECTION) {
         if (clipboard_.active_==false) {
             clipboard_.active_=true ;
-            clipboard_.x_=viewData_->songX_ ;
+            clipboard_.x_ = viewData_->songX_;
             clipboard_.y_=viewData_->songY_ ;
             clipboard_.offset_=viewData_->songOffset_ ;
 			saveX_=clipboard_.x_ ;
@@ -101,11 +99,11 @@ void MixerView::ProcessButtonMask(unsigned short mask, bool pressed) {
         }
         processSelectionButtonMask(mask) ;
     } else {
-	   
-       // Switch back to normal mode
+
+        // Switch back to normal mode
 
         viewMode_=VM_NORMAL ;
-        processNormalButtonMask(mask) ;
+        processNormalButtonMask(mask);
     }
 };
 
@@ -114,12 +112,12 @@ void MixerView::ProcessButtonMask(unsigned short mask, bool pressed) {
         process button mask in the case there is no
         selection active
  ******************************************************/
- 
+
 void MixerView::processNormalButtonMask(unsigned int mask) {
 
 	// B Modifier
 
-	if (mask&EPBM_B) {
+    if (mask & EPBM_B) {
         if (mask & EPBM_A) {
             // B + A = cut: reset volume to full
 			Mixer::GetInstance()->SetChannelVolume(viewData_->mixerCol_, 0xFF);
@@ -129,120 +127,144 @@ void MixerView::processNormalButtonMask(unsigned int mask) {
         }
     } else {
 
-	  // A modifier
+        // A modifier
 
-	  if (mask&EPBM_A) {
-          if (mixerRow_ == 3) {
-              // On LPF row: A+Up/Down = coarse ×2/÷2, A+Left/Right = fine ±10Hz
-              // A alone (no direction) = toggle off/1000Hz
-              Mixer *m = Mixer::GetInstance();
-              int col = viewData_->mixerCol_;
-              unsigned short freq = m->GetChannelLPF(col);
-              unsigned short newFreq = freq;
-            if (mask & EPBM_UP) {
-                if (freq == 0) newFreq = 20;
-                else {
-                    unsigned short step = freq / 10 < 1 ? 1 : freq / 10;
-                    newFreq = (unsigned short)(freq + step > 20000 ? 0 : freq + step);
+        if (mask & EPBM_A) {
+            if (mixerRow_ == 3) {
+                // On LPF row: A+Up/Down = coarse ×2/÷2, A+Left/Right = fine
+                // ±10Hz A alone (no direction) = toggle off/1000Hz
+                Mixer *m = Mixer::GetInstance();
+                int col = viewData_->mixerCol_;
+                unsigned short freq = m->GetChannelLPF(col);
+                unsigned short newFreq = freq;
+                if (mask & EPBM_UP) {
+                    if (freq == 0)
+                        newFreq = 20;
+                    else {
+                        unsigned short step = freq / 10 < 1 ? 1 : freq / 10;
+                        newFreq =
+                            (unsigned short)(freq + step > 20000 ? 0
+                                                                 : freq + step);
+                    }
+                } else if (mask & EPBM_DOWN) {
+                    if (freq == 0)
+                        newFreq = 20000;
+                    else {
+                        unsigned short step = freq / 10 < 1 ? 1 : freq / 10;
+                        newFreq = (freq <= step)
+                                      ? 0
+                                      : (unsigned short)(freq - step < 20
+                                                             ? 0
+                                                             : freq - step);
+                    }
+                } else if (mask & EPBM_RIGHT) {
+                    if (freq == 0)
+                        newFreq = 20;
+                    else
+                        newFreq =
+                            (unsigned short)(freq + 10 > 20000 ? 0 : freq + 10);
+                } else if (mask & EPBM_LEFT) {
+                    if (freq == 0)
+                        newFreq = 20000;
+                    else
+                        newFreq =
+                            (freq <= 10)
+                                ? 0
+                                : (unsigned short)(freq - 10 < 20 ? 0
+                                                                  : freq - 10);
                 }
-            } else if (mask & EPBM_DOWN) {
-                if (freq == 0) newFreq = 20000;
-                else {
-                    unsigned short step = freq / 10 < 1 ? 1 : freq / 10;
-                    newFreq = (freq <= step) ? 0 : (unsigned short)(freq - step < 20 ? 0 : freq - step);
+                if (newFreq != freq) {
+                    m->SetChannelLPF(col, newFreq);
+                    isDirty_ = true;
                 }
-            } else if (mask & EPBM_RIGHT) {
-                  if (freq == 0) newFreq = 20;
-                  else newFreq = (unsigned short)(freq + 10 > 20000 ? 0 : freq + 10);
-              } else if (mask & EPBM_LEFT) {
-                  if (freq == 0) newFreq = 20000;
-                  else newFreq = (freq <= 10) ? 0 : (unsigned short)(freq - 10 < 20 ? 0 : freq - 10);
-              }
-              if (newFreq != freq) {
-                  m->SetChannelLPF(col, newFreq);
-                  isDirty_ = true;
-              }
-              // show notification
-              if (newFreq == 0) {
-                  SetNotification("       Low Pass Filter: OFF");
-              } else {
-                  char notifBuf[40];
-                  sprintf(notifBuf, "       Low Pass Filter: %dHz", (int)newFreq);
-                  SetNotification(notifBuf);
-              }
-          } else if (mixerRow_ == 2) {
-              // On HPF row: A+Right cycles forward, A+Left cycles backward
-              if (mask & (EPBM_RIGHT | EPBM_LEFT)) {
-                  Mixer *m = Mixer::GetInstance();
-                  int col = viewData_->mixerCol_;
-                  int mode = m->GetChannelHPF(col);
-                  if (mask & EPBM_RIGHT) {
-                      mode = (mode + 1) % 3;
-                  } else {
-                      mode = (mode + 2) % 3;
-                  }
-                  m->SetChannelHPF(col, mode);
-                  isDirty_ = true;
+                // show notification
+                if (newFreq == 0) {
+                    SetNotification("       Low Pass Filter: OFF");
+                } else {
+                    char notifBuf[40];
+                    sprintf(notifBuf, "       Low Pass Filter: %dHz",
+                            (int)newFreq);
+                    SetNotification(notifBuf);
+                }
+            } else if (mixerRow_ == 2) {
+                // On HPF row: A+Right cycles forward, A+Left cycles backward
+                if (mask & (EPBM_RIGHT | EPBM_LEFT)) {
+                    Mixer *m = Mixer::GetInstance();
+                    int col = viewData_->mixerCol_;
+                    int mode = m->GetChannelHPF(col);
+                    if (mask & EPBM_RIGHT) {
+                        mode = (mode + 1) % 3;
+                    } else {
+                        mode = (mode + 2) % 3;
+                    }
+                    m->SetChannelHPF(col, mode);
+                    isDirty_ = true;
 
-                  const char *modeStr = (mode == 0) ? "OFF" : (mode == 1) ? "20Hz" : "90Hz";
-                  std::string notif = std::string("      High Pass Filter: ") + modeStr;
-                  SetNotification(notif.c_str());
-              }
-          } else if (mixerRow_ == 1) {
-              // On volume row: A adjusts volume
-			  Mixer *mixer = Mixer::GetInstance();
-			  int col = viewData_->mixerCol_;
-			  int currentVol = mixer->GetChannelVolume(col);
-			  int newVol = currentVol;
+                    const char *modeStr = (mode == 0)   ? "OFF"
+                                          : (mode == 1) ? "20Hz"
+                                                        : "90Hz";
+                    std::string notif =
+                        std::string("      High Pass Filter: ") + modeStr;
+                    SetNotification(notif.c_str());
+                }
+            } else if (mixerRow_ == 1) {
+                // On volume row: A adjusts volume
+                Mixer *mixer = Mixer::GetInstance();
+                int col = viewData_->mixerCol_;
+                int currentVol = mixer->GetChannelVolume(col);
+                int newVol = currentVol;
 
-              // Coarse adjustment (UP/DOWN)
-              if (mask & EPBM_UP) {
-                  newVol = currentVol + 16;
-              }
-              if (mask&EPBM_DOWN) {
-				  newVol = currentVol - 16;
-              }
+                // Coarse adjustment (UP/DOWN)
+                if (mask & EPBM_UP) {
+                    newVol = currentVol + 16;
+                }
+                if (mask & EPBM_DOWN) {
+                    newVol = currentVol - 16;
+                }
 
-              // Fine adjustment (RIGHT/LEFT)
-              if (mask & EPBM_RIGHT) {
-                  newVol = currentVol + 1;
-              }
-              if (mask&EPBM_LEFT) {
-				  newVol = currentVol - 1;
-              }
+                // Fine adjustment (RIGHT/LEFT)
+                if (mask & EPBM_RIGHT) {
+                    newVol = currentVol + 1;
+                }
+                if (mask & EPBM_LEFT) {
+                    newVol = currentVol - 1;
+                }
 
-              // Clamp to valid range (0-255)
-			  if (newVol < 0) newVol = 0;
-			  if (newVol > 255) newVol = 255;
-			  
-			  if (newVol != currentVol) {
-				  mixer->SetChannelVolume(col, newVol);
-				  isDirty_ = true;
-			  }
-          }
+                // Clamp to valid range (0-255)
+                if (newVol < 0)
+                    newVol = 0;
+                if (newVol > 255)
+                    newVol = 255;
 
-          if (mask & EPBM_R) {
-              toggleSolo();
-          }
+                if (newVol != currentVol) {
+                    mixer->SetChannelVolume(col, newVol);
+                    isDirty_ = true;
+                }
+            }
 
-      } else {
-          // R Modifier
-          if (mask & EPBM_R) {
-              if (mask & EPBM_UP) {
-                  ViewType vt = VT_SONG;
-                  ViewEvent ve(VET_SWITCH_VIEW, &vt);
-                  SetChanged();
-                  NotifyObservers(&ve);
-              } else if (mask & EPBM_RIGHT) {
-                  ViewType vt = VT_TABLE;
-                  ViewEvent ve(VET_SWITCH_VIEW, &vt);
-                  SetChanged();
-                  NotifyObservers(&ve);
-              }
-              if (mask & EPBM_START) {
-                  onStop();
-              }
-	    	} else {
+            if (mask & EPBM_R) {
+                toggleSolo();
+            }
+
+        } else {
+            // R Modifier
+            if (mask & EPBM_R) {
+                if (mask & EPBM_UP) {
+                    ViewType vt = VT_SONG;
+                    ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                    viewData_->songX_ = viewData_->mixerCol_;
+                    SetChanged();
+                    NotifyObservers(&ve);
+                } else if (mask & EPBM_RIGHT) {
+                    ViewType vt = VT_TABLE;
+                    ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                    SetChanged();
+                    NotifyObservers(&ve);
+                }
+                if (mask & EPBM_START) {
+                    onStop();
+                }
+            } else {
 
                 // L Modifier / Normal
 
@@ -260,7 +282,7 @@ void MixerView::processNormalButtonMask(unsigned int mask) {
                     onStart();
                 }
             }
-      }
+        }
     }
 } ;
 
@@ -269,44 +291,44 @@ void MixerView::processNormalButtonMask(unsigned int mask) {
         process button mask in the case there is a
         selection active
  ******************************************************/
- 
+
 void MixerView::processSelectionButtonMask(unsigned int mask) {
 
 	// B Modifier
 
-	if (mask&EPBM_B) {
+    if (mask & EPBM_B) {
 
     } else {
 
-	  // A modifier
+        // A modifier
 
-	  if (mask&EPBM_A) {
+        if (mask & EPBM_A) {
 
-	  } else {
+        } else {
 
-		  // R Modifier
+            // R Modifier
 
-          	if (mask&EPBM_R) {
- 				if (mask&EPBM_START) {
+            if (mask & EPBM_R) {
+                if (mask&EPBM_START) {
 				    onStop() ;
                 }
-	    	} else {
+            } else {
 
-    			// No modifier
-	          		if (mask&EPBM_START) {
-					   onStart() ;
-	    			}
-		    }
-	  } 
-	}
+                // No modifier
+                if (mask & EPBM_START) {
+                    onStart();
+                }
+            }
+        }
+    }
 }
 
 void MixerView::DrawView() {
 
-	Clear() ;
+    Clear();
 
-	GUITextProperties props ;
-	GUIPoint pos=GetTitlePosition() ;
+    GUITextProperties props;
+    GUIPoint pos=GetTitlePosition() ;
 	GUIPoint anchor=GetAnchor() ;
 	char hex[3] ;
 
@@ -314,11 +336,11 @@ void MixerView::DrawView() {
 
 	SetColor(CD_NORMAL) ;
 
-	Player *player=Player::GetInstance() ;
-	
-	std::ostringstream os;
+    Player *player = Player::GetInstance();
 
-	os << ((player->GetSequencerMode()==SM_SONG)?"Song":"Live") ;
+    std::ostringstream os;
+
+    os << ((player->GetSequencerMode() == SM_SONG) ? "Song" : "Live");
 
     std::string buffer(os.str());
 
@@ -330,7 +352,7 @@ void MixerView::DrawView() {
     Mixer *mixer = Mixer::GetInstance();
     Player *playerInst = Player::GetInstance();
     GUITextProperties rowLabelProps;
-    
+
     // Row 0: bus routing
     if (mixerRow_ == 0) {
         rowLabelProps.invert_ = true;
@@ -340,7 +362,7 @@ void MixerView::DrawView() {
         SetColor(CD_NORMAL);
     }
     DrawString(pos._x - 3, pos._y, " ", rowLabelProps);
-    
+
     for (int i = 0; i < 8; i++) {
         props.invert_ = (i == viewData_->mixerCol_ && mixerRow_ == 0);
         SetColor((i == viewData_->mixerCol_ && mixerRow_ == 0) ? CD_HILITE2 : CD_NORMAL);
@@ -356,7 +378,7 @@ void MixerView::DrawView() {
         }
         pos._x += dx;
     }
-    
+
     // Row 1: volumes
     pos = anchor;
     pos._y += 1;
@@ -368,11 +390,12 @@ void MixerView::DrawView() {
         SetColor(CD_NORMAL);
     }
     DrawString(pos._x - 5, pos._y, "VOL", rowLabelProps);
-    
+
     pos._x = anchor._x;
     for (int i = 0; i < 8; i++) {
         props.invert_ = (i == viewData_->mixerCol_ && mixerRow_ == 1);
-        SetColor((i == viewData_->mixerCol_ && mixerRow_ == 1) ? CD_HILITE2 : CD_NORMAL);
+        SetColor((i == viewData_->mixerCol_ && mixerRow_ == 1) ? CD_HILITE2
+                                                               : CD_NORMAL);
 
         int vol = mixer->GetChannelVolume(i);
         hex2char(vol, hex);
@@ -391,12 +414,12 @@ void MixerView::DrawView() {
         SetColor(CD_NORMAL);
     }
     DrawString(pos._x - 5, pos._y, "HPF", rowLabelProps);
-    
+
     pos._x = anchor._x;
     for (int i = 0; i < 8; i++) {
         props.invert_ = (i == viewData_->mixerCol_ && mixerRow_ == 2);
         SetColor((i == viewData_->mixerCol_ && mixerRow_ == 2) ? CD_HILITE2 : CD_NORMAL);
-        
+
         int hpf = mixer->GetChannelHPF(i);
         char code[4];
         if (hpf == 0) {
@@ -467,19 +490,19 @@ void MixerView::DrawView() {
     // Draw VU bars at the end so they appear on top of everything
     // They will always show the empty dashes and smoothly decay when paused
     DrawVuBars();
-} ;
+};
 
-void MixerView::OnPlayerUpdate(PlayerEventType ,unsigned int tick) {
+void MixerView::OnPlayerUpdate(PlayerEventType, unsigned int tick) {
 
-	Player *player=Player::GetInstance() ;
+    Player *player = Player::GetInstance();
 
-	// Draw clipping indicator & CPU usage
+    // Draw clipping indicator & CPU usage
 
-	GUIPoint anchor=GetAnchor() ;
-	GUIPoint pos=anchor ;
+    GUIPoint anchor = GetAnchor();
+    GUIPoint pos=anchor ;
 
-	GUITextProperties props ;
-	SetColor(CD_NORMAL) ;
+    GUITextProperties props;
+    SetColor(CD_NORMAL) ;
 
     if (View::miniLayout_) {
       pos._y=0 ;
@@ -488,19 +511,19 @@ void MixerView::OnPlayerUpdate(PlayerEventType ,unsigned int tick) {
       pos=anchor ;
       pos._x+=25 ;
     }
-    
-	if (player->Clipped()) {
-           DrawString(pos._x,pos._y,"clip",props); 
-    } else {
-           DrawString(pos._x,pos._y,"----",props); 
-    }
-	char strbuffer[10] ;
 
-	pos._y+=1 ;
-	sprintf(strbuffer,"%3.3d%%",player->GetPlayedBufferPercentage()) ; 
+    if (player->Clipped()) {
+        DrawString(pos._x, pos._y, "clip", props);
+    } else {
+        DrawString(pos._x, pos._y, "----", props);
+    }
+    char strbuffer[10];
+
+    pos._y += 1;
+    sprintf(strbuffer,"%3.3d%%",player->GetPlayedBufferPercentage()) ;
 	DrawString(pos._x,pos._y,strbuffer,props) ;
 
-    System *sys=System::GetInstance() ;
+    System *sys = System::GetInstance();
     int batt=sys->GetBatteryLevel() ;
     if (batt>=0) {
 		if (batt<90) {
@@ -512,21 +535,20 @@ void MixerView::OnPlayerUpdate(PlayerEventType ,unsigned int tick) {
 		props.invert_=invertBatt_ ;
 
 	    pos._y+=1 ;
-    	sprintf(strbuffer,"%3.3d",batt) ; 
-	    DrawString(pos._x,pos._y,strbuffer,props) ;
+        sprintf(strbuffer, "%3.3d", batt);
+        DrawString(pos._x,pos._y,strbuffer,props) ;
     }
-	SetColor(CD_NORMAL) ;
-	props.invert_=false ;
+    SetColor(CD_NORMAL);
+    props.invert_=false ;
     int time=int(player->GetPlayTime()) ;
     int mi=time/60 ;
     int se=time-mi*60 ;
-	sprintf(strbuffer,"%2.2d:%2.2d",mi,se) ; 
-	pos._y+=1 ;	
-	DrawString(pos._x,pos._y,strbuffer,props) ;
+    sprintf(strbuffer, "%2.2d:%2.2d", mi, se);
+    pos._y += 1;
+    DrawString(pos._x,pos._y,strbuffer,props) ;
 
     drawNotes() ;
-
-} ;
+};
 
 /******************************************************
  DrawVuBars:
@@ -541,11 +563,11 @@ void MixerView::DrawVuBars() {
     // DrawVuBarRow for rendering Draws stereo L/R for each of the 8 channels
 
     Player *player = Player::GetInstance();
-    
+
     GUIPoint vuPos = GetAnchor();
     // VU meter starts at anchor row and grows upward for 8 rows
-    vuPos._y += 16;  // Position below the row labels (bus, vol, hpf)
-    
+    vuPos._y += 16; // Position below the row labels (bus, vol, hpf)
+
     GUITextProperties vuProps;
     vuProps.invert_ = true;
 
@@ -558,22 +580,21 @@ void MixerView::DrawVuBars() {
     // Update bar heights with slew rate decay for both L and R
     int displayHeightsL[8];
     int displayHeightsR[8];
-    GetVuPeakLevelsStereo(vuBarHeightsL_, vuBarHeightsR_, 
-                          displayHeightsL, displayHeightsR,
-                          peakLevelsL, peakLevelsR);
-    
+    GetVuPeakLevelsStereo(vuBarHeightsL_, vuBarHeightsR_, displayHeightsL,
+                          displayHeightsR, peakLevelsL, peakLevelsR);
+
     // Draw vertical VU bars for L and R channels (two columns per channel)
     // Each bar is 8 rows tall, growing upward
     for (int row = 0; row < VU_METER_HEIGHT; row++) {
         // Set color based on level threshold
         SetColor(GetVuBarColor(row));
-        
+
         // Draw left and right channels for all 8 channels
         for (int i = 0; i < 8; i++) {
             GUIPoint pos = vuPos;
             pos._x += i * dx;  // Each channel gets dx spacing
             pos._y -= row;     // Grow upward from the anchor position
-            
+
             // Draw left channel
             DrawVuBarRow(this, pos, row, displayHeightsL[i], vuProps,
                          GetVuBarColor(row));
@@ -584,7 +605,7 @@ void MixerView::DrawVuBars() {
                          GetVuBarColor(row));
         }
     }
-    
+
     SetColor(CD_NORMAL);
 }
 
