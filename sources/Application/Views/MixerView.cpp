@@ -484,8 +484,8 @@ void MixerView::DrawView() {
     EnableNotification();
 
     if (player->IsRunning()) {
-		OnPlayerUpdate(PET_UPDATE) ;
-	} ;
+        OnPlayerUpdate(PET_UPDATE);
+    }
 
     // Draw VU bars at the end so they appear on top of everything
     // They will always show the empty dashes and smoothly decay when paused
@@ -609,6 +609,4 @@ void MixerView::DrawVuBars() {
     SetColor(CD_NORMAL);
 }
 
-void MixerView::AnimationUpdate() {
-    DrawVuBars();
-} ;
+void MixerView::AnimationUpdate() { DrawVuBars(); }
