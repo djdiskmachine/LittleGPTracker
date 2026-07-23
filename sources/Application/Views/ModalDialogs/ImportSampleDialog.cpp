@@ -1,6 +1,7 @@
 #include "ImportSampleDialog.h"
-#include "Application/Instruments/SamplePool.h"
 #include "Application/Instruments/SampleInstrument.h"
+#include "Application/Instruments/SamplePool.h"
+#include "Application/Views/ModalDialogs/MessageBox.h"
 
 #define LIST_SIZE 15
 #define LIST_WIDTH 28
@@ -30,23 +31,23 @@ ImportSampleDialog::~ImportSampleDialog() {
 
 void ImportSampleDialog::DrawView() {
 
-	SetWindow(LIST_WIDTH,LIST_SIZE+3) ;
+    SetWindow(LIST_WIDTH, LIST_SIZE + 3);
 
-	GUITextProperties props ;
+    GUITextProperties props;
 
-// Draw title
+    // Draw title
 
-//	char title[40] ;
+    //	char title[40] ;
 
-	SetColor(CD_NORMAL) ;
+    SetColor(CD_NORMAL);
 
-//	sprintf(title,"Sample Import from %s",currentPath_.GetName()) ;
-//	w_.DrawString(title,pos,props) ;
+    //	sprintf(title,"Sample Import from %s",currentPath_.GetName()) ;
+    //	w_.DrawString(title,pos,props) ;
 
-// Draw samples
+    // Draw samples
 
-	int x=1 ;
-	int y=1 ;
+    int x = 1;
+    int y=1 ;
 
 	if (currentSample_<topIndex_) {
 		topIndex_=currentSample_ ;
@@ -136,7 +137,16 @@ void ImportSampleDialog::import(Path &element) {
 			toInstr_=viewData_->project_->GetInstrumentBank()->GetNext() ;
 		};
 	} else {
-		Trace::Error("failed to import sample") ;
+        const char *err_str = (sampleID == -SLOAD_ERR_MAX_SAMPLES)
+                                  ? "Maximum number of samples exceeded"
+                              : (sampleID == -SLOAD_ERR_MAX_SOUNDFONTS)
+                                  ? "Maximum number of SoundFonts exceeded"
+                              : (sampleID == -SLOAD_ERR_INVALID_DIR)
+                                  ? "Invalid directory"
+                                  : "Unable to open file";
+        Trace::Error(err_str);
+        MessageBox *mb = new MessageBox(*this, err_str);
+        View::DoModal(mb);
 	};
 	isDirty_=true ;
 } ;
