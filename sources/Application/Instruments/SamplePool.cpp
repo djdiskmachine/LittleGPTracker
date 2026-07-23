@@ -202,11 +202,12 @@ int SamplePool::ImportSample(Path &path) {
 	delete(fout) ;
 
 	// now load the sample
+    bool status = dstPath.Matches("*.wav")
+                      ? loadSample(dstPath.GetPath().c_str())
+                      : loadSoundFont(dstPath.GetPath().c_str());
 
-	bool status=loadSample(dstPath.GetPath().c_str()) ;
-
-	SetChanged() ;
-	SamplePoolEvent ev ;
+    SetChanged();
+    SamplePoolEvent ev ;
 	ev.index_=count_-1 ;
 	ev.type_=SPET_INSERT ;
 	NotifyObservers(&ev) ;
