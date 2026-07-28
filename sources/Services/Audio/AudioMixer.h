@@ -22,6 +22,9 @@ public:
 	void EnableRendering(bool enable) ;
 	void SetVolume(fixed volume) ;
     unsigned int GetPeakLevel() const { return peakMixerLevel_; }
+    unsigned int GetPreMasterVolumePeakLevel() const {
+        return preMasterVolumePeakLevel_;
+    }
     virtual void SetSoftclip(int clip, int gain);
     virtual void SetMasterVolume(int volume) ;
 	virtual bool Clipped() ;
@@ -40,5 +43,6 @@ private:
   int masterVolume_;
   bool clipped_;
   unsigned int peakMixerLevel_;
+  unsigned int preMasterVolumePeakLevel_;
 };
 #endif

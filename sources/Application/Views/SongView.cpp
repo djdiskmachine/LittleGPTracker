@@ -901,15 +901,9 @@ void SongView::processSelectionButtonMask(unsigned int mask) {
  ******************************************************/
 
 void SongView::DrawVuBars() {
-    // NOTE: Common VU meter logic extracted to VuMeterUtil
-    // Uses: GetVuPeakLevelsStereo for L/R decay, GetVuBarColor for colors,
-    // DrawVuBarRow for rendering Draws stereo L/R columns side by side
-
     Player *player = Player::GetInstance();
-    
+
     GUIPoint anchor = GetAnchor();
-    // VU meter positioned at: x = anchor._x + 25 (right of tracks)
-    //                          y = anchor._y + songRowCount_ (below all tracks)
     GUIPoint vuPos = anchor;
     vuPos._x += 25;
     vuPos._y += View::songRowCount_ - 1;
@@ -917,47 +911,43 @@ void SongView::DrawVuBars() {
     GUITextProperties vuProps;
     vuProps.invert_ = true;
 
-    float peakLevelsL[8];
-    float peakLevelsR[8];
-    ReadMixBusPeakLevels(player->IsRunning(), peakLevelsL, peakLevelsR);
+    float peakLevelsL[9];
+    float peakLevelsR[9];
 
-    // Update bar heights with slew rate decay for both L and R
-    int displayHeightsL[8];
-    int displayHeightsR[8];
-    GetVuPeakLevelsStereo(vuBarHeightsL_, vuBarHeightsR_, 
-                          displayHeightsL, displayHeightsR,
-                          peakLevelsL, peakLevelsR);
-    
+    // Read master peak level (post-volume) to match MixerView's Master meter
+    if (!player->IsRunning()) {
+        peakLevelsL[8] = peakLevelsR[8] = 0.0f;
+    } else {
+        MixerService *ms = MixerService::GetInstance();
+        uint32_t masterLevel = ms->GetMasterPeakLevel();
+        peakLevelsL[8] = (float)((masterLevel >> 16) & 0xFFFF) / 32767.0f;
+        peakLevelsR[8] = (float)(masterLevel & 0xFFFF) / 32767.0f;
+    }
+
+    // Update bar height at index 8 using utility
+    int displayHeightsL[9];
+    int displayHeightsR[9];
+    UpdateVuBarHeights(vuBarHeightsL_, displayHeightsL, peakLevelsL, 9);
+    UpdateVuBarHeights(vuBarHeightsR_, displayHeightsR, peakLevelsR, 9);
+
     // Draw vertical VU bars for L and R channels (two columns side by side)
-    // Each bar is 8 rows tall, growing upward
     for (int row = 0; row < VU_METER_HEIGHT; row++) {
-        // Set color based on level threshold
         SetColor(GetVuBarColor(row));
-        
-        // Get max height from all channels for both L and R
-        int maxHeightL = 0;
-        int maxHeightR = 0;
-        for (int i = 0; i < 8; i++) {
-            if (displayHeightsL[i] > maxHeightL) {
-                maxHeightL = displayHeightsL[i];
-            }
-            if (displayHeightsR[i] > maxHeightR) {
-                maxHeightR = displayHeightsR[i];
-            }
-        }
-        
+
         // Draw left channel at x
         GUIPoint posL = vuPos;
         posL._y -= row;
-        DrawVuBarRow(this, posL, row, maxHeightL, vuProps, GetVuBarColor(row));
+        DrawVuBarRow(this, posL, row, displayHeightsL[8], vuProps,
+                     GetVuBarColor(row));
 
         // Draw right channel at x+1 (one character to the right)
         GUIPoint posR = vuPos;
         posR._x += 1;
         posR._y -= row;
-        DrawVuBarRow(this, posR, row, maxHeightR, vuProps, GetVuBarColor(row));
+        DrawVuBarRow(this, posR, row, displayHeightsR[8], vuProps,
+                     GetVuBarColor(row));
     }
-    
+
     SetColor(CD_NORMAL);
 }
 

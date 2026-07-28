@@ -20,7 +20,9 @@ protected:
 	void onStop() ;
 	void updateCursor(int dx,int dy)  ;
     void toggleMute();
-    void toggleSolo() ;
+    void toggleSolo();
+    void unMuteAll();
+
 private:
 	const char *song_ ;
     int soloChannel_;
@@ -40,9 +42,11 @@ private:
     int saveY_ ;
 	int saveOffset_ ;
 	bool invertBatt_ ;
-    void DrawVuBars();      // Draw VU bars - called from both DrawView and
-                            // AnimationUpdate
-    int vuBarHeightsL_[8];  // Left channel smoothed bar heights with slew rate decay
-    int vuBarHeightsR_[8];  // Right channel smoothed bar heights with slew rate decay
+    ViewType previousViewType_; // Track which view we came from for easy
+                                // navigation back
+    void DrawVuBars();          // Draw VU bars - called from both DrawView and
+                                // AnimationUpdate
+    int vuBarHeightsL_[9];  // Left channel smoothed bar heights with slew rate decay (8 channels + 1 master)
+    int vuBarHeightsR_[9];  // Right channel smoothed bar heights with slew rate decay (8 channels + 1 master)
 };
 #endif

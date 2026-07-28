@@ -499,6 +499,13 @@ void ChainView::processNormalButtonMask(unsigned short mask) {
                     }
                 }
 
+                if (mask & EPBM_DOWN) {
+                    ViewType vt = VT_MIXER;
+                    ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                    SetChanged();
+                    NotifyObservers(&ve);
+                }
+
                 // We toggle full chain start only if we"re not in live mode
                 // or if the player ain't playing yet
 
