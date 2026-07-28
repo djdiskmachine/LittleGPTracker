@@ -61,12 +61,11 @@ bool FxPrinter::Run() {
     setPaths();
     // Are we overwriting an already imported sample?
     bool imported = SamplePool::GetInstance()->IsImported(fo_);
-    parseCommand();
 #ifdef FFMPEG_ENABLED
     if (encode(fiPath_.c_str(), ir_.c_str(), foPath_.c_str(), irWet_, irPad_) == 0) {
         int newIndex = SamplePool::GetInstance()->Reassign(fo_, imported);
         instrument_->AssignSample(newIndex);
-        notificationResult_ = "libav OK!";
+        notificationResult_ = "Done!";
         return true;
     } else {
         Trace::Log("PRINTFX", "Failed");

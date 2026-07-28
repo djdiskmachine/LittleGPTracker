@@ -22,94 +22,60 @@ static AVFilterContext *ir_buffersrc_ctx;
 static AVFilterContext *buffersink_ctx;
 static AVCodecContext *enc_ctx = NULL;
 
-static int open_input_file(const char *filename)
-{
+/* Return the number of channels for a codecpar across FFmpeg API versions. */
+static int par_channels(const AVCodecParameters *par) {
+#ifdef FFMPEG_LEGACY_API
+    return par->channels;
+#else
+    return par->ch_layout.nb_channels;
+#endif
+}
+
+/* Write a filter-friendly channel layout string ("mono", "stereo", or "Nc"). */
+static void par_layout_str(const AVCodecParameters *par, char *out, size_t n) {
+    int ch = par_channels(par);
+    if (ch == 1)
+        strcpy(out, "mono");
+    else if (ch == 2)
+        strcpy(out, "stereo");
+    else
+        snprintf(out, n, "%dc", ch);
+}
+
+/* Open an audio file, decode-probe its first stream, and normalize codecpar. */
+static int open_audio_file(AVFormatContext **fmt_ctx, const char *filename) {
     const AVCodec *dec;
     AVCodecContext *dec_ctx;
     AVStream *stream;
     int ret;
 
-    if ((ret = avformat_open_input(&ifmt_ctx, filename, NULL, NULL)) < 0) { 
+    if ((ret = avformat_open_input(fmt_ctx, filename, NULL, NULL)) < 0) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open input file\n");
         return ret;
     }
 
-    if ((ret = avformat_find_stream_info(ifmt_ctx, NULL)) < 0) {
+    if ((ret = avformat_find_stream_info(*fmt_ctx, NULL)) < 0) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find stream information\n");
         return ret;
     }
 
-    /* select the audio stream */
-    ret = av_find_best_stream(ifmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, &dec, 0);
+    ret = av_find_best_stream(*fmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, &dec, 0);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find an audio stream in the input file\n");
+        av_log(NULL, AV_LOG_ERROR,
+               "[LibAvProc] Cannot find an audio stream in the input file\n");
         return ret;
     }
 
-    stream = ifmt_ctx->streams[ret];
+    stream = (*fmt_ctx)->streams[ret];
 
-    /* create decoding context */
     dec_ctx = avcodec_alloc_context3(dec);
     if (!dec_ctx)
         return AVERROR(ENOMEM);
     avcodec_parameters_to_context(dec_ctx, stream->codecpar);
 
-    /* init the audio decoder */
     if ((ret = avcodec_open2(dec_ctx, dec, NULL)) < 0) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open audio decoder\n");
-        return ret;
-    }
-
-    stream->codecpar->codec_id = dec_ctx->codec_id;
-    stream->codecpar->sample_rate = dec_ctx->sample_rate;
-    stream->codecpar->format = dec_ctx->sample_fmt;
-#ifdef FFMPEG_LEGACY_API
-    stream->codecpar->channels = dec_ctx->channels;
-    stream->codecpar->channel_layout = dec_ctx->channel_layout;
-#else
-    av_channel_layout_copy(&stream->codecpar->ch_layout, &dec_ctx->ch_layout);
-#endif
-
-    avcodec_free_context(&dec_ctx);
-
-    return 0;
-}
-
-static int open_ir_file(const char *filename)
-{
-    const AVCodec *dec;
-    AVCodecContext *dec_ctx;
-    AVStream *stream;
-    int ret;
-
-    if ((ret = avformat_open_input(&ir_fmt_ctx, filename, NULL, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open IR file\n");
-        return ret;
-    }
-
-    if ((ret = avformat_find_stream_info(ir_fmt_ctx, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find stream information in IR file\n");
-        return ret;
-    }
-
-    /* select the audio stream */
-    ret = av_find_best_stream(ir_fmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, &dec, 0);
-    if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot find an audio stream in the IR file\n");
-        return ret;
-    }
-
-    stream = ir_fmt_ctx->streams[ret];
-
-    /* create decoding context */
-    dec_ctx = avcodec_alloc_context3(dec);
-    if (!dec_ctx)
-        return AVERROR(ENOMEM);
-    avcodec_parameters_to_context(dec_ctx, stream->codecpar);
-
-    /* init the audio decoder */
-    if ((ret = avcodec_open2(dec_ctx, dec, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot open IR audio decoder\n");
+        avcodec_free_context(&dec_ctx);
         return ret;
     }
 
@@ -158,34 +124,22 @@ static int open_output_file(const char *filename)
         return AVERROR(ENOMEM);
     }
 
-    /* Set output parameters to target format: 44.1kHz, 16-bit, stereo unless IR is mono */
+    /* Set output parameters to target format: 44.1kHz, 16-bit, stereo unless
+     * both inputs are mono */
     enc_ctx->sample_rate = 44100;
-    
-    /* Set channel layout based on IR format */
+
+    /* Stereo output if either the input or the IR is stereo; mono only if both
+     * are mono */
+    int out_channels = (par_channels(ifmt_ctx->streams[0]->codecpar) == 1 &&
+                        par_channels(ir_fmt_ctx->streams[0]->codecpar) == 1)
+                           ? 1
+                           : 2;
 #ifdef FFMPEG_LEGACY_API
-    int ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
-    if (ir_channels == 0) {
-        ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
-    }
-    
-    if (ir_channels == 1) {
-        enc_ctx->channels = 1;
-        enc_ctx->channel_layout = AV_CH_LAYOUT_MONO;
-    } else {
-        enc_ctx->channels = 2;
-        enc_ctx->channel_layout = AV_CH_LAYOUT_STEREO;
-    }
+    enc_ctx->channels = out_channels;
+    enc_ctx->channel_layout =
+        out_channels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO;
 #else
-    int ir_channels = ir_fmt_ctx->streams[0]->codecpar->ch_layout.nb_channels;
-    if (ir_channels == 0) {
-        ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
-    }
-    
-    if (ir_channels == 1) {
-        av_channel_layout_default(&enc_ctx->ch_layout, 1);  /* Mono */
-    } else {
-        av_channel_layout_default(&enc_ctx->ch_layout, 2);  /* Stereo */
-    }
+    av_channel_layout_default(&enc_ctx->ch_layout, out_channels);
 #endif
 
     /* Use S16 format to match encoder */
@@ -237,28 +191,12 @@ static int init_filters(int ir_wet, int ir_pad)
     AVRational time_base = ifmt_ctx->streams[0]->time_base;
     AVRational ir_time_base = ir_fmt_ctx->streams[0]->time_base;
 
-    /* Determine the target format - always 44.1kHz, stereo unless IR is mono */
+    /* Output is 44.1kHz; stereo unless both the input and the IR are mono */
     char target_layout[64];
     int target_sample_rate = 44100;
-    
-    /* Determine output channel layout based on IR format */
-#ifdef FFMPEG_LEGACY_API
-    int ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
-    if (ir_channels == 0) {
-        ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
-    }
-#else
-    int ir_channels = ir_fmt_ctx->streams[0]->codecpar->ch_layout.nb_channels;
-    if (ir_channels == 0) {
-        ir_channels = ir_fmt_ctx->streams[0]->codecpar->channels;
-    }
-#endif
-
-    if (ir_channels == 1) {
-        strcpy(target_layout, "mono");  /* If IR is mono, output mono for simplicity */
-    } else {
-        strcpy(target_layout, "stereo"); /* Otherwise, output stereo */
-    }
+    int both_mono = par_channels(ifmt_ctx->streams[0]->codecpar) == 1 &&
+                    par_channels(ir_fmt_ctx->streams[0]->codecpar) == 1;
+    strcpy(target_layout, both_mono ? "mono" : "stereo");
 
     filter_graph = avfilter_graph_alloc();
     if (!outputs || !inputs || !filter_graph) {
@@ -283,31 +221,8 @@ static int init_filters(int ir_wet, int ir_pad)
 
     /* Set the filter options through the AVOptions API. */
     char ch_layout_str[64];
-    // Use the actual channel layout from the input file
-#ifdef FFMPEG_LEGACY_API
-    if (ifmt_ctx->streams[0]->codecpar->channels == 1) {
-        strcpy(ch_layout_str, "mono");
-    } else if (ifmt_ctx->streams[0]->codecpar->channels == 2) {
-        strcpy(ch_layout_str, "stereo");
-    } else {
-        snprintf(ch_layout_str, sizeof(ch_layout_str), "%dc", ifmt_ctx->streams[0]->codecpar->channels);
-    }
-#else
-    if (ifmt_ctx->streams[0]->codecpar->ch_layout.nb_channels == 0) {
-        // If channel layout is unknown, default based on channel count
-        if (ifmt_ctx->streams[0]->codecpar->channels == 1) {
-            strcpy(ch_layout_str, "mono");
-        } else if (ifmt_ctx->streams[0]->codecpar->channels == 2) {
-            strcpy(ch_layout_str, "stereo");
-        } else {
-            snprintf(ch_layout_str, sizeof(ch_layout_str), "%dc", ifmt_ctx->streams[0]->codecpar->channels);
-        }
-    } else {
-        // Use the input stream's channel layout
-        av_channel_layout_describe(&ifmt_ctx->streams[0]->codecpar->ch_layout,
-                                   ch_layout_str, sizeof(ch_layout_str));
-    }
-#endif
+    par_layout_str(ifmt_ctx->streams[0]->codecpar, ch_layout_str,
+                   sizeof(ch_layout_str));
     snprintf(args, sizeof(args),
              "time_base=%d/%d:sample_rate=%d:sample_fmt=%s:channel_layout=%s",
              time_base.num, time_base.den, ifmt_ctx->streams[0]->codecpar->sample_rate,
@@ -328,31 +243,8 @@ static int init_filters(int ir_wet, int ir_pad)
     }
 
     char ir_ch_layout_str[64];
-    // Use the actual channel layout from the IR file
-#ifdef FFMPEG_LEGACY_API
-    if (ir_fmt_ctx->streams[0]->codecpar->channels == 1) {
-        strcpy(ir_ch_layout_str, "mono");
-    } else if (ir_fmt_ctx->streams[0]->codecpar->channels == 2) {
-        strcpy(ir_ch_layout_str, "stereo");
-    } else {
-        snprintf(ir_ch_layout_str, sizeof(ir_ch_layout_str), "%dc", ir_fmt_ctx->streams[0]->codecpar->channels);
-    }
-#else
-    if (ir_fmt_ctx->streams[0]->codecpar->ch_layout.nb_channels == 0) {
-        // If channel layout is unknown, default based on channel count
-        if (ir_fmt_ctx->streams[0]->codecpar->channels == 1) {
-            strcpy(ir_ch_layout_str, "mono");
-        } else if (ir_fmt_ctx->streams[0]->codecpar->channels == 2) {
-            strcpy(ir_ch_layout_str, "stereo");
-        } else {
-            snprintf(ir_ch_layout_str, sizeof(ir_ch_layout_str), "%dc", ir_fmt_ctx->streams[0]->codecpar->channels);
-        }
-    } else {
-        // Use the IR stream's channel layout
-        av_channel_layout_describe(&ir_fmt_ctx->streams[0]->codecpar->ch_layout,
-                                   ir_ch_layout_str, sizeof(ir_ch_layout_str));
-    }
-#endif
+    par_layout_str(ir_fmt_ctx->streams[0]->codecpar, ir_ch_layout_str,
+                   sizeof(ir_ch_layout_str));
     snprintf(ir_args, sizeof(ir_args),
              "time_base=%d/%d:sample_rate=%d:sample_fmt=%s:channel_layout=%s",
              ir_time_base.num, ir_time_base.den, ir_fmt_ctx->streams[0]->codecpar->sample_rate,
@@ -433,16 +325,30 @@ static int init_filters(int ir_wet, int ir_pad)
     if (afir_wet > 10) afir_wet = 10;
     if (afir_wet < 0) afir_wet = 0;
 
-    snprintf(filters_descr, sizeof(filters_descr),
-             "[ir_in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s["
-             "ir_norm];"
-             "[in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s,"
-             "asplit[in_1][in_2];"
-             "[in_1][ir_norm]afir=dry=10:wet=%d[reverb];"
-             "[in_2][reverb]amix=inputs=2:weights=1 "
-             "1,volume=2.5,aformat=sample_fmts=s16:channel_layouts=%s[out]",
-             target_sample_rate, target_layout, target_sample_rate,
-             target_layout, afir_wet, target_layout);
+    if (ir_pad > 0) {
+        snprintf(filters_descr, sizeof(filters_descr),
+                 "[ir_in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s["
+                 "ir_norm];"
+                 "[in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s,"
+                 "asplit[in_1][in_2];"
+                 "[in_1][ir_norm]afir=dry=10:wet=%d[reverb];"
+                 "[in_2][reverb]amix=inputs=2:weights=1 "
+                 "1,volume=2.5,aformat=sample_fmts=s16:channel_layouts=%s,"
+                 "apad=pad_dur=%dms[out]",
+                 target_sample_rate, target_layout, target_sample_rate,
+                 target_layout, afir_wet, target_layout, ir_pad);
+    } else {
+        snprintf(filters_descr, sizeof(filters_descr),
+                 "[ir_in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s["
+                 "ir_norm];"
+                 "[in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s,"
+                 "asplit[in_1][in_2];"
+                 "[in_1][ir_norm]afir=dry=10:wet=%d[reverb];"
+                 "[in_2][reverb]amix=inputs=2:weights=1 "
+                 "1,volume=2.5,aformat=sample_fmts=s16:channel_layouts=%s[out]",
+                 target_sample_rate, target_layout, target_sample_rate,
+                 target_layout, afir_wet, target_layout);
+    }
 
     av_log(NULL, AV_LOG_INFO, "Filter graph: %s\n", filters_descr);
 
@@ -460,13 +366,9 @@ end:
     return ret;
 }
 
-static int encode_write_frame(AVFrame *filt_frame, unsigned int stream_index, int *got_frame) {
+static int encode_write_frame(AVFrame *filt_frame, unsigned int stream_index) {
     int ret;
-    int got_frame_local;
     AVPacket *enc_pkt;
-
-    if (!got_frame)
-        got_frame = &got_frame_local;
 
     if (!enc_ctx) {
         return AVERROR(EINVAL);
@@ -507,63 +409,26 @@ end:
     return ret;
 }
 
-static int filter_encode_write_frame(AVFrame *frame, AVFrame *ir_frame, unsigned int stream_index)
-{
+static int drain_filtergraph(void) {
     int ret;
-    AVFrame *filt_frame;
 
-    /* Only add frames if they are provided */
-    if (frame) {
-        ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF);
-        if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the input filtergraph\n");
-            return ret;
-        }
-    }
+    for (;;) {
+        AVFrame *filt_frame = av_frame_alloc();
+        if (!filt_frame)
+            return AVERROR(ENOMEM);
 
-    if (ir_frame) {
-        ret = av_buffersrc_add_frame_flags(ir_buffersrc_ctx, ir_frame, AV_BUFFERSRC_FLAG_KEEP_REF);
-        if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the IR filtergraph\n");
-            return ret;
-        }
-    }
-
-    /* Always try to pull filtered frames from the filtergraph */
-    while (1) {
-        filt_frame = av_frame_alloc();
-        if (!filt_frame) {
-            ret = AVERROR(ENOMEM);
-            break;
-        }
         ret = av_buffersink_get_frame(buffersink_ctx, filt_frame);
         if (ret < 0) {
-            /* if no more frames for output - returns AVERROR(EAGAIN)
-             * if flushed and no more frames for output - returns AVERROR_EOF
-             * rewrite retcode to 0 to show it as normal procedure completion
-             */
-            if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
-                ret = 0;
+            /* EAGAIN: need more input. EOF: fully flushed. Both are normal. */
             av_frame_free(&filt_frame);
-            break;
+            return (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) ? 0 : ret;
         }
 
-        printf("Got filtered frame: %d samples, %d channels, %d Hz\n",
-#ifdef FFMPEG_LEGACY_API
-               filt_frame->nb_samples, filt_frame->channels,
-               filt_frame->sample_rate);
-#else
-               filt_frame->nb_samples, filt_frame->ch_layout.nb_channels,
-               filt_frame->sample_rate);
-#endif
-
-        ret = encode_write_frame(filt_frame, stream_index, NULL);
+        ret = encode_write_frame(filt_frame, 0);
         av_frame_free(&filt_frame);
         if (ret < 0)
-            break;
+            return ret;
     }
-
-    return ret;
 }
 
 int encode(const char *fi, const char *ir, const char *fo, int irWet,
@@ -574,9 +439,9 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet,
     AVCodecContext *dec_ctx = NULL, *ir_dec_ctx = NULL;
     int ir_loaded = 0;
 
-    if ((ret = open_input_file(fi)) < 0)
+    if ((ret = open_audio_file(&ifmt_ctx, fi)) < 0)
         goto end;
-    if ((ret = open_ir_file(ir)) < 0)
+    if ((ret = open_audio_file(&ir_fmt_ctx, ir)) < 0)
         goto end;
     if ((ret = open_output_file(fo)) < 0)
         goto end;
@@ -629,11 +494,8 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet,
         goto end;
     }
 
-    /* Process both streams - load ALL IR data first, then process main audio */
-    int ir_eof = 0, main_eof = 0;
-    
-    /* First load all IR data */
-    while (!ir_eof && av_read_frame(ir_fmt_ctx, ir_packet) >= 0) {
+    /* Load all IR data first, then process main audio */
+    while (av_read_frame(ir_fmt_ctx, ir_packet) >= 0) {
         if (ir_packet->stream_index == 0) {
             ret = avcodec_send_packet(ir_dec_ctx, ir_packet);
             while (ret >= 0) {
@@ -667,9 +529,9 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet,
         fprintf(stderr, "No impulse response data loaded\n");
         goto end;
     }
-        
-    /* Now process the main audio */
-    while (!main_eof && av_read_frame(ifmt_ctx, packet) >= 0) {
+
+    /* Process the main audio */
+    while (av_read_frame(ifmt_ctx, packet) >= 0) {
         if (packet->stream_index == 0) {
             ret = avcodec_send_packet(dec_ctx, packet);
             while (ret >= 0) {
@@ -683,31 +545,15 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet,
 
                 ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF);
                 if (ret < 0) {
-                    av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the input filtergraph\n");
+                    av_log(NULL, AV_LOG_ERROR,
+                           "[LibAvProc] Error while feeding the input "
+                           "filtergraph\n");
                     goto end;
-                }                
-                /* Pull filtered frames immediately */
-                while (1) {
-                    AVFrame *filt_frame = av_frame_alloc();
-                    ret = av_buffersink_get_frame(buffersink_ctx, filt_frame);
-                    if (ret == AVERROR(EAGAIN)) {
-                        av_frame_free(&filt_frame);
-                        break; /* Need more input */
-                    } else if (ret == AVERROR_EOF) {
-                        av_frame_free(&filt_frame);
-                        break; /* No more frames */
-                    } else if (ret < 0) {
-                        printf("Error getting frame from filter: %s\n", av_err2str(ret));
-                        av_frame_free(&filt_frame);
-                        goto end;
-                    }
-
-                    ret = encode_write_frame(filt_frame, 0, NULL);
-                    av_frame_free(&filt_frame);
-                    if (ret < 0) {
-                        goto end;
-                    }
                 }
+                /* Pull whatever the filtergraph can produce right now */
+                ret = drain_filtergraph();
+                if (ret < 0)
+                    goto end;
             }
         }
         av_packet_unref(packet);
@@ -719,9 +565,9 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet,
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while closing the input filtergraph\n");
         goto end;
     }
-    
+
     /* Pull any remaining frames from the filter graph */
-    ret = filter_encode_write_frame(NULL, NULL, 0);
+    ret = drain_filtergraph();
     if (ret < 0) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Flushing filter failed\n");
         goto end;
