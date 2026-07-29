@@ -336,6 +336,10 @@ void SamplePool::unload(int i) {
 */
 int SamplePool::loadSoundFont(const char *path) {
 
+    Path sPath(path);
+    Status::Set("Loading %s", sPath.GetName().c_str());
+    Trace::Log("loadSoundFont", "%s", path);
+
     sfBankID id = SoundFontManager::GetInstance()->LoadBank(path);
     if (id==-SF_BANK_TABLE_FULL) {
 		return SLOAD_ERR_MAX_SOUNDFONTS ;
