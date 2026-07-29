@@ -1,0 +1,43 @@
+name: Issue template
+description: Create issue from template
+title: "[BUG/FEATURE/OTHER] - short description of your issue"
+assignees: []
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve Little Piggy Tracker by submitting this report.
+        Feature requests submitted here will be considered for future updates as time and resources allow.
+  - type: textarea
+    id: logs
+    attributes:
+      label: lgpt.log
+      description: Paste or attach the log file.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform configuration
+      description: Select your platform.
+      options:
+        - Desktop
+        - Handheld
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Build version
+      description: Enter the Little Piggy Tracker version.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Describe the issue in detail.
+    validations:
+      required: true
