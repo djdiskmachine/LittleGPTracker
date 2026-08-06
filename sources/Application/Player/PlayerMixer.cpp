@@ -12,12 +12,10 @@
 
 PlayerMixer::PlayerMixer() {
 
-	for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-        lastInstrument_[i]=0 ;
-	} ;
-
-    for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-        channel_[i]=new PlayerChannel(i) ;
+    for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+        lastInstrument_[i] = 0;
+		channel_[i] = new PlayerChannel(i);
+		isChannelPlaying_[i] = false;
     }
 }
 

@@ -85,9 +85,8 @@ class SongView : public View {
     void DrawVuBars();   // Draw VU bars - called from both DrawView and
                          // AnimationUpdate
     uint8_t jumpLength_; // When jumping columns with B
-    int vuBarHeightsL_[8];  // Left channel smoothed bar heights with slew rate
-                            // decay
-    int vuBarHeightsR_[8];  // Right channel smoothed bar heights with slew rate decay
+    int vuBarHeightsL_[1]; // Master channel stereo VU meter
+    int vuBarHeightsR_[1];
 };
 
 #endif

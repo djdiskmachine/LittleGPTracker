@@ -27,9 +27,9 @@ SongView::SongView(GUIWindow &w, ViewData *viewData, const char *song)
     for (int i = 0; i < 8; i++) {
         this->lastPlayedPosition_[i] = 0;
         this->lastQueuedPosition_[i] = 0;
-        this->vuBarHeightsL_[i] = 0;
-        this->vuBarHeightsR_[i] = 0;
     }
+    vuBarHeightsL_[0] = 0;
+    vuBarHeightsR_[0] = 0;
     clipboard_.active_ = false;
     clipboard_.data_ = 0;
     invertBatt_ = false;
@@ -911,24 +911,24 @@ void SongView::DrawVuBars() {
     GUITextProperties vuProps;
     vuProps.invert_ = true;
 
-    float peakLevelsL[9];
-    float peakLevelsR[9];
+    float peakLevelsL[1];
+    float peakLevelsR[1];
 
     // Read master peak level (post-volume) to match MixerView's Master meter
     if (!player->IsRunning()) {
-        peakLevelsL[8] = peakLevelsR[8] = 0.0f;
+        peakLevelsL[0] = peakLevelsR[0] = 0.0f;
     } else {
         MixerService *ms = MixerService::GetInstance();
         uint32_t masterLevel = ms->GetMasterPeakLevel();
-        peakLevelsL[8] = (float)((masterLevel >> 16) & 0xFFFF) / 32767.0f;
-        peakLevelsR[8] = (float)(masterLevel & 0xFFFF) / 32767.0f;
+        peakLevelsL[0] = (float)((masterLevel >> 16) & 0xFFFF) / 32767.0f;
+        peakLevelsR[0] = (float)(masterLevel & 0xFFFF) / 32767.0f;
     }
 
-    // Update bar height at index 8 using utility
-    int displayHeightsL[9];
-    int displayHeightsR[9];
-    UpdateVuBarHeights(vuBarHeightsL_, displayHeightsL, peakLevelsL, 9);
-    UpdateVuBarHeights(vuBarHeightsR_, displayHeightsR, peakLevelsR, 9);
+    // Update bar height for master using utility
+    int displayHeightsL[1];
+    int displayHeightsR[1];
+    UpdateVuBarHeights(vuBarHeightsL_, displayHeightsL, peakLevelsL, 1);
+    UpdateVuBarHeights(vuBarHeightsR_, displayHeightsR, peakLevelsR, 1);
 
     // Draw vertical VU bars for L and R channels (two columns side by side)
     for (int row = 0; row < VU_METER_HEIGHT; row++) {
@@ -937,14 +937,14 @@ void SongView::DrawVuBars() {
         // Draw left channel at x
         GUIPoint posL = vuPos;
         posL._y -= row;
-        DrawVuBarRow(this, posL, row, displayHeightsL[8], vuProps,
+        DrawVuBarRow(this, posL, row, displayHeightsL[0], vuProps,
                      GetVuBarColor(row));
 
         // Draw right channel at x+1 (one character to the right)
         GUIPoint posR = vuPos;
         posR._x += 1;
         posR._y -= row;
-        DrawVuBarRow(this, posR, row, displayHeightsR[8], vuProps,
+        DrawVuBarRow(this, posR, row, displayHeightsR[0], vuProps,
                      GetVuBarColor(row));
     }
 

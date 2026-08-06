@@ -336,10 +336,6 @@ void AppWindow::LoadProject(const Path &p) {
 
     Project *project = new Project();
 
-    // Reset Mixer to defaults before loading so stale values from a previous
-    // project do not carry over, and ensure it is registered before Load().
-    Mixer::GetInstance()->Clear();
-
     bool succeeded = persist->Load();
     if (!succeeded) {
         project->GetInstrumentBank()->AssignDefaults();

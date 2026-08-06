@@ -372,9 +372,7 @@ void MixerView::DrawView() {
         props.invert_ = (i == viewData_->mixerCol_ && mixerRow_ == 0);
         SetColor((i == viewData_->mixerCol_ && mixerRow_ == 0) ? CD_HILITE2 : CD_NORMAL);
 
-        if (soloChannel_ == i) {
-            DrawString(pos._x, pos._y, "S ", props);
-        } else if (playerInst->IsChannelMuted(i)) {
+        if (playerInst->IsChannelMuted(i)) {
             DrawString(pos._x, pos._y, "M ", props);
         } else {
             int bus = mixer->GetBus(i);
