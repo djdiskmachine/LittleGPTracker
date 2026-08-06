@@ -42,19 +42,26 @@ void SamplePool::Reset() {
 	SoundFontManager::GetInstance()->Reset() ;
 } ;
 
-void SamplePool::Load() {
+/*
+  Returns an element of
+  {SLOAD_OK, SLOAD_ERR_INVALID_DIR, SLOAD_ERR_MAX_SAMPLES,
+   SLOAD_ERR_MAX_SOUNDFONTS, SLOAD_ERR_MAX_SAMPLES | SLOAD_ERR_MAX_SOUNDFONTS}.
+*/
+unsigned int SamplePool::Load() {
 
-	Path sampleDir("samples:");
+    Path sampleDir("samples:");
 
-	I_Dir *dir=FileSystem::GetInstance()->Open(sampleDir.GetPath().c_str()) ;
-	if (!dir) {
-		return ;
-	}
+    I_Dir *dir = FileSystem::GetInstance()->Open(sampleDir.GetPath().c_str());
+    if (!dir) {
+        return SLOAD_ERR_INVALID_DIR;
+    }
 
-	// First, find all wav files
+    unsigned int result = SLOAD_OK;
 
-	dir->GetContent("*.wav") ;
-	IteratorPtr<Path> it(dir->GetIterator()) ;
+    // First, find all wav files
+
+    dir->GetContent("*.wav");
+    IteratorPtr<Path> it(dir->GetIterator()) ;
 	count_=0 ;
 
 	for(it->Begin();!it->IsDone();it->Next()) {
@@ -62,8 +69,9 @@ void SamplePool::Load() {
         Trace::Log("Load", "%s", path.GetCanonicalPath().c_str());
         loadSample(path.GetPath().c_str()) ;
 		if (count_==MAX_PIG_SAMPLES) {
-		   Trace::Error("Warning maximum sample count reached") ;
-		   break ;
+            result |= SLOAD_ERR_MAX_SAMPLES;
+            Trace::Error("Warning maximum sample count reached");
+            break;
 		} ;
 
 	} ;
@@ -72,17 +80,26 @@ void SamplePool::Load() {
 
 	dir->GetContent("*.sf2") ;
 	IteratorPtr<Path> it2(dir->GetIterator()) ;
+    int sf_idx = 0;
 
-	for(it2->Begin();!it2->IsDone();it2->Next()) {
-		Path &path=it2->CurrentItem() ;
-		loadSoundFont(path.GetPath().c_str()) ;
-	} ;
+    for (it2->Begin(); !it2->IsDone(); it2->Next(), sf_idx++) {
+        Path &path=it2->CurrentItem() ;
+        Trace::Log("Load", "%s", path.GetCanonicalPath().c_str());
+        loadSoundFont(path.GetPath().c_str()) ;
+		if (sf_idx == MAX_SOUNDFONTS) {
+            result |= SLOAD_ERR_MAX_SOUNDFONTS;
+            Trace::Error("Warning maximum soundfont count reached");
+            break;
+		} ;
+    };
 
-	delete dir ;
+    delete dir;
 
-	// now sort the samples
+    // now sort the samples
     Sort();
-} ;
+
+    return result;
+};
 
 void SamplePool::Sort() {
     int rest=count_;
@@ -124,41 +141,51 @@ int SamplePool::GetNameListSize() {
 	return count_ ;
 } ;
 
-bool SamplePool::loadSample(const char *path) {
+/*
+  Returns an element of
+  {SLOAD_OK, SLOAD_ERR_MAX_SAMPLES, SLOAD_ERR_INPUT_FILE}.
+*/
+int SamplePool::loadSample(const char *path) {
 
-	if (count_==MAX_PIG_SAMPLES) return false ;
+    if (count_==MAX_PIG_SAMPLES) return SLOAD_ERR_MAX_SAMPLES ;
 
-	Path sPath(path) ;
-    Status::Set("Loading %s",sPath.GetName().c_str()) ;
-    Trace::Log("loadSample", "%s", path);
+Path sPath(path) ;
+Status::Set("Loading %s", sPath.GetName().c_str());
+Trace::Log("loadSample", "%s", path);
 
-    Path wavPath(path);
-    WavFile *wave=WavFile::Open(path) ;
-	if (wave) {
-		wav_[count_]=wave ;
-		const std::string name=wavPath.GetName() ;
-		names_[count_]=(char*)SYS_MALLOC(name.length()+1) ;
-		strcpy(names_[count_],name.c_str()) ;
-		count_++ ;
-		wave->GetBuffer(0,wave->GetSize(-1)) ;
-		wave->Close() ;
-		return true ;
-	} else {
-		Trace::Error("Failed to load samples %s",wavPath.GetName().c_str()) ;
-		return false ;
- 	}
+Path wavPath(path);
+WavFile *wave = WavFile::Open(path);
+if (wave) {
+    wav_[count_] = wave;
+    const std::string name = wavPath.GetName();
+    names_[count_] = (char *)SYS_MALLOC(name.length() + 1);
+    strcpy(names_[count_], name.c_str());
+    count_++;
+    wave->GetBuffer(0, wave->GetSize(-1));
+    wave->Close();
+    return SLOAD_OK;
+} else {
+    Trace::Error("Failed to load samples %s", wavPath.GetName().c_str());
+    return SLOAD_ERR_INPUT_FILE;
+}
 }
 
 #define IMPORT_CHUNK_SIZE 1000
 
+/*
+  Returns a nonnegative int or an element of
+  {-SLOAD_ERR_INVALID_DIR, -SLOAD_ERR_INPUT_FILE, -SLOAD_ERR_MAX_SAMPLES,
+   -SLOAD_ERR_MAX_SOUNDFONTS}.
+*/
 int SamplePool::ImportSample(Path &path) {
 
-	if (count_==MAX_PIG_SAMPLES) return -1 ;
+    if (count_ == MAX_PIG_SAMPLES)
+        return -SLOAD_ERR_MAX_SAMPLES;
 
-	// construct target path
+    // construct target path
 
-	std::string dpath="samples:" ;
-	dpath+=path.GetName() ;
+    std::string dpath = "samples:";
+    dpath+=path.GetName() ;
 	Path dstPath(dpath.c_str()) ;
 
     // Opens files
@@ -167,23 +194,23 @@ int SamplePool::ImportSample(Path &path) {
     if (!fin) {
         Trace::Error("Failed to open input file %s",
                      path.GetCanonicalPath().c_str());
-        return -1;
+        return -SLOAD_ERR_INPUT_FILE;
     };
-    fin->Seek(0,SEEK_END) ;
-	long size=fin->Tell() ;
+    fin->Seek(0, SEEK_END);
+    long size=fin->Tell() ;
 	fin->Seek(0,SEEK_SET) ;
 
 	I_File *fout=FileSystem::GetInstance()->Open(dstPath.GetPath().c_str(),"w") ;
 	if (!fout) {
 		fin->Close() ;
-		delete (fin) ;
-		return -1 ;
+        delete (fin);
+        return -SLOAD_ERR_OUTPUT_FILE ;
 	} ;
 
-	// copy file to current project
+    // copy file to current project
 
-	char buffer[IMPORT_CHUNK_SIZE] ;
-	while (size>0) {
+    char buffer[IMPORT_CHUNK_SIZE];
+    while (size>0) {
 		int count=(size>IMPORT_CHUNK_SIZE)?IMPORT_CHUNK_SIZE:size ;
 		fin->Read(buffer,1,count) ;
 		fout->Write(buffer,1,count) ;
@@ -195,16 +222,17 @@ int SamplePool::ImportSample(Path &path) {
 	delete(fin) ;
 	delete(fout) ;
 
-	// now load the sample
+    // now load the sample
+    int status = dstPath.Matches("*.wav")
+                     ? loadSample(dstPath.GetPath().c_str())
+                     : loadSoundFont(dstPath.GetPath().c_str());
 
-	bool status=loadSample(dstPath.GetPath().c_str()) ;
-
-	SetChanged() ;
-	SamplePoolEvent ev ;
+    SetChanged();
+    SamplePoolEvent ev ;
 	ev.index_=count_-1 ;
 	ev.type_=SPET_INSERT ;
-	NotifyObservers(&ev) ;
-	return status?(count_-1):-1 ;
+    NotifyObservers(&ev);
+    return !status ?(count_-1):(-status) ;
 };
 
 bool SamplePool::IsImported(std::string name) {
@@ -302,49 +330,61 @@ void SamplePool::unload(int i) {
 	NotifyObservers(&ev) ;
 }
 
-bool SamplePool::loadSoundFont(const char *path) {
+/*
+  Returns an element of
+  {SLOAD_OK, SLOAD_ERR_MAX_SOUNDFONTS, SLOAD_ERR_INPUT_FILE}.
+*/
+int SamplePool::loadSoundFont(const char *path) {
 
-	sfBankID  id=SoundFontManager::GetInstance()->LoadBank(path) ;
-	if (id==-1) {
-		return false ;
-	} 
+    Path sPath(path);
+    Status::Set("Loading %s", sPath.GetName().c_str());
+    Trace::Log("loadSoundFont", "%s", path);
 
-	// Grab the sample offset
+    sfBankID id = SoundFontManager::GetInstance()->LoadBank(path);
+    if (id==-SF_BANK_TABLE_FULL) {
+		return SLOAD_ERR_MAX_SOUNDFONTS ;
+    } else if (id < 0) {
+        return SLOAD_ERR_INPUT_FILE;
+    }
 
-	long offset=sfGetSMPLOffset(id) ;
+    // Grab the sample offset
 
-	// Add all presets of the sf
+    long offset = sfGetSMPLOffset(id);
 
-	WORD presetCount=0 ;
-	SFPRESETHDRPTR pHeaders=sfGetPresetHdrs(id,&presetCount); 
+    // Add all presets of the sf
+
+    WORD presetCount = 0;
+    SFPRESETHDRPTR pHeaders=sfGetPresetHdrs(id,&presetCount); 
 
 	for (int i=0;i<presetCount;i++) {
 		if (count_<MAX_PIG_SAMPLES) {
 			sfPresetHdr current=pHeaders[i] ;
 			wav_[count_]=new SoundFontPreset(id,i) ;
 			const char *name=pHeaders[i].achPresetName ;
-			names_[count_]=(char*)SYS_MALLOC(strlen(name)+1) ;
-			strcpy(names_[count_],name) ;
-			count_++ ;
+            Trace::Log("loadSoundFont", "%s", name);
+            names_[count_] = (char *)SYS_MALLOC(strlen(name) + 1);
+            strcpy(names_[count_], name);
+            count_++;
 		}
 	}
-/*
-	// Get Sample information
+    /*
+        // Get Sample information
 
-	WORD headerCount=0 ;
-	SFSAMPLEHDRPTR  &headers=sfGetSampHdrs(id,&headerCount ); 
+        WORD headerCount=0 ;
+        SFSAMPLEHDRPTR  &headers=sfGetSampHdrs(id,&headerCount );
 
-	// Loop on every sample, add them
+        // Loop on every sample, add them
 
-	for (int i=0;i<headerCount;i++) {
-		if (count_<MAX_PIG_SAMPLES) {
-			sfSampleHdr &current=headers[i] ;
-			wav_[count_]=new SoundFontSample(current) ;
-			const char *name=headers[i].achSampleName ;
-			names_[count_]=(char*)SYS_MALLOC(strlen(name)+1) ;
-			strcpy(names_[count_],name) ;
-			count_++ ;
-		}
-	}
-*/	return true ;
+        for (int i=0;i<headerCount;i++) {
+            if (count_<MAX_PIG_SAMPLES) {
+                sfSampleHdr &current=headers[i] ;
+                wav_[count_]=new SoundFontSample(current) ;
+                const char *name=headers[i].achSampleName ;
+                names_[count_]=(char*)SYS_MALLOC(strlen(name)+1) ;
+                strcpy(names_[count_],name) ;
+                count_++ ;
+            }
+        }
+    */
+    return SLOAD_OK;
 } ;
