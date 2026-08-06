@@ -60,10 +60,6 @@ jobs:
       - name: Install build deps
         run: choco install -y directx-sdk zip --no-progress --yes
         shell: powershell
-      
-      - name: Install FFmpeg development libraries
-        run: vcpkg install ffmpeg[avcodec,avformat,avfilter]:x86-windows-static
-        shell: cmd
 
       - name: Download and Extract VCE9 release
         run: |
