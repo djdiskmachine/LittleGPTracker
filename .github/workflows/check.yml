@@ -70,7 +70,7 @@ jobs:
           Expand-Archive -Path "$env:TEMP\VCE9.zip" -DestinationPath $destination -Force
         shell: pwsh
 
-      - name: Install Visual Studio 2008 Express
+      - name: Install Visual Studio 2008
         run: |
           Invoke-WebRequest -Uri "http://download.microsoft.com/download/8/B/5/8B5804AD-4990-40D0-A6AA-CE894CBBB3DC/VS2008ExpressENUX1397868.iso" -OutFile "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso"
           $mountResult = Mount-DiskImage -ImagePath "$env:GITHUB_WORKSPACE\VS2008ExpressENUX1397868.iso" -PassThru
