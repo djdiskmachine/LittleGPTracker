@@ -14,8 +14,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install Pillow
-          choco install -y directx-sdk zip ffmpeg-shared --no-progress --yes
+          choco install -y directx-sdk zip --no-progress --yes
         shell: powershell
+      
+      - name: Install FFmpeg development libraries
+        run: vcpkg install ffmpeg[avcodec,avformat,avfilter]:x86-windows-static
+        shell: cmd
 
       - name: Download and Extract VCE9 release
         run: |

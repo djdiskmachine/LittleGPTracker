@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@v4.1.7
 
       - name: Install build deps
-        run: choco install -y directx-sdk zip ffmpeg-shared --no-progress --yes
+        run: choco install -y directx-sdk zip --no-progress --yes
         shell: powershell
       
       - name: Install FFmpeg development libraries
