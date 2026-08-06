@@ -548,6 +548,7 @@ void AppWindow::onUpdate() {
     if (_isDirty) {
         _isDirty = false;
         Redraw();
+    }
 
     // Call AnimationUpdate periodically (~10-25Hz depending on frame rate)
     static unsigned int animTick = 0;
