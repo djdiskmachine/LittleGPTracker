@@ -74,5 +74,4 @@ class TableView : public View {
 
     uchar lastPosition_[3];
 };
-
 #endif

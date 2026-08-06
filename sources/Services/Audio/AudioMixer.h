@@ -1,9 +1,9 @@
 #ifndef _AUDIO_MIXER_H_
 #define _AUDIO_MIXER_H_
 
+#include "Application/Instruments/WavFileWriter.h"
 #include "AudioModule.h"
 #include "Foundation/T_SimpleList.h"
-#include "Application/Instruments/WavFileWriter.h"
 #include <string>
 
 struct SoftClipData {
@@ -21,6 +21,10 @@ public:
 	void SetFileRenderer(const char *path) ;
 	void EnableRendering(bool enable) ;
 	void SetVolume(fixed volume) ;
+    unsigned int GetPeakLevel() const { return peakMixerLevel_; }
+    unsigned int GetPreMasterVolumePeakLevel() const {
+        return preMasterVolumePeakLevel_;
+    }
     virtual void SetSoftclip(int clip, int gain);
     virtual void SetMasterVolume(int volume) ;
 	virtual bool Clipped() ;
@@ -38,5 +42,7 @@ private:
   int softclipGain_;
   int masterVolume_;
   bool clipped_;
-} ;
+  unsigned int peakMixerLevel_;
+  unsigned int preMasterVolumePeakLevel_;
+};
 #endif
