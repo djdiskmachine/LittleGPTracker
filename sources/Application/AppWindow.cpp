@@ -3,6 +3,7 @@
 #include "Application/Commands/EventDispatcher.h"
 #include "Application/Instruments/SamplePool.h"
 #include "Application/Mixer/MixerService.h"
+#include "Application/Model/Mixer.h"
 #include "Application/Persistency/PersistencyService.h"
 #include "Application/Player/TablePlayback.h"
 #include "Application/Utils/char.h"
@@ -536,8 +537,16 @@ void AppWindow::onUpdate() {
         LoadProject(_newProjectToLoad.c_str());
         return;
     }
+
+    // Call AnimationUpdate periodically (~10-25Hz depending on frame rate)
+    static unsigned int animTick = 0;
+    if ((animTick++ % 2) == 0) {  // every 2nd call, roughly 25Hz at 50Hz main loop
+        if (_currentView) {
+            _currentView->AnimationUpdate();
+        }
+    }
     Flush();
-};
+}
 
 void AppWindow::LayoutChildren() {};
 
@@ -577,9 +586,8 @@ void AppWindow::Update(Observable &o, I_ObservableData *d) {
         case VT_GROOVE:
             _currentView = _grooveView;
             break;
-            /*			case VT_MIXER:
-                        _currentView=_mixerView ;
-            */
+        case VT_MIXER:
+            _currentView = _mixerView;
             break;
         }
         _currentView->SetFocus(*vt);

@@ -38,12 +38,13 @@ public:
 	bool Start() ;
 	void Stop() ;
 
-	MixBus *GetMixBus(int i) ;	
+    MixBus *GetMixBus(int i);
+    unsigned int GetMasterPeakLevel() const;
 
-	virtual void Update(Observable &o,I_ObservableData *d) ;	
+    virtual void Update(Observable &o, I_ObservableData *d);
 
-	void OnPlayerStart() ;
-	void OnPlayerStop() ;
+    void OnPlayerStart();
+    void OnPlayerStop() ;
 
 	bool Clipped() ;
     void SetPregain(int);

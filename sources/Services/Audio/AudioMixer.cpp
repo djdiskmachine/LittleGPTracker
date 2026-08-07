@@ -16,6 +16,8 @@ AudioMixer::AudioMixer(const char *name):
     softclipGain_ = 0 ;
 	masterVolume_ = 100 ;
 	clipped_ = false ;
+    peakMixerLevel_ = 0;
+    preMasterVolumePeakLevel_ = 0 ;
 	
 	// Precalculate constant values for softclipping algorithm
 	softClipData_[0].alpha = 1.45f; // -1.5db (approx.)
@@ -97,12 +99,52 @@ bool AudioMixer::Render(fixed *buffer,int samplecount) {
          fixed *c = buffer;
          float damp = pow((float)masterVolume_ / 100, 4.0f);
 
+         // Capture pre-volume peaks (raw signal before any processing)
+         fixed preVolumePeakL = i2fp(0), preVolumePeakR = i2fp(0);
+         for (int i = 0; i < samplecount * 2; i += 2) {
+             fixed left = c[i];
+             fixed right = c[i + 1];
+             if (left < 0) left = -left;
+             if (right < 0) right = -right;
+             if (left > preVolumePeakL) preVolumePeakL = left;
+             if (right > preVolumePeakR) preVolumePeakR = right;
+         }
+         // Pack and store pre-volume peaks
+         unsigned int prePackedL = (unsigned int)fp2i(preVolumePeakL);
+         unsigned int prePackedR = (unsigned int)fp2i(preVolumePeakR);
+         if (prePackedL > 0xFFFF) prePackedL = 0xFFFF;
+         if (prePackedR > 0xFFFF) prePackedR = 0xFFFF;
+         preMasterVolumePeakLevel_ = (prePackedL << 16) | prePackedR;
+
+         // Track peak levels (left and right channels)
+         fixed peakL = i2fp(0), peakR = i2fp(0);
+
          if (volume_ != i2fp(1)) {
              for (int i = 0; i < samplecount * 2; i++) {
                  fixed v = fp_mul(*c, volume_);
                  *c++ = v;
              }
          }
+
+         // Re-point c to buffer start for peak tracking
+         c = buffer;
+         
+         // Track peak levels for both channels
+         for (int i = 0; i < samplecount * 2; i += 2) {
+             fixed left = c[i];
+             fixed right = c[i + 1];
+             if (left < 0) left = -left;
+             if (right < 0) right = -right;
+             if (left > peakL) peakL = left;
+             if (right > peakR) peakR = right;
+         }
+
+         // left 16 bits | right 16 bits, clamped to 16-bit range
+         unsigned int packedL = (unsigned int)fp2i(peakL);
+         unsigned int packedR = (unsigned int)fp2i(peakR);
+         if (packedL > 0xFFFF) packedL = 0xFFFF;
+         if (packedR > 0xFFFF) packedR = 0xFFFF;
+         peakMixerLevel_ = (packedL << 16) | packedR;
 
          // Apply soft/hard clipping before recording
          c = buffer;

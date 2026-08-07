@@ -48,44 +48,44 @@ public:
 	bool Init(Project*,ViewData *) ;
 	void Reset() ;
 	void Close() ;
-	
-	
-	virtual void Update(Observable &o,I_ObservableData *d) ;
 
-	// basic interface
+    virtual void Update(Observable &o, I_ObservableData *d);
 
-	void Start(PlayMode mode,bool forceSongMode) ;
-	void Stop() ;
-	
-//	void Toggle(PlayMode mode,bool forceSongMode=false) ;
-//	void ChangePlayMode(PlayMode mode) ;
-//	PlayMode GetPlayMode() ;
-	
-	void SetSequencerMode(SequencerMode mode) ;
-	SequencerMode GetSequencerMode() ;
-	
-	void OnStartButton(PlayMode origin,unsigned int from,bool startFromLastPos,unsigned char chainPos) ;
-	void OnSongStartButton(unsigned int from,unsigned int to,bool requestStop,bool forceImmediate) ;
-	
-	bool IsRunning() ;
-	bool Clipped() ;
-	
-	void ProcessCommands() ;
-	bool ProcessChannelCommand(int channel,FourCC cmd,ushort param) ;
+    // basic interface
+
+    void Start(PlayMode mode, bool forceSongMode);
+    void Stop() ;
+
+    //	void Toggle(PlayMode mode,bool forceSongMode=false) ;
+    //	void ChangePlayMode(PlayMode mode) ;
+    //	PlayMode GetPlayMode() ;
+
+    void SetSequencerMode(SequencerMode mode);
+    SequencerMode GetSequencerMode() ;
+
+    void OnStartButton(PlayMode origin, unsigned int from,
+                       bool startFromLastPos, unsigned char chainPos);
+    void OnSongStartButton(unsigned int from,unsigned int to,bool requestStop,bool forceImmediate) ;
+
+    bool IsRunning();
+    bool Clipped() ;
+
+    void ProcessCommands();
+    bool ProcessChannelCommand(int channel,FourCC cmd,ushort param) ;
 
 	void StartStreaming(const Path &path) ;
 	void StopStreaming() ;
 
 	// Channel data
-	
-	bool IsChannelPlaying(int channel) ;
-	void SetChannelMute(int channel,bool mute) ;
-	bool IsChannelMuted(int channel) ;
-	
-	// Live queuing
 
-	QueueingMode GetQueueingMode(int i) ;
-	unsigned char GetQueuePosition(int i) ;
+    bool IsChannelPlaying(int channel);
+    void SetChannelMute(int channel,bool mute) ;
+    bool IsChannelMuted(int channel);
+
+    // Live queuing
+
+    QueueingMode GetQueueingMode(int i);
+    unsigned char GetQueuePosition(int i) ;
 	unsigned char GetQueueChainPosition(int i) ;
 	void QueueChannel(int i,QueueingMode mode,unsigned char position,unsigned char chainpos=0) ;
 
@@ -116,13 +116,12 @@ protected:
 	void moveToNextChain(int channel,int hop) ;
 
     void triggerLiveChains() ;
-    
+
     bool isPlayable(int row,int col,int chainPos=0) ;
-    bool findPlayable(uchar *row,int col,uchar chainPos=0) ;
+    bool findPlayable(uchar *row, int col, uchar chainPos = 0);
 
-private:
-
-	PlayerMixer *mixer_ ;
+  private:
+    PlayerMixer *mixer_ ;
 	ViewData *viewData_ ;
 	Project *project_ ;
 
@@ -140,10 +139,11 @@ private:
 	bool triggerLiveChains_ ;
 
 	double startTime_ ;
+    double currentTime_;
 
-	char instrumentOnChannel_[SONG_CHANNEL_COUNT][3];
+    char instrumentOnChannel_[SONG_CHANNEL_COUNT][3];
 
-	// Live queuing system
+    // Live queuing system
 
     unsigned char liveQueuePosition_[SONG_CHANNEL_COUNT] ;
     QueueingMode liveQueueingMode_[SONG_CHANNEL_COUNT] ;
@@ -153,7 +153,6 @@ private:
 
 	bool retrigAllImmediate_ ;
 	unsigned char retrigPos_ ;
-	
-} ;
+};
 
 #endif

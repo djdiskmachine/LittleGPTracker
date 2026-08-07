@@ -120,22 +120,22 @@ void MixerService::Stop() {
      }
 }
 
-MixBus *MixerService::GetMixBus(int i) {
-	return &(bus_[i]) ;
-} ;
+MixBus *MixerService::GetMixBus(int i) { return &(bus_[i]); }
 
-void MixerService::Update(Observable &o,I_ObservableData *d)  {
+unsigned int MixerService::GetMasterPeakLevel() const {
+    return master_.GetPeakLevel();
+}
 
-  AudioDriver::Event *event=(AudioDriver::Event *)d;
-  if (event->type_ == AudioDriver::Event::ADET_BUFFERNEEDED)
-  {  
-    Lock() ;
-    SetChanged() ;
-    NotifyObservers() ;
+void MixerService::Update(Observable &o, I_ObservableData *d) {
+    AudioDriver::Event *event = (AudioDriver::Event *)d;
+    if (event->type_ == AudioDriver::Event::ADET_BUFFERNEEDED) {
+        Lock();
+        SetChanged();
+        NotifyObservers();
 
-    out_->Trigger();
-    Unlock();
-  }
+        out_->Trigger();
+        Unlock();
+    }
 }
 
 bool MixerService::Clipped() {

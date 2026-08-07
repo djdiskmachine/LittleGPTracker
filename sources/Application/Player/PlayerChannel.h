@@ -17,13 +17,26 @@ public:
 	void SetMute(bool muted) ;
 	bool IsMuted() ;
 	void SetMixBus(int i) ;
-	void Reset() ;
-private:
+    void SetVolume(fixed volume);
+    void SetHPFMode(unsigned char mode);
+    void ApplyHPF(fixed *buffer, int samplecount);
+    void SetLPFFreq(unsigned short freq);
+    void Reset();
+
+  private:
 	int index_ ;
 	I_Instrument *instr_ ;
 	bool muted_ ;
-	int busIndex_ ;
+    fixed volume_;
+    int busIndex_ ;
 	MixBus *mixBus_ ;
-} ;
+    fixed hpfPrevInput_[2];
+    fixed hpfPrevOutput_[2];
+	fixed hpfAlpha_;
+	unsigned char hpfMode_;
+    fixed lpfPrevOutput_[2];
+    fixed lpfAlpha_;
+    unsigned short lpfFreq_;
+};
 
 #endif
