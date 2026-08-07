@@ -118,8 +118,20 @@
      typedef int BOOL; /* 16 bit signed value     */
 #endif
      typedef unsigned short WORD; /* 16 bit unsigned value   */
+#ifndef LONG
+#ifdef _WIN32
+     typedef long LONG;           /* match Windows LONG to avoid C2371 vs windows.h */
+#else
      typedef int32_t LONG;        /* 32 bit signed value (fixed-size) */
+#endif
+#endif
+#ifndef DWORD
+#ifdef _WIN32
+     typedef unsigned long DWORD; /* match Windows DWORD to avoid C2371 vs windows.h */
+#else
      typedef uint32_t DWORD;      /* 32 bit unsigned value (fixed-size) */
+#endif
+#endif
      typedef float FLOAT;         /* 32 bit floating point value */
      typedef double DOUBLE;       /* 64 bit floating point value */
      typedef long double LDOUBLE; /* 80 bit floating point value */
