@@ -80,8 +80,9 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(OutDir)"
-copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(ProjectDir)resources\W32\"</Command>
+      <Command>if not exist "$(ProjectDir)resources\W32" mkdir "$(ProjectDir)resources\W32"
+    copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(OutDir)"
+    copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(ProjectDir)resources\W32\"</Command>
       <Message>Copying SDL2.dll to output and resources\W32</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -109,8 +110,9 @@ copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(ProjectDir)resources\W32
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(OutDir)"
-copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(ProjectDir)resources\W32\"</Command>
+        <Command>if not exist "$(ProjectDir)resources\W32" mkdir "$(ProjectDir)resources\W32"
+      copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(OutDir)"
+      copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(ProjectDir)resources\W32\"</Command>
       <Message>Copying SDL2.dll to output and resources\W32</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
