@@ -1,6 +1,7 @@
 bin/**
 build/**
 projects/build**
+projects/resources/W32/SDL2.dll
 tracks/**
 *.dat
 *.wav

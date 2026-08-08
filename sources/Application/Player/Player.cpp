@@ -25,6 +25,8 @@ Player::Player() {
 	sequencerMode_=SM_SONG;
 	lastPercentage_=0;
 	retrigAllImmediate_=false;
+	startTime_=0;
+	currentTime_=0;
 
 	for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
 		instrumentOnChannel_[i][0] = ' ';

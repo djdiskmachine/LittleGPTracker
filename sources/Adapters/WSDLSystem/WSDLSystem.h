@@ -2,9 +2,8 @@
 #define _WSDL_SYSTEM_H_
 
 #include "System/System/System.h"
-#include "Externals/SDL/SDL.h"
-#include <string>
 #include "UIFramework/SimpleBaseClasses/EventManager.h"
+#include <string>
 
 class WSDLSystem: public System {
 public:
@@ -17,13 +16,13 @@ public: // System implementation
 	virtual void Sleep(int millisec);
 	virtual void *Malloc(unsigned size) ;
 	virtual void Free(void *) ;
-    virtual void Memset(void *addr,char val,int size) ;
-    virtual void *Memcpy(void *s1, const void *s2, int n)  ; 
+	virtual void Memset(void *addr,char val,int size) ;
+	virtual void *Memcpy(void *s1, const void *s2, int n)  ;
 	virtual int GetBatteryLevel() { return -1 ; } ;
 	virtual void PostQuitMessage() ;
 	virtual unsigned int GetMemoryUsage() ;
 
-  static std::string SGetLastErrorString();
+	static std::string SGetLastErrorString();
 
 private:
 	static EventManager *eventManager_;

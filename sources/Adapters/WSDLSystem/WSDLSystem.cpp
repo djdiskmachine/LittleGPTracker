@@ -1,22 +1,28 @@
-
 #include "WSDLSystem.h"
-#include "Adapters/RTAudio/RTAudioStub.h"
-#include "Adapters/SDL/GUI/SDLEventManager.h"
-#include "Adapters/SDL/GUI/GUIFactory.h"
-#include "Adapters/SDL/GUI/SDLGUIWindowImp.h"
-#include "Adapters/RTAudio/RTAudioStub.h"
-#include "Adapters/RTMidi/RTMidiService.h"
-#include "Adapters/W32/Midi/W32MidiService.h"
-#include "Adapters/W32/Audio/W32Audio.h"
+#include "Adapters/SDL2/GUI/GUIFactory.h"
+#include "Adapters/SDL2/GUI/SDLEventManager.h"
+#include "Adapters/SDL2/GUI/SDLGUIWindowImp.h"
+#include "Adapters/SDL2/Timer/SDLTimer.h"
 #include "Adapters/W32FileSystem/W32FileSystem.h"
 #include "Adapters/W32/Process/W32Process.h"
-#include "Adapters/W32/Timer/W32Timer.h"
 #include "Application/Model/Config.h"
 #include "System/Console/Logger.h"
+#include <SDL2/SDL.h>
 #include <windows.h>
 #include <stdlib.h>
 #include <time.h>
-#include <iostream>
+
+#ifdef SDLAUDIO
+#include "Adapters/SDL2/Audio/SDLAudio.h"
+#endif
+
+#ifdef RTAUDIO
+#include "Adapters/RTAudio/RTAudioStub.h"
+#endif
+
+#ifdef RTMIDI
+#include "Adapters/RTMidi/RTMidiService.h"
+#endif
 
 EventManager *WSDLSystem::eventManager_ = NULL ;
 
@@ -27,18 +33,13 @@ int WSDLSystem::MainLoop() {
 
 void WSDLSystem::Boot(int argc,char **argv) {
 
-	SDL_putenv("SDL_VIDEODRIVER=directx") ;
-
 	// Install System
 	System::Install(new WSDLSystem()) ;
 
 	// Install FileSystem
 	FileSystem::Install(new W32FileSystem()) ;
-  // Setup logger
-  Trace::GetInstance()->SetLogger(*(new StdOutLogger()));
 
 	// Get application directory & install platform specific aliases
-
 	HMODULE module = GetModuleHandle(NULL);
 	char temp_path[MAX_PATH];
 	int length = GetModuleFileName(module,temp_path,MAX_PATH);
@@ -51,93 +52,67 @@ void WSDLSystem::Boot(int argc,char **argv) {
 	temp_path[n]=0;
 
 	Path::SetAlias("bin",temp_path) ;
-
 	Path::SetAlias("root","bin:..") ;
 
-  // Tracing
-  
+	// Tracing
 #ifdef _DEBUG
-  Trace::GetInstance()->SetLogger(*(new StdOutLogger()));
+	Trace::GetInstance()->SetLogger(*(new StdOutLogger()));
 #else
-  Path logPath("bin:lgpt.log");
-  FileLogger *fileLogger=new FileLogger(logPath);
-  if(fileLogger->Init().Succeeded())
-  {
-    Trace::GetInstance()->SetLogger(*fileLogger);    
-  }
+	Path logPath("bin:lgpt.log");
+	FileLogger *fileLogger=new FileLogger(logPath);
+	if(fileLogger->Init().Succeeded())
+	{
+		Trace::GetInstance()->SetLogger(*fileLogger);
+	}
 #endif
-  
-	Config *config=Config::GetInstance() ;
-	config->ProcessArguments(argc,argv) ;
+
+	// Process arguments
+	Config::GetInstance()->ProcessArguments(argc,argv) ;
 
 	// Install GUI Factory
 	I_GUIWindowFactory::Install(new GUIFactory()) ;
 
 	// Install Timers
+	TimerService::GetInstance()->Install(new SDLTimerService()) ;
 
-	TimerService::GetInstance()->Install(new W32TimerService()) ;
+#ifdef SDLAUDIO
+	Trace::Log("System","Installing SDL audio") ;
+	AudioSettings hint;
+	hint.bufferSize_ = 1024;
+	hint.preBufferCount_ = 8;
+	Audio::Install(new SDLAudio(hint));
+#endif
 
-//	(new RTAudioStub(config->GetValue("AUDIODRIVER")))->Init() ;
-
-	// Allow to use either Direct Sound of MMSYSTEM
-
+#ifdef RTAUDIO
+	Trace::Log("System","Installing RT audio") ;
 	AudioSettings hints ;
-	const char *api=config->GetValue("AUDIOAPI") ;
-	Audio *audio=0 ;
+	hints.bufferSize_ = 512 ;
+	hints.preBufferCount_ = 10 ;
+	Audio::Install(new RTAudioStub(hints)) ;
+#endif
 
-	if (api&&(!_stricmp(api,"MMSYSTEM"))) {
-		hints.audioAPI_="MMSYSTEM" ;
-		hints.audioDevice_="" ;
-		hints.bufferSize_=512 ;
-		hints.preBufferCount_=10;
-		audio=new W32Audio(hints) ;
-	} else {
-		hints.audioAPI_="DSound" ;
-		hints.audioDevice_="" ;
-		hints.bufferSize_=512 ;
-		hints.preBufferCount_=10;
-		audio=new RTAudioStub(hints) ;
-	}
-
-	Audio::Install(audio) ;
-
-	// Install Midi
+#ifdef RTMIDI
+	Trace::Log("System","Installing RT MIDI") ;
 	MidiService::Install(new RTMidiService()) ;
+#endif
 
 	// Install Threads
-
 	SysProcessFactory::Install(new W32ProcessFactory()) ;
 
-	if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_JOYSTICK|SDL_INIT_TIMER) < 0 )   {
+	if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_JOYSTICK) < 0 )   {
 		return;
 	}
-	SDL_EnableUNICODE(1);
 	SDL_ShowCursor(SDL_DISABLE);
 
 	atexit(SDL_Quit);
 
 	eventManager_=I_GUIWindowFactory::GetInstance()->GetEventManager() ;
 	eventManager_->Init() ;
-
-	eventManager_->MapAppButton("a",APP_BUTTON_A) ;
-	eventManager_->MapAppButton("s",APP_BUTTON_B) ;
-	eventManager_->MapAppButton("left",APP_BUTTON_LEFT) ;
-	eventManager_->MapAppButton("right",APP_BUTTON_RIGHT) ;
-	eventManager_->MapAppButton("up",APP_BUTTON_UP) ;
-	eventManager_->MapAppButton("down",APP_BUTTON_DOWN) ;
-	eventManager_->MapAppButton("right ctrl",APP_BUTTON_L) ;
-	eventManager_->MapAppButton("left ctrl",APP_BUTTON_R) ;
-	eventManager_->MapAppButton("space",APP_BUTTON_START) ;
-
 } ;
 
 void WSDLSystem::Shutdown() {
 	delete Audio::GetInstance() ;
 } ;
-
-//void WSDLSystem::readConfig() {
-//	SDLInput::GetInstance()->ReadConfig() ;
-//} ;
 
 unsigned long WSDLSystem::GetClock() {
 	return (clock()*1000)/CLOCKS_PER_SEC ;
@@ -154,62 +129,61 @@ void *WSDLSystem::Malloc(unsigned size) {
 
 void WSDLSystem::Free(void *ptr) {
 	free(ptr) ;
-} 
+}
 
 void WSDLSystem::Memset(void *addr,char val,int size) {
-    
-    unsigned int ad=(unsigned int)addr ;
-    if (((ad&0x3)==0)&&((size&0x3)==0)) { // Are we 4-byte aligned ?
-        unsigned int intVal=0 ;
-        for (int i=0;i<4;i++) {
-             intVal=(intVal<<8)+val ;  
-        }
-        unsigned int *dst=(unsigned int *)addr ;
-        size_t intSize=size>>2 ;
-        
-        for (unsigned int i=0;i<intSize;i++) {
-            *dst++=intVal ;
-        }        
-    } else {
-        memset(addr,val,size) ;
-    } ;
+
+	unsigned int ad=(unsigned int)addr ;
+	if (((ad&0x3)==0)&&((size&0x3)==0)) { // Are we 4-byte aligned ?
+		unsigned int intVal=0 ;
+		for (int i=0;i<4;i++) {
+			intVal=(intVal<<8)+val ;
+		}
+		unsigned int *dst=(unsigned int *)addr ;
+		size_t intSize=size>>2 ;
+
+		for (unsigned int i=0;i<intSize;i++) {
+			*dst++=intVal ;
+		}
+	} else {
+		memset(addr,val,size) ;
+	} ;
 } ;
 
-void *WSDLSystem::Memcpy(void *s1, const void *s2, int n) 
+void *WSDLSystem::Memcpy(void *s1, const void *s2, int n)
 {
-    return memcpy(s1,s2,n) ;
-} ;  
+	return memcpy(s1,s2,n) ;
+} ;
 
-void WSDLSystem::PostQuitMessage() 
+void WSDLSystem::PostQuitMessage()
 {
 	SDLEventManager::GetInstance()->PostQuitMessage()  ;
-} ; 
+} ;
 
-unsigned int  WSDLSystem::GetMemoryUsage() 
+unsigned int  WSDLSystem::GetMemoryUsage()
 {
 	return 0 ;
 } ;
 
-
 std::string WSDLSystem::SGetLastErrorString()
 {
-    LPVOID lpMsgBuf;
+	LPVOID lpMsgBuf;
 
-    DWORD dw = GetLastError(); 
+	DWORD dw = GetLastError();
 
-    FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM |
-        FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL,
-        dw,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (LPTSTR) &lpMsgBuf,
-        0, NULL );
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR) &lpMsgBuf,
+		0, NULL );
 
-    std::string error = (char *)lpMsgBuf;
+	std::string error = (char *)lpMsgBuf;
 
-    LocalFree(lpMsgBuf);
+	LocalFree(lpMsgBuf);
 
-    return error;
+	return error;
 }

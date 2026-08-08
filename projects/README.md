@@ -1,7 +1,8 @@
 Recommendation: Install pre-commit
 From repo root: cp pre-commit ./git/hooks
 
-##### Windows: Use Visual 2008 express edition + will need the DirectX SDK (I'm using March 2008)
+##### Windows: Use Visual Studio to build
+	Requires installing SDL2 headers under sources/Externals/SDL2
 
 ##### CAANOO: Compile under linux with the caanoo toolchain
 
