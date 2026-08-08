@@ -144,10 +144,10 @@
     <ClCompile Include="..\sources\Adapters\W32\Process\W32Process.cpp">
       <Filter>Source Files\Adapters</Filter>
     </ClCompile>
-    <ClCompile Include="..\sources\Adapters\W32\Main\W32Main.cpp">
+    <ClCompile Include="..\sources\Adapters\W32\Main\WSDLmain.cpp">
       <Filter>Source Files\Adapters</Filter>
     </ClCompile>
-    <ClCompile Include="..\sources\Adapters\W32\System\W32System.cpp">
+    <ClCompile Include="..\sources\Adapters\WSDLSystem\WSDLSystem.cpp">
       <Filter>Source Files\Adapters</Filter>
     </ClCompile>
     <ClCompile Include="..\sources\Adapters\SDL2\Audio\SDLAudio.cpp">
@@ -602,7 +602,7 @@
     <ClInclude Include="..\sources\Adapters\W32\Process\W32Process.h">
       <Filter>Source Files\Adapters</Filter>
     </ClInclude>
-    <ClInclude Include="..\sources\Adapters\W32\System\W32System.h">
+    <ClInclude Include="..\sources\Adapters\WSDLSystem\WSDLSystem.h">
       <Filter>Source Files\Adapters</Filter>
     </ClInclude>
     <ClInclude Include="..\sources\Adapters\SDL2\Audio\SDLAudio.h">

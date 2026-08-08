@@ -1,6 +1,6 @@
 
 #include "W32FileSystem.h"
-#include "Adapters/W32/System/W32System.h"
+#include "Adapters/WSDLSystem/WSDLSystem.h"
 #include "System/Console/Trace.h"
 #include <windows.h>
 #include <string.h>
@@ -109,7 +109,7 @@ Result W32FileSystem::MakeDir(const char *path) {
 	BOOL success = CreateDirectory(path,NULL) ;
   if (!success)
   {
-    std::string error = W32System::SGetLastErrorString();
+    std::string error = WSDLSystem::SGetLastErrorString();
     return Result(error);
   }
   return Result::NoError;

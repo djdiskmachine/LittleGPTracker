@@ -1,10 +1,10 @@
 #include <string.h>
-#include "Adapters/W32/System/W32System.h"
+#include "Adapters/WSDLSystem/WSDLSystem.h"
 #include "Adapters/SDL2/GUI/SDLGUIWindowImp.h"
 #include "Application/Application.h"
 
 int main(int argc,char *argv[]) {
-	W32System::Boot(argc,argv);
+	WSDLSystem::Boot(argc,argv);
 
 	SDLCreateWindowParams params;
 	params.title="littlegptracker";
@@ -12,8 +12,8 @@ int main(int argc,char *argv[]) {
 
 	Application::GetInstance()->Init(params);
 
-	int retval=W32System::MainLoop();
+	int retval=WSDLSystem::MainLoop();
 
-	W32System::Shutdown();
+	WSDLSystem::Shutdown();
 	return retval;
 }

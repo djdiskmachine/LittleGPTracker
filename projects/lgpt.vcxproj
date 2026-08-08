@@ -128,9 +128,9 @@
     <ClCompile Include="..\sources\Adapters\SDL2\GUI\SDLGUIWindowImp.cpp" />
     <ClCompile Include="..\sources\Adapters\SDL2\Timer\SDLTimer.cpp" />
     <ClCompile Include="..\sources\Adapters\W32FileSystem\W32FileSystem.cpp" />
-    <ClCompile Include="..\sources\Adapters\W32\Main\W32Main.cpp" />
+    <ClCompile Include="..\sources\Adapters\W32\Main\WSDLmain.cpp" />
     <ClCompile Include="..\sources\Adapters\W32\Process\W32Process.cpp" />
-    <ClCompile Include="..\sources\Adapters\W32\System\W32System.cpp" />
+    <ClCompile Include="..\sources\Adapters\WSDLSystem\WSDLSystem.cpp" />
     <ClCompile Include="..\sources\Application\Application.cpp" />
     <ClCompile Include="..\sources\Application\AppWindow.cpp" />
     <ClCompile Include="..\sources\Application\Audio\AudioFileStreamer.cpp" />
@@ -283,7 +283,7 @@
     <ClInclude Include="..\sources\Adapters\SDL2\Timer\SDLTimer.h" />
     <ClInclude Include="..\sources\Adapters\W32FileSystem\W32FileSystem.h" />
     <ClInclude Include="..\sources\Adapters\W32\Process\W32Process.h" />
-    <ClInclude Include="..\sources\Adapters\W32\System\W32System.h" />
+    <ClInclude Include="..\sources\Adapters\WSDLSystem\WSDLSystem.h" />
     <ClInclude Include="..\sources\Application\Application.h" />
     <ClInclude Include="..\sources\Application\AppWindow.h" />
     <ClInclude Include="..\sources\Application\Audio\AudioFileStreamer.h" />

@@ -1,4 +1,4 @@
-#include "W32System.h"
+#include "WSDLSystem.h"
 #include "Adapters/SDL2/GUI/GUIFactory.h"
 #include "Adapters/SDL2/GUI/SDLEventManager.h"
 #include "Adapters/SDL2/GUI/SDLGUIWindowImp.h"
@@ -24,17 +24,17 @@
 #include "Adapters/RTMidi/RTMidiService.h"
 #endif
 
-EventManager *W32System::eventManager_ = NULL ;
+EventManager *WSDLSystem::eventManager_ = NULL ;
 
-int W32System::MainLoop() {
+int WSDLSystem::MainLoop() {
 	eventManager_->InstallMappings() ;
 	return eventManager_->MainLoop() ;
 } ;
 
-void W32System::Boot(int argc,char **argv) {
+void WSDLSystem::Boot(int argc,char **argv) {
 
 	// Install System
-	System::Install(new W32System()) ;
+	System::Install(new WSDLSystem()) ;
 
 	// Install FileSystem
 	FileSystem::Install(new W32FileSystem()) ;
@@ -110,28 +110,28 @@ void W32System::Boot(int argc,char **argv) {
 	eventManager_->Init() ;
 } ;
 
-void W32System::Shutdown() {
+void WSDLSystem::Shutdown() {
 	delete Audio::GetInstance() ;
 } ;
 
-unsigned long W32System::GetClock() {
+unsigned long WSDLSystem::GetClock() {
 	return (clock()*1000)/CLOCKS_PER_SEC ;
 }
 
-void W32System::Sleep(int millisec) {
+void WSDLSystem::Sleep(int millisec) {
 	if (millisec>0)
 		::Sleep(millisec) ;
 }
 
-void *W32System::Malloc(unsigned size) {
+void *WSDLSystem::Malloc(unsigned size) {
 	return malloc(size) ;
 }
 
-void W32System::Free(void *ptr) {
+void WSDLSystem::Free(void *ptr) {
 	free(ptr) ;
 }
 
-void W32System::Memset(void *addr,char val,int size) {
+void WSDLSystem::Memset(void *addr,char val,int size) {
 
 	unsigned int ad=(unsigned int)addr ;
 	if (((ad&0x3)==0)&&((size&0x3)==0)) { // Are we 4-byte aligned ?
@@ -150,22 +150,22 @@ void W32System::Memset(void *addr,char val,int size) {
 	} ;
 } ;
 
-void *W32System::Memcpy(void *s1, const void *s2, int n)
+void *WSDLSystem::Memcpy(void *s1, const void *s2, int n)
 {
 	return memcpy(s1,s2,n) ;
 } ;
 
-void W32System::PostQuitMessage()
+void WSDLSystem::PostQuitMessage()
 {
 	SDLEventManager::GetInstance()->PostQuitMessage()  ;
 } ;
 
-unsigned int  W32System::GetMemoryUsage()
+unsigned int  WSDLSystem::GetMemoryUsage()
 {
 	return 0 ;
 } ;
 
-std::string W32System::SGetLastErrorString()
+std::string WSDLSystem::SGetLastErrorString()
 {
 	LPVOID lpMsgBuf;
 

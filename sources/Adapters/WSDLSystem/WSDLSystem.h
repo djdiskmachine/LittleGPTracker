@@ -1,11 +1,11 @@
-#ifndef _W32_SYSTEM_H_
-#define _W32_SYSTEM_H_
+#ifndef _WSDL_SYSTEM_H_
+#define _WSDL_SYSTEM_H_
 
 #include "System/System/System.h"
 #include "UIFramework/SimpleBaseClasses/EventManager.h"
 #include <string>
 
-class W32System: public System {
+class WSDLSystem: public System {
 public:
 	static void Boot(int argc,char **argv) ;
 	static void Shutdown() ;
