@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -58,7 +58,7 @@
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../sources/Externals;../sources/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__WINDOWS_MM__;__WINDOWS_DS__;SDL2;RTAUDIO;RTMIDI;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__WINDOWS_MM__;__WINDOWS_DS__;SDL2;RTAUDIO;RTMIDI;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;FFMPEG_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -69,7 +69,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/fixed:no %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;winmm.lib;dsound.lib;dxguid.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;winmm.lib;dsound.lib;dxguid.lib;ole32.lib;avformat.lib;avcodec.lib;avutil.lib;avfilter.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>../libs/SDL2/lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -90,7 +90,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <AdditionalIncludeDirectories>../sources/Externals;../sources/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__WINDOWS_MM__;__WINDOWS_DS__;SDL2;RTAUDIO;RTMIDI;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;__WINDOWS_MM__;__WINDOWS_DS__;SDL2;RTAUDIO;RTMIDI;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;FFMPEG_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
@@ -98,7 +98,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/fixed:no %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;winmm.lib;dsound.lib;dxguid.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;winmm.lib;dsound.lib;dxguid.lib;ole32.lib;avformat.lib;avcodec.lib;avutil.lib;avfilter.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>../libs/SDL2/lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -139,8 +139,7 @@
     <ClCompile Include="..\sources\Application\Commands\CommandDispatcher.cpp" />
     <ClCompile Include="..\sources\Application\Commands\EventDispatcher.cpp" />
     <ClCompile Include="..\sources\Application\Controllers\ControlRoom.cpp" />
-    <ClCompile Include="..\sources\Application\FX\FxPrinter.cpp" />
-    <ClCompile Include="..\sources\Application\Instruments\CommandList.cpp" />
+    <ClCompile Include="..\sources\Application\FX\FxPrinter.cpp" />    <ClCompile Include="..\.\sources\Application\FX\LibavProcessor.c" />    <ClCompile Include="..\sources\Application\Instruments\CommandList.cpp" />
     <ClCompile Include="..\sources\Application\Instruments\Filters.cpp" />
     <ClCompile Include="..\sources\Application\Instruments\InstrumentBank.cpp" />
     <ClCompile Include="..\sources\Application\Instruments\MidiInstrument.cpp" />
@@ -293,8 +292,7 @@
     <ClInclude Include="..\sources\Application\Commands\EventDispatcher.h" />
     <ClInclude Include="..\sources\Application\Commands\NodeList.h" />
     <ClInclude Include="..\sources\Application\Controllers\ControlRoom.h" />
-    <ClInclude Include="..\sources\Application\FX\FxPrinter.h" />
-    <ClInclude Include="..\sources\Application\Instruments\CommandList.h" />
+    <ClInclude Include="..\sources\Application\FX\FxPrinter.h" />    <ClInclude Include="..\.\sources\Application\FX\LibavProcessor.h" />    <ClInclude Include="..\sources\Application\Instruments\CommandList.h" />
     <ClInclude Include="..\sources\Application\Instruments\Filters.h" />
     <ClInclude Include="..\sources\Application\Instruments\InstrumentBank.h" />
     <ClInclude Include="..\sources\Application\Instruments\I_Instrument.h" />

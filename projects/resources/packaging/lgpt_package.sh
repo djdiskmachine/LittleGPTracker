@@ -40,7 +40,9 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   CONTENTS+=" ../../../docs/wiki/config_xml.md"
   CONTENTS+=" ../../../docs/wiki/tips_and_tricks.md"
   CONTENTS+=" ../$1/*.txt"
-  zip -9 ../../$PACKAGE -jq $CONTENTS && cd -
+  zip -9 ../../$PACKAGE -jq $CONTENTS
+  [ -d ../../lib ] && cd ../.. && zip -9 -r -y $PACKAGE lib && cd -
+  cd -
 }
 
 collect_resources PSP EBOOT.PBP
@@ -52,6 +54,7 @@ collect_resources W32 lgpt-W32.exe
 collect_resources RASPI lgpt.rpi-exe
 collect_resources CHIP lgpt.chip-exe
 collect_resources BITTBOY lgpt-bittboy.elf
+collect_resources GARLIC lgpt-garlic.elf
 collect_resources GARLICPLUS lgpt-garlicplus.elf
 collect_resources RG35XXPLUS lgpt-rg35xxplus.elf
 collect_resources MACOS LittleGPTracker.app

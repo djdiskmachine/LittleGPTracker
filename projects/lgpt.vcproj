@@ -43,7 +43,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="../sources/Externals;../sources/"
-				PreprocessorDefinitions="WIN32;_DEBUG;__WINDOWS_DS__;__WINDOWS_ASIO__;_CRT_SECURE_NO_WARNINGS;__WINDOWS_MM__;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_"
+				PreprocessorDefinitions="WIN32;_DEBUG;__WINDOWS_DS__;__WINDOWS_ASIO__;_CRT_SECURE_NO_WARNINGS;__WINDOWS_MM__;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;FFMPEG_ENABLED"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/fixed:no"
-				AdditionalDependencies="sdlmain.lib sdl.lib winmm.lib dsound.lib SDL_image.lib"
+				AdditionalDependencies="sdlmain.lib sdl.lib winmm.lib dsound.lib avformat.lib avcodec.lib avutil.lib avfilter.lib SDL_image.lib"
 				OutputFile="$(OutDir)/lgpt.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../libs/WSDL"
@@ -126,7 +126,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="3"
 				AdditionalIncludeDirectories="../sources/Externals;../sources/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WINDOWS_DS__;__WINDOWS_ASIO__;__WINDOWS_MM__;_CRT_SECURE_NO_WARNINGS;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WINDOWS_DS__;__WINDOWS_ASIO__;__WINDOWS_MM__;_CRT_SECURE_NO_WARNINGS;CPP_MEMORY;_LGPT_NO_SCREEN_CACHE_;FFMPEG_ENABLED"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -145,7 +145,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/fixed:no"
-				AdditionalDependencies="sdlmain-release.lib  sdl-release.lib winmm.lib dsound.lib"
+				AdditionalDependencies="sdlmain-release.lib  sdl-release.lib winmm.lib dsound.lib avformat.lib avcodec.lib avutil.lib avfilter.lib"
 				OutputFile="$(OutDir)/lgpt-W32.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../libs/WSDL"
@@ -305,7 +305,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/fixed:no"
-				AdditionalDependencies="sdlmain.lib sdl.lib winmm.lib SDL_image.lib dsound.lib"
+				AdditionalDependencies="sdlmain.lib sdl.lib winmm.lib SDL_image.lib dsound.lib avformat.lib avcodec.lib avutil.lib avfilter.lib"
 				OutputFile="$(OutDir)/lgpt_demo.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../libs/WSDL"
@@ -385,7 +385,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/fixed:no"
-				AdditionalDependencies="sdlmain-release.lib  sdl-release.lib winmm.lib dsound.lib sdl_image.lib"
+				AdditionalDependencies="sdlmain-release.lib  sdl-release.lib winmm.lib dsound.lib avformat.lib avcodec.lib avutil.lib avfilter.lib sdl_image.lib"
 				OutputFile="$(OutDir)/lgpt_demo.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../libs/WSDL"
@@ -1097,7 +1097,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\sources\Application\FX\LibavProcessor.c"
+						>
+					</File>
+					<File
 						RelativePath="..\sources\Application\FX\FxPrinter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\sources\Application\FX\LibavProcessor.h"
 						>
 					</File>
 				</Filter>

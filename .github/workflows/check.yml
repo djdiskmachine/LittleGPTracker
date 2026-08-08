@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@v4.1.7
 
       - name: Install packaging deps
-        run: choco install -y zip --no-progress --yes
+        run: choco install -y zip ffmpeg --no-progress --yes
         shell: powershell
 
       - name: Add MSBuild to PATH

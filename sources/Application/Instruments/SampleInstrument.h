@@ -12,14 +12,16 @@
 #include "Foundation/Variables/WatchedVariable.h"
 
 enum SampleInstrumentLoopMode {
-    SILM_ONESHOT = 0,
-    SILM_LOOP,
-    SILM_LOOP_PINGPONG,
-    SILM_OSC,
-    //	SILM_OSCFINE,
-    SILM_LOOPSYNC,
-    SILM_LAST
-};
+	SILM_ONESHOT=0,
+	SILM_LOOP,
+	SILM_LOOP_PINGPONG,
+	SILM_OSC,
+//	SILM_OSCFINE,
+	SILM_LOOPSYNC,
+	SILM_SLICE,
+	SILM_LAST
+} ;
+
 
 #define NO_SAMPLE (-1)
 #define SIP_VOLUME    		MAKE_FOURCC('V','O','L','M')
@@ -88,18 +90,18 @@ public:
 	   void SetVolume(int) ;
 	   int GetSampleSize(int channel=-1) ;
        int GetLoopEnd();
-       virtual const char *GetName();
-       virtual const char *GetFileName();
- 
-  static void EnableDownsamplingLegacy();
+       virtual const char *GetName() ; // returns sample name until real
+	                                   // namer is implemented
+       virtual const char *GetFullName();
+       static void EnableDownsamplingLegacy();
 
-protected:
-		void updateInstrumentData(bool search) ;
-		void doTickUpdate(int channel) ;
-		void doKRateUpdate(int channel) ;
-		void updateFeedback(renderParams *rp) ;
+     protected:
+       void updateInstrumentData(bool search);
+       void doTickUpdate(int channel);
+       void doKRateUpdate(int channel);
+       void updateFeedback(renderParams *rp);
 
-private:
+     private:
        SoundSource *source_ ;
        struct renderParams renderParams_[SONG_CHANNEL_COUNT] ;
        bool running_ ;

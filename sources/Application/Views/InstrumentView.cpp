@@ -320,6 +320,7 @@ void InstrumentView::ProcessButtonMask(unsigned short mask,bool pressed) {
                     FxPrinter printer(viewData_);
                     isDirty_ = printer.Run();
                     View::SetNotification(printer.GetNotification());
+					this->OnFocus();
                     break;
                 }
                 default:
