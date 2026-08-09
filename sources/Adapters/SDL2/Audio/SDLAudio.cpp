@@ -36,6 +36,7 @@ int SDLAudio::GetSampleRate() {
         Trace::Error(
             "AUDIO",
             "Sample rate requested before audio driver is initialised!");
+        return 0;
     }
     return drv_->GetSampleRate();
 };

@@ -13,7 +13,7 @@ class Audio : public T_Factory<Audio>, public T_SimpleList<AudioOut> {
     virtual ~Audio();
     virtual void Init() = 0;
     virtual void Close() = 0;
-    virtual int GetSampleRate() { return 44100; };
+    virtual int GetSampleRate() = 0;
     virtual int GetMixerVolume() { return 100; };
     virtual void SetMixerVolume(int volume) {};
 
