@@ -273,7 +273,9 @@ static int init_filters(int ir_wet, int ir_pad)
 
     /* Configure the buffersink to accept the expected format */
     static const enum AVSampleFormat out_sample_fmts[] = { AV_SAMPLE_FMT_S16, -1 };
-    ret = av_opt_set_int_list(buffersink_ctx, "sample_fmts", out_sample_fmts, -1, AV_OPT_SEARCH_CHILDREN);
+    /* av_opt_set_int_list macro fails to expand under MSVC; call av_opt_set_bin directly (list length excludes the -1 terminator) */
+    ret = av_opt_set_bin(buffersink_ctx, "sample_fmts", (const uint8_t *)out_sample_fmts,
+                         sizeof(out_sample_fmts) - sizeof(out_sample_fmts[0]), AV_OPT_SEARCH_CHILDREN);
     if (ret < 0) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot set output sample format\n");
         goto end;
