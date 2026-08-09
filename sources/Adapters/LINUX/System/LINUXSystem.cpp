@@ -83,16 +83,15 @@ void LINUXSystem::Boot(int argc, char **argv) {
 		}
 	}
 #else
-		// Install aliases
-		char buff[1024];
-		ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff) - 1);
-		if (len != -1) {
-        buff[len] = 0;
-    } else {
-        strcpy(buff, ".");
-    }
-    Path::SetAlias("bin", dirname(buff));
-    Path::SetAlias("root", ".");
+	char buff[1024];
+	ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff)-1);
+	if (len != -1) {
+		buff[len] = 0;
+	} else {
+		strcpy(buff, ".");
+	}
+	Path::SetAlias("bin", dirname(buff));
+	Path::SetAlias("root", ".");
 #endif
 
     // always use stdout, user can capture in launch script
