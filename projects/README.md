@@ -3,6 +3,7 @@ From repo root: cp pre-commit ./git/hooks
 
 ##### Windows: Use Visual Studio to build
 	Requires installing SDL2 headers under sources/Externals/SDL2
+	Install FFMPEG using vcpkg
 
 ##### CAANOO: Compile under linux with the caanoo toolchain
 

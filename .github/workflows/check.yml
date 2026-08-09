@@ -57,16 +57,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.1.7
 
-      - name: Install packaging deps
-        run: choco install -y zip --no-progress --yes
+      - name: Install build deps
+        run: |
+          choco install -y zip --no-progress --yes
         shell: powershell
+
+      - name: Install FFmpeg dev libs
+        run: |
+          curl -L -o ffmpeg.7z https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full-shared.7z
+          7z x ffmpeg.7z
+          Rename-Item (Get-ChildItem -Directory -Filter "ffmpeg-*-shared").FullName ffmpeg-dev
+        shell: pwsh
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
 
       - name: Build Solution
         working-directory: projects
-        run: msbuild lgpt.sln /p:Configuration=Release /p:Platform=Win32 /p:PlatformToolset=v143 /m
+        run: msbuild lgpt.sln /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143 /m
         shell: pwsh
 
       - name: Package build
@@ -130,7 +138,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow
+          sudo apt install -y make pkgconf gcc-multilib g++-multilib libsdl2-dev:i386 libasound2-plugins:i386 libjack-dev:i386 python3-pillow libavcodec-dev:i386 libavformat-dev:i386 libavfilter-dev:i386 libavutil-dev:i386 libswresample-dev:i386
 
       - name: Build X86
         working-directory: projects
@@ -237,7 +245,7 @@ jobs:
       - name: Install Garlic Plus toolchain
         run: |
           sudo apt update && sudo apt install -y python3-pillow
-          wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/simotek/union-rg35xxplus-toolchain/releases/download/20240830/rg35xxplus-toolchain.tar.xz
+          wget -O /tmp/rg35xxplus-toolchain.tar.xz https://github.com/djdiskmachine/union-rg35xxplus-toolchain/releases/download/1.1/rg35xxplus-toolchain.tar.gz
           mkdir /opt/rg35xxplus-toolchain
           tar -xvf /tmp/rg35xxplus-toolchain.tar.xz -C /opt/rg35xxplus-toolchain  --strip-components=1
 
@@ -343,7 +351,7 @@ jobs:
       - name: Install required libraries
         run: |
           sudo apt update
-          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow
+          sudo apt install -y make pkgconf libsdl2-dev libasound2-plugins libjack-dev python3-pillow libavcodec-dev libavformat-dev libavfilter-dev libavutil-dev libswresample-dev
 
       - name: Build X64
         working-directory: projects
