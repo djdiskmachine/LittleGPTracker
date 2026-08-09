@@ -5,10 +5,11 @@
 // Used to propagate audio hints & settings
 
 struct AudioSettings {
-	std::string audioAPI_;
-	std::string audioDevice_ ;
-	int bufferSize_ ;
-	int preBufferCount_ ;
-} ;
+    std::string audioAPI_;
+    std::string audioDevice_;
+    int bufferSize_;
+    int preBufferCount_;
+    int sampleRate_;
+};
 
 #endif

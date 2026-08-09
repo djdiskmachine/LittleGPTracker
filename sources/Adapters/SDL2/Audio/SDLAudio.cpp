@@ -3,37 +3,43 @@
 #include "SDLAudioDriver.h"
 #include "Services/Audio/AudioOutDriver.h"
 
-SDLAudio::SDLAudio(AudioSettings &hints):Audio(hints) {
-	hints_=hints;
+SDLAudio::SDLAudio(AudioSettings &hints) : Audio(hints) {
+    hints_ = hints;
+    drv_ = NULL;
 }
 
-SDLAudio::~SDLAudio() {
-}
+SDLAudio::~SDLAudio() {}
 
 void SDLAudio::Init() {
-	AudioSettings settings ;
-	settings.audioAPI_=GetAudioAPI();
+    AudioSettings settings;
+    settings.audioAPI_ = GetAudioAPI();
 
-	settings.bufferSize_=GetAudioBufferSize() ;
-	settings.preBufferCount_=GetAudioPreBufferCount() ;
+    settings.bufferSize_ = GetAudioBufferSize();
+    settings.preBufferCount_ = GetAudioPreBufferCount();
+    settings.sampleRate_ = GetPreferredSampleRate();
 
-
-   SDLAudioDriver *drv=new SDLAudioDriver(settings) ;
-   AudioOut *out=new AudioOutDriver(*drv) ;
-   Insert(out) ;
-} ;
+    drv_ = new SDLAudioDriver(settings);
+    AudioOut *out = new AudioOutDriver(*drv_);
+    Insert(out);
+};
 
 void SDLAudio::Close() {
-     IteratorPtr<AudioOut>it(GetIterator()) ;
-     for (it->Begin();!it->IsDone();it->Next()) {
-         AudioOut &current=it->CurrentItem() ;
-         current.Close() ;
-     }
-} ;
+    IteratorPtr<AudioOut> it(GetIterator());
+    for (it->Begin(); !it->IsDone(); it->Next()) {
+        AudioOut &current = it->CurrentItem();
+        current.Close();
+    }
+};
 
-int SDLAudio::GetMixerVolume() {
-	return 100 ;
-} ;
+int SDLAudio::GetSampleRate() {
+    if (!drv_) {
+        Trace::Error(
+            "AUDIO",
+            "Sample rate requested before audio driver is initialised!");
+    }
+    return drv_->GetSampleRate();
+};
 
-void SDLAudio::SetMixerVolume(int volume) {
-} ;
+int SDLAudio::GetMixerVolume() { return 100; };
+
+void SDLAudio::SetMixerVolume(int volume) {};

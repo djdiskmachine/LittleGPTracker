@@ -1,18 +1,20 @@
 #include "FxPrinter.h"
+#include "Services/Audio/Audio.h"
 
-FxPrinter::FxPrinter(ViewData* viewData)
-    : samples_dir("project:samples"),
-      impulse_dir("root:samplelib"),
+FxPrinter::FxPrinter(ViewData *viewData)
+    : samples_dir("project:samples"), impulse_dir("root:samplelib"),
       viewData_(viewData) {
     int curInstr = viewData_->currentInstrument_;
-    InstrumentBank* bank = viewData_->project_->GetInstrumentBank();
-    instrument_ = static_cast<SampleInstrument *>(bank->GetInstrument(curInstr));
+    InstrumentBank *bank = viewData_->project_->GetInstrumentBank();
+    instrument_ =
+        static_cast<SampleInstrument *>(bank->GetInstrument(curInstr));
     notificationResult_ = "";
     // Assume ffmpeg exists but swap for local ffmpig if it doesn't
     ffmpeg_ = "ffmpeg";
     Path pigPath("bin:ffmpig");
     Path ffmpigPath(pigPath.GetPath().c_str());
-    if(ffmpigPath.Exists()) ffmpeg_ = pigPath.GetPath();
+    if (ffmpigPath.Exists())
+        ffmpeg_ = pigPath.GetPath();
 }
 
 void FxPrinter::setParams() {
@@ -33,7 +35,8 @@ void FxPrinter::setPaths() {
 std::string FxPrinter::parseCommand() {
     std::string command;
     float padDur = static_cast<float>(irPad_) / 1000;
-    float smplLength = static_cast<float>(instrument_->GetSampleSize()) / 44100;
+    float smplLength = static_cast<float>(instrument_->GetSampleSize()) /
+                       Audio::GetInstance()->GetSampleRate();
 
     std::ostringstream cm1, cm2, cm3, cm4, cm5;
     cm1 << ffmpeg_ << " -y -i "
