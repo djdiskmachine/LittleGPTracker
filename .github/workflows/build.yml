@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Solution
         working-directory: projects
-        run: msbuild lgpt.sln /p:Configuration=Release /p:Platform=Win32 /p:PlatformToolset=v143 /m
+        run: msbuild lgpt.sln /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143 /m
         shell: pwsh
       
       - name: Package build

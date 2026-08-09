@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
@@ -271,17 +272,9 @@ static int init_filters(int ir_wet, int ir_pad)
         goto end;
     }
 
-    /* Configure the buffersink to accept the expected format */
-    static const enum AVSampleFormat out_sample_fmts[] = { AV_SAMPLE_FMT_S16, -1 };
-    /* av_opt_set_int_list macro fails to expand under MSVC; call av_opt_set_bin directly (list length excludes the -1 terminator) */
-    ret = av_opt_set_bin(buffersink_ctx, "sample_fmts", (const uint8_t *)out_sample_fmts,
-                         sizeof(out_sample_fmts) - sizeof(out_sample_fmts[0]), AV_OPT_SEARCH_CHILDREN);
-    if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Cannot set output sample format\n");
-        goto end;
-    }
-
-    /* This filter takes no options. */
+    /* Output format is forced by the trailing aformat=sample_fmts=s16 filter,
+     * so the sink needs no sample_fmts option (rejected as "Option not found"
+     * on this build). Initialize it with no options. */
     ret = avfilter_init_str(buffersink_ctx, NULL);
     if (ret < 0) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Could not initialize the abuffersink instance.\n");
@@ -328,17 +321,19 @@ static int init_filters(int ir_wet, int ir_pad)
     if (afir_wet < 0) afir_wet = 0;
 
     if (ir_pad > 0) {
+        /* Pad the input before the convolution so afir has trailing silence to
+         * ring the reverb tail into; padding after amix only appends silence to
+         * an already-truncated tail. */
         snprintf(filters_descr, sizeof(filters_descr),
                  "[ir_in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s["
                  "ir_norm];"
                  "[in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s,"
-                 "asplit[in_1][in_2];"
+                 "apad=pad_dur=%dms,asplit[in_1][in_2];"
                  "[in_1][ir_norm]afir=dry=10:wet=%d[reverb];"
                  "[in_2][reverb]amix=inputs=2:weights=1 "
-                 "1,volume=2.5,aformat=sample_fmts=s16:channel_layouts=%s,"
-                 "apad=pad_dur=%dms[out]",
+                 "1,volume=2.5,aformat=sample_fmts=s16:channel_layouts=%s[out]",
                  target_sample_rate, target_layout, target_sample_rate,
-                 target_layout, afir_wet, target_layout, ir_pad);
+                 target_layout, ir_pad, afir_wet, target_layout);
     } else {
         snprintf(filters_descr, sizeof(filters_descr),
                  "[ir_in]aresample=%d,aformat=sample_fmts=fltp:channel_layouts=%s["
@@ -433,6 +428,14 @@ static int drain_filtergraph(void) {
     }
 }
 
+/* Mirror FFmpeg log output to stdout (app console can't capture stderr) */
+static void libav_log_to_stdout(void *avcl, int level, const char *fmt, va_list vl) {
+    if (level > av_log_get_level())
+        return;
+    vprintf(fmt, vl);
+    fflush(stdout);
+}
+
 int encode(const char *fi, const char *ir, const char *fo, int irWet,
            int irPad) {
     int ret;
@@ -440,6 +443,10 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet,
     AVFrame *frame = NULL, *ir_frame = NULL;
     AVCodecContext *dec_ctx = NULL, *ir_dec_ctx = NULL;
     int ir_loaded = 0;
+
+    /* Route FFmpeg's log to stdout so failures surface in the app console */
+    av_log_set_level(AV_LOG_VERBOSE);
+    av_log_set_callback(libav_log_to_stdout);
 
     if ((ret = open_audio_file(&ifmt_ctx, fi)) < 0)
         goto end;

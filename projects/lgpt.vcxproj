@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
+    <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
+    <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -17,12 +17,12 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -30,10 +30,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -41,26 +41,26 @@
     <_ProjectFileVersion>18.0.11925.146</_ProjectFileVersion>
     <!-- Pick first location whose include\libavcodec\avcodec.h actually exists; FFMPEG_DIR env var wins -->
     <FFmpegDir Condition="'$(FFMPEG_DIR)'!=''">$(FFMPEG_DIR)</FFmpegDir>
-    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(VCPKG_ROOT)\installed\x86-windows-relonly\include\libavcodec\avcodec.h')">$(VCPKG_ROOT)\installed\x86-windows-relonly</FFmpegDir>
-    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(VCPKG_ROOT)\installed\x86-windows\include\libavcodec\avcodec.h')">$(VCPKG_ROOT)\installed\x86-windows</FFmpegDir>
-    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(USERPROFILE)\Documents\vcpkg\installed\x86-windows-relonly\include\libavcodec\avcodec.h')">$(USERPROFILE)\Documents\vcpkg\installed\x86-windows-relonly</FFmpegDir>
-    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(USERPROFILE)\Documents\vcpkg\installed\x86-windows\include\libavcodec\avcodec.h')">$(USERPROFILE)\Documents\vcpkg\installed\x86-windows</FFmpegDir>
+    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(VCPKG_ROOT)\installed\x64-windows-relonly\include\libavcodec\avcodec.h')">$(VCPKG_ROOT)\installed\x64-windows-relonly</FFmpegDir>
+    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(VCPKG_ROOT)\installed\x64-windows\include\libavcodec\avcodec.h')">$(VCPKG_ROOT)\installed\x64-windows</FFmpegDir>
+    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(USERPROFILE)\Documents\vcpkg\installed\x64-windows-relonly\include\libavcodec\avcodec.h')">$(USERPROFILE)\Documents\vcpkg\installed\x64-windows-relonly</FFmpegDir>
+    <FFmpegDir Condition="'$(FFmpegDir)'=='' AND Exists('$(USERPROFILE)\Documents\vcpkg\installed\x64-windows\include\libavcodec\avcodec.h')">$(USERPROFILE)\Documents\vcpkg\installed\x64-windows</FFmpegDir>
     <FFmpegDir Condition="'$(FFmpegDir)'==''">$(ProjectDir)..\ffmpeg-dev</FFmpegDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../bin\</OutDir>
     <IntDir>../build/Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>lgpt</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>buildW32/\</OutDir>
     <IntDir>../build/Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
     <TargetName>lgpt-W32</TargetName>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
@@ -78,23 +78,23 @@
       <AdditionalOptions>/fixed:no %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;winmm.lib;dsound.lib;dxguid.lib;ole32.lib;avformat.lib;avcodec.lib;avutil.lib;avfilter.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(FFmpegDir)\lib;../libs/SDL2/lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(FFmpegDir)\lib;../libs/SDL2/lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
-      <TargetMachine>MachineX86</TargetMachine>
+      <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(ProjectDir)resources\W32" mkdir "$(ProjectDir)resources\W32"
-    copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(OutDir)"
-    copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(ProjectDir)resources\W32\"
+    copy /Y "$(ProjectDir)..\libs\SDL2\lib\x64\SDL2.dll" "$(OutDir)"
+    copy /Y "$(ProjectDir)..\libs\SDL2\lib\x64\SDL2.dll" "$(ProjectDir)resources\W32\"
     if exist "$(FFmpegDir)\bin\*.dll" copy /Y "$(FFmpegDir)\bin\*.dll" "$(OutDir)"</Command>
       <Message>Copying SDL2.dll to output and resources\W32</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <Optimization>Full</Optimization>
       <AdditionalIncludeDirectories>$(FFmpegDir)\include;../sources/Externals;../sources/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -108,19 +108,19 @@
       <AdditionalOptions>/fixed:no %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;winmm.lib;dsound.lib;dxguid.lib;ole32.lib;avformat.lib;avcodec.lib;avutil.lib;avfilter.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(FFmpegDir)\lib;../libs/SDL2/lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(FFmpegDir)\lib;../libs/SDL2/lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
-      <TargetMachine>MachineX86</TargetMachine>
+      <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
         <Command>if not exist "$(ProjectDir)resources\W32" mkdir "$(ProjectDir)resources\W32"
-      copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(OutDir)"
-      copy /Y "$(ProjectDir)..\libs\SDL2\lib\x86\SDL2.dll" "$(ProjectDir)resources\W32\"
+      copy /Y "$(ProjectDir)..\libs\SDL2\lib\x64\SDL2.dll" "$(OutDir)"
+      copy /Y "$(ProjectDir)..\libs\SDL2\lib\x64\SDL2.dll" "$(ProjectDir)resources\W32\"
       if exist "$(FFmpegDir)\bin\*.dll" copy /Y "$(FFmpegDir)\bin\*.dll" "$(OutDir)"</Command>
       <Message>Copying SDL2.dll to output and resources\W32</Message>
     </PostBuildEvent>
