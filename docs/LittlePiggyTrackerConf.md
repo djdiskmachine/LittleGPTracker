@@ -117,7 +117,7 @@ LittleGPTracker uses 6 colours to do all the drawing. If you want, you can redef
 - `FOREGROUND`: Color of the foreground
 - `BORDER`: Color of the border in the start screen / dialogs
 - `HICOLOR1`: Row count in song screen
-- `HICOLOR2`: Highlight color 2
+- `HICOLOR2`: Highlight color 2 as well as warning level ('orange') in VU meter
 - `CURSORCOLOR`: Cursor color
 - `PLAYCOLOR`: Play indicator color
 - `MUTECOLOR`: Mute indicator color
@@ -125,7 +125,8 @@ LittleGPTracker uses 6 colours to do all the drawing. If you want, you can redef
 - `SONGVIEW_00`: Color of the chain "00" in song screen
 - `ROWCOLOR1`: Row count color 1
 - `ROWCOLOR2`: Row count color 2
-- `MAJORBEAT`: Color of "--" at row 00,04,08,0c in phrase screen
+- `MAJORBEAT`: Color of rows 00,04,08,0c in phrase screen as well as clipping indicator ('red') in VU meter
+- `CONSOLE`: Color of normal signal level ('green') in VU meter
 - `ALTROWNUMBER`: How many rows for each `ROWCOLOR`
 
 All colors are defined by a set of hexadecimal triplet for RGB. Here's an example:

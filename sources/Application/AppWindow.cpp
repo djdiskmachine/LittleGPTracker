@@ -114,6 +114,7 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
     defineColor("ROWCOLOR1", rownumberColor_);
     defineColor("ROWCOLOR2", rownumber2Color_);
     defineColor("MAJORBEAT", majorbeatColor_);
+    defineColor("CONSOLE", consoleColor_);
 
     GUIWindow::Clear(backgroundColor_);
 
