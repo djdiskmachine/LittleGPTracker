@@ -1,4 +1,7 @@
+1.6.0-bacon19
+    Expose CONSOLE colour in config and update docs
 
+1.6.0-bacon18
     Migrate W32 to SDL2, removing need for building in vs2008
 
 1.6.0-bacon17
