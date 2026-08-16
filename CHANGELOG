@@ -1,6 +1,12 @@
 
     Migrate W32 to SDL2, removing need for building in vs2008
 
+1.6.0-bacon18
+    Create column Titles.
+        * Every view will have a column title (or header).
+        * Is possible to change the color of the header.
+        * Include the color changes as part of the mixer view.
+
 1.6.0-bacon17
     Fix sample list refreshing bug
 

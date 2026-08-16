@@ -32,5 +32,6 @@
     <ALTROWNUMBER value = "4"/>       <!--How many rows of each ROWCOLOR-->
     <ALTROWNUMBER value = "4"/>
     <FONTTYPE     value = '0' />     <!-- '0':original '1':digital '2':monster 'CUSTOM': load custom_font.xml-->
+    <COL_TITLE    value = "853B6F" /> <!-- Color of the column title -->
 
 </CONFIG>

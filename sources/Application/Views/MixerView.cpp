@@ -368,16 +368,17 @@ void MixerView::DrawView() {
     }
     DrawString(pos._x - 3, pos._y, " ", rowLabelProps);
 
+    char chbuf[4];
     for (int i = 0; i < 8; i++) {
         props.invert_ = (i == viewData_->mixerCol_ && mixerRow_ == 0);
-        SetColor((i == viewData_->mixerCol_ && mixerRow_ == 0) ? CD_HILITE2 : CD_NORMAL);
+        SetColor((i == viewData_->mixerCol_ && mixerRow_ == 0) ? CD_HILITE2
+                                                               : CD_COL_TITLE);
 
         if (playerInst->IsChannelMuted(i)) {
             DrawString(pos._x, pos._y, "M ", props);
         } else {
-            int bus = mixer->GetBus(i);
-            hex2char(bus, hex);
-            DrawString(pos._x, pos._y, hex, props);
+            snprintf(chbuf, sizeof(chbuf), "%2d", i);
+            DrawString(pos._x, pos._y, chbuf, props);
         }
         pos._x += dx;
     }
