@@ -5,8 +5,8 @@
 #include "Adapters/SDL2/GUI/SDLEventManager.h"
 #include "Adapters/SDL2/GUI/SDLGUIWindowImp.h"
 #include "Adapters/SDL2/Timer/SDLTimer.h"
+#include "Adapters/SDL2/Process/SDLProcess.h"
 #include "Adapters/Unix/FileSystem/UnixFileSystem.h"
-#include "Adapters/Unix/Process/UnixProcess.h"
 #include "Application/Commands/NodeList.h"
 #include "Application/Controllers/ControlRoom.h"
 #include "Application/Model/Config.h"
@@ -78,8 +78,8 @@ void SwitchSystem::Boot(int argc, char **argv) {
     Trace::Log("System", "Installing DUMMY MIDI");
     MidiService::Install(new DummyMidi());
 
-    // Install Threads
-    SysProcessFactory::Install(new UnixProcessFactory());
+    // Install Threads.
+    SysProcessFactory::Install(new SDLProcessFactory());
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         return;

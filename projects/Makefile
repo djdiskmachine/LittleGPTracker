@@ -202,7 +202,7 @@ SWITCHDIRS := \
 	../sources/Adapters/SWITCH/Main \
 	../sources/Adapters/SWITCH/System \
 	../sources/Adapters/Unix/FileSystem \
-	../sources/Adapters/Unix/Process \
+	../sources/Adapters/SDL2/Process \
 	../sources/System/Process \
 	$(DUMMYMIDIDIRS) $(SDL2DIRS) $(SDL2AUDIODIRS)
 
@@ -456,7 +456,7 @@ SWITCHFILES := \
 	SDLGUIWindowImp.o \
 	SDLEventManager.o \
 	Process.o \
-	UnixProcess.o \
+	SDLProcess.o \
 	SDLTimer.o \
 	$(SDLAUDIOFILES) \
 	$(DUMMYMIDIFILES)
