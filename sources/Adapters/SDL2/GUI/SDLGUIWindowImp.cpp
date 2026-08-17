@@ -48,6 +48,10 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 320; 
   int screenHeight = 240;
   windowed_ = false;
+ #elif defined(PLATFORM_SWITCH)
+  int screenWidth = 1280;
+  int screenHeight = 720;
+  windowed_ = false;
  #else
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
@@ -89,7 +93,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 	}
 	else
 	{
-		if (framebuffer_)
+		if (framebuffer_ || windowed_ == false)
 		{
 		mult_ = multFromSize;
 		}
