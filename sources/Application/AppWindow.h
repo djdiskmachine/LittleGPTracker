@@ -28,6 +28,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
   public:
     static AppWindow *Create(GUICreateWindowParams &);
     void LoadProject(const Path &path);
+    void LoadProjectDeferred(const Path &path);
     void SaveLastProject(const Path &p);
     void CloseProject();
 
@@ -79,6 +80,7 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     bool _closeProject;
     bool _loadAfterSaveAsProject;
     bool _loadAfterResume;
+    bool _loadAfterProjectSelect;
     bool _shouldQuit;
     unsigned short _mask;
     unsigned long _lastA;

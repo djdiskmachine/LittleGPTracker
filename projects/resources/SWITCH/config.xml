@@ -1,0 +1,11 @@
+<CONFIG>
+	<AUTO_LOAD_LAST value="YES"/> <!-- change to disable auto loading -->
+	<!-- AUDIOBUFFERSIZE, AUDIOPREBUFFERCOUNT, AUDIOSAMPLERATE and SCREENMULT are
+	     deliberately absent: the Switch values live in SwitchSystem.cpp and
+	     Audio.cpp lets this file override them, so setting them here would undo
+	     the tuned defaults (and SCREENMULT would override the fullscreen
+	     calculation). Only add them if you know you want something different. -->
+	<KEYDELAY value="200"/>
+	<KEYREPEAT value="100" />
+	<FONTTYPE  value = '0' />     <!-- '0':original '1':digital '2':monster 'CUSTOM': load custom_font.xml-->
+</CONFIG>

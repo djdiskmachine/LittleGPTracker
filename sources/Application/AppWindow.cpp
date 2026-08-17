@@ -45,7 +45,12 @@ static void ProjectSelectCallback(View &v, ModalView &dialog) {
     if (dialog.GetReturnCode() > 0) {
         Path selected = spd.GetSelection();
         instance->SaveLastProject(selected);
-        instance->LoadProject(selected.GetPath().c_str());
+        // Defer the actual load instead of calling LoadProject() here: this
+        // callback runs while onEvent() holds the MixerService lock, and a
+        // synchronous load destroys/recreates that same mutex mid-lock
+        // (MixerService::Close()/Init()), corrupting it. Process it on the
+        // next onUpdate() instead, after the lock is released.
+        instance->LoadProjectDeferred(selected.GetPath().c_str());
     } else {
         System::GetInstance()->PostQuitMessage();
     }
@@ -88,6 +93,7 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
     _closeProject = 0;
     _loadAfterSaveAsProject = 0;
     _loadAfterResume = 0;
+    _loadAfterProjectSelect = 0;
     _lastA = 0;
     _lastB = 0;
     _mask = 0;
@@ -129,7 +135,8 @@ AppWindow::AppWindow(I_GUIWindowImp &imp) : GUIWindow(imp) {
 
     SelectProjectDialog *spd = new SelectProjectDialog(*_currentView);
     Path lastProjectPath = GetLastProjectPath();
-    if (shouldAutoLoad && lastProjectPath.Exists()) {
+    if (shouldAutoLoad && !lastProjectPath.GetPath().empty() &&
+        lastProjectPath.Exists()) {
         Trace::Log("AppWindow", "Auto-loading last project: %s",
                    lastProjectPath.GetPath().c_str());
         _newProjectToLoad = lastProjectPath.GetPath().c_str();
@@ -414,6 +421,11 @@ void AppWindow::LoadProject(const Path &p) {
     Redraw();
 }
 
+void AppWindow::LoadProjectDeferred(const Path &p) {
+    _newProjectToLoad = p.GetPath();
+    _loadAfterProjectSelect = true;
+}
+
 void AppWindow::CloseProject() {
 
     _closeProject = false;
@@ -533,6 +545,12 @@ bool AppWindow::onEvent(GUIEvent &event) {
 void AppWindow::onUpdate() {
     if (_loadAfterResume) {
         _loadAfterResume = false;
+        _isDirty = true;
+        LoadProject(_newProjectToLoad.c_str());
+        return;
+    }
+    if (_loadAfterProjectSelect) {
+        _loadAfterProjectSelect = false;
         _isDirty = true;
         LoadProject(_newProjectToLoad.c_str());
         return;

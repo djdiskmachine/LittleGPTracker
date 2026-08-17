@@ -1,0 +1,77 @@
+-include $(PWD)/rules_base
+
+#---------------------------------------------------------------------------------
+# Nintendo Switch (homebrew, devkitPro/libnx)
+#---------------------------------------------------------------------------------
+
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>/devkitpro")
+endif
+
+# config
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-D_64BIT \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-D_NDEBUG \
+	-DSDL2 \
+	-DSDLAUDIO \
+	-DDUMMYMIDI \
+	-D__SWITCH__
+
+DEVKITARM := $(DEVKITPRO)/devkitA64
+TOOLPATH  := $(DEVKITARM)/bin
+TOOLSBIN  := $(DEVKITPRO)/tools/bin
+PREFIX    := aarch64-none-elf-
+
+# rules_base sets CC/CXX from $(PREFIX) at include time (line 1, above),
+# before PREFIX is known here - so bind the real cross-compiler explicitly.
+CC       := $(PREFIX)gcc
+CXX      := $(PREFIX)g++
+AS       := $(PREFIX)as
+AR       := $(PREFIX)ar
+OBJCOPY  := $(PREFIX)objcopy
+
+PORTLIBS := $(DEVKITPRO)/portlibs/switch
+LIBNX    := $(DEVKITPRO)/libnx
+
+# must match the flags libSDL2.a itself was built with (see
+# $(PORTLIBS)/lib/pkgconfig/sdl2.pc) or the TLS model / ABI mismatches
+ARCH := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE -ftls-model=local-exec
+
+SDL_CFLAGS := -I$(PORTLIBS)/include -I$(PORTLIBS)/include/SDL2 -isystem $(LIBNX)/include -D_REENTRANT
+# switch-sdl2 uses EGL internally for SDL_GetWindowSurface even though we
+# never touch GL ourselves - these are required to satisfy its link deps
+SDL_LIBS   := -lSDL2 -lEGL -lstdc++ -lglapi -ldrm_nouveau -lnx -lpthread
+
+OPT_FLAGS := -O2 $(ARCH) -ffunction-sections -fdata-sections
+INCLUDES  := $(SDL_CFLAGS) -I$(PWD)/../sources
+CFLAGS    := $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall
+CXXFLAGS  := $(CFLAGS) -std=gnu++03
+LIBS      := -L$(PORTLIBS)/lib -L$(LIBNX)/lib $(SDL_LIBS)
+
+# <switch.h> (constexpr/alignas) needs C++11; only SwitchNxlink.cpp touches it
+SwitchNxlink.o: CXXFLAGS := $(CFLAGS) -std=gnu++11
+
+LDFLAGS := -specs=$(LIBNX)/switch.specs $(ARCH) -Wl,-Map,$(notdir $*.map)
+
+OUTPUT    := ../lgpt-switch
+EXTENSION := nro
+
+APP_TITLE   := LittleGPTracker
+APP_AUTHOR  := n0s2
+APP_VERSION := $(shell awk -F'"' '/PROJECT_NUMBER/{n=$$2} /PROJECT_RELEASE/{r=$$2} /BUILD_COUNT/{b=$$2} END{print n"."r"."b}' $(PWD)/../sources/Application/Model/Project.h)
+APP_ICON    := $(PWD)/resources/SWITCH/LittleGPTracker.jpg
+
+#---------------------------------------------------------------------------------
+# link the elf, then wrap it into a homebrew .nro (with icon/nacp metadata)
+#---------------------------------------------------------------------------------
+
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+
+%.nro: %.elf
+	$(TOOLSBIN)/nacptool --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $(basename $@).nacp
+	$(TOOLSBIN)/elf2nro $< $@ --icon=$(APP_ICON) --nacp=$(basename $@).nacp
