@@ -1,5 +1,25 @@
 
+1.6.0-bacon18
     Migrate W32 to SDL2, removing need for building in vs2008
+
+    Nintendo Switch support
+        * Homebrew .nro built with devkitPro/libnx, launched from hbmenu
+        * Installs to /switch/lgpt on the SD card, see INSTALL_HOW_TO.txt
+        * Built on PRs and releases by the CI
+
+    Fixes:
+    Fix songs playing far too fast on Switch
+        * The audio thread's semaphore came from UnixSysSemaphore, which uses
+          sem_open - an ENOSYS stub on devkitA64 that returns NULL, so every
+          wait returned immediately and the thread rendered unthrottled
+    Fix crash when loading a project while another one is playing
+        * The load ran while onEvent() held the MixerService lock and
+          destroyed that very mutex, so the later unlock hit freed memory
+    Fix dependency file generation on macOS
+        * The sed in rules_base used the GNU-only \+, which BSD sed takes
+          literally, leaving the generated .d files malformed
+    Fix README, CHANGELOG and LICENSE being unextractable from release zips
+        * They were stored under a literal ../../../ path, which unzip refuses
 
 1.6.0-bacon17
     Fix sample list refreshing bug
