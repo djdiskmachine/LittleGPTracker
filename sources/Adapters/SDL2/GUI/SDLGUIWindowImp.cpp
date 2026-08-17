@@ -93,6 +93,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 	}
 	else
 	{
+    // If drawing on a framebuffer or in a fullscreen app, calc the UI scale from size
 		if (framebuffer_ || windowed_ == false)
 		{
 		mult_ = multFromSize;
