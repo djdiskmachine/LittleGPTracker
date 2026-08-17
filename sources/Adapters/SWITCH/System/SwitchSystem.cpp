@@ -64,14 +64,11 @@ void SwitchSystem::Boot(int argc, char **argv) {
     Trace::Log("System", "Installing SDL audio");
     AudioSettings hint;
     hint.bufferSize_ = 1024;
-    hint.preBufferCount_ = 8;
-    // switch-sdl2's audio renderer runs at a hardcoded 48kHz mix rate
-    // (AudioRendererOutputRate_48kHz in its SDL_switchaudio.c) regardless
-    // of what we request; the per-voice rate conversion from a requested
-    // 44100 up to that fixed 48kHz mix rate wasn't behaving correctly in
-    // practice (playback audibly sped up, ~48000/44100 = 1.088x). Request
-    // 48000 directly so the voice rate matches the renderer's native rate
-    // and no resampling is needed at all.
+    hint.preBufferCount_ = 2;
+    // switch-sdl2 mixes at a hardcoded 48kHz (its arConfig is a static const
+    // AudioRendererConfig). Voices are initialised at whatever rate we ask
+    // for and libnx resamples per voice, so 44100 works too, we ask for
+    // 48000 to match the mix rate and skip that conversion entirely
     hint.sampleRate_ = 48000;
     Audio::Install(new SDLAudio(hint));
 
