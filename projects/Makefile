@@ -198,6 +198,14 @@ PSPDIRS := \
 	../sources/Adapters/SDL/GUI \
 	../sources/Adapters/SDL/Timer
 
+SWITCHDIRS := \
+	../sources/Adapters/SWITCH/Main \
+	../sources/Adapters/SWITCH/System \
+	../sources/Adapters/Unix/FileSystem \
+	../sources/Adapters/Unix/Process \
+	../sources/System/Process \
+	$(DUMMYMIDIDIRS) $(SDL2DIRS) $(SDL2AUDIODIRS)
+
 GP32DIRS	:=	.\
 				../sources/Adapters/GP32FileSystem \
 				../sources/Adapters/GP32Midi \
@@ -439,6 +447,20 @@ PSPFILES := \
 	SDLTimer.o \
 	PSPSystem.o
 
+SWITCHFILES := \
+	UnixFileSystem.o \
+	SwitchMain.o \
+	SwitchSystem.o \
+	SwitchNxlink.o \
+	GUIFactory.o \
+	SDLGUIWindowImp.o \
+	SDLEventManager.o \
+	Process.o \
+	UnixProcess.o \
+	SDLTimer.o \
+	$(SDLAUDIOFILES) \
+	$(DUMMYMIDIFILES)
+
 #---------------------------------------------------------------------------------
 # Windows
 #---------------------------------------------------------------------------------
@@ -520,7 +542,7 @@ $(BUILD):
 
 clean:
 	@echo clean ...
-	@rm -fr $(OUTPUT).$(EXTENSION) $(BUILD) *.elf *.gxb *.fxe *.gdb
+	@rm -fr $(OUTPUT).$(EXTENSION) $(BUILD) *.elf *.gxb *.fxe *.gdb *.nro *.nacp *.map
 
 #---------------------------------------------------------------------------------
 
