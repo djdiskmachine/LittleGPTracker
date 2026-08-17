@@ -4,14 +4,14 @@
 #include "Adapters/SDL2/GUI/GUIFactory.h"
 #include "Adapters/SDL2/GUI/SDLEventManager.h"
 #include "Adapters/SDL2/GUI/SDLGUIWindowImp.h"
-#include "Adapters/SDL2/Timer/SDLTimer.h"
 #include "Adapters/SDL2/Process/SDLProcess.h"
+#include "Adapters/SDL2/Timer/SDLTimer.h"
 #include "Adapters/Unix/FileSystem/UnixFileSystem.h"
 #include "Application/Commands/NodeList.h"
 #include "Application/Controllers/ControlRoom.h"
 #include "Application/Model/Config.h"
-#include "System/Console/Logger.h"
 #include "SwitchNxlink.h"
+#include "System/Console/Logger.h"
 #include <sys/time.h>
 #include <time.h>
 
