@@ -17,7 +17,7 @@ export OBJCOPY	:=	$(PREFIX)objcopy
 
 define adjustdepends
 cp $(DEPSDIR)/$*.d $(DEPSDIR)/$*.P;
-sed -e 's/#.*//' -e 's/^[^:]*: \+//' -e 's/^ *//' -e 's/ *\\$$//' -e '/^$$/ d' -e 's/$$/ :/' < $(DEPSDIR)/$*.P >> $(DEPSDIR)/$*.d;
+sed -e 's/#.*//' -e 's/^[^:]*:[[:space:]]*//' -e 's/^ *//' -e 's/ *\\$$//' -e '/^$$/ d' -e 's/$$/ :/' < $(DEPSDIR)/$*.P >> $(DEPSDIR)/$*.d;
 rm $(DEPSDIR)/$*.P
 endef
 
