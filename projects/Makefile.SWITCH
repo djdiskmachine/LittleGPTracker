@@ -62,7 +62,7 @@ EXTENSION := nro
 
 APP_TITLE   := LittleGPTracker
 APP_AUTHOR  := n0s2
-APP_VERSION := 1.0
+APP_VERSION := $(shell awk -F'"' '/PROJECT_NUMBER/{n=$$2} /PROJECT_RELEASE/{r=$$2} /BUILD_COUNT/{b=$$2} END{print n"."r"."b}' $(PWD)/../sources/Application/Model/Project.h)
 APP_ICON    := $(PWD)/resources/SWITCH/LittleGPTracker.jpg
 
 #---------------------------------------------------------------------------------
