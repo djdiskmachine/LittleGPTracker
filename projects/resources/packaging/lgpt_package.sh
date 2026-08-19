@@ -22,6 +22,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   if [ "$1" == "PSP" ] ||
   [ "$1" == "GARLIC" ] ||
   [ "$1" == "RG35XXPLUS" ] ||
+  [ "$1" == "ANDROID" ] ||
   [ "$1" == "BITTBOY" ]; then # All files go in the root folder
     zip -9 $PACKAGE -j $CONTENTS
   elif [ "$1" == "MACOS" ]; then # .app is a folder
@@ -55,5 +56,6 @@ collect_resources BITTBOY lgpt-bittboy.elf
 collect_resources GARLICPLUS lgpt-garlicplus.elf
 collect_resources RG35XXPLUS lgpt-rg35xxplus.elf
 collect_resources MACOS LittleGPTracker.app
+collect_resources ANDROID LittlePiggyTracker.apk
 # collect_resources RS97 lgpt.dge
 # collect_resources STEAM lgpt.steam-exe

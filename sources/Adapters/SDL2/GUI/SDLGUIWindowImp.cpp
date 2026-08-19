@@ -13,7 +13,7 @@
 SDLGUIWindowImp *instance_ ;
 
 unsigned short appWidth=320 ;
-unsigned short appHeight=240 ;
+unsigned short appHeight = 240;
 
 SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p) 
 {
@@ -37,7 +37,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   if (displayModeRet < 0) {
     Trace::Error("DISPLAY","No display mode found.  Error Code: %d.", displayModeRet);
   }
-    
+
   NAssert(displayModeRet >= 0);
  
  #if defined(PLATFORM_PSP)
@@ -48,18 +48,24 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 320; 
   int screenHeight = 240;
   windowed_ = false;
- #else
+#elif defined(__ANDROID__)
+  // Use full screen dimensions on Android
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
- #endif
- 
- #if defined(RS97)
+  windowed_ = false;
+  SDL_Log("DISPLAY: Android - using full display: %dx%d", screenWidth, screenHeight);
+#else
+  int screenWidth = displayMode.w;
+  int screenHeight = displayMode.h;
+#endif
+
+#if defined(RS97)
   /* Pick the best bitdepth for the RS97 as it will select 32 as its default, even though that's slow */
   bitDepth_ = 16;
- #else
+#else
   bitDepth_ = SDL_BITSPERPIXEL(displayMode.format);
- #endif
-  
+#endif
+
   const char * driverName = SDL_GetVideoDriver(0);
   
   Trace::Log("DISPLAY","Using driver %s. Screen (%d,%d) Bpp:%d",driverName,screenWidth,screenHeight,bitDepth_);
@@ -79,8 +85,8 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   }
  
   #ifdef PLATFORM_PSP
-  	mult_ = 1;
-  #else
+  mult_ = 1;
+#else
 	int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
 	const char *mult=Config::GetInstance()->GetValue("SCREENMULT") ;
 	if (mult)
@@ -519,6 +525,8 @@ void SDLGUIWindowImp::ProcessExpose()
 {
     // Expose and resize events will cause a new surface to be needed.
     surface_ = SDL_GetWindowSurface(window_);
+    _window->ForceFullRedraw(); // surface re-acquired: force full bitmap+char
+                                // redraw
     _window->Update() ;
 }
 

@@ -141,12 +141,19 @@ int SDLEventManager::MainLoop()
                     switch (event.window.event)
                     {
                         case SDL_WINDOWEVENT_EXPOSED:
+                            // SDL2 docs: surface re-acquisition is NOT needed
+                            // on expose, only on resize. Just update content.
+                            appWindow->Update() ;
+                            break;
                         case SDL_WINDOWEVENT_RESIZED:
                         case SDL_WINDOWEVENT_SIZE_CHANGED:
                             sdlWindow->ProcessExpose() ;
                             break;
                     }
 					break ;
+                case SDL_APP_DIDENTERFOREGROUND:
+                    sdlWindow->ProcessExpose() ;
+                    break ;
 				case SDL_USEREVENT:
 					sdlWindow->ProcessUserEvent(event) ;
 					break ;
