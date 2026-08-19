@@ -499,6 +499,13 @@ void ChainView::processNormalButtonMask(unsigned short mask) {
                     }
                 }
 
+                if (mask & EPBM_DOWN) {
+                    ViewType vt = VT_MIXER;
+                    ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                    SetChanged();
+                    NotifyObservers(&ve);
+                }
+
                 // We toggle full chain start only if we"re not in live mode
                 // or if the player ain't playing yet
 
@@ -593,6 +600,13 @@ void ChainView::processSelectionButtonMask(unsigned short mask) {
                         SetChanged();
                         NotifyObservers(&ve);
                     }
+                }
+
+                if (mask & EPBM_DOWN) {
+                    ViewType vt = VT_MIXER;
+                    ViewEvent ve(VET_SWITCH_VIEW, &vt);
+                    SetChanged();
+                    NotifyObservers(&ve);
                 }
 
                 if (mask & EPBM_START) {
@@ -811,8 +825,8 @@ void ChainView::OnPlayerUpdate(PlayerEventType eventType, unsigned int tick) {
     pos._x += 200;
 /*
 	if (player->Clipped()) {
-           w_.DrawString("clip",pos,props); 
+           w_.DrawString("clip",pos,props);
     } else {
-           w_.DrawString("----",pos,props); 
+           w_.DrawString("----",pos,props);
     }
 */} ;

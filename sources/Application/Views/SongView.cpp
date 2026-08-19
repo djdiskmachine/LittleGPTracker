@@ -7,6 +7,7 @@
 #include "System/Console/Trace.h"
 #include "System/System/System.h"
 #include "UIController.h"
+#include "VuMeterUtil.h"
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
@@ -27,6 +28,8 @@ SongView::SongView(GUIWindow &w, ViewData *viewData, const char *song)
         this->lastPlayedPosition_[i] = 0;
         this->lastQueuedPosition_[i] = 0;
     }
+    vuBarHeightsL_[0] = 0;
+    vuBarHeightsR_[0] = 0;
     clipboard_.active_ = false;
     clipboard_.data_ = 0;
     invertBatt_ = false;
@@ -891,6 +894,73 @@ void SongView::processSelectionButtonMask(unsigned int mask) {
 }
 
 /******************************************************
+ DrawVuBars:
+        Draw stereo L/R VU meters to the right of tracks
+        Called from both AnimationUpdate and DrawView to ensure
+        bars are always visible and never flicker
+ ******************************************************/
+
+void SongView::DrawVuBars() {
+    Player *player = Player::GetInstance();
+
+    GUIPoint anchor = GetAnchor();
+    GUIPoint vuPos = anchor;
+    vuPos._x += 25;
+    vuPos._y += View::songRowCount_ - 1;
+    
+    GUITextProperties vuProps;
+    vuProps.invert_ = true;
+
+    float peakLevelsL[1];
+    float peakLevelsR[1];
+
+    // Read master peak level (post-volume) to match MixerView's Master meter
+    if (!player->IsRunning()) {
+        peakLevelsL[0] = peakLevelsR[0] = 0.0f;
+    } else {
+        MixerService *ms = MixerService::GetInstance();
+        uint32_t masterLevel = ms->GetMasterPeakLevel();
+        peakLevelsL[0] = (float)((masterLevel >> 16) & 0xFFFF) / 32767.0f;
+        peakLevelsR[0] = (float)(masterLevel & 0xFFFF) / 32767.0f;
+    }
+
+    // Update bar height for master using utility
+    int displayHeightsL[1];
+    int displayHeightsR[1];
+    UpdateVuBarHeights(vuBarHeightsL_, displayHeightsL, peakLevelsL, 1);
+    UpdateVuBarHeights(vuBarHeightsR_, displayHeightsR, peakLevelsR, 1);
+
+    // Draw vertical VU bars for L and R channels (two columns side by side)
+    for (int row = 0; row < VU_METER_HEIGHT; row++) {
+        SetColor(GetVuBarColor(row));
+
+        // Draw left channel at x
+        GUIPoint posL = vuPos;
+        posL._y -= row;
+        DrawVuBarRow(this, posL, row, displayHeightsL[0], vuProps,
+                     GetVuBarColor(row));
+
+        // Draw right channel at x+1 (one character to the right)
+        GUIPoint posR = vuPos;
+        posR._x += 1;
+        posR._y -= row;
+        DrawVuBarRow(this, posR, row, displayHeightsR[0], vuProps,
+                     GetVuBarColor(row));
+    }
+
+    SetColor(CD_NORMAL);
+}
+
+/******************************************************
+ AnimationUpdate:
+        Update animation and draw VU meters
+ ******************************************************/
+
+void SongView::AnimationUpdate() {
+    DrawVuBars();
+}
+
+/******************************************************
  Redraw:
         redraw completely the song view
  ******************************************************/
@@ -1025,6 +1095,10 @@ void SongView::DrawView() {
     if (player->IsRunning()) {
         OnPlayerUpdate(PET_UPDATE);
     };
+
+    // Draw VU bars at the end so they appear on top of everything
+    // They will always show the empty dashes and smoothly decay when paused
+    DrawVuBars();
 };
 
 /******************************************************

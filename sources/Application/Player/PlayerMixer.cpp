@@ -12,12 +12,10 @@
 
 PlayerMixer::PlayerMixer() {
 
-	for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-        lastInstrument_[i]=0 ;
-	} ;
-
-    for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-        channel_[i]=new PlayerChannel(i) ;
+    for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+        lastInstrument_[i] = 0;
+		channel_[i] = new PlayerChannel(i);
+		isChannelPlaying_[i] = false;
     }
 }
 
@@ -106,7 +104,10 @@ void PlayerMixer::Update(Observable &o,I_ObservableData *d) {
   Mixer *mixer = Mixer::GetInstance();
 
   for (int i=0;i<SONG_CHANNEL_COUNT;i++) {
-    channel_[i]->SetMixBus(mixer->GetBus(i));
+      channel_[i]->SetMixBus(mixer->GetBus(i));
+      channel_[i]->SetVolume(fl2fp(mixer->GetChannelVolume(i) / 255.0f));
+      channel_[i]->SetHPFMode((unsigned char)mixer->GetChannelHPF(i));
+      channel_[i]->SetLPFFreq(mixer->GetChannelLPF(i));
   }
   MixerService *ms=MixerService::GetInstance();
   ms->SetPregain(project_->GetPregain());

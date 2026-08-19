@@ -19,26 +19,35 @@ struct SamplePoolEvent: public I_ObservableData {
 	int index_ ;
 } ;
 
+enum SampleLoadResult {
+    SLOAD_OK = 0,
+    SLOAD_ERR_MAX_SAMPLES = 1,
+    SLOAD_ERR_MAX_SOUNDFONTS = 2,
+    SLOAD_ERR_INVALID_DIR = 4,
+    SLOAD_ERR_INPUT_FILE = 5,
+    SLOAD_ERR_OUTPUT_FILE = 6,
+};
+
 class SamplePool: public T_Singleton<SamplePool>,public Observable {
 public:
-	void Load() ;
-    void Sort();
-    SamplePool();
-	void Reset() ;
-	~SamplePool() ;
-	SoundSource *GetSource(int i) ;
-	char **GetNameList() ;
-	int GetNameListSize();
-    int ImportSample(Path &path);
-    bool IsImported(std::string name);
-    // int InsertSample(const std::string& sampleName, bool imported, std::string fi);
-    int Reassign(std::string name, bool imported);
-    void PurgeSample(int i) ;
-	const char *GetSampleLib() ;
+  unsigned int Load();
+  void Sort();
+  SamplePool();
+  void Reset();
+  ~SamplePool();
+  SoundSource *GetSource(int i);
+  char **GetNameList();
+  int GetNameListSize();
+  int ImportSample(Path &path);
+  bool IsImported(std::string name);
+  // int InsertSample(const std::string& sampleName, bool imported, std::string fi);
+  int Reassign(std::string name, bool imported);
+  void PurgeSample(int i);
+  const char *GetSampleLib();
 protected:
   void unload(int i);
-  bool loadSample(const char *path);
-  bool loadSoundFont(const char *path);
+  int loadSample(const char *path);
+  int loadSoundFont(const char *path);
   int getIndexOf(const char *path);
   int count_;
   char *names_[MAX_PIG_SAMPLES];

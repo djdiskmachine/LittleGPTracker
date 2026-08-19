@@ -1,0 +1,1036 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Adapters">
+      <UniqueIdentifier>{4429b538-df13-4adc-ba57-a5f9f6a52903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Adapters\Audio">
+      <UniqueIdentifier>{b23bebd2-a876-484e-a54f-e298d65522bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Adapters\Midi">
+      <UniqueIdentifier>{21590a36-2dd1-4da2-9f05-0c395c4ab8d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Adapters\SDLGUI">
+      <UniqueIdentifier>{15bb641a-8666-4eb9-9d66-b7c774d6da34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Adapters\Timer">
+      <UniqueIdentifier>{fae80a72-9569-4c42-8a9e-f66accd10c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{5264156f-42b1-4435-9d95-8d425ce61ec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System\process">
+      <UniqueIdentifier>{a23ce88c-b4ac-4d55-a880-4cf7908fe14a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System\Console">
+      <UniqueIdentifier>{ffcf3613-34c1-4fa4-b345-9ea6c394785f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System\Errors">
+      <UniqueIdentifier>{defedc77-ef11-4624-a648-041928724a03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Foundation">
+      <UniqueIdentifier>{b2ceb029-12c7-4f55-bbda-9721930aa695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Foundation\Variables">
+      <UniqueIdentifier>{9a5ee837-3ca0-45f7-94cf-e03feb6653d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Foundation\Services">
+      <UniqueIdentifier>{d39f751b-0f44-4508-be88-10dc24a839bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application">
+      <UniqueIdentifier>{3e06d785-dbec-47a8-92f2-8e6d8223907a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Model">
+      <UniqueIdentifier>{38306773-2e04-4970-bb8e-dd14ad3f42ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Views">
+      <UniqueIdentifier>{53f28905-beba-4fef-a114-c618411a7f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Views\BaseClasses">
+      <UniqueIdentifier>{39b9256e-a2ca-46b9-8f16-84928c20b01b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Views\ModalDialogs">
+      <UniqueIdentifier>{66edfdaa-05c1-4162-ae60-edfffff5b610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Utils">
+      <UniqueIdentifier>{2bf42e67-d6c9-4a28-9b22-d2da9870401d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\FX">
+      <UniqueIdentifier>{745c6f89-fde9-411b-8ae0-e3d4cb759dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Player">
+      <UniqueIdentifier>{bebe098d-e35b-430f-84c1-322eb28d6349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Instruments">
+      <UniqueIdentifier>{367756d5-206c-4c04-9cc7-d21f801f4c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Persistency">
+      <UniqueIdentifier>{8313ce00-9d47-4755-b1d9-684fd708a4a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Audio">
+      <UniqueIdentifier>{e8d19b7c-88dd-4e29-a3d3-c59feeba0a63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Commands">
+      <UniqueIdentifier>{8900f296-d14e-4d17-81cd-e9ecfb674471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Controllers">
+      <UniqueIdentifier>{4a5f773e-c142-42fc-a4f5-13b195549a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Mixer">
+      <UniqueIdentifier>{5b0bddae-565e-4b0a-b93d-8a20f43a5b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UIFramework">
+      <UniqueIdentifier>{b93a2ba4-81f8-4587-9487-f3f4b55569a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UIFramework\BasicDatas">
+      <UniqueIdentifier>{9a4d35de-39bb-4e2d-bdbf-878d26bc05b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UIFramework\Interfaces">
+      <UniqueIdentifier>{b14419a1-6ef5-4deb-b3c9-633caa5dc296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UIFramework\SimpleBaseClass">
+      <UniqueIdentifier>{5509fbb8-9bab-40ff-9e94-7ab19ae8c058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Externals">
+      <UniqueIdentifier>{0674362b-34a3-4c4a-95ff-d866e36f1ede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Externals\TinyXML">
+      <UniqueIdentifier>{39413762-910d-445b-8552-0b2d5a3f2ee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Externals\Compression">
+      <UniqueIdentifier>{a45fb1cc-cc9d-40a5-bf94-53f363b3a0cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Externals\rtMidi">
+      <UniqueIdentifier>{bd502d3e-3548-49cf-9d61-c19b17ac6ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Externals\Soundfont">
+      <UniqueIdentifier>{b82e96fb-0119-40dd-b8f7-a1ce750c5764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Services">
+      <UniqueIdentifier>{76e48282-3d37-4a47-b508-9790655ba54c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Services\Audio">
+      <UniqueIdentifier>{c0deba7d-119a-44ae-898e-4027561aa963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Services\Midi">
+      <UniqueIdentifier>{3e33e37f-bd33-4bc2-adcd-9eb756138ef7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Services\Controllers">
+      <UniqueIdentifier>{13af2d3c-c519-41e3-a399-4e41e4b4ca9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Services\Time">
+      <UniqueIdentifier>{5e50a257-7f86-4bba-a714-e88f643038a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{4e2554c6-9611-4cd5-a05b-29f47351707d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\sources\Adapters\W32FileSystem\W32FileSystem.cpp">
+      <Filter>Source Files\Adapters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\W32\Process\W32Process.cpp">
+      <Filter>Source Files\Adapters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\W32\Main\WSDLmain.cpp">
+      <Filter>Source Files\Adapters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\WSDLSystem\WSDLSystem.cpp">
+      <Filter>Source Files\Adapters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\SDL2\Audio\SDLAudio.cpp">
+      <Filter>Source Files\Adapters\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\SDL2\Audio\SDLAudioDriver.cpp">
+      <Filter>Source Files\Adapters\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\RTMidi\RTMidiInDevice.cpp">
+      <Filter>Source Files\Adapters\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\RTMidi\RTMidiOutDevice.cpp">
+      <Filter>Source Files\Adapters\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\RTMidi\RTMidiService.cpp">
+      <Filter>Source Files\Adapters\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\SDL2\GUI\GUIFactory.cpp">
+      <Filter>Source Files\Adapters\SDLGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\SDL2\GUI\SDLEventManager.cpp">
+      <Filter>Source Files\Adapters\SDLGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\SDL2\GUI\SDLGUIWindowImp.cpp">
+      <Filter>Source Files\Adapters\SDLGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Adapters\SDL2\Timer\SDLTimer.cpp">
+      <Filter>Source Files\Adapters\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\FileSystem\FileSystem.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\io\Status.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\Timer\Timer.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\Process\Process.cpp">
+      <Filter>Source Files\System\process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\Process\SysMutex.cpp">
+      <Filter>Source Files\System\process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\Console\Logger.cpp">
+      <Filter>Source Files\System\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\Console\n_assert.cpp">
+      <Filter>Source Files\System\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\Console\Trace.cpp">
+      <Filter>Source Files\System\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\System\Errors\Result.cpp">
+      <Filter>Source Files\System\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\Observable.cpp">
+      <Filter>Source Files\Foundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\SingletonRegistry.cpp">
+      <Filter>Source Files\Foundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\Variables\Variable.cpp">
+      <Filter>Source Files\Foundation\Variables</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\Variables\VariableContainer.cpp">
+      <Filter>Source Files\Foundation\Variables</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\Variables\WatchedVariable.cpp">
+      <Filter>Source Files\Foundation\Variables</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\Services\Service.cpp">
+      <Filter>Source Files\Foundation\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\Services\ServiceRegistry.cpp">
+      <Filter>Source Files\Foundation\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Foundation\Services\SubService.cpp">
+      <Filter>Source Files\Foundation\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Application.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\AppWindow.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Chain.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Config.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Groove.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Mixer.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Phrase.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Project.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Song.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Scale.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Model\Table.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\UIFramework\BasicDatas\FontConfig.cpp">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\ChainView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\ConsoleView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\GrooveView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\InstrumentView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\ListSelectView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\MixerView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\NullView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\PhraseView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\ProjectView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\SongView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\TableView.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\UIController.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\ViewData.cpp">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\FieldView.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\I_Action.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\BaseClasses\ModalView.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UIActionField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UIBigHexVarField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UIField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UIIntField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UIIntVarField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UIIntVarOffField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UINoteVarField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UISortedVarList.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\UIStaticField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\BaseClasses\UITempoField.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\View.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\views\BaseClasses\ViewEvent.cpp">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\ModalDialogs\ImportSampleDialog.cpp">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\ModalDialogs\MessageBox.cpp">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\ModalDialogs\NewProjectDialog.cpp">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\ModalDialogs\SelectProjectDialog.cpp">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Views\ModalDialogs\CommandSelectorModal.cpp">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\utils\char.cpp">
+      <Filter>Source Files\Application\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\utils\fixed.cpp">
+      <Filter>Source Files\Application\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\utils\HexBuffers.cpp">
+      <Filter>Source Files\Application\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Utils\wildcard.cpp">
+      <Filter>Source Files\Application\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\FX\FxPrinter.cpp">
+      <Filter>Source Files\Application\FX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Player\Player.cpp">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Player\PlayerChannel.cpp">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Player\PlayerMixer.cpp">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Player\SyncMaster.cpp">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Player\TablePlayback.cpp">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\CommandList.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\Filters.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\InstrumentBank.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\MidiInstrument.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SampleInstrument.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SamplePool.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SampleVariable.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SoundFontManager.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SoundFontPreset.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SoundFontSample.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SoundSource.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\SRPUpdaters.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\WavFile.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Instruments\WavFileWriter.cpp">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Persistency\PersistencyService.cpp">
+      <Filter>Source Files\Application\Persistency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Persistency\Persistent.cpp">
+      <Filter>Source Files\Application\Persistency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Audio\AudioFileStreamer.cpp">
+      <Filter>Source Files\Application\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Audio\DummyAudioOut.cpp">
+      <Filter>Source Files\Application\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Commands\ApplicationCommandDispatcher.cpp">
+      <Filter>Source Files\Application\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Commands\CommandDispatcher.cpp">
+      <Filter>Source Files\Application\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Commands\EventDispatcher.cpp">
+      <Filter>Source Files\Application\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Controllers\ControlRoom.cpp">
+      <Filter>Source Files\Application\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Mixer\MixBus.cpp">
+      <Filter>Source Files\Application\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Application\Mixer\MixerService.cpp">
+      <Filter>Source Files\Application\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\UIFramework\BasicDatas\GUIEvent.cpp">
+      <Filter>Source Files\UIFramework\BasicDatas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\UIFramework\BasicDatas\GUIRect.cpp">
+      <Filter>Source Files\UIFramework\BasicDatas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\UIFramework\Interfaces\I_GUIWindowImp.cpp">
+      <Filter>Source Files\UIFramework\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\UIFramework\SimpleBaseClasses\EventManager.cpp">
+      <Filter>Source Files\UIFramework\SimpleBaseClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\UIFramework\SimpleBaseClasses\GUIWindow.cpp">
+      <Filter>Source Files\UIFramework\SimpleBaseClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\TinyXML\Tiny2NosStub.cpp">
+      <Filter>Source Files\Externals\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\TinyXML\tinystr.cpp">
+      <Filter>Source Files\Externals\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\TinyXML\tinyxml.cpp">
+      <Filter>Source Files\Externals\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\TinyXML\tinyxmlerror.cpp">
+      <Filter>Source Files\Externals\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\TinyXML\tinyxmlparser.cpp">
+      <Filter>Source Files\Externals\TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Compression\lz.c">
+      <Filter>Source Files\Externals\Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\RtMidi\RtMidi.cpp">
+      <Filter>Source Files\Externals\rtMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\ENAB.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\HYDRA.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\OMEGA.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\RIFF.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\SFDETECT.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\SFLOOKUP.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\SFNAV.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\SFREADER.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Externals\Soundfont\WIN_MEM.CPP">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Audio\Audio.cpp">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Audio\AudioDriver.cpp">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Audio\AudioMixer.cpp">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Audio\AudioOut.cpp">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Audio\AudioOutDriver.cpp">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Midi\MidiChannel.cpp">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Midi\MidiEvent.cpp">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Midi\MidiInDevice.cpp">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Midi\MidiInMerger.cpp">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Midi\MidiOutDevice.cpp">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Midi\MidiService.cpp">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\ButtonControllerSource.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\Channel.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\ControllableVariable.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\ControllerService.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\ControllerSource.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\ControlNode.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\HatControllerSource.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\JoystickControllerSource.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\KeyboardControllerSource.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Controllers\MultiChannelAdapter.cpp">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Services\Time\TimeService.cpp">
+      <Filter>Source Files\Services\Time</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\sources\Adapters\W32FileSystem\W32FileSystem.h">
+      <Filter>Source Files\Adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\W32\Process\W32Process.h">
+      <Filter>Source Files\Adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\WSDLSystem\WSDLSystem.h">
+      <Filter>Source Files\Adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\SDL2\Audio\SDLAudio.h">
+      <Filter>Source Files\Adapters\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\SDL2\Audio\SDLAudioDriver.h">
+      <Filter>Source Files\Adapters\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\RTMidi\RTMidiInDevice.h">
+      <Filter>Source Files\Adapters\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\RTMidi\RTMidiOutDevice.h">
+      <Filter>Source Files\Adapters\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\RTMidi\RTMidiService.h">
+      <Filter>Source Files\Adapters\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\SDL2\GUI\GUIFactory.h">
+      <Filter>Source Files\Adapters\SDLGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\SDL2\GUI\SDLEventManager.h">
+      <Filter>Source Files\Adapters\SDLGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\SDL2\GUI\SDLGUIWindowImp.h">
+      <Filter>Source Files\Adapters\SDLGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Adapters\SDL2\Timer\SDLTimer.h">
+      <Filter>Source Files\Adapters\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\FileSystem\FileSystem.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\System\System.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\Process\Process.h">
+      <Filter>Source Files\System\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\Process\SysMutex.h">
+      <Filter>Source Files\System\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\Console\Logger.h">
+      <Filter>Source Files\System\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\Console\n_assert.h">
+      <Filter>Source Files\System\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\Console\Trace.h">
+      <Filter>Source Files\System\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\System\Errors\Result.h">
+      <Filter>Source Files\System\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Foundation\Types\types.h">
+      <Filter>Source Files\Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Foundation\Variables\Variable.h">
+      <Filter>Source Files\Foundation\Variables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Foundation\Variables\VariableContainer.h">
+      <Filter>Source Files\Foundation\Variables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Foundation\Variables\WatchedVariable.h">
+      <Filter>Source Files\Foundation\Variables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Application.h">
+      <Filter>Source Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\AppWindow.h">
+      <Filter>Source Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Chain.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Config.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Groove.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Mixer.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Phrase.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Project.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Song.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Scale.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Model\Table.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\UIFramework\BasicDatas\FontConfig.h">
+      <Filter>Source Files\Application\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\ChainView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\ConsoleView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\GrooveView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\InstrumentView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\ListSelectView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\MixerView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\NullView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\PhraseView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\ProjectView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\SongView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\TableView.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\UIController.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\ViewData.h">
+      <Filter>Source Files\Application\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\BaseClasses\FieldView.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\BaseClasses\ModalView.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\BaseClasses\UIIntVarField.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\BaseClasses\UIIntVarOffField.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\BaseClasses\UISortedVarList.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\BaseClasses\UIStaticField.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\BaseClasses\UITempoField.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\views\BaseClasses\View.h">
+      <Filter>Source Files\Application\Views\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\ModalDialogs\ImportSampleDialog.h">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\ModalDialogs\MessageBox.h">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\ModalDialogs\NewProjectDialog.h">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\ModalDialogs\SelectProjectDialog.h">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Views\ModalDialogs\CommandSelectorModal.h">
+      <Filter>Source Files\Application\Views\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\utils\fixed.h">
+      <Filter>Source Files\Application\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\utils\HexBuffers.h">
+      <Filter>Source Files\Application\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\FX\FxPrinter.h">
+      <Filter>Source Files\Application\FX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Player\FileEngine.h">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Player\Player.h">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Player\PlayerChannel.h">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Player\PlayerMixer.h">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Player\SyncMaster.h">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Player\TablePlayback.h">
+      <Filter>Source Files\Application\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\CommandList.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\Filters.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\I_Instrument.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\I_SRPUpdater.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\InstrumentBank.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\MidiInstrument.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SampleInstrument.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SamplePool.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SampleRenderingParams.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SampleVariable.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SoundFontManager.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SoundFontPreset.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SoundFontSample.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SoundSource.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\SRPUpdaters.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\WavFile.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Instruments\WavFileWriter.h">
+      <Filter>Source Files\Application\Instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Audio\AudioFileStreamer.h">
+      <Filter>Source Files\Application\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Audio\DummyAudioOut.h">
+      <Filter>Source Files\Application\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Commands\ApplicationCommandDispatcher.h">
+      <Filter>Source Files\Application\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Commands\CommandDispatcher.h">
+      <Filter>Source Files\Application\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Commands\EventDispatcher.h">
+      <Filter>Source Files\Application\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Commands\NodeList.h">
+      <Filter>Source Files\Application\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Controllers\ControlRoom.h">
+      <Filter>Source Files\Application\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Mixer\MixBus.h">
+      <Filter>Source Files\Application\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Application\Mixer\MixerService.h">
+      <Filter>Source Files\Application\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\UIFramework\Interfaces\I_GUIGraphics.h">
+      <Filter>Source Files\UIFramework\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\UIFramework\SimpleBaseClasses\EventManager.h">
+      <Filter>Source Files\UIFramework\SimpleBaseClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\UIFramework\SimpleBaseClasses\GUIWindow.h">
+      <Filter>Source Files\UIFramework\SimpleBaseClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\RtMidi\RtError.h">
+      <Filter>Source Files\Externals\rtMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\RtMidi\RtMidi.h">
+      <Filter>Source Files\Externals\rtMidi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\DATATYPE.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\EMUERRS.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\ENAB.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\HYDRA.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\OMEGA.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\RIFF.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\SFDATA.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\SFDETECT.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\SFENUM.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\SFLOOKUP.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\SFNAV.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\SFREADER.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Externals\Soundfont\WIN_MEM.H">
+      <Filter>Source Files\Externals\Soundfont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Audio\Audio.h">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Audio\AudioDriver.h">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Audio\AudioMixer.h">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Audio\AudioModule.h">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Audio\AudioOut.h">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Audio\AudioOutDriver.h">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Audio\AudioSettings.h">
+      <Filter>Source Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Midi\MidiChannel.h">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Midi\MidiEvent.h">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Midi\MidiInDevice.h">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Midi\MidiInMerger.h">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Midi\MidiMessage.h">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Midi\MidiOutDevice.h">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Midi\MidiService.h">
+      <Filter>Source Files\Services\Midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\ButtonControllerSource.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\Channel.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\ControllableVariable.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\ControllerService.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\ControllerSource.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\ControlNode.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\HatControllerSource.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\JoystickControllerSource.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\KeyboardControllerSource.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Controllers\MultiChannelAdapter.h">
+      <Filter>Source Files\Services\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Services\Time\TimeService.h">
+      <Filter>Source Files\Services\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Resources\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\sources\Resources\lgpt.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\docs\bug_features.txt">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="..\docs\revision.txt">
+      <Filter>Documents</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

@@ -3,6 +3,7 @@
 #include "Application/Commands/EventDispatcher.h"
 #include "Application/Instruments/SamplePool.h"
 #include "Application/Mixer/MixerService.h"
+#include "Application/Model/Mixer.h"
 #include "Application/Persistency/PersistencyService.h"
 #include "Application/Player/TablePlayback.h"
 #include "Application/Utils/char.h"
@@ -331,7 +332,7 @@ void AppWindow::LoadProject(const Path &p) {
 
     SamplePool *pool = SamplePool::GetInstance();
 
-    pool->Load();
+    unsigned int load_result = pool->Load();
 
     Project *project = new Project();
 
@@ -397,6 +398,19 @@ void AppWindow::LoadProject(const Path &p) {
         _songView->DoModal(mb);
     }
 
+    // Report on sample & SoundFont load fails
+    if (load_result) {
+      const char *err_str = (load_result == SLOAD_ERR_MAX_SAMPLES) ? "Maximum number of samples exceeded"
+	: (load_result == SLOAD_ERR_MAX_SOUNDFONTS) ? "Maximum number of SoundFonts exceeded"
+	: (load_result == SLOAD_ERR_MAX_SAMPLES | SLOAD_ERR_MAX_SOUNDFONTS) ? "Maximum number of samples and SoundFonts exceeded"	
+	: (load_result == SLOAD_ERR_INVALID_DIR) ? "Sample directory could not be opened"
+	: "Unknown error loading sample pool";
+      Trace::Error(err_str) ;
+      MessageBox *mb =
+            new MessageBox(*_currentView, err_str);	  
+    _currentView->DoModal(mb);
+    }
+    
     Redraw();
 }
 
@@ -534,9 +548,16 @@ void AppWindow::onUpdate() {
     if (_isDirty) {
         _isDirty = false;
         Redraw();
+
+    // Call AnimationUpdate periodically (~10-25Hz depending on frame rate)
+    static unsigned int animTick = 0;
+    if ((animTick++ % 2) == 0) {  // every 2nd call, roughly 25Hz at 50Hz main loop
+        if (_currentView) {
+            _currentView->AnimationUpdate();
+        }
     }
     Flush();
-};
+}
 
 void AppWindow::LayoutChildren() {};
 
@@ -576,9 +597,8 @@ void AppWindow::Update(Observable &o, I_ObservableData *d) {
         case VT_GROOVE:
             _currentView = _grooveView;
             break;
-            /*			case VT_MIXER:
-                        _currentView=_mixerView ;
-            */
+        case VT_MIXER:
+            _currentView = _mixerView;
             break;
         }
         _currentView->SetFocus(*vt);

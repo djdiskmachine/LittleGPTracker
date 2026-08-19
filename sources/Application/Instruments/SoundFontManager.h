@@ -5,8 +5,16 @@
 #include "Externals/Soundfont/ENAB.H"
 #include <vector>
 
-class SoundFontManager:public T_Singleton<SoundFontManager> {
-public:
+#define MAX_SOUNDFONTS MAXLOADEDBANKS
+
+enum SFManagerError {
+    SF_BANK_TABLE_FULL = 1,
+    SF_LOAD_ERROR = 2,
+    SF_OPEN_ERROR = 3,
+};
+
+class SoundFontManager : public T_Singleton<SoundFontManager> {
+  public:
 	SoundFontManager() ;
 	~SoundFontManager() ;
 	void Reset() ;

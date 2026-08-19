@@ -282,7 +282,8 @@ They are currenly _mostly_ used for **W32** but might extend in the future to ot
 - `AUDIODRIVER`: Allows to specify which driver to open. It takes the first drvier whose name matches the beginning of the string. For example, to force using a realtek soundcard instead of the default one, you can just specify “Real”
 - `AUDIOBUFFERSIZE`: Allows to tweak the default buffersize used for the audio. If the piggy glitches, increase this value.
 - `AUDIOPREBUFFERCOUNT`: Even if the computer has the ability to run the piggy full screen, some sound hardware needs nearly instant reply for the couple of first buffers. If you have upped the `AUDIOBUFFERSIZE` but still get glitches, try putting it back to something decent (like 512) and define `AUDIOPREBUFFERCOUNT` to be 2,3,… that way, a set of blank buffer will be queued, ready for the soundcard to grab, before the sequencer is actually kicked in.
-
+- `AUDIOSAMPLERATE`: SDL2 Only, Modern Linux systems running pipewire often run at 48000 rather then 44100. This setting 
+allows you to run at the system default. SDL may use a different sample rate if the specified one is not supported. Currently 44100 and 48000 have been tested on Linux.
 
 ```xml
 <CONFIG>

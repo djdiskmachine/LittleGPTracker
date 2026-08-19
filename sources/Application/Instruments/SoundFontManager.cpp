@@ -14,20 +14,30 @@ void SoundFontManager::Reset() {
 		SAFE_FREE(*it) ;
 		it=sampleData_.erase(it) ;
 	} ;
+
+        // Unload all SoundFonts
+        sfBankID i;
+        for(i = 0; i < MAX_SOUNDFONTS; i++)
+          sfUnloadSFBank(i);
 } ;
 
+/*
+  Returns a nonnegative short or an element of
+  {-SF_BANK_TABLE_FULL, -SF_LOAD_ERROR, -SF_OPEN_ERROR}.
+ */
 sfBankID SoundFontManager::LoadBank(const char *path) {
 
 	sfBankID id=sfReadSFBFile((char *)path) ; 
 	if (id==-1) {
-		return -1 ;
+        enaErrors err_code = sfGetError();
+        return -(err_code == enaLOADERROR ? SF_LOAD_ERROR : SF_BANK_TABLE_FULL);
 	} 
 	// open the file
 
 	I_File *fin=FileSystem::GetInstance()->Open(path,"r") ;
 	if (!fin) {
-		return false;
-	}
+        return -SF_OPEN_ERROR;
+    }
 
 	// Grab the sample offset
 

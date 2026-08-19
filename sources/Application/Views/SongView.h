@@ -14,6 +14,7 @@ class SongView : public View {
     // View implementation
     virtual void ProcessButtonMask(unsigned short mask, bool pressed);
     virtual void DrawView();
+    virtual void AnimationUpdate();
     virtual void OnPlayerUpdate(PlayerEventType, unsigned int tick = 0);
     virtual void OnFocus();
 
@@ -81,7 +82,11 @@ class SongView : public View {
     bool needClear_;
     bool canDeepClone_;
     void nudgeTempo(int direction);
+    void DrawVuBars();   // Draw VU bars - called from both DrawView and
+                         // AnimationUpdate
     uint8_t jumpLength_; // When jumping columns with B
+    int vuBarHeightsL_[1]; // Master channel stereo VU meter
+    int vuBarHeightsR_[1];
 };
 
 #endif
