@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <unistd.h>
-#ifdef _64BIT
+#if defined(_64BIT) || defined(__ANDROID__)
 #include <dirent.h>
 #else
 #include <sys/dir.h>
