@@ -142,11 +142,18 @@ void GrooveView::DrawView() {
 // Compute song grid location
 
 	GUIPoint anchor=GetAnchor() ;
+
+    // Draw column titles
+    pos = anchor;
+    pos._y -= 1;
+    SetColor(CD_COL_TITLE);
+    DrawString(pos._x, pos._y, "Tk", props);
 	
 // Display row numbers
 
-	char buffer[6] ;
-	pos=anchor ;
+    SetColor(CD_NORMAL);
+    char buffer[6];
+    pos=anchor ;
 	pos._x-=3 ;
 	for (int j=0;j<16;j++) {
 		((j/altRowNumber_)%2)?SetColor(CD_ROW):SetColor(CD_ROW2);

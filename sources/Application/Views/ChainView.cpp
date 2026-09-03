@@ -700,6 +700,13 @@ void ChainView::DrawView() {
         pos._y += 1;
     }
 
+    // Draw column titles
+    pos = anchor;
+    pos._y -= 1;
+    SetColor(CD_COL_TITLE);
+    DrawString(pos._x, pos._y, "Ph", props);
+    DrawString(pos._x + 3, pos._y, "Ts", props);
+
     SetColor(CD_NORMAL);
 
     pos = anchor;

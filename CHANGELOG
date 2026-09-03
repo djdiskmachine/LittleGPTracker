@@ -1,4 +1,15 @@
+1.6.0-bacon20
+    Fixed MIDI muting
+    Added MIDI chord command (MCHD)
 
+1.6.0-bacon19
+    Create column Titles.
+        * Every view will have a column title (or header).
+        * Is possible to change the color of the header.
+        * Include the color changes as part of the mixer view.
+    Expose CONSOLE colour in config and update docs
+
+1.6.0-bacon18
     Migrate W32 to SDL2, removing need for building in vs2008
 
 1.6.0-bacon17

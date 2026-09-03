@@ -1020,12 +1020,23 @@ void SongView::DrawView() {
         pos._y += 1;
     }
 
+    // Draw column titles
+    pos = anchor;
+    pos._y -= 1;
+    SetColor(CD_COL_TITLE);
+    char chbuf[4];
+    short dx = 3;
+    for (int i = 0; i < SONG_CHANNEL_COUNT; i++) {
+        snprintf(chbuf, sizeof(chbuf), "%02d", i);
+        DrawString(pos._x + i * dx, pos._y, chbuf, props);
+    }
+
     SetColor(CD_NORMAL);
 
     pos = anchor;
     unsigned char *data =
         viewData_->song_->data_ + (SONG_CHANNEL_COUNT * viewData_->songOffset_);
-    short dx = 3;
+    dx = 3;
     short dy = 1;
     for (int j = 0; j < View::songRowCount_; j++) {
 

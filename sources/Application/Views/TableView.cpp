@@ -833,8 +833,18 @@ void TableView::DrawView() {
 
     GUIPoint anchor = GetAnchor();
 
-    // Display row numbers
+    // Draw column titles
+    pos = anchor;
+    pos._y -= 1;
+    SetColor(CD_COL_TITLE);
+    DrawString(pos._x, pos._y, "Cmd1", props);
+    DrawString(pos._x + 5, pos._y, "", props);
+    DrawString(pos._x + 10, pos._y, "Cmd2", props);
+    DrawString(pos._x + 15, pos._y, "", props);
+    DrawString(pos._x + 20, pos._y, "Cmd3", props);
+    DrawString(pos._x + 25, pos._y, "", props);
 
+    // Display row numbers
     char buffer[6];
     pos = anchor;
     pos._x -= 3;

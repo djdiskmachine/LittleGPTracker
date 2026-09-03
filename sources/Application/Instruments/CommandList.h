@@ -14,6 +14,7 @@
 #define I_CMD_LEGA MAKE_FOURCC('L','E','G','A')
 #define I_CMD_RTRG MAKE_FOURCC('R','T','R','G')
 #define I_CMD_TMPO MAKE_FOURCC('T','M','P','O')
+#define I_CMD_MCHD MAKE_FOURCC('M', 'C', 'H', 'D')
 #define I_CMD_MDCC MAKE_FOURCC('M','D','C','C')
 #define I_CMD_MDPG MAKE_FOURCC('M','D','P','G')
 #define I_CMD_MVEL MAKE_FOURCC('M','V','E','L')

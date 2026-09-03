@@ -26,13 +26,13 @@ public:
 	  virtual bool Init() ;
 
 	  // Start & stop the instument
-      virtual bool Start(int channel,unsigned char note,bool retrigger=true) ;
+      virtual bool Start(int channel, unsigned char note, int flags = 1);
       virtual void Stop(int channel) ;
 
       // size refers to the number of samples
       // should always fill interleaved stereo / 16bit
-      virtual bool Render(int channel,fixed *buffer,int size,bool updateTick) ;
-	  virtual void ProcessCommand(int channel,FourCC cc,ushort value) ;
+      virtual bool Render(int channel, fixed *buffer, int size, int flags);
+      virtual void ProcessCommand(int channel,FourCC cc,ushort value) ;
 
       virtual bool IsInitialized() ;
 
@@ -48,25 +48,35 @@ public:
 
 	   virtual int GetTable() ;
 	   virtual bool GetTableAutomation();
-	   virtual void GetTableState(TableSaveState &state) ;	 
-	   virtual void SetTableState(TableSaveState &state) ;	 
+       virtual void GetTableState(TableSaveState &state);
+       virtual void SetTableState(TableSaveState &state);
+       virtual void QueueNote(bool note_on, int channel, unsigned char note,
+                              unsigned char velocity);
+       virtual void SetVolume(int channel, unsigned char volume);
+       virtual void SetCC(int channel, unsigned char id, unsigned char value);
+       virtual void SetPRG(int channel, unsigned char id);
 
-	  // external parameter list
-	  
-	  void SetChannel(int i);
- 	  
- private:
-	  char name_[20] ;  // Instrument name
-	  int lastNote_[SONG_CHANNEL_COUNT] ; 
-	  int remainingTicks_ ;
-	  bool playing_ ;
-	  bool retrig_ ;
-	  int retrigLoop_ ;
-	  char velocity_;
-	  TableSaveState tableState_ ;
-	  bool first_[SONG_CHANNEL_COUNT] ;
+       // external parameter list
 
-	  static MidiService* svc_ ;
+       void SetChannel(int i);
+
+     private:
+       char name_[20]; // Instrument name
+       T_SimpleList<unsigned char>
+           *lastNote_[SONG_CHANNEL_COUNT]; // List of played note(s).
+       int rootNote_[SONG_CHANNEL_COUNT];
+       // Keep track of last requested note even if not played. This way,
+       // 'root notes' of chords are stored even when the track is muted.
+       int remainingTicks_;
+       bool playing_;
+       bool retrig_;
+       int retrigLoop_;
+       char velocity_;
+       TableSaveState tableState_;
+       bool first_[SONG_CHANNEL_COUNT];
+       bool muted_[SONG_CHANNEL_COUNT];
+
+       static MidiService *svc_;
 } ;
 
 #endif

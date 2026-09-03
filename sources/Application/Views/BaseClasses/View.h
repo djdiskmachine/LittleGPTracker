@@ -70,7 +70,8 @@ enum ColorDefinition {
     CD_SONGVIEW00,
     CD_ROW,
     CD_ROW2,
-    CD_MAJORBEAT
+    CD_MAJORBEAT,
+    CD_COL_TITLE
 };
 
 enum ViewUpdateDirection { VUD_LEFT = 0, VUD_RIGHT, VUD_UP, VUD_DOWN };

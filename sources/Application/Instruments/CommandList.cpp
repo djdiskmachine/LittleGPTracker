@@ -1,35 +1,12 @@
 
 #include "CommandList.h"
 
-static FourCC _all[]= {
-	I_CMD_NONE,
-	I_CMD_ARPG,
-	I_CMD_CRSH,
-	I_CMD_DLAY,
-	I_CMD_FBMX,
-	I_CMD_FBTN,
-	I_CMD_FCUT,
-	I_CMD_FLTR,
-	I_CMD_FRES,
-	I_CMD_GROV,
-	I_CMD_HOP,
-	I_CMD_IRTG,
-	I_CMD_KILL,
-	I_CMD_LEGA,
-	I_CMD_LPOF,
-	I_CMD_MDCC,
-	I_CMD_MDPG,
-	I_CMD_MVEL,
-	I_CMD_PAN_,
-	I_CMD_PFIN,
-	I_CMD_PLOF,
-	I_CMD_PTCH,
-	I_CMD_RTRG,
-	I_CMD_STOP,
-	I_CMD_TABL,
-	I_CMD_TMPO,
-	I_CMD_VOLM
-} ;
+static FourCC _all[] = {
+    I_CMD_NONE, I_CMD_ARPG, I_CMD_CRSH, I_CMD_DLAY, I_CMD_FBMX, I_CMD_FBTN,
+    I_CMD_FCUT, I_CMD_FLTR, I_CMD_FRES, I_CMD_GROV, I_CMD_HOP,  I_CMD_IRTG,
+    I_CMD_KILL, I_CMD_LEGA, I_CMD_LPOF, I_CMD_MCHD, I_CMD_MDCC, I_CMD_MDPG,
+    I_CMD_MVEL, I_CMD_PAN_, I_CMD_PFIN, I_CMD_PLOF, I_CMD_PTCH, I_CMD_RTRG,
+    I_CMD_STOP, I_CMD_TABL, I_CMD_TMPO, I_CMD_VOLM};
 
 int CommandList::GetCount() { return sizeof(_all) / sizeof(FourCC); }
 

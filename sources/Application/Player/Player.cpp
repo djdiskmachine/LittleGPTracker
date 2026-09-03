@@ -672,6 +672,26 @@ bool Player::ProcessChannelCommand(int channel, FourCC cmd, ushort param) {
             gr->SetGroove(channel, param);
         }
     } break;
+    case I_CMD_HOP: {
+        bool channel_stop = (param & 0xFF) == 0xFF;
+        if (channel_stop) {
+            // Stop current channel
+            mixer_->StopChannel(channel);
+
+            // If all channels are stopped, stop the song if in song mode.
+            if (GetSequencerMode() == SM_SONG) {
+                bool all_channels_stopped = true;
+                for (int c = 0; c < SONG_CHANNEL_COUNT; c++) {
+                    all_channels_stopped &= !mixer_->IsChannelPlaying(c);
+                }
+                if (all_channels_stopped) {
+                    Stop();
+                }
+            } else {
+                liveQueueingMode_[channel] = QM_NONE;
+            }
+      }
+    } break;
         case I_CMD_STOP: {
             switch (GetSequencerMode()) {
             case SM_SONG:
@@ -882,14 +902,24 @@ void Player::playCursorPosition(int channel) {
 int Player::getChannelHop(int channel, int pos) {
 
     int phrase = viewData_->currentPlayPhrase_[channel];
-    FourCC cc = viewData_->song_->phrase_->cmd1_[phrase * 16 + pos];
-    if (cc == I_CMD_HOP) {
-        return (viewData_->song_->phrase_->param1_[phrase * 16 + pos]) & 0xF;
-    }
-    cc = viewData_->song_->phrase_->cmd2_[phrase * 16 + pos];
-    if (cc == I_CMD_HOP) {
-        return (viewData_->song_->phrase_->param2_[phrase * 16 + pos]) & 0xF;
-    }
+
+    Phrase *song_phrase = viewData_->song_->phrase_;
+    FourCC cc[] = {song_phrase->cmd1_[phrase * 16 + pos],
+		 song_phrase->cmd2_[phrase * 16 + pos]};
+    int param[] = {song_phrase->param1_[phrase * 16 + pos],
+		   song_phrase->param2_[phrase * 16 + pos]};
+
+    // First hop takes precedence.
+    for(int i = 0; i < 2; i++)
+      if (cc[i] == I_CMD_HOP) {
+	int arg = param[i] & 0xFF;
+	if (arg != 0xFF)
+	  return arg & 0xF;
+	else
+	  // 'Hop stop' deferred to command processing stage.
+	  return -1;
+      }
+    
   return -1;
 }
 

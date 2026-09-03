@@ -67,7 +67,7 @@ I_Iterator<Item> *T_SimpleList<Item>::GetIterator() {
 
 template <class Item>
 I_Iterator<Item> *T_SimpleList<Item>::GetIterator(bool reverse) {
-	return new T_SimpleListIterator<Item>(*this,reverse) ;
+    return new T_SimpleListIterator<Item>(*this, reverse);
 }
 
 // Empties the list's content

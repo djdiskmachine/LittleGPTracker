@@ -370,7 +370,8 @@ void MixerView::DrawView() {
 
     for (int i = 0; i < 8; i++) {
         props.invert_ = (i == viewData_->mixerCol_ && mixerRow_ == 0);
-        SetColor((i == viewData_->mixerCol_ && mixerRow_ == 0) ? CD_HILITE2 : CD_NORMAL);
+        SetColor((i == viewData_->mixerCol_ && mixerRow_ == 0) ? CD_HILITE2
+                                                               : CD_COL_TITLE);
 
         if (playerInst->IsChannelMuted(i)) {
             DrawString(pos._x, pos._y, "M ", props);

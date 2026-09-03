@@ -166,9 +166,10 @@ void SampleInstrument::OnStart() {
 	tableState_.Reset() ;
 } ;
 
-bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
-{
-	// Look if we're dirty & need to update this instrument's data
+bool SampleInstrument::Start(int channel, unsigned char midinote, int flags) {
+    bool cleanstart = flags & 1;
+
+    // Look if we're dirty & need to update this instrument's data
 
   if (dirty_) 
   {
@@ -273,6 +274,7 @@ bool SampleInstrument::Start(int channel,unsigned char midinote,bool cleanstart)
                  };
                  rp->baseSpeed_ = fl2fp((freq * length) / driverRate);
                  rp->rendFirst_ = rp->rendLoopStart_;
+
                  if (cleanstart) {
                      rp->position_ = float(rp->rendFirst_);
                  }
@@ -452,46 +454,48 @@ void SampleInstrument::updateFeedback(renderParams *rp) {
 
 // Size in samples
 
-bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick) {
+bool SampleInstrument::Render(int channel, fixed *buffer, int size, int flags) {
 
-  bool somethingToMix=false ;
+    bool somethingToMix = false;
+    bool updateTick = flags & 1;
 
-  // Get Current render parameters
-	  
-  renderParams *rp=renderParams_+channel ;
-  lastMidiNote_[channel]=rp->midiNote_ ;
-	 bool *rpFinished=&(rp->finished_) ;
+    // Get Current render parameters
 
-     if (source_) {
+    renderParams *rp = renderParams_ + channel;
+    lastMidiNote_[channel] = rp->midiNote_;
+    bool *rpFinished = &(rp->finished_);
 
-		 if (*rpFinished) return false ;	
-		 
-		 // clear the fixed point buffer
+    if (source_) {
 
-		 SYS_MEMSET(buffer,0,size*2*sizeof(fixed)) ;
+        if (*rpFinished)
+            return false;
 
+        // clear the fixed point buffer
 
-		 bool hasUpdaters=!(rp->activeUpdaters_.empty()) ;
+        SYS_MEMSET(buffer, 0, size * 2 * sizeof(fixed));
 
-		 int filterMix=filterMix_->GetInt() ;
-		 FilterMode filterMode=(FilterMode)filterMode_->GetInt() ;
-		 bool filterBoost=(filterMode==FM_SCREAM) ;
-		 bool bassyFilter=(filterMode==FM_BASSY) ;
+        bool hasUpdaters = !(rp->activeUpdaters_.empty());
 
-		 // Be sure filters are properly initialized
+        int filterMix = filterMix_->GetInt();
+        FilterMode filterMode = (FilterMode)filterMode_->GetInt();
+        bool filterBoost = (filterMode == FM_SCREAM);
+        bool bassyFilter = (filterMode == FM_BASSY);
 
-		 set_filter(channel,FLT_LOWPASS,rp->cutoff_,rp->reso_,filterMix,bassyFilter);
+        // Be sure filters are properly initialized
 
-		 filter_t* flt =get_filter(channel) ;
-		 bool filtering=(rp->cutoff_<i2fp(1))||(rp->reso_>i2fp(0)) ;
+        set_filter(channel, FLT_LOWPASS, rp->cutoff_, rp->reso_, filterMix,
+                   bassyFilter);
 
-	// Process tick-level updates
-	  
-		 if (updateTick) {
+        filter_t *flt = get_filter(channel);
+        bool filtering = (rp->cutoff_ < i2fp(1)) || (rp->reso_ > i2fp(0));
 
-			 if (hasUpdaters) {
+        // Process tick-level updates
 
-				 doTickUpdate(channel) ;
+        if (updateTick) {
+
+            if (hasUpdaters) {
+
+                doTickUpdate(channel);
 
 				struct RUParams rup ;
 				rup.cutOffset_=rup.resOffset_=rup.volumeOffset_=rup.panOffset_=0 ;
@@ -507,36 +511,35 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 				rp->volume_=rp->baseVolume_+rup.volumeOffset_ ;
 				rp->speed_=fp_mul(rp->baseSpeed_,rup.speedOffset_) ;
 				rp->pan_=rp->basePan_+rup.panOffset_ ;
-			}
+            }
 
-		// Process retrig
-		  
-			if (rp->retrig_) {
-				if (rp->retrigCount_==0) {
-					int ticks=rp->retrigOffset_-rp->retrigLoop_ ;
-					long offset=long(ticks*SyncMaster::GetInstance()->GetTickSampleCount()) ;
-					rp->position_+=offset*fp2fl(rp->speed_) ;
-					if (rp->position_<0) {
-						rp->position_=0 ;
-					} ;
-					rp->retrigCount_=rp->retrigLoop_ ;
-				}
-				rp->retrigCount_-- ;
-			} ;
+            // Process retrig
 
+            if (rp->retrig_) {
+                if (rp->retrigCount_ == 0) {
+                    int ticks = rp->retrigOffset_ - rp->retrigLoop_;
+                    long offset =
+                        long(ticks *
+                             SyncMaster::GetInstance()->GetTickSampleCount());
+                    rp->position_ += offset * fp2fl(rp->speed_);
+                    if (rp->position_ < 0) {
+                        rp->position_ = 0;
+                    };
+                    rp->retrigCount_ = rp->retrigLoop_;
+                }
+            rp->retrigCount_-- ;
+		} ;
+        }
 
-		}
-		
-	  // Get additional parameters from variables
+        // Get additional parameters from variables
 
+        // Crush
 
-		 // Crush 
-
-		 int shift=16-rp->crush_;
-	     fixed mask=0xFFFFFFFF ;
-		 if (shift !=0) {
-			 mask<<=FIXED_SHIFT+shift  ;
-		 }
+        int shift = 16 - rp->crush_;
+        fixed mask = 0xFFFFFFFF;
+        if (shift != 0) {
+            mask <<= FIXED_SHIFT + shift;
+        }
 
 		 // Crush vol
 
@@ -988,9 +991,8 @@ bool SampleInstrument::Render(int channel,fixed *buffer,int size,bool updateTick
 		somethingToMix=true ;
     }
 
-    return somethingToMix ; 
-} ;
-
+    return somethingToMix;
+};
 
 void SampleInstrument::AssignSample(int i) {
 
