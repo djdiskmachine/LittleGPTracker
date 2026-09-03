@@ -1,0 +1,26 @@
+Installation:
+1. You need a Nintendo Switch running custom firmware (Atmosphere) with the
+   homebrew menu available. Nothing here installs to the HOME menu.
+2. Copy the `switch` folder from this zip onto the root of your SD card and
+   merge it with the one already there. You should end up with:
+     /switch/lgpt/lgpt.nro
+     /switch/lgpt/mapping.xml
+     /switch/lgpt/config.xml
+     /switch/lgpt/samplelib/
+   The folder MUST be named `lgpt`: the app looks for its projects and samples
+   in `sdmc:/switch/lgpt` and will not find them anywhere else.
+3. Put the SD card back in the console.
+
+
+Usage:
+Open the homebrew menu (album, or the title override of your choice) and pick
+LittleGPTracker. Your projects are saved under /switch/lgpt/.
+
+
+Notes:
+- Audio buffer size and sample rate are already set for this console in the
+  build. If you add AUDIOBUFFERSIZE, AUDIOPREBUFFERCOUNT, AUDIOSAMPLERATE or
+  SCREENMULT to config.xml you will override those defaults, which usually
+  makes things worse (too small a buffer crackles).
+- Launching through `nxlink -s lgpt.nro` streams the log output to your PC,
+  which is useful if you want to report a problem.

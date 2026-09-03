@@ -27,6 +27,7 @@ this, set Software rendering **or** change rendering resolution after LGPT has s
   - **lgptsav.dat** - this file doesn't exist for new projects but will be created by lgpt when you first save
 - **lgpt.fxe** - gp32 executable
 - **lgpt.gpe** - gp2x executable
+- **lgpt.nro** - Nintendo Switch executable
 - **SampleLib** - Place your samples here
 
 Getting lgpt to run depends on your platform:
@@ -34,6 +35,7 @@ Getting lgpt to run depends on your platform:
 - **gp32:** place LGPT.fxe, lgptNew, and lgpt10k in \GPMM
 - **gp2x/caanoo:** place LGPT.gpe, lgptNew, and lgpt10k in the same folder (anywhere on your SD card)
 - **win/mac/\*nix :** everything should be in the right spot, just run the executable in \install\bin\ (for fullscreen run “lgpt.exe -fullscreen”)
+- **Nintendo Switch:** merge the `switch` folder from the zip into the root of your SD card, so you end up with lgpt.nro, samplelib and the projects together in /switch/lgpt, then launch it from the homebrew menu. Custom firmware is required, and the folder has to keep the `lgpt` name because the app looks for its projects and samples there.
 
 ## Importing Samples
 

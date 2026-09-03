@@ -48,18 +48,22 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 320; 
   int screenHeight = 240;
   windowed_ = false;
- #else
+#elif defined(PLATFORM_SWITCH)
+  int screenWidth = 1280;
+  int screenHeight = 720;
+  windowed_ = false;
+#else
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
- #endif
- 
- #if defined(RS97)
+#endif
+
+#if defined(RS97)
   /* Pick the best bitdepth for the RS97 as it will select 32 as its default, even though that's slow */
   bitDepth_ = 16;
- #else
+#else
   bitDepth_ = SDL_BITSPERPIXEL(displayMode.format);
- #endif
-  
+#endif
+
   const char * driverName = SDL_GetVideoDriver(0);
   
   Trace::Log("DISPLAY","Using driver %s. Screen (%d,%d) Bpp:%d",driverName,screenWidth,screenHeight,bitDepth_);
@@ -89,7 +93,9 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 	}
 	else
 	{
-		if (framebuffer_)
+        // If drawing on a framebuffer or in a fullscreen app, calc the UI scale
+        // from size
+        if (framebuffer_ || windowed_ == false)
 		{
 		mult_ = multFromSize;
 		}
