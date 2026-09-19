@@ -40,22 +40,23 @@ Recommended reading to get you started:
 
 ## Features per platform
 
-| Platform    | MIDI_Possible | MIDI_enabled | Soundfonts | Note                                 |
-|-------------|---------------|--------------|------------|--------------------------------------|
-| PSP         | NO            | NO           | YES        | [See notes](projects/resources/PSP/INSTALL_HOW_TO.txt) |
-| DEB         | YES           | YES          | YES        |                                      |
-| X64         | YES           | YES          | MAYBE      |                                      |
-| X86         | YES           | YES          | YES        |                                      |
-| STEAM       | YES           | YES          | MAYBE      |                                      |
-| MIYOO       | NO            | NO           | YES        | Port by [Nine-H](https://ninethehacker.xyz) |
-| W32         | YES           | YES          | YES        | Built in VS2008 with love            |
-| RASPI       | YES           | YES          | YES        | Versatile platform                   |
-| CHIP        | YES           | YES          | YES        | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
-| BITTBOY     | MAYBE         | NO           | YES        |                                      |
-| GARLIC      | NO         | NO           |NO        | No longer maintained, use Portmaster|
-| GARLICPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| RG35XXPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
-| MACOS       | YES           | YES          | MAYBE      | Port by [clsource](https://genserver.social/clsource) |
+| Platform   | MIDI_Possible | MIDI_enabled | Soundfonts | Note                                                    |
+|------------|---------------|--------------|------------|---------------------------------------------------------|
+| PSP        | NO            | NO           | YES        | [See notes](projects/resources/PSP/INSTALL_HOW_TO.txt)  |
+| DEB        | YES           | YES          | YES        |                                                         |
+| AARCH64    | YES           | YES          | YES        |                                                         |
+| X64        | YES           | YES          | YES        |                                                         |
+| X86        | YES           | YES          | YES        |                                                         |
+| STEAM      | YES           | YES          | MAYBE      |                                                         |
+| MIYOO      | NO            | NO           | YES        | Port by [Nine-H](https://ninethehacker.xyz)             |
+| W32        | YES           | YES          | YES        | Built in VS2008 with love                               |
+| RASPI      | YES           | YES          | YES        | Versatile platform                                      |
+| CHIP       | YES           | YES          | YES        | [See notes](projects/resources/CHIP/INSTALL_HOW_TO.txt) |
+| BITTBOY    | MAYBE         | NO           | YES        |                                                         |
+| GARLIC     | NO            | NO           | NO         | No longer maintained, use Portmaster                    |
+| GARLICPLUS | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)                   |
+| RG35XXPLUS | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)                   |
+| MACOS      | YES           | YES          | MAYBE      | Port by [clsource](https://genserver.social/clsource)   |
 
 * **MIDI functionality __greatly__ depends on kernel support, please feature request your favourite OS maintainer =)**
 * **Install ffmpeg by following install instructions for your platform [here](https://www.ffmpeg.org/download.html)**

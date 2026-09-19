@@ -127,6 +127,50 @@ jobs:
           tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           files: ./projects/*.zip
 
+  build-aarch64:
+    runs-on: ubuntu-26.04-arm
+    container:
+       image: monkeyx/retro_builder:arm64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.7
+      
+      - name: Install required libraries
+        run: |
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+          apt update
+          apt upgrade -y
+          apt install -y make pkgconf libsdl2-dev libasound2 libasound2-dev python3-pil librtmidi-dev unzip zip curl jq
+        env:
+          DEBIAN_FRONTEND: "noninteractive"
+
+      - name: Build AARCH64
+        working-directory: projects
+        run: make PLATFORM=AARCH64
+
+      - name: Package build
+        working-directory: projects
+        run: |
+          TAG=$(curl "https://api.github.com/repos/djdiskmachine/lgpt-resources/tags" | jq -r '.[0].name')
+          curl -L -o lgpt-resources.zip https://github.com/djdiskmachine/lgpt-resources/archive/refs/tags/${TAG}.zip
+          unzip lgpt-resources.zip
+          mv lgpt-resources-${TAG}/*/ ./resources/packaging
+          rm -rf lgpt-resources*
+          ./resources/packaging/lgpt_package.sh
+
+      - name: Extract Git tag name
+        id: extract_tag
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Upload build release
+        uses: softprops/action-gh-release@v2.4.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          files: ./projects/*.zip
+
   build-x64:
     runs-on: ubuntu-latest
     steps:
