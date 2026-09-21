@@ -37,6 +37,7 @@ Recommended reading to get you started:
 - [Quick-Start Guide](docs/wiki/quick_start_guide.md)
 - [Little Piggy Tracker Configuration](docs/LittlePiggyTrackerConf.md)
 - [Tips and Tricks](docs/wiki/tips_and_tricks.md)
+- [Cheat Sheet](docs/cheatsheet/LittleGPTracker-Cheatsheet.pdf) (PDF, one page)
 
 ## Features per platform
 
