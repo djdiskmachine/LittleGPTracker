@@ -11,13 +11,18 @@ no bundled libraries, no bundled fonts, no bundled C library.
 |------|---------|
 | `projects/Makefile.RK3566` | Build configuration: toolchain, sysroot, defines |
 | `projects/Makefile` | Two added lines registering `RK3566DIRS` / `RK3566FILES` |
-| `projects/resources/RK3566/config.xml` | Fullscreen, panel fill, quit hotkey, auto-load, ayu dark theme |
+| `projects/resources/RK3566/config.xml` | Fullscreen, panel fill, quit hotkey, auto-load, MIDI input, ayu dark theme |
 | `projects/resources/RK3566/mapping.xml` | Gamepad button mapping |
 | `projects/resources/RK3566/LittleGPTracker.sh` | Launch script for the EmulationStation "Ports" menu |
-| `projects/resources/RK3566/setup-sysroot.sh` | Builds the cross sysroot from a device over ssh |
+| `projects/resources/RK3566/setup-sysroot.sh` | Builds the cross sysroot (SDL2 + ALSA) from a device over ssh |
 | `projects/resources/RK3566/fetch-demo-song.sh` | Installs a demo song from the official release |
 
-Four changes were needed in shared code, each marked with a comment:
+Five changes were needed in shared code, each marked with a comment:
+
+* `sources/Application/Application.cpp` — `MIDICTRLDEVICE` accepts `*` to mean
+  "every MIDI input that is present". A device name has to be known in advance
+  to be written into a config file, and on a handheld it is not: it is whatever
+  keyboard the user plugs in. See "MIDI" below.
 
 * `sources/Adapters/SDL2/Audio/SDLAudioDriver.cpp` — added the missing
   `<string.h>`: the file uses `memcpy`/`memmove` and relied on a transitive
@@ -49,23 +54,26 @@ Four changes were needed in shared code, each marked with a comment:
 | Gamepad | `retrogame_joypad` (rocknix-singleadc-joypad) on `/dev/input/js0` |
 | glibc / libstdc++ | 2.38 / GCC 13 (`GLIBCXX_3.4.33`) |
 | SDL2 | 2.30.5 |
+| MIDI | ALSA sequencer (`/dev/snd/seq`), libasound 1.2.10 |
 
 ROCKNIX mounts `/` read-only from a squashfs image; `/storage` is the writable
 ext4 partition. Ports therefore live under `/storage/roms/ports/`.
 
 ## How it builds
 
-The tracker is cross-compiled but linked against the **target's own SDL2**. That
-keeps the deliverable to one file and guarantees the app runs against exactly the
-SDL2 the compositor and audio server were tested with. Two things are needed on
-the build host:
+The tracker is cross-compiled but linked against the **target's own SDL2 and
+ALSA**. That keeps the deliverable to one file and guarantees the app runs
+against exactly the SDL2 the compositor and audio server were tested with. Two
+things are needed on the build host:
 
 1. **Arm GNU Toolchain** `aarch64-none-linux-gnu`, glibc **2.38**. The device
    exports `GLIBC_2.38` as its newest versioned symbol; a newer toolchain emits
    symbols the device's loader rejects.
 2. **A sysroot** holding SDL2 2.30.x headers and the device's `libSDL2.so` for
-   the linker. `projects/resources/RK3566/setup-sysroot.sh` assembles this over
-   ssh:
+   the linker, plus alsa-lib headers and the device's `libasound.so` for MIDI.
+   A runtime image ships no headers, so the script fetches the alsa-lib release
+   matching the device's library and copies the library itself off the device.
+   `projects/resources/RK3566/setup-sysroot.sh` assembles all of this over ssh:
 
 ```sh
 cd projects/resources/RK3566
@@ -82,10 +90,11 @@ make PLATFORM=RK3566 \
 ```
 
 The result is `projects/lgpt-rk3566.elf`. Build defines are `_64BIT`,
-`CPP_MEMORY`, `SDL2`, `SDLAUDIO`, `DUMMYMIDI` and `_NO_JACK_`, compiled
-`-std=gnu++03 -O3 -mcpu=cortex-a55`. `FFMPEG_ENABLED` is deliberately off: it
-only gates the ffmpeg based sample importer, which needs a keyboard and file
-dialog to be worth anything.
+`CPP_MEMORY`, `SDL2`, `SDLAUDIO`, `RTMIDI`, `__LINUX_ALSA__`,
+`__LINUX_ALSASEQ__` and `_NO_JACK_`, compiled `-std=gnu++03 -O3
+-mcpu=cortex-a55`. `FFMPEG_ENABLED` is deliberately off: it only gates the
+ffmpeg based sample importer, which needs a keyboard and file dialog to be worth
+anything.
 
 ## How it deploys
 
@@ -152,6 +161,100 @@ which is the SDL button index list that quits when held together, and
 so the project picker (and with it a second way out) is always shown at
 startup. Both are worth keeping unless you deliberately want to boot straight
 into a project.
+
+## MIDI
+
+MIDI runs over the ALSA sequencer. `RtMidi` (the copy in `sources/Externals`)
+is built with its `__LINUX_ALSASEQ__` backend, which means it talks to
+`/dev/snd/seq` through libasound rather than to any audio server. Everything
+that registers a port there is therefore usable: a USB MIDI interface
+(`snd-usb-audio` is built into this kernel), anything PipeWire bridges into the
+sequencer, or `aseqnet` for MIDI over the network.
+
+**Input.** `config.xml` sets:
+
+```xml
+<MIDICTRLDEVICE value='*'/>
+```
+
+`MIDICTRLDEVICE` is matched as a prefix against the port name the driver
+publishes, and `*` is the wildcard that opens every input present. That matters
+on a handheld: the name of the interface is not known when the config file is
+written, and without a match the tracker opens no MIDI input at all. Interfaces
+nothing is mapped to cost nothing.
+
+What an input device then does is decided by `mapping.xml`, where MIDI appears
+as the controller source `midi`:
+
+```xml
+<MAP src="midi:all:0:note:60" dst="/event/start" />
+```
+
+is MIDI channel 1, note 60. The middle field is the device name from `log.txt`
+or `all` for any device; `note`, `cc`, `pb`, `pc` and `at` are the event types.
+`docs/LittlePiggyTrackerConf.md` has the original write-up of this scheme.
+
+**Output.** Which interface the tracker sends to is a *project* setting, the
+`MIDI:` line in the project view, and notes come from MIDI instruments. The list
+of interfaces is read when the project is opened, so an interface that is
+plugged in later is not offered until the project is reloaded.
+
+Ports are enumerated once, at startup, and the names found are written to
+`log.txt`:
+
+```
+[RTMidiService] 1 input port(s)
+[RTMidiService]  Midi Through:0
+[RTMidiService] 1 output port(s)
+[RTMidiService]  Midi Through:0
+```
+
+so plug the interface in before starting the tracker, and read that line to find
+out what to put in `mapping.xml`.
+
+### The USB port
+
+The SoC has a host controller, but on the RGB30 ROCKNIX configures the port the
+USB-C connector is wired to as a **device**: the device tree reports
+
+```sh
+cat /proc/device-tree/usb@fcc00000/dr_mode     # peripheral
+```
+
+and ROCKNIX's own `/usr/bin/usbgadget` binds an MTP/CDC-ethernet gadget to that
+same controller. A USB MIDI keyboard plugged in there would be talking to a
+port that is itself acting as a USB device, so it will not be enumerated. A
+second controller (`usb@fd000000`) is in `dr_mode=host` with its xHCI
+registered, but whether a physical connector is wired to it is a question about
+the shell, not the software, and it has not been tested here.
+
+Everything above the kernel is in place either way: the tracker sees a MIDI
+interface as an ALSA sequencer port, and it does not matter whether the kernel
+got that port from USB, Bluetooth or the network.
+
+### Testing MIDI without a MIDI keyboard
+
+`CONFIG_SND_SEQ_DUMMY` is built into this kernel, so there is always a
+`Midi Through` client that echoes whatever is sent to it back out. That is
+enough to exercise both directions over ssh:
+
+```sh
+# listen to the loopback
+aseqdump -p 14:0 &
+
+# send one note to the loopback, which the tracker is listening on
+aplaymidi -p 14:0 note60.mid
+```
+
+with, in `mapping.xml`,
+
+```xml
+<MAP src="midi:all:0:note:60" dst="/event/down" />
+```
+
+Put the `Midi Through:0` name in the project's `MIDI:` setting to test the
+other direction; `aseqdump` then shows the start byte and the clock the tracker
+sends while it plays.
 
 ## Demo songs
 
@@ -304,6 +407,25 @@ script does not need to set up the environment at all.
   Confirmed on the device by eye as well.
 * Quit hotkey: `QUITBUTTONS=8,9` parses to mask `0x300` and the tracker logs
   `Quit combo mask 300` at startup.
+* MIDI: the binary links `libasound.so.2`, and all 55 `snd_*` symbols it
+  imports are exported by the device's libasound 1.2.10. On the device the
+  tracker creates its ALSA sequencer clients, enumerates the ports present
+  (`1 input port(s) / Midi Through:0`, `1 output port(s) / Midi Through:0`),
+  opens the input because `config.xml` says `MIDICTRLDEVICE=*` —
+  `[MIDI] Controlling activated for MIDI interface Midi Through:0` — and
+  attaches the MIDI mapping (`[MAPPING] Attached /event/down to
+  midi:all:0:note:60`).
+* MIDI **input**, end to end: a note 60 sent with `aplaymidi` through the
+  kernel's `Midi Through` loopback moved the song grid's cursor from row `00`
+  to row `09`. Nine rows is the expected number for a note held for one second:
+  the first press plus eight repeats at `KEYDELAY=200`/`KEYREPEAT=100`, which is
+  exactly what holding the D-pad down does. Captured before and after.
+* MIDI **output**, end to end: with the same note mapped to `/event/start`,
+  playback began, the tracker logged `[MidiService] midi device Midi Through:0
+  started`, its `RtMidi Output Client` appeared in the sequencer subscribed to
+  `14:0`, and `aseqdump` on the loopback captured `Start` followed by 238
+  `Clock` messages while it played.
+* The desktop `X64` target still builds with the shared-adapter changes.
 * Demo songs: all five auto-load on the device with zero load errors and the
   expected sample counts (6, 28, 15, 21, 21). `Bootloop-FastJump` was played
   through to confirm audio: the log shows the project opening, its samples being
@@ -334,9 +456,14 @@ script does not need to set up the environment at all.
 
 ## Known limitations
 
-* MIDI is stubbed out (`DUMMYMIDI`). USB MIDI may work on ROCKNIX but is
-  untested here.
 * ffmpeg based sample import (`PrintFX`) is not compiled in.
+* MIDI interfaces are enumerated once, at startup. One plugged in later is not
+  picked up until the tracker is restarted, and an output device added later is
+  not offered in the project view until the project is reloaded.
+* No MIDI interface other than the kernel's own `Midi Through` loopback was
+  available to test with, and the device's USB-C port is configured as a USB
+  device rather than a host (see "The USB port"), so the USB half of the story
+  is verified only down to the ALSA sequencer.
 * Filling a square panel stretches the 4:3 layout vertically; there is no
   scaling setting that both fills the screen and preserves the aspect ratio.
 * The rendering comparison against an x86_64 build was made before the display

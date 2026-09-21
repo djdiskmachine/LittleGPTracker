@@ -19,11 +19,21 @@ void Application::initMidiInput()
 {
   const char *preferedDevice=Config::GetInstance()->GetValue("MIDICTRLDEVICE");
 
+  // MIDICTRLDEVICE normally names one interface, matched on a prefix because
+  // drivers append their own port number ("Midi Through" matches
+  // "Midi Through:0").  "*" means "every input that is plugged in", which is
+  // what a handheld wants: the name of whatever keyboard is connected is not
+  // known in advance and cannot be put in a config file that ships with the
+  // build.  Interfaces that nothing is mapped to cost nothing, so opening all
+  // of them is harmless.
+  bool allDevices=(preferedDevice)&&(!strcmp(preferedDevice,"*")) ;
+
   IteratorPtr<MidiInDevice>it(MidiService::GetInstance()->GetInIterator()) ;
   for(it->Begin();!it->IsDone();it->Next())
   {
     MidiInDevice &in=it->CurrentItem() ;
-    if ((preferedDevice) && (!strncmp(in.GetName(), preferedDevice, strlen(preferedDevice))))
+    if ((preferedDevice) &&
+        (allDevices || (!strncmp(in.GetName(), preferedDevice, strlen(preferedDevice)))))
     {
       if (in.Init())
       {

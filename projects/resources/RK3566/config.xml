@@ -91,6 +91,34 @@
 	<CONSOLE     value='AAD94C'/>  <!-- token green                 -->
 
 	<!--
+		=========================================================================
+		MIDI INPUT
+		=========================================================================
+
+		Open every MIDI input that is present, instead of naming one.  The
+		tracker matches MIDICTRLDEVICE as a prefix, and a driver appends its
+		own port number, so naming a device means knowing it in advance
+		("Midi Through" matches "Midi Through:0").  On a handheld the name of
+		whatever keyboard is plugged in is not known when this file is
+		written, and "*" is the wildcard that skips the match.
+
+		Input shows up to the tracker as the controller source "midi", so an
+		interface only does something once mapping.xml maps one of its
+		events, for example:
+
+			<MAP src="midi:all:0:note:60" dst="/event/start" />
+
+		which is MIDI channel 1, note 60.  The middle field is the device
+		name as listed in log.txt, or "all" to accept any device.  cc, pb,
+		pc, at and note are the event types that can be mapped.
+
+		MIDI OUT is chosen per project, in the project view's "MIDI:" field.
+		Both directions need an ALSA sequencer port to talk to, which is what
+		a USB MIDI interface creates when it is plugged in.
+	-->
+	<MIDICTRLDEVICE value='*'/>
+
+	<!--
 		Set DUMPEVENT to YES to print every key/button/axis event to log.txt.
 		That is how mapping.xml below was produced.
 	-->

@@ -42,7 +42,13 @@ STRIP := $(CROSS_COMPILE)strip
 # CPP_MEMORY  : use the C++ allocator instead of the platform allocator
 # SDL2        : use the SDL2 GUI/timer adapters rather than the SDL1.2 ones
 # SDLAUDIO    : audio out through SDL2 (which goes to ALSA on ROCKNIX)
-# DUMMYMIDI   : no MIDI hardware on these handhelds; keep the stub
+# RTMIDI      : MIDI through the bundled RtMidi
+# __LINUX_ALSA__ / __LINUX_ALSASEQ__ : select RtMidi's ALSA sequencer backend.
+#                  RtMidi 1.0.8 actually guards that code with the ALSASEQ
+#                  spelling, while the ALSA spelling is what the rest of the
+#                  desktop makefiles pass; both are defined so this target
+#                  matches X64/RASPI.  ALSA seq is how the kernel presents USB
+#                  MIDI interfaces to userspace.
 # _NO_JACK_   : do not probe for a JACK server
 #
 # FFMPEG_ENABLED is deliberately NOT set: it only gates the ffmpeg based
@@ -60,7 +66,9 @@ DEFINES := \
 	-D_NO_JACK_ \
 	-DSDL2 \
 	-DSDLAUDIO \
-	-DDUMMYMIDI
+	-DRTMIDI \
+	-D__LINUX_ALSA__ \
+	-D__LINUX_ALSASEQ__
 
 # The tree mixes <SDL2/SDL.h> (SDL2 adapters) and <SDL/SDL.h> (legacy SDL1.2
 # adapters), so both the SDL2 directory itself and its parent have to be on the
@@ -68,6 +76,11 @@ DEFINES := \
 # legacy includes that are still reachable in this configuration resolvable.
 SDL_CFLAGS := -I$(RK3566_SYSROOT)/usr/include/SDL2 -I$(RK3566_SYSROOT)/usr/include -D_REENTRANT
 SDL_LIBS   := -lSDL2
+
+# RtMidi's ALSA backend talks to /dev/snd/seq through libasound.  The sysroot
+# carries the device's own libasound.so.2 plus matching headers, so MIDI needs
+# no extra runtime dependency on the device.
+ALSA_LIBS  := -lasound
 
 #---------------------------------------------------------------------------------
 # optimization
@@ -85,7 +98,7 @@ CXXFLAGS := $(CFLAGS) -std=gnu++03
 LIBS     := -L$(RK3566_SYSROOT)/usr/lib \
             -Wl,--allow-shlib-undefined \
             -Wl,-rpath-link,$(RK3566_SYSROOT)/usr/lib \
-            $(SDL_LIBS) -lpthread -lm -ldl
+            $(SDL_LIBS) $(ALSA_LIBS) -lpthread -lm -ldl
 
 OUTPUT    = ../lgpt-rk3566
 EXTENSION := elf

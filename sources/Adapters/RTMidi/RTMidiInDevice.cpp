@@ -1,5 +1,6 @@
 #include "RTMidiInDevice.h"
 #include "Services/Midi/MidiMessage.h"
+#include "System/Console/Trace.h"
 #include "System/Console/n_assert.h"
 
 void mycallback( double deltatime, std::vector< unsigned char > *message, void *userData )
@@ -26,7 +27,17 @@ RTMidiInDevice::~RTMidiInDevice() {
 
 bool RTMidiInDevice::initDriver() {
 
-	rtMidiIn_.openPort(index_) ;
+	// RtMidi signals failure by throwing, and the port list this index came
+	// from was built earlier: the interface may have been unplugged since, or
+	// something else may be holding the port.  An interface that cannot be
+	// opened is not fatal, the tracker runs without it.
+	try {
+		rtMidiIn_.openPort(index_) ;
+	} catch (RtError &error) {
+		Trace::Log("RTMidiInDevice","Could not open %s: %s",GetName(),error.getMessageString()) ;
+		return false ;
+	}
+
 	rtMidiIn_.setCallback( &mycallback,this );
 
 	// ignore sysex, timing, or active sensing messages.
@@ -36,7 +47,11 @@ bool RTMidiInDevice::initDriver() {
 } ;
 
 void RTMidiInDevice::closeDriver() {
-	rtMidiIn_.closePort() ;
+	try {
+		rtMidiIn_.closePort() ;
+	} catch (RtError &error) {
+		Trace::Log("RTMidiInDevice","Could not close %s: %s",GetName(),error.getMessageString()) ;
+	}
 } ;
 
 bool RTMidiInDevice::startDriver() {
