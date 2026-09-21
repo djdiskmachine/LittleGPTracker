@@ -3,6 +3,7 @@
 #include "Services/Time/TimeService.h"
 #include "System/Console/Trace.h"
 #include "System/System/System.h"
+#include <string.h>
 
 void sdl_callback(void *userdata, Uint8 *stream, int len) {
     SDLAudioDriver *sound = (SDLAudioDriver *)userdata;

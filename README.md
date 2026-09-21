@@ -55,6 +55,7 @@ Recommended reading to get you started:
 | GARLIC      | NO         | NO           |NO        | No longer maintained, use Portmaster|
 | GARLICPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
 | RG35XXPLUS  | MAYBE         | NO           | YES        | Port by [Simotek](http://simotek.net)|
+| RK3566      | NO            | NO           | YES        | ROCKNIX handhelds (Powkiddy RGB30 etc.) [See notes](docs/RK3566_PORT.md) |
 | MACOS       | YES           | YES          | MAYBE      | Port by [clsource](https://genserver.social/clsource) |
 
 * **MIDI functionality __greatly__ depends on kernel support, please feature request your favourite OS maintainer =)**

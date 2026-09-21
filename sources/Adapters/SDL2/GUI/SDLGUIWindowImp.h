@@ -52,6 +52,11 @@ private:
     SDL_Window *window_;
     SDL_Surface *surface_;
 //	SDL_Surface *offscreen_ ;
+    // The tracker always draws a 320x240 screen into this surface at 1:1;
+    // Flush() scales it onto the window. Keeping drawing and presentation
+    // apart is what allows the UI to fill a panel that is not a whole multiple
+    // of 320x240 (eg. the 720x720 screen of an RGB30).
+    SDL_Surface *frame_;
     GUIRect screenRect_ ;
 	unsigned int currentColor_ ;
 	unsigned int backgroundColor_ ;
@@ -65,5 +70,7 @@ private:
 	int appAnchorX_ ;
 	int appAnchorY_ ;
 	int mult_ ;
+    // Presentation scale taken from SCREENMULT, or 0 to scale to the window.
+    int presentMult_ ;
 } ;
 #endif

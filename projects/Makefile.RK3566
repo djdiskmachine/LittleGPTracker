@@ -1,0 +1,94 @@
+-include $(PWD)/rules_base
+
+#---------------------------------------------------------------------------------
+# LittleGPTracker - RK3566 / ROCKNIX port
+#
+# Targets RK3566 based handhelds running ROCKNIX (Powkiddy RGB30, Anbernic
+# RG-ARC, Gameforce Chi, ...).  Cross-compiles on an x86_64 host but links
+# against the *target's own* SDL2, so the only artifact that has to be copied
+# to the device is the executable - no bundled libraries, no bundled fonts,
+# no bundled libc.
+#
+# Requirements on the build host:
+#   * Arm GNU Toolchain aarch64-none-linux-gnu with glibc 2.38, to match the
+#     glibc shipped in ROCKNIX (GLIBC_2.38 is the newest versioned symbol
+#     the device exports; anything newer will not load).
+#   * SDL2 headers matching the device's runtime (SDL 2.30.x) plus a linker
+#     stub for the device's libSDL2.so.
+#
+# Both are located with RK3566_TOOLCHAIN / RK3566_SYSROOT and can be pointed
+# somewhere else from the command line:
+#
+#   make PLATFORM=RK3566 RK3566_SYSROOT=/opt/rocknix-sysroot
+#
+# See docs/RK3566_PORT.md for how the sysroot is assembled.
+#---------------------------------------------------------------------------------
+
+RK3566_TOOLCHAIN ?= /devel/src/.rk3566-port/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu
+RK3566_SYSROOT   ?= /devel/src/.rk3566-port/sysroot
+
+PREFIX        := $(RK3566_TOOLCHAIN)/bin/aarch64-none-linux-gnu-
+CROSS_COMPILE := $(PREFIX)
+TOOLPATH      := $(RK3566_TOOLCHAIN)/bin
+
+CC    := $(CROSS_COMPILE)gcc
+CXX   := $(CROSS_COMPILE)g++
+STRIP := $(CROSS_COMPILE)strip
+
+#---------------------------------------------------------------------------------
+# config
+#
+# _64BIT      : target is LP64, the tracker's default is 32bit assumptions
+# CPP_MEMORY  : use the C++ allocator instead of the platform allocator
+# SDL2        : use the SDL2 GUI/timer adapters rather than the SDL1.2 ones
+# SDLAUDIO    : audio out through SDL2 (which goes to ALSA on ROCKNIX)
+# DUMMYMIDI   : no MIDI hardware on these handhelds; keep the stub
+# _NO_JACK_   : do not probe for a JACK server
+#
+# FFMPEG_ENABLED is deliberately NOT set: it only gates the ffmpeg based
+# sample import in InstrumentView and would add a large dependency for a
+# feature that needs a keyboard and a file dialog to be useful.
+#---------------------------------------------------------------------------------
+
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-D_64BIT \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-D_NDEBUG \
+	-D_NO_JACK_ \
+	-DSDL2 \
+	-DSDLAUDIO \
+	-DDUMMYMIDI
+
+# The tree mixes <SDL2/SDL.h> (SDL2 adapters) and <SDL/SDL.h> (legacy SDL1.2
+# adapters), so both the SDL2 directory itself and its parent have to be on the
+# include path.  A "SDL" symlink next to the real "SDL2" directory keeps the few
+# legacy includes that are still reachable in this configuration resolvable.
+SDL_CFLAGS := -I$(RK3566_SYSROOT)/usr/include/SDL2 -I$(RK3566_SYSROOT)/usr/include -D_REENTRANT
+SDL_LIBS   := -lSDL2
+
+#---------------------------------------------------------------------------------
+# optimization
+#
+# RK3566 is a quad Cortex-A55.  -fno-strict-aliasing is kept because the
+# tracker predates strict aliasing rules and type-punning through the mixer
+# would otherwise be miscompiled at -O3.
+#---------------------------------------------------------------------------------
+
+OPT_FLAGS := -O3 -mcpu=cortex-a55 -mtune=cortex-a55 -fno-strict-aliasing
+
+INCLUDES := $(SDL_CFLAGS) -I$(PWD)/../sources
+CFLAGS   := $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall
+CXXFLAGS := $(CFLAGS) -std=gnu++03
+LIBS     := -L$(RK3566_SYSROOT)/usr/lib \
+            -Wl,--allow-shlib-undefined \
+            -Wl,-rpath-link,$(RK3566_SYSROOT)/usr/lib \
+            $(SDL_LIBS) -lpthread -lm -ldl
+
+OUTPUT    = ../lgpt-rk3566
+EXTENSION := elf
+
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)

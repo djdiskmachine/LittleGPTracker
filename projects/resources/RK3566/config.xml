@@ -1,0 +1,98 @@
+<CONFIG>
+	<!--
+		LittleGPTracker configuration for RK3566 / ROCKNIX handhelds.
+
+		The panel on these devices (Powkiddy RGB30, Anbernic RG-ARC, ...) is
+		720x720 while the tracker always draws a 320x240 screen, so the drawn
+		screen is scaled up to fit.  No SCREENMULT is set here, which means
+		"fill the panel": 2.25x across and 3x down.  That is as large as the
+		text can be made, and on a panel this dense the alternative - whole
+		multiples only, which cap out at 2x and leave black borders - is
+		uncomfortably small to read.
+
+		To keep the original 4:3 proportions instead and accept smaller text
+		with black bars, set:
+
+			<SCREENMULT value='2'/>
+
+		which presents the screen at exactly 2x, centred (640x480).
+	-->
+	<FULLSCREEN value='YES'/>
+
+	<!--
+		Show the project picker on every start instead of jumping straight
+		into the last project.  That picker is the only place the tracker
+		offers an "Exit" button, so leaving this at NO guarantees the UI
+		always offers a way out of the application.
+	-->
+	<AUTO_LOAD_LAST value='NO'/>
+
+	<!-- Joystick/keyboard auto repeat, in milliseconds. -->
+	<KEYDELAY value='200'/>
+	<KEYREPEAT value='100'/>
+
+	<!--
+		Quit the tracker by holding these SDL joystick buttons together.
+		On this pad 8 is Select and 9 is Start, so Select+Start quits - the
+		same combination ROCKNIX uses to leave an emulator.
+
+		This exists because the tracker's only built-in quit control is the
+		"Exit" button on the project picker, which cannot be reached once a
+		project is loaded, and a handheld has no window to close.
+	-->
+	<QUITBUTTONS value='8,9'/>
+
+	<!-- '0':original '1':digital '2':monster 'CUSTOM': load custom_font.xml -->
+	<FONTTYPE value='0'/>
+
+	<!--
+		=========================================================================
+		THEME: ayu dark
+		=========================================================================
+
+		Taken from the ayu dark VS Code theme, so the tracker's slots follow the
+		roles ayu itself uses rather than an approximation of its palette:
+
+		  BACKGROUND   editor.background
+		  FOREGROUND   editor.foreground
+		  CURSORCOLOR  editorCursor.foreground
+		  BORDER       editor.findMatchBackground / accent tint (list.highlight)
+		  ROWCOLOR1    editorLineNumber.activeForeground
+		  ROWCOLOR2    editorLineNumber.foreground, ie 5a6378 at alpha a6
+		               composited over the background -> 404758
+		  COL_TITLE    activityBarTop.foreground
+		  the rest     the ayu token colours, by their syntax role
+
+		ayu uses one accent (the gold E6B450) for the cursor, the border and the
+		active highlights, so CURSORCOLOR and BORDER sharing it is deliberate.
+
+		Sources: https://github.com/ayu-theme/ayu-colors (MIT) and
+		https://github.com/ayu-theme/vscode-ayu (MIT).  The tracker reads these
+		once at startup, so a change needs a relaunch.  Delete this block to go
+		back to the built-in purple theme.
+
+		Contrast against the background is noted where a value is on the dim
+		side, since this panel is dense and easy to under-light.
+	-->
+	<BACKGROUND  value='10141C'/>  <!-- editor.background          -->
+	<FOREGROUND  value='BFBDB6'/>  <!-- editor.foreground   9.8:1  -->
+	<BORDER      value='E6B450'/>  <!-- accent tint                -->
+	<CURSORCOLOR value='E6B450'/>  <!-- editorCursor.foreground    -->
+	<PLAYCOLOR   value='AAD94C'/>  <!-- token green                 -->
+	<MUTECOLOR   value='F07178'/>  <!-- token red                   -->
+	<HICOLOR1    value='FF8F40'/>  <!-- token orange (keywords)     -->
+	<HICOLOR2    value='FFB454'/>  <!-- token yellow (functions)    -->
+	<ROWCOLOR1   value='5A6378'/>  <!-- line number, active  3.1:1  -->
+	<ROWCOLOR2   value='404758'/>  <!-- line number, normal  2.0:1  -->
+	<MAJORBEAT   value='697184'/>  <!-- activityBarTop.fg    3.8:1  -->
+	<COL_TITLE   value='697184'/>  <!-- activityBarTop.fg           -->
+	<SONGVIEW_FE value='95E6CB'/>  <!-- token teal                  -->
+	<SONGVIEW_00 value='5A6673'/>  <!-- comment grey         3.1:1  -->
+	<CONSOLE     value='AAD94C'/>  <!-- token green                 -->
+
+	<!--
+		Set DUMPEVENT to YES to print every key/button/axis event to log.txt.
+		That is how mapping.xml below was produced.
+	-->
+	<!-- <DUMPEVENT value='YES'/> -->
+</CONFIG>

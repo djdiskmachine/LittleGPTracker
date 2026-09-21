@@ -10,6 +10,40 @@ bool SDLEventManager::dumpEvent_=false ;
 
 SDLEventManager::SDLEventManager() 
 {
+	quitButtonMask_=0 ;
+	buttonsDown_=0 ;
+}
+
+// Buttons that quit the tracker when held together, from the QUITBUTTONS
+// config value (comma separated SDL joystick button indices, eg "8,9" for
+// Select+Start). Leave the value out to disable the combo.
+void SDLEventManager::LoadQuitCombo() {
+
+	quitButtonMask_=0 ;
+	const char *value=Config::GetInstance()->GetValue("QUITBUTTONS") ;
+	if (!value) return ;
+
+	const char *p=value ;
+	while (*p) {
+		int button=atoi(p) ;
+		if ((button>=0)&&(button<32)) {
+			quitButtonMask_|=(1u<<button) ;
+		}
+		const char *comma=strchr(p,',') ;
+		if (!comma) break ;
+		p=comma+1 ;
+	}
+	Trace::Log("EVENT","Quit combo mask %x",quitButtonMask_) ;
+}
+
+int SDLEventManager::JoystickIndexForInstance(SDL_JoystickID instanceId) {
+
+	for (int i=0;i<MAX_JOY_COUNT;i++) {
+		if (joystick_[i]&&(SDL_JoystickInstanceID(joystick_[i])==instanceId)) {
+			return i ;
+		}
+	}
+	return -1 ;
 }
 
 SDLEventManager::~SDLEventManager() 
@@ -35,6 +69,7 @@ bool SDLEventManager::Init()
 	joyCount=(joyCount>MAX_JOY_COUNT)?MAX_JOY_COUNT:joyCount ;
 
 	keyboardCS_=new KeyboardControllerSource("keyboard") ;
+	LoadQuitCombo() ;
 	const char *dumpIt=Config::GetInstance()->GetValue("DUMPEVENT") ;
 	if ((dumpIt)&&(!strcmp(dumpIt,"YES")))
   {
@@ -95,21 +130,51 @@ int SDLEventManager::MainLoop()
 
 
 				case SDL_JOYBUTTONDOWN:
-					buttonCS_[event.jbutton.which]->SetButton(event.jbutton.button,true) ;
+				{
+					int joy=JoystickIndexForInstance(event.jbutton.which) ;
+					if (joy>=0) {
+						buttonCS_[joy]->SetButton(event.jbutton.button,true) ;
+					}
+					if (quitButtonMask_&&(event.jbutton.button<32))
+					{
+						buttonsDown_|=(1u<<event.jbutton.button) ;
+						if ((buttonsDown_&quitButtonMask_)==quitButtonMask_)
+						{
+							Trace::Log("EVENT","Quit combo pressed") ;
+							buttonsDown_=0 ;
+							sdlWindow->ProcessQuit() ;
+						}
+					}
+				}
 					break ;
 				case SDL_JOYBUTTONUP:
+				{
 					if (dumpEvent_) {
 						Trace::Log("EVENT","but(%d):%d",event.button.which,event.jbutton.button) ;
 					}
-					buttonCS_[event.jbutton.which]->SetButton(event.jbutton.button,false) ;
+					int joy=JoystickIndexForInstance(event.jbutton.which) ;
+					if (joy>=0) {
+						buttonCS_[joy]->SetButton(event.jbutton.button,false) ;
+					}
+					if (event.jbutton.button<32)
+					{
+						buttonsDown_&=~(1u<<event.jbutton.button) ;
+					}
+				}
 					break ;
 				case SDL_JOYAXISMOTION:
+				{
 					if (dumpEvent_) {
 						Trace::Log("EVENT","joy(%d)::%d=%d",event.jaxis.which,event.jaxis.axis,event.jaxis.value) ;
 					}
-					joystickCS_[event.jaxis.which]->SetAxis(event.jaxis.axis,float(event.jaxis.value)/32767.0f) ;
+					int joy=JoystickIndexForInstance(event.jaxis.which) ;
+					if (joy>=0) {
+						joystickCS_[joy]->SetAxis(event.jaxis.axis,float(event.jaxis.value)/32767.0f) ;
+					}
+				}
 					break ;
 				case SDL_JOYHATMOTION:
+				{
 					if (dumpEvent_)
           {
 						for (int i=0;i<4;i++)
@@ -121,7 +186,11 @@ int SDLEventManager::MainLoop()
 							}
 						}
 					}
-					hatCS_[event.jhat.which]->SetHat(event.jhat.hat,event.jhat.value) ;
+					int joy=JoystickIndexForInstance(event.jhat.which) ;
+					if (joy>=0) {
+						hatCS_[joy]->SetHat(event.jhat.hat,event.jhat.value) ;
+					}
+				}
 					break ;
 				case SDL_JOYBALLMOTION:
 					if (dumpEvent_)

@@ -1,5 +1,6 @@
 #include "SDLGUIWindowImp.h"
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 #include "Application/Model/Config.h"
 #include "Application/Utils/char.h"
@@ -15,12 +16,32 @@ SDLGUIWindowImp *instance_ ;
 unsigned short appWidth=320 ;
 unsigned short appHeight=240 ;
 
+// Opt-in rendering diagnostic: set LGPT_SCREENSHOT to a path and the presented
+// window is written there as a BMP, which is the only way to confirm what the
+// tracker actually draws on a device whose framebuffer is composited by the GPU
+// (and therefore unreadable through /dev/fb0).
+static const char *screenshotPath_=0 ;
+static Uint32 screenshotLast_=0 ;
+// Minimum gap between captures.  Flush() is only called when the UI
+// actually changes, so a fixed frame count either fires too early (on
+// the loading screen) or never, depending on the video driver.
+#define SCREENSHOT_INTERVAL_MS 400
+
 SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p) 
 {
 
   SDLCreateWindowParams &sdlP=(SDLCreateWindowParams &)p;
   cacheFonts_=sdlP.cacheFonts_ ;
   framebuffer_=sdlP.framebuffer_ ;
+
+  if (!screenshotPath_)
+  {
+    const char *shot=getenv("LGPT_SCREENSHOT") ;
+    if ((shot)&&(shot[0]))
+    {
+      screenshotPath_=shot ;
+    }
+  }
   
   // By default if we are not running a framebuffer device
   // we assumed it's windowed
@@ -77,49 +98,61 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
     framebuffer_ = true;
     windowed_ = false;
   }
- 
-  #ifdef PLATFORM_PSP
-  	mult_ = 1;
-  #else
-	int multFromSize=MIN(screenHeight/appHeight,screenWidth/appWidth);
-	const char *mult=Config::GetInstance()->GetValue("SCREENMULT") ;
-	if (mult)
-	{
-		mult_=atoi(mult);
-	}
-	else
-	{
-		if (framebuffer_)
-		{
-		mult_ = multFromSize;
-		}
-		else
-		{
-		mult_ = 1;
-		}
-	}
-  #endif
-  // Create a window that is the requested size
-  
-  screenRect_._topLeft._x=0;
-  screenRect_._topLeft._y=0;
-  screenRect_._bottomRight._x=windowed_?appWidth*mult_:screenWidth;
-  screenRect_._bottomRight._y=windowed_?appHeight*mult_:screenHeight;
 
-  Trace::Log("DISPLAY","Creating SDL Window (%d,%d)",screenRect_.Width(), screenRect_.Height());
+  // A fullscreen window covers the whole display, so the app area has to be
+  // scaled up into it rather than being the window itself. Without this the
+  // tracker renders a window sized to the app area and leaves the rest of a
+  // high resolution panel (eg. the 720x720 RGB30 screen) untouched.
+  if (fullscreen)
+  {
+    windowed_ = false;
+  }
+
+  // Drawing always happens at 1:1 into a fixed 320x240 surface and Flush()
+  // scales that onto the window, so SCREENMULT is a presentation scale rather
+  // than a drawing scale. Leaving it unset fills the window, which is what
+  // makes the UI usable on a 720x720 panel: eight pixel glyphs at 2x are
+  // unreadably small there, at 2.25x3 they are not.
+  mult_ = 1;
+  presentMult_ = 0;
+  const char *mult = Config::GetInstance()->GetValue("SCREENMULT");
+  if (mult)
+  {
+    presentMult_ = atoi(mult);
+  }
+
+  // Fullscreen takes the whole display; windowed honours SCREENMULT.
+  int windowMult = (presentMult_ > 0) ? presentMult_ : 1;
+  int windowWidth = windowed_ ? appWidth * windowMult : screenWidth;
+  int windowHeight = windowed_ ? appHeight * windowMult : screenHeight;
+  if (windowWidth < appWidth) windowWidth = appWidth;
+  if (windowHeight < appHeight) windowHeight = appHeight;
+
+  Trace::Log("DISPLAY", "Creating SDL Window (%d,%d) for a %dx%d screen",
+             windowWidth, windowHeight, appWidth, appHeight);
     window_ = SDL_CreateWindow("LittleGPTracker",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,
-                               screenRect_.Width(),screenRect_.Height(),fullscreen?SDL_WINDOW_FULLSCREEN:SDL_WINDOW_SHOWN);
+                               windowWidth,windowHeight,fullscreen?SDL_WINDOW_FULLSCREEN:SDL_WINDOW_SHOWN);
     NAssert(window_) ;
 
-	// Compute the x & y offset to locate our app window
-
-	appAnchorX_=(screenRect_.Width()-appWidth*mult_)/2 ;
-	appAnchorY_=(screenRect_.Height()-appHeight*mult_)/2 ;
-
     SDL_SetWindowIcon(window_, SDL_LoadBMP("lgpt_icon.bmp"));
-    surface_ = SDL_GetWindowSurface(window_);
 
-    NAssert(surface_) ;
+    SDL_Surface *windowSurface = SDL_GetWindowSurface(window_);
+    NAssert(windowSurface) ;
+
+    // Fixed size drawing surface, in the window's pixel format so that the
+    // scaled blit in Flush() stays a plain format copy.
+    frame_ = SDL_CreateRGBSurfaceWithFormat(0, appWidth, appHeight, 32,
+                                            windowSurface->format->format);
+    NAssert(frame_) ;
+    surface_ = frame_;
+
+    // The app fills the drawing surface; presentation is handled separately.
+    screenRect_._topLeft._x = 0;
+    screenRect_._topLeft._y = 0;
+    screenRect_._bottomRight._x = appWidth;
+    screenRect_._bottomRight._y = appHeight;
+    appAnchorX_ = 0;
+    appAnchorY_ = 0;
 
     Uint32 rmask, gmask, bmask, amask;
 
@@ -495,30 +528,67 @@ void SDLGUIWindowImp::Unlock()
 
 void SDLGUIWindowImp::Flush()
 {
-    // blit partial updates on resource constrained platforms
-    if ((!framebuffer_)&&(updateCount_!=0))
+    // The app drew into the fixed size frame_ surface; scale that onto the
+    // window. SDL_BlitScaled samples nearest neighbour, which keeps the pixel
+    // font crisp at the non whole multiples a 720x720 panel needs.
+    SDL_Surface *windowSurface=SDL_GetWindowSurface(window_) ;
+    if (windowSurface)
     {
-        if (updateCount_<MAX_OVERLAYS)
+        SDL_Rect dst ;
+        if (presentMult_>0)
         {
-            SDL_UpdateWindowSurfaceRects(window_,updateRects_,updateCount_);
+            // SCREENMULT: a whole multiple, centred, reduced until it fits.
+            int s=presentMult_ ;
+            while ((s>1)&&((appWidth*s>windowSurface->w)||(appHeight*s>windowSurface->h)))
+            {
+                s-- ;
+            }
+            dst.w=appWidth*s ;
+            dst.h=appHeight*s ;
         }
         else
         {
-            SDL_Rect updateRect;
-            updateRect.x = screenRect_.Left();
-            updateRect.y = screenRect_.Top();
-            updateRect.w = screenRect_.Width();
-            updateRect.h = screenRect_.Height();
-            SDL_UpdateWindowSurfaceRects(window_,&updateRect,1);
+            // Fill the window. On a square panel this is what makes the UI
+            // large enough to read; the aspect ratio is stretched to match.
+            dst.w=windowSurface->w ;
+            dst.h=windowSurface->h ;
         }
+        dst.x=(windowSurface->w-dst.w)/2 ;
+        dst.y=(windowSurface->h-dst.h)/2 ;
+
+        SDL_BlitScaled(frame_,0,windowSurface,&dst) ;
+        SDL_UpdateWindowSurface(window_) ;
     }
     updateCount_=0;
+
+    // Write the surface out whenever the UI changes, rate limited, so that the
+    // file ends up holding the most recent screen rather than whichever frame
+    // happened to be first.
+    if (screenshotPath_)
+    {
+        Uint32 now=SDL_GetTicks() ;
+        if ((screenshotLast_==0)||((now-screenshotLast_)>=SCREENSHOT_INTERVAL_MS))
+        {
+            screenshotLast_=now ;
+            // Capture what was presented rather than the app's own surface, so
+            // that a capture also exercises the scaling step.
+            SDL_Surface *shot=SDL_GetWindowSurface(window_) ;
+            if ((shot)&&(SDL_SaveBMP(shot,screenshotPath_)==0))
+            {
+                Trace::Log("DISPLAY","Wrote screenshot to %s",screenshotPath_) ;
+            }
+            else
+            {
+                Trace::Error("DISPLAY","Could not write %s: %s",screenshotPath_,SDL_GetError()) ;
+            }
+        }
+    }
 }
 
 void SDLGUIWindowImp::ProcessExpose() 
 {
-    // Expose and resize events will cause a new surface to be needed.
-    surface_ = SDL_GetWindowSurface(window_);
+    // The drawing surface is fixed size and independent of the window, so an
+    // expose or resize only means the window has to be redrawn.
     _window->Update() ;
 }
 
