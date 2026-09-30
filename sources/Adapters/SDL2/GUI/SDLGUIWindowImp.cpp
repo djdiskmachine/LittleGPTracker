@@ -138,6 +138,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 	instance_=this ;
 	currentColor_=0;
 	backgroundColor_=0 ;
+	foregroundColor_=0 ;
 	SDL_ShowCursor(SDL_DISABLE);
 	FontConfig();
 
@@ -176,11 +177,17 @@ void SDLGUIWindowImp::prepareFullFonts()
 	for (int i=0;i<FONT_COUNT;i++)
   {
     
-	  fonts[i] = SDL_CreateRGBSurface(
+    if (fonts[i] == NULL)
+    {
+	    fonts[i] = SDL_CreateRGBSurface(
                  SDL_SWSURFACE,
                  8*mult_, 8*mult_, 
-                 bitDepth_,
-                 0, 0, 0, 0);
+                 surface_->format->BitsPerPixel,
+                 surface_->format->Rmask,
+                 surface_->format->Gmask,
+                 surface_->format->Bmask,
+                 surface_->format->Amask);
+    }
 		if (fonts[i]==NULL) 
     {
 			Trace::Error("[DISPLAY] Failed to create font surface %d",i) ;
@@ -275,7 +282,12 @@ void SDLGUIWindowImp::DrawChar(const char c, GUIPoint &pos, GUITextProperties &p
 		area->w=8*mult_ ;
 	}
 
-	if (((cacheFonts_)&&(currentColor_==foregroundColor_)&&(!p.invert_))) {
+	bool useCache = false;
+	if (cacheFonts_ && (currentColor_ == foregroundColor_) && (!p.invert_)) {
+		useCache = true;
+	}
+
+	if (useCache) {
 
 		SDL_Rect srcRect ;
 		srcRect.x=0 ;
@@ -296,7 +308,7 @@ void SDLGUIWindowImp::DrawChar(const char c, GUIPoint &pos, GUITextProperties &p
 
 	} else {
 		// prepare bg & fg pixel ptr
-        int pixelSize=surface_->format->BytesPerPixel ;
+		int pixelSize=surface_->format->BytesPerPixel ;
 		unsigned char *bgPtr=(unsigned char *)&backgroundColor_ ;
 		unsigned char *fgPtr=(unsigned char *)&currentColor_ ;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -304,7 +316,7 @@ void SDLGUIWindowImp::DrawChar(const char c, GUIPoint &pos, GUITextProperties &p
 		fgPtr+=(4-pixelSize) ;
 #endif
 		const unsigned char *src=font+c*8 ;
-        unsigned char *dest=((unsigned char *)surface_->pixels) + (yy*surface_->pitch) + xx*pixelSize;
+		unsigned char *dest=((unsigned char *)surface_->pixels) + (yy*surface_->pitch) + xx*pixelSize;
 
 		for (int y = 0; y < 8; y++) {
 			for (int n=0;n<mult_;n++) {
@@ -355,7 +367,12 @@ void SDLGUIWindowImp::DrawString(const char *string,GUIPoint &pos,GUITextPropert
 
 	for (int l=0;l<len;l++)
   {
-		if (((cacheFonts_)&&(currentColor_==foregroundColor_)&&(!p.invert_)))
+		bool useCache = false;
+		if (cacheFonts_ && (currentColor_ == foregroundColor_) && (!p.invert_)) {
+			useCache = true;
+		}
+
+		if (useCache)
     {
 			SDL_Rect srcRect ;
 			srcRect.x=0 ;
@@ -378,7 +395,7 @@ void SDLGUIWindowImp::DrawString(const char *string,GUIPoint &pos,GUITextPropert
     else
     {
 			// prepare bg & fg pixel ptr
-            int pixelSize=surface_->format->BytesPerPixel ;
+			int pixelSize=surface_->format->BytesPerPixel ;
 			unsigned char *bgPtr=(unsigned char *)&backgroundColor_ ;
 			unsigned char *fgPtr=(unsigned char *)&currentColor_ ;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -386,7 +403,7 @@ void SDLGUIWindowImp::DrawString(const char *string,GUIPoint &pos,GUITextPropert
 			fgPtr+=(4-pixelSize) ;
 #endif
 			const unsigned char *src=font+(string[l]*8) ;
-            unsigned char *dest=((unsigned char *)surface_->pixels) + (yy*surface_->pitch) + xx*pixelSize;
+			unsigned char *dest=((unsigned char *)surface_->pixels) + (yy*surface_->pitch) + xx*pixelSize;
 
 			for (int y = 0; y < 8; y++) {
 				for (int n=0;n<mult_;n++) {
@@ -422,7 +439,13 @@ void SDLGUIWindowImp::Clear(GUIColor &c,bool overlay)
   rect.w = screenRect_.Width();
   rect.h = screenRect_.Height();
  
-    backgroundColor_=SDL_MapRGB(surface_->format,c._r&0xFF,c._g&0xFF,c._b&0xFF);
+  Uint32 newBg = SDL_MapRGB(surface_->format,c._r&0xFF,c._g&0xFF,c._b&0xFF);
+  if (newBg != backgroundColor_) {
+      backgroundColor_ = newBg;
+      if (cacheFonts_) {
+          prepareFullFonts();
+      }
+  }
   SDL_FillRect(surface_, &rect,backgroundColor_) ;
 
 	if (!framebuffer_)
