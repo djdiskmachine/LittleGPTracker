@@ -1,0 +1,58 @@
+-include $(PWD)/rules_base
+
+#---------------------------------------------------------------------------------
+# TrimUI "tg5050" (1280x720) running NextUI.
+#
+# Same adapter set and flags as TG5040; only the toolchain and the output name
+# differ. NextUI ships tg5050 as its own platform with its own cross toolchain
+# (gcc 10.3) and SDK sysroot, so the tg5040 binary is not reusable here.
+#
+# Unpack the tg5050 toolchain and sysroot into DEVKIT, or point it elsewhere:
+#
+#   make PLATFORM=TG5050 DEVKIT=/path/to/tg5050/aarch64-nextui-linux-gnu
+#---------------------------------------------------------------------------------
+
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-D_64BIT \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-D_NDEBUG \
+	-D_NO_JACK_ \
+	-DSDL2 \
+	-DSDLAUDIO \
+	-DDUMMYMIDI
+
+DEVKIT ?= /opt/tg5050-nextui-toolchain
+TRIPLET := aarch64-nextui-linux-gnu
+CROSS_COMPILE := $(DEVKIT)/bin/$(TRIPLET)-
+
+# The shared Makefile prepends $(DEVKITARM)/bin to PATH. Left unset that
+# becomes a bare "/bin", which on an FHS-compat host (NixOS) shadows the
+# build shell's python3 with one that has no Pillow, breaking mkfont.py.
+DEVKITARM := $(DEVKIT)
+
+CC    = $(CROSS_COMPILE)gcc
+CXX   = $(CROSS_COMPILE)g++
+STRIP = $(CROSS_COMPILE)strip
+TOOLPATH = $(DEVKIT)/bin
+
+SYSROOT    := $(shell $(CC) -print-sysroot)
+SDL_CFLAGS := -D_REENTRANT -I$(SYSROOT)/usr/include/SDL2
+SDL_LIBS   := -lSDL2
+
+OPT_FLAGS = -O3 -march=armv8-a+crypto+crc -fasynchronous-unwind-tables \
+            -fstack-protector-strong -Wformat -Wformat-security
+
+INCLUDES = -Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources
+CFLAGS   := $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall
+CXXFLAGS := $(CFLAGS) -std=gnu++03
+LIBS     := $(SDL_LIBS) -lpthread
+
+OUTPUT    = ../lgpt-tg5050
+EXTENSION := elf
+
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@

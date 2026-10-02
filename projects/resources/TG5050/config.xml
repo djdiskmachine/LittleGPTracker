@@ -1,0 +1,17 @@
+<CONFIG>
+	<AUTO_LOAD_LAST value="YES"/>
+
+	<!-- The UI grid is 320x240; SCREENMULT is the integer scale applied to it.
+	     3 is the largest whole scale that fits every TrimUI panel NextUI runs
+	     on: 960x720 centred on a 1024x768 Brick / Brick Pro, and exactly full
+	     height on a 1280x720 Smart Pro or tg5050. -->
+	<SCREENMULT value="3"/>
+
+	<!-- ALSA dmix on these devices is unhappy with very small periods; 1024 is
+	     a safe starting point. Drop to 512 for tighter timing if it holds. -->
+	<AUDIOBUFFERSIZE value="1024"/>
+
+	<KEYDELAY value="200"/>
+	<KEYREPEAT value="100"/>
+	<FONTTYPE value="0"/>
+</CONFIG>

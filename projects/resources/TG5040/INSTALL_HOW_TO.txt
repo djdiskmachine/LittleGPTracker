@@ -1,0 +1,36 @@
+Installation (TrimUI Brick / Brick Pro / Smart Pro, NextUI firmware)
+===================================================================
+
+NextUI organises add-ons as "paks": a folder ending in .pak containing a
+launch.sh. Tools live in Tools/<platform>/ at the root of the SD card, and
+this build's platform is "tg5040".
+
+1. Make a folder on the SD card:   /Tools/tg5040/LGPT.pak/
+2. Copy into it: lgpt-tg5040.elf, config.xml, mapping.xml, custom_font.xml
+3. Add a launch.sh in the same folder:
+
+       #!/bin/sh
+       cd "$(dirname "$0")"
+       chmod +x ./lgpt-tg5040.elf
+       export LD_LIBRARY_PATH="/usr/trimui/lib:$LD_LIBRARY_PATH"
+       exec ./lgpt-tg5040.elf
+
+   The LD_LIBRARY_PATH line is required. /etc/ld.so.conf is empty on these
+   devices and /usr/trimui/lib is not on the default search path, so without
+   it SDL2 either resolves to whatever another pak happened to leave behind
+   or is not found at all. It must be the device's own SDL2: other builds
+   are known to fail on the Brick's unsupported SDL_GetDisplayDPI query.
+
+4. Put your samplelib/ and lgpt_* project folders next to the binary, or set
+   ROOTFOLDER in config.xml to keep them elsewhere on the card.
+5. Launch LGPT from the Tools menu.
+
+Controls
+--------
+D-pad navigate, A edit, B back, L/R modifiers, START play. SELECT and the
+menu button are deliberately unmapped.
+
+Notes
+-----
+Renders at a 3x integer scale: 960x720, centred on a 1024x768 Brick and
+exactly full height on a 1280x720 Smart Pro.

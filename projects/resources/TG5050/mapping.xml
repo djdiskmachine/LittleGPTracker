@@ -1,0 +1,39 @@
+<!--
+    TrimUI Brick / Smart Pro built-in gamepad ("TRIMUI Player1", js0).
+
+    Raw SDL joystick indices, taken from the device's own SDL2
+    gamecontroller string:
+      a:b0 b:b1 x:b2 y:b3 leftshoulder:b4 rightshoulder:b5
+      back:b6 start:b7 guide:b8 leftstick:b9 rightstick:b10
+      dpup:h0.1 dpright:h0.2 dpdown:h0.4 dpleft:h0.8
+
+    SDL's "a" is the BOTTOM face button and "b" the RIGHT one, but the Brick
+    is labelled Nintendo-style (B bottom, A right), so the physical A is b1
+    and the physical B is b0 - deliberately crossed over below so that
+    LGPT's A (edit/enter) sits on the button actually printed "A".
+
+    hat direction index is LGPT's own, not SDL's bitmask:
+    0=up 1=right 2=down 3=left (see HatControllerSource::SetHat).
+
+    SELECT (b6) and the menu/guide button (b8) are intentionally left
+    unmapped - LGPT has no /event/select, and NextUI wants the menu button.
+
+    Set <DUMPEVENT value="YES"/> in config.xml to log raw events if you
+    want to re-derive these.
+-->
+<MAPPINGS>
+
+    <MAP src="hat:0:0:0" dst="/event/up" />
+    <MAP src="hat:0:0:1" dst="/event/right" />
+    <MAP src="hat:0:0:2" dst="/event/down" />
+    <MAP src="hat:0:0:3" dst="/event/left" />
+
+    <MAP src="but:0:1" dst="/event/a" />
+    <MAP src="but:0:0" dst="/event/b" />
+
+    <MAP src="but:0:4" dst="/event/lshoulder" />
+    <MAP src="but:0:5" dst="/event/rshoulder" />
+
+    <MAP src="but:0:7" dst="/event/start" />
+
+</MAPPINGS>

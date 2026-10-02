@@ -1,0 +1,59 @@
+-include $(PWD)/rules_base
+
+#---------------------------------------------------------------------------------
+# TrimUI Brick / Smart Pro (Allwinner A133p, "tg5040") running NextUI.
+#
+# Built against the NextUI cross toolchain plus the TrimUI SDK sysroot, the
+# same pair NextUI's own container image uses. Unpack them into DEVKIT (see
+# the header comment in the other TrimUI makefile for the archive URLs), or
+# point DEVKIT at your own copy:
+#
+#   make PLATFORM=TG5040 DEVKIT=/path/to/aarch64-nextui-linux-gnu
+#---------------------------------------------------------------------------------
+
+DEFINES := \
+	-DPLATFORM_$(PLATFORM) \
+	-D_64BIT \
+	-DBUFFERED \
+	-DCPP_MEMORY \
+	-DHAVE_STDINT_H \
+	-D_NDEBUG \
+	-D_NO_JACK_ \
+	-DSDL2 \
+	-DSDLAUDIO \
+	-DDUMMYMIDI
+
+DEVKIT ?= /opt/tg5040-nextui-toolchain
+TRIPLET := aarch64-nextui-linux-gnu
+CROSS_COMPILE := $(DEVKIT)/bin/$(TRIPLET)-
+
+# The shared Makefile prepends $(DEVKITARM)/bin to PATH. Left unset that
+# becomes a bare "/bin", which on an FHS-compat host (NixOS) shadows the
+# build shell's python3 with one that has no Pillow, breaking mkfont.py.
+DEVKITARM := $(DEVKIT)
+
+CC    = $(CROSS_COMPILE)gcc
+CXX   = $(CROSS_COMPILE)g++
+STRIP = $(CROSS_COMPILE)strip
+TOOLPATH = $(DEVKIT)/bin
+
+# The crosstool-NG compiler already resolves its own sysroot, so a bare -lSDL2
+# links; the explicit include path is only so <SDL.h> style includes also work.
+SYSROOT    := $(shell $(CC) -print-sysroot)
+SDL_CFLAGS := -D_REENTRANT -I$(SYSROOT)/usr/include/SDL2
+SDL_LIBS   := -lSDL2
+
+OPT_FLAGS = -O3 -march=armv8-a+crypto+crc -fasynchronous-unwind-tables \
+            -fstack-protector-strong -Wformat -Wformat-security
+
+INCLUDES = -Iinclude $(SDL_CFLAGS) -I$(PWD)/../sources
+CFLAGS   := $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -Wall
+CXXFLAGS := $(CFLAGS) -std=gnu++03
+LIBS     := $(SDL_LIBS) -lpthread
+
+OUTPUT    = ../lgpt-tg5040
+EXTENSION := elf
+
+%.elf: $(OFILES)
+	$(CXX) $(LDFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(STRIP) $@
