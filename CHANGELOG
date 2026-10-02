@@ -1,3 +1,11 @@
+1.6.0-bacon21
+    Added TG5040 and TG5050 targets for TrimUI handhelds running NextUI
+        * TG5040 covers the Brick, Brick Pro and Smart Pro; TG5050 is its own
+          platform with a separate toolchain and sysroot
+        * Both reuse the existing SDL2 adapter set; no new adapter code
+        * SDL2 window now takes the panel's full mode on these platforms,
+          so the scaled grid is centred in the real screen
+
 1.6.0-bacon20
     Fixed MIDI muting
     Added MIDI chord command (MCHD)

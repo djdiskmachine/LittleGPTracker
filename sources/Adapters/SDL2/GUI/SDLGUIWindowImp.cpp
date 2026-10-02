@@ -48,17 +48,17 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   int screenWidth = 320; 
   int screenHeight = 240;
   windowed_ = false;
- #elif defined(PLATFORM_TG5040) || defined(PLATFORM_TG5050)
-  // TrimUI handhelds under NextUI: Brick / Brick Pro (1024x768), Smart Pro and
-  // tg5050 (1280x720). There is no window manager, so take the panel's full
-  // mode and let appAnchorX_/Y_ centre the scaled grid inside it. Left
-  // windowed_ true, SDL would open a 960x720 window on a 1024x768 panel.
-  int screenWidth = displayMode.w;
-  int screenHeight = displayMode.h;
-  windowed_ = false;
  #else
   int screenWidth = displayMode.w;
   int screenHeight = displayMode.h;
+ #endif
+
+ #if defined(PLATFORM_TG5040) || defined(PLATFORM_TG5050)
+  /* TrimUI handhelds under NextUI (Brick and Brick Pro at 1024x768, Smart Pro
+     and tg5050 at 1280x720) have no window manager, so keep the panel's full
+     mode taken above and let appAnchorX_/Y_ centre the scaled grid inside it.
+     Left windowed, SDL opens a 960x720 window on a 1024x768 panel. */
+  windowed_ = false;
  #endif
  
  #if defined(RS97)

@@ -34,6 +34,7 @@ Getting lgpt to run depends on your platform:
 - **gp32:** place LGPT.fxe, lgptNew, and lgpt10k in \GPMM
 - **gp2x/caanoo:** place LGPT.gpe, lgptNew, and lgpt10k in the same folder (anywhere on your SD card)
 - **win/mac/\*nix :** everything should be in the right spot, just run the executable in \install\bin\ (for fullscreen run “lgpt.exe -fullscreen”)
+- **trimui (Brick / Brick Pro / Smart Pro / tg5050, NextUI firmware):** NextUI organises add-ons as "paks". Put the files in a folder called LGPT.pak under Tools/tg5040/ (or Tools/tg5050/) at the root of the SD card, alongside a launch.sh that runs the binary, then start it from the Tools menu. The package's INSTALL_HOW_TO.txt has a working launch.sh, including the LD_LIBRARY_PATH line these devices need to find their own SDL2.
 
 ## Importing Samples
 

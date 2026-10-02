@@ -1,7 +1,16 @@
 -include $(PWD)/rules_base
 
 #---------------------------------------------------------------------------------
-# TrimUI Brick / Smart Pro (Allwinner A133p, "tg5040") running NextUI.
+# TrimUI handhelds running NextUI: "tg5040".
+#
+# tg5040 is NextUI's platform name for the whole Allwinner A133p family - the
+# Brick, the Brick Pro and the Smart Pro all build and ship as tg5040, and all
+# install to Tools/tg5040/ on the SD card. There is deliberately no separate
+# Brick target: NextUI tells the devices apart at runtime, exporting
+# DEVICE=brick / brickpro / smartpro, and the display code below just takes
+# whatever mode the panel reports (1024x768 on a Brick, 1280x720 on a Smart
+# Pro). tg5050 is a different platform with its own toolchain; see
+# Makefile.TG5050.
 #
 # Built against the NextUI cross toolchain plus the TrimUI SDK sysroot, the
 # same pair NextUI's own container image uses. Unpack them into DEVKIT (see
