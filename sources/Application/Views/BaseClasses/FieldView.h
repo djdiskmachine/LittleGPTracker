@@ -17,6 +17,10 @@ public:
 	void ClearFocus() ;
 	int GetFocusIndex() ;
 	void SetSize(int size) ;
+
+    virtual void DrawLabel(int x, int y, int index, const char *txt);
+    virtual void DrawLabel(int x, int y, int minIndex, int maxIndex,
+                                const char *txt);
 private:
 	T_SimpleList<UIField> fieldList_ ;
 	UIField *focus_ ;

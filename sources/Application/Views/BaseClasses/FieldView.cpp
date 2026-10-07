@@ -289,3 +289,42 @@ int FieldView::GetFocusIndex() {
 	} ;
 	return focusIndex ;
 }
+
+/**
+ * Add highlight to labels if the index is selected
+ *
+ * This function will get the current focus index.
+ * Change the color.
+ * Change the impression mode to "invert".
+ *
+ * Print the string
+ *
+ */
+void FieldView::DrawLabel(int x, int y, int minIndex, int maxIndex, const char *txt) {
+    GUITextProperties props ;
+    int focusIndex = GetFocusIndex();
+    if (focusIndex >= minIndex && focusIndex <= maxIndex) {
+        SetColor(CD_HILITE2);
+        props.invert_ = true;
+    } else {
+        SetColor(CD_COL_TITLE);
+        props.invert_ = false;
+    }
+
+    DrawString(x,y, txt, props) ;
+    props.invert_ = false;
+}
+
+/**
+ * Add highlight to labels if the index is selected
+ *
+ * This function will get the current focus index.
+ * Change the color.
+ * Change the impression mode to "invert".
+ *
+ * Print the string
+ *
+ */
+void FieldView::DrawLabel(int x, int y, int index, const char *txt) {
+    DrawLabel(x, y, index, index, txt);
+}
