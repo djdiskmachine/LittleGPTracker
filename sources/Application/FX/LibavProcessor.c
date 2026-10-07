@@ -436,6 +436,26 @@ static void libav_log_to_stdout(void *avcl, int level, const char *fmt, va_list 
     fflush(stdout);
 }
 
+/* Load all IR data first, then process main audio */    
+static int decode_into_buffer(AVFormatContext *fmt_ctx, AVCodecContext *dec_ctx,
+                               AVFilterContext *buffersrc_ctx, AVPacket *pkt, AVFrame *frame) {
+    int ret;
+    while (av_read_frame(fmt_ctx, pkt) >= 0) {
+        if (pkt->stream_index == 0) {
+            ret = avcodec_send_packet(dec_ctx, pkt);
+            while (ret >= 0) {
+                ret = avcodec_receive_frame(dec_ctx, frame);
+                if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) break;
+                if (ret < 0) { av_packet_unref(pkt); return ret; }
+                ret = av_buffersrc_add_frame_flags(buffersrc_ctx, frame, AV_BUFFERSRC_FLAG_KEEP_REF);
+                if (ret < 0) { av_packet_unref(pkt); return ret; }
+            }
+        }
+        av_packet_unref(pkt);
+    }
+    return av_buffersrc_add_frame_flags(buffersrc_ctx, NULL, 0); // signal EOF
+}
+
 int encode(const char *fi, const char *ir, const char *fo, int irWet,
            int irPad) {
     int ret;
@@ -503,32 +523,10 @@ int encode(const char *fi, const char *ir, const char *fo, int irWet,
         goto end;
     }
 
-    /* Load all IR data first, then process main audio */
-    while (av_read_frame(ir_fmt_ctx, ir_packet) >= 0) {
-        if (ir_packet->stream_index == 0) {
-            ret = avcodec_send_packet(ir_dec_ctx, ir_packet);
-            while (ret >= 0) {
-                ret = avcodec_receive_frame(ir_dec_ctx, ir_frame);
-                if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-                    break;
-                } else if (ret < 0) {
-                    fprintf(stderr, "Error while decoding IR\n");
-                    goto end;
-                }
-
-                ret = av_buffersrc_add_frame_flags(ir_buffersrc_ctx, ir_frame, AV_BUFFERSRC_FLAG_KEEP_REF);
-                if (ret < 0) {
-                    av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error while feeding the IR filtergraph\n");
-                    goto end;
-                }
-                ir_loaded = 1;
-            }
-        }
-        av_packet_unref(ir_packet);
-    }
-    
     /* Signal end of IR stream */
-    ret = av_buffersrc_add_frame_flags(ir_buffersrc_ctx, NULL, 0);
+    ret = decode_into_buffer(ir_fmt_ctx, ir_dec_ctx, ir_buffersrc_ctx, ir_packet, ir_frame,
+                              /*drain_each_frame=*/0, &ir_loaded);
+
     if (ret < 0) {
         av_log(NULL, AV_LOG_ERROR, "[LibAvProc] Error closing IR filtergraph\n");
         goto end;
