@@ -81,23 +81,26 @@ void View::drawMap() {
     	GUITextProperties props ;
 
 		//draw entire map
-		SetColor(CD_HILITE1) ;
-    	char buffer[5] ;
-		props.invert_=true ;
-		//row1
+        SetColor(CD_ROW2);
+        props.invert_ = false ;
+        char buffer[5] ;
+        //row1
 		sprintf(buffer,"P G ");
         DrawString(pos._x,pos._y,buffer,props) ;
 		pos._y++ ;		
 		//row2
-		sprintf(buffer,"SCPI");
+        SetColor(CD_ROW);
+        sprintf(buffer,"SCPI");
         DrawString(pos._x,pos._y,buffer,props) ;
 		pos._y++ ;		
 		//row3
+        SetColor(CD_ROW2);
         sprintf(buffer, " MTT");
         DrawString(pos._x,pos._y,buffer,props) ;
 
 		//draw current screen on map
-		SetColor(CD_HILITE2) ;
+        SetColor(CD_CURSOR);
+        props.invert_ = true ;
 		pos._y = anchor._y;
 		switch(viewType_)
 		{
