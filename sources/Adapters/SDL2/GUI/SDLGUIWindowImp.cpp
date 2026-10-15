@@ -70,6 +70,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
   if ((fullscreenValue)&&(!strcmp(fullscreenValue,"YES")))
   {
   	fullscreen=true ;
+  	windowed_=false ;
   }
   	
   if (!strcmp(driverName, "fbcon"))
@@ -108,7 +109,7 @@ SDLGUIWindowImp::SDLGUIWindowImp(GUICreateWindowParams &p)
 
   Trace::Log("DISPLAY","Creating SDL Window (%d,%d)",screenRect_.Width(), screenRect_.Height());
     window_ = SDL_CreateWindow("LittleGPTracker",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,
-                               screenRect_.Width(),screenRect_.Height(),fullscreen?SDL_WINDOW_FULLSCREEN:SDL_WINDOW_SHOWN);
+                               screenRect_.Width(),screenRect_.Height(),fullscreen?SDL_WINDOW_FULLSCREEN_DESKTOP:SDL_WINDOW_SHOWN);
     NAssert(window_) ;
 
 	// Compute the x & y offset to locate our app window
