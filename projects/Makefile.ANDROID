@@ -12,6 +12,10 @@ NDK_PATH ?= $(ANDROID_NDK_HOME)
 # Override BUILD directory to be ABI-specific
 BUILD := build$(PLATFORM)_$(ABI)
 
+# Override adjustdepends for Android, for which it is broken
+define adjustdepends
+endef
+
 ifeq ($(ABI),armeabi-v7a)
     TOOLCHAIN_PREFIX := armv7a-linux-androideabi
     ARCH_FLAGS := -march=armv7-a -mfloat-abi=softfp -mfpu=neon
@@ -25,7 +29,11 @@ else
 endif
 
 # Set up NDK toolchain
-TOOLCHAIN := $(NDK_PATH)/toolchains/llvm/prebuilt/linux-x86_64
+#MACOS toolchain
+TOOLCHAIN := $(NDK_PATH)/toolchains/llvm/prebuilt/darwin-x86_64
+#Linux toolchain
+#TOOLCHAIN := $(NDK_PATH)/toolchains/llvm/prebuilt/linux-x86_64
+
 CC := $(TOOLCHAIN)/bin/$(TOOLCHAIN_PREFIX)$(ANDROID_API)-clang
 CXX := $(TOOLCHAIN)/bin/$(TOOLCHAIN_PREFIX)$(ANDROID_API)-clang++
 AR := $(TOOLCHAIN)/bin/llvm-ar

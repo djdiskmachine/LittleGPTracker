@@ -7,8 +7,8 @@
 extern "C" {
 
 JNIEXPORT void JNICALL
-Java_org_neocities_djdiskmachine_lgpt_1android_LgptSDLActivity_invalidateScreen(JNIEnv *env, jobject thiz)
-{
+Java_net_djdiskmachi_lgpt_1android_LgptSDLActivity_invalidateScreen(
+    JNIEnv *env, jobject thiz) {
     Application *app = Application::GetInstance();
     if (app) {
         AppWindow *appWindow = static_cast<AppWindow *>(app->GetWindow());
@@ -17,7 +17,6 @@ Java_org_neocities_djdiskmachine_lgpt_1android_LgptSDLActivity_invalidateScreen(
         }
     }
 }
-
 }
 
 #endif // __ANDROID__
