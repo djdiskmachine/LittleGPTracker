@@ -1,3 +1,7 @@
+1.6.0-bacon21
+    Android port
+    Fixes folder navigation for Android
+
 1.6.0-bacon20
     Fixed MIDI muting
     Added MIDI chord command (MCHD)

@@ -34,7 +34,8 @@ class AppWindow : public GUIWindow, I_Observer, Status {
     virtual void Clear(bool all = false);
     virtual void ClearRect(GUIRect &rect);
     virtual void SetColor(ColorDefinition cd);
-    void SetDirty();
+    virtual void SetDirty();
+    virtual void ForceFullRedraw();
 
   protected: // GUIWindow implementation
     virtual bool onEvent(GUIEvent &event);

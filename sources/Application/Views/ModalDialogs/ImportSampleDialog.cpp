@@ -266,14 +266,20 @@ void ImportSampleDialog::setCurrentFolder(Path *path) {
 	sampleList_.Empty() ;
 	if (path) {
 		int count=0 ;
-		I_Dir *dir=FileSystem::GetInstance()->Open(path->GetPath().c_str()) ;	
+        // Always provide an "up" entry, independent of platform listing
+        Path *up = new Path(path->GetPath() + "/..");
+        sampleList_.Insert(up);
+        count++;
+        I_Dir *dir=FileSystem::GetInstance()->Open(path->GetPath().c_str());
 		if (dir) {
 			dir->GetContent("*") ;
 			dir->Sort() ;
 			IteratorPtr<Path>it(dir->GetIterator()) ;
 			for (it->Begin();!it->IsDone();it->Next()) {
 				Path &current=it->CurrentItem() ;
-		 		if (current.IsDirectory()) {
+                if (current.GetName() == "..")
+                    continue; // we supply our own
+                if (current.IsDirectory()) {
 					if (current.GetName().substr(0,1)!="." || current.GetName()=="..") {
 						Path *sample=new Path(current) ;
 						sampleList_.Insert(sample) ;
