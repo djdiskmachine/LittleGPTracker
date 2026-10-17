@@ -7,6 +7,7 @@ If you want to grab some sounds to get off the ground quickly, or want to hear a
 ## Installation
 
 Grab the installation package for your platform from the [download page](https://github.com/djdiskmachine/LittleGPTracker/releases/). If the package contains an INSTALL_HOW_TO.txt, follow those instructions. Otherwise, extract the files from the archive & copy it where you like. After that you can run the executable type for your system, located in the lgpt root or in the /bin folder. linux users may need to set the binary as executable (chmod a+x lgpt.deb-exe).
+Android source rebuilds regenerate dependency files automatically; deleting stale `.d` files is no longer required.
 If you're using PPSSPP, LittleGPTracker might boot with a black screen. To workaround
 this, set Software rendering **or** change rendering resolution after LGPT has started
 

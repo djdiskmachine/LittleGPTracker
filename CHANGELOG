@@ -1,3 +1,6 @@
+1.6.0-bacon21
+    Fixed malformed dependency adjustment during Android rebuilds
+
 1.6.0-bacon20
     Fixed MIDI muting
     Added MIDI chord command (MCHD)
