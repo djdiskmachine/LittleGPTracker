@@ -43,6 +43,7 @@ collect_resources() { #1PLATFORM #2lgpt.*-exe
   zip -9 ../../$PACKAGE -jq $CONTENTS && cd -
 }
 
+collect_resources AARCH64 lgpt.aarch64
 collect_resources PSP EBOOT.PBP
 collect_resources DEB lgpt.deb-exe
 collect_resources X64 lgpt.x64

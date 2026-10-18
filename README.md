@@ -44,6 +44,7 @@ Recommended reading to get you started:
 |-------------|---------------|--------------|------------|--------------------------------------|
 | PSP         | NO            | NO           | YES        | [See notes](projects/resources/PSP/INSTALL_HOW_TO.txt) |
 | DEB         | YES           | YES          | YES        |                                      |
+| AARCH64     | YES           | YES          | YES        |                                      |
 | X64         | YES           | YES          | MAYBE      |                                      |
 | X86         | YES           | YES          | YES        |                                      |
 | STEAM       | YES           | YES          | MAYBE      |                                      |
