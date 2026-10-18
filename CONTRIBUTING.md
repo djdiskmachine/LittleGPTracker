@@ -16,7 +16,7 @@ Thank you for considering contributing to this project!
 Before submitting a PR, ensure:
 
 - [ ] **Version bumped** in `sources/Application/Model/Project.h`:
-  - Bump BUILD_COUNT (`#define BUILD_COUNT "3-bacon3"`) for the most part
+  - Bump BUILD_COUNT (`#define BUILD_COUNT "3-bacon3"`) if asked to by repo maintainer.
   
 - [ ] **Documentation updated**:
   - Update `docs/wiki/What-is-LittlePiggyTracker.md` reflecting your changes
@@ -24,6 +24,9 @@ Before submitting a PR, ensure:
   
 - [ ] **Clean commit history**:
   - As changes are merged via squash commit, please provide a clear and descriptive commit message
+
+- [ ] **Submitting new hardware configuration?**:
+  - Before submitting, please check device compatibility with Portmaster. Maintaining a device is continuous work and is rarely a one-shot. Does this hardware configuration contribute something that Portmaster cannot achieve?
 
 - [ ] **Testing**:
   - Describe how you tested your changes in the PR description
