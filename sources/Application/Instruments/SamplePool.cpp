@@ -253,14 +253,15 @@ int SamplePool::Reassign(std::string name, bool imported) {
     if (count_ == MAX_PIG_SAMPLES)
         return -1;
     int insertedIndex = getIndexOf(name.c_str());
-    if (imported)
+    // on disk is not always in the pool: unload only what is
+    if (imported && insertedIndex >= 0)
         unload(insertedIndex);
 
     std::string aliasPath = "samples:";
     aliasPath += name;
     Path dstPath(aliasPath.c_str());
 
-    if (loadSample(dstPath.GetCanonicalPath().c_str())) {
+    if (loadSample(dstPath.GetCanonicalPath().c_str()) == SLOAD_OK) {
         SetChanged();
         SamplePoolEvent ev;
         ev.index_ = getIndexOf(name.c_str());;
