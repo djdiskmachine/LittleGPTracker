@@ -1,0 +1,273 @@
+% ---------------------------------------------------------------------------
+% LittleGPTracker - cheat sheet
+%
+% Build:
+%   TEXMFVAR=$PWD/texmf/var TEXMFCONFIG=$PWD/texmf/config \
+%       pdflatex -interaction=nonstopmode LittleGPTracker-Cheatsheet.tex
+%
+% TEXMFVAR *must* point at a writable directory.  The default
+% (~/.texlive/texmf-var) is not writable here, and without it pdflatex cannot
+% generate the EC bitmap fonts it needs and dies on the first \normalsize.
+%
+% pdflatex rather than lualatex/xelatex: this TeX Live has no Latin Modern
+% OpenType fonts, so fontspec cannot load a default face.  Encoding stays at
+% OT1 for the same reason - the T1/EC variants are bitmap only, while OT1 uses
+% the Type1 CM fonts and stays sharp.  That means: no non-ASCII source, and
+% <, > and | only inside \texttt.
+% ---------------------------------------------------------------------------
+\documentclass[8pt,a4paper]{extarticle}
+
+\usepackage[a4paper,margin=8mm,top=7mm,bottom=7mm]{geometry}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+% ------------------------------------------------------------------ palette
+% The tracker's ayu dark theme, on paper: accents only, dark ink on white.
+\definecolor{accent}{HTML}{A86400}   % ayu gold, darkened to stay legible
+\definecolor{accent2}{HTML}{17604F}  % ayu teal, darkened
+\definecolor{ink}{HTML}{10141C}
+\definecolor{dim}{HTML}{545C6B}
+\definecolor{rule}{HTML}{C9CDD6}
+\definecolor{boxbg}{HTML}{F2EFE7}
+
+\color{ink}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\scriptsize\color{dim}LittleGPTracker cheat sheet \textbullet{} \thepage}
+
+% ------------------------------------------------------------------- layout
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.3mm}
+\setlength{\columnsep}{4mm}
+\setlength{\columnseprule}{0.2pt}
+\renewcommand{\columnseprulecolor}{\color{rule}}
+
+% Section heading: the text, then a rule that fills the rest of the line.  It
+% used to be a full-width rule pulled up under the heading with a negative
+% \vspace, which drew it straight through the descenders.
+%
+% \parfillskip is zeroed inside the group so the rule, not the paragraph's
+% fill glue, takes all of the space left on the line.
+\newcommand{\sechead}[1]{%
+  \par\addvspace{1.5mm}%
+  {\parfillskip=0pt\noindent{\small\bfseries\color{accent}#1}%
+   \quad{\color{rule}\hrulefill}\par}%
+  \addvspace{0.8mm}}
+
+% Entries use an inline label with a small hanging indent, so a wrapped line
+% lines up under the text rather than under the label.
+\newcommand{\entry}[2]{\par\addvspace{0.28mm}\noindent\hangindent=2.4mm\hangafter=1 #1~#2\par}
+\newcommand{\ctl}[2]{\entry{\texttt{\textbf{#1}}}{#2}}
+\newcommand{\cmd}[3]{\entry{\textbf{\color{accent}#1}~{\scriptsize\texttt{#2}}}{#3}}
+\newcommand{\sq}[1]{\texttt{#1}}
+\newcommand{\kw}[1]{\textbf{#1}}
+
+% shaded aside, kept to the column width
+\newcommand{\note}[1]{%
+  \par\addvspace{1.2mm}%
+  \noindent\colorbox{boxbg}{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}%
+      \scriptsize\color{ink}#1%
+    \end{minipage}}%
+  \par\addvspace{0.6mm}}
+
+\begin{document}
+
+% ============================================================== masthead
+\begin{center}
+{\large\bfseries\color{accent} LittleGPTracker}\\[0.2mm]
+{\scriptsize\color{dim}cheat sheet \textbullet{} 1.6.0-bacon20}
+\end{center}
+\vspace{-1.4mm}
+{\color{rule}\hrule height 0.6pt}
+\vspace{0.4mm}
+
+\begin{multicols}{3}
+
+\sechead{Buttons}
+\kw{A}, \kw{B}, the shoulders \kw{LT} and \kw{RT}, \kw{Start} and
+\kw{Select}. On a desktop build the same controls are Q and W for LT and RT,
+the arrow keys for the D-pad and space for Start --- and the tricky part: the
+\kw{A} key is \kw{B}, while \kw{S} is \kw{A}.
+
+\ctl{D-pad}{Move the cursor.}
+\ctl{A}{Insert note / chain / phrase.}
+\ctl{A A}{Insert the next unused one.}
+\ctl{A + D-pad}{Change the value under the cursor: up/down by \sq{10},
+left/right by \sq{1}.}
+\ctl{B}{Copy.}
+\ctl{B + A}{Cut.}
+\ctl{LT + A}{Paste.}
+\ctl{B + D-pad}{Fast navigation: page, channel, or \sq{10}/\sq{1} in value
+screens. On the song screen, left/right switches Song and Live mode.}
+\ctl{RT + D-pad}{Walk between screens.}
+\ctl{RT + B}{Mute or unmute the channel.}
+\ctl{RT + A}{Solo the channel.}
+\ctl{LT + RT}{Undo every mute and solo.}
+\ctl{LT + up/down}{Jump to the next block after a blank row.}
+\ctl{LT + (B,A)}{Clone the item into the next unused slot.}
+\ctl{Start}{Play / stop, at the level of the screen you are on.}
+\ctl{RT + Start}{Play the song from the edited row, on any screen.}
+
+\sechead{Selections}
+\ctl{LT + B}{Select what is under the cursor.}
+\ctl{LT + B B}{Select the whole row.}
+\ctl{LT + B B B}{Select the whole screen.}
+\ctl{D-pad}{Grow or shrink it, then \kw{B} to copy or \kw{LT+A} to cut.}
+\ctl{RT + B}{On a one-column selection in a chain or table: fill values upward.}
+
+\sechead{Live mode}
+\kw{B + left/right} on the song screen toggles it. \kw{Start} then queues only
+the chain under the cursor, not the whole row, so each channel can be on a
+different row.
+
+\ctl{Start}{Queue; the play arrow blinks.}
+\ctl{Start Start}{Queue immediately: starts at the end of the current phrase.}
+\ctl{LT + Start}{Queue every channel on the row.}
+\ctl{RT + Start}{Queue the channel to stop; the arrow becomes an underscore.}
+
+\sechead{Screens}
+\kw{RT + D-pad} walks the map below; the screen you are on is named top left.
+
+{\scriptsize\ttfamily
+\noindent project\\
+song $\leftrightarrow$ chain $\leftrightarrow$ phrase $\leftrightarrow$ instrument\\
+\hspace*{6mm}phrase $\updownarrow$ groove\\
+\hspace*{6mm}phrase $\downarrow$ table \hspace*{3mm} instrument $\downarrow$ table\par}
+
+\ctl{project}{Tempo, master, transpose, soft clip, housekeeping, \kw{midi} out,
+render, save, and \kw{Exit} to quit the tracker.}
+\ctl{song}{The order list: channels across, time down, a chain per cell.}
+\ctl{chain}{Phrases, each row with its own transpose.}
+\ctl{phrase}{Note, instrument, and two commands with their parameters.}
+\ctl{instrument}{Sample, root note, loop, crush, filter, feedback, table.}
+\ctl{table}{Three commands per row, run once per tick.}
+\ctl{groove}{Ticks per step. Two sixes is straight; \sq{1F} swings.}
+
+\sechead{Saving}
+Stop playback first. Project screen, then \kw{Save Song}; the cursor vanishes
+while it writes, so do not switch off until it returns. No undo, no autosave ---
+save early and often.
+
+\kw{Render} writes 16\,bit 44.1\,kHz WAVs as well as playing: \kw{Stereo} for the
+mix, \kw{Stems} for a file per channel.
+
+\sechead{Files}
+Everything sits beside the binary.
+
+\ctl{config.xml}{Screen, theme, MIDI input.}
+\ctl{mapping.xml}{Buttons, joysticks and MIDI events, to tracker events.}
+\ctl{lgpt\_*/}{A directory per project, holding \sq{lgptsav.dat}.}
+\ctl{samplelib/}{The sample library.}
+\ctl{log.txt}{Everything the tracker says, including the MIDI ports it found.}
+
+\sechead{Commands}
+Two per phrase row, three per table row. In \sq{aabb}, \sq{aa} is usually a
+speed or tick count and \sq{bb} the target; speed \sq{00} is instant.
+
+\cmd{ARPG}{abcd}{Arpeggio: cycles root, $+$\sq{a}, $+$\sq{b}, $+$\sq{c},
+$+$\sq{d} semitones; a zero ends the cycle, so \sq{ARPG 3000} is root and $+3$.}
+\cmd{CRSH}{aabb}{\sq{aa} pre-crush drive, \sq{00} leaves it alone; \sq{bb}
+crush depth, \sq{0} is 1 bit, \sq{F} is 16 bit.}
+\cmd{DLAY}{--bb}{Delay the note by \sq{bb} ticks.}
+\cmd{FCUT}{aabb}{Cutoff to \sq{bb} at speed \sq{aa}: \sq{0080} jumps to half,
+\sq{1000} closes it.}
+\cmd{FLTR}{aabb}{Set cutoff \sq{aa} and resonance \sq{bb} outright.
+\sq{FLTR 00FF} is unfiltered.}
+\cmd{FRES}{aabb}{Resonance to \sq{bb} at speed \sq{aa}.}
+\cmd{FBMX}{aabb}{Feedback mix to \sq{bb} at speed \sq{aa}.}
+\cmd{FBTN}{aabb}{Feedback tune to \sq{bb} at speed \sq{aa}.}
+\cmd{HOP}{aabb}{Jump to the next phrase in the chain at row \sq{bb};
+\sq{bb}${=}$\sq{FF} stops the channel. Instant: the rest of the row still runs.}
+\cmd{IRTG}{aabb}{Retrigger the instrument \sq{bb} semitones up. It accumulates:
+\sq{IRTG 0001} climbs a semitone each time.}
+\cmd{KILL}{--bb}{Stop the instrument after \sq{bb} ticks.}
+\cmd{LEGA}{aabb}{Exponential slide to \sq{bb} at speed \sq{aa}; \sq{bb} is
+relative, \sq{00}--\sq{7F} up and \sq{80}--\sq{FF} down.}
+\cmd{LPOF}{aaaa}{Shift loop start and end by \sq{aaaa}, signed. Reset by the
+next note.}
+\cmd{MCHD}{aabb}{Two extra notes \sq{aa} and \sq{bb} semitones above the root,
+held until the next note; \sq{00} is ignored.}
+\cmd{MDCC}{aabb}{MIDI continuous controller \sq{aa} to value \sq{bb}, on the
+running instrument's channel.}
+\cmd{MDPG}{--bb}{MIDI program change; \sq{0000} is program 1.}
+\cmd{MVEL}{--bb}{MIDI note velocity.}
+\cmd{PAN}{aabb}{Pan to \sq{bb} at speed \sq{aa}.}
+\cmd{PFIN}{aabb}{Pitch fine-tune to \sq{bb} at speed \sq{aa}; \sq{00} back to
+the root.}
+\cmd{PLOF}{aabb}{Sample offset. The sample is cut into 256 chunks: jump to
+chunk \sq{aa}, or move \sq{bb} chunks relative.}
+\cmd{PTCH}{aabb}{Linear pitch slide to \sq{bb} at speed \sq{aa}.}
+\cmd{RTRG}{aabb}{Retrigger: loop \sq{bb} ticks from here, moving \sq{aa} ticks
+forward on each pass.}
+\cmd{TABL}{--bb}{Run table \sq{bb}.}
+\cmd{TMPO}{--bb}{Set tempo. \sq{00} changes nothing, \sq{3C} is 60\,bpm,
+\sq{190} is 400\,bpm.}
+\cmd{VOLM}{aabb}{Volume to \sq{bb} at speed \sq{aa}. Start from an instrument
+at volume 0 to fade sounds in.}
+
+\sechead{Instrument}
+\ctl{sample}{The wav. \kw{A A} opens the sample browser.}
+\ctl{volume, pan}{Pan \sq{7F} is centre.}
+\ctl{root note, detune}{Tuning. Your friend when an oscillator sounds wrong.}
+\ctl{drive}{Gain before the crush.}
+\ctl{crush}{Bit depth: \sq{F} clean, lower coarser.}
+\ctl{downsample}{Halves the rate per step up; the aliasing whine.}
+\ctl{flt cut/res}{Cutoff and resonance. Only a low-pass exists in this code.}
+\ctl{type}{Mislabelled: it is wired to the filter \emph{mix}, not a filter type.}
+\ctl{Mode}{Filter distortion: original, bassy, scream.}
+\ctl{attenuate}{Volume after the filter.}
+\ctl{fb tune, fb mix}{Feedback delay line. Below \sq{80} the length is the value,
+above it ten times that.}
+\ctl{interpolation}{\sq{linear} smooths; \sq{none} takes the nearest sample and
+grits up low notes.}
+\ctl{loop mode}{\sq{none}, \sq{loop}, \sq{ping pong}, \sq{oscillator} (the loop
+becomes a tuned waveform), \sq{looper sync} (retunes the loop to exactly 16
+rows).}
+\ctl{slices}{Equal slices from C-2 up; \sq{1} disables.}
+\ctl{start, loop start, loop end}{Hex sample offsets. End below start plays
+backwards.}
+\ctl{automation, table}{Automation steps the table one row per trigger instead
+of letting it free-run.}
+
+\kw{wet}/\kw{pad} print an impulse-response reverb onto the sample. It needs
+ffmpeg; without it the row does nothing.
+
+\sechead{MIDI}
+Whether MIDI is available depends on the platform; the README carries a table.
+Ports are listed once, at startup, in \sq{log.txt}:
+
+{\scriptsize\ttfamily
+\phantom{x}[RTMidiService] 1 input port(s)\\
+\phantom{x}[RTMidiService] \phantom{1} Launchpad:0\par}
+
+\kw{Input.} \sq{config.xml} holds \sq{MIDICTRLDEVICE}, matched as a
+\emph{prefix} of the port name, so with no match no input is opened at all.
+What an event then does is decided by \sq{mapping.xml}:
+
+{\scriptsize\ttfamily
+\phantom{x}\textless{}MAP src="midi:all:0:note:60"\\
+\phantom{xxxxxx}dst="/event/start" /\textgreater\par}
+
+That reads \sq{midi}:\emph{device}:\emph{channel}:\emph{type}:\emph{id}, where
+the channel is \sq{0}--\sq{F} for MIDI 1--16, the device is a name from
+\sq{log.txt} or \sq{all}, and the type is \sq{note}, \sq{cc}, \sq{pc}, \sq{pb}
+or \sq{at}. Destinations are the ones the buttons use: \sq{/event/start},
+\sq{/event/up}, \sq{/event/a} and so on.
+
+\kw{Output.} Which interface the tracker sends to is a \emph{project} setting
+--- the \sq{midi} line on the project screen --- and notes come from MIDI
+instruments, whose screen sets channel, volume and gate length. While it plays
+the tracker also sends clock, start and stop, so it can drive external gear.
+The list is read when the project opens, so an interface plugged in later is
+not offered until you reload.
+
+\note{Ports are only enumerated at startup: connect the interface first, then
+start the tracker. One plugged in later is not offered until you reload.}
+
+\end{multicols}
+\end{document}
