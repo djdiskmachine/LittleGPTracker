@@ -20,6 +20,9 @@
 #define VU_METER_CLIP_LEVEL 7
 #define VU_METER_WARN_LEVEL 5
 
+#define SCREEN_WIDTH 40
+#define SCREEN_HEIGHT 30
+
 enum GUIEventPadButtonMasks {
     EPBM_LEFT = 1,
     EPBM_DOWN = 2,

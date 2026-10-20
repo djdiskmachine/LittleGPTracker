@@ -1,3 +1,8 @@
+1.6.0-bacon21
+    Redesign the Project View
+        * Values are not separate from the label
+        * Labels are highlighted when the value is selected
+
 1.6.0-bacon20
     Fixed MIDI muting
     Added MIDI chord command (MCHD)

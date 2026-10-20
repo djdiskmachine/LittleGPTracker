@@ -1,4 +1,6 @@
 #include "ProjectView.h"
+
+#include "../AppWindow.h"
 #include "Application/Mixer/MixerService.h"
 #include "Application/Model/ProjectDatas.h"
 #include "Application/Model/Scale.h"
@@ -108,10 +110,11 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 	project_=data->project_ ;
 
 	GUIPoint position=GetAnchor() ;
-	
-	Variable *v=project_->FindVariable(VAR_TEMPO) ;
+    position._x += 5;
+
+    Variable *v=project_->FindVariable(VAR_TEMPO) ;
     UITempoField *f = new UITempoField(ACTION_TEMPO_CHANGED, position, *v,
-                                       "Tempo: %d [%2.2x]  ", 60, 400, 1, 10);
+                                       "%d [%2.2x]  ", 60, 400, 1, 10);
     T_SimpleList<UIField>::Insert(f) ;
 	f->AddObserver(*this) ;
 	tempoField_=f ;
@@ -119,29 +122,30 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
     v = project_->FindVariable(VAR_MASTERVOL);
     position._y += 1;
     UIIntVarField *field =
-        new UIIntVarField(position, *v, "Master: %d", 10, 100, 1, 10);
+        new UIIntVarField(position, *v, "%d", 10, 100, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
     v = project_->FindVariable(VAR_PREGAIN);
     position._y += 2;
-    field = new UIIntVarField(position, *v, "Drive: %d", 10, 200, 1, 10);
+    field = new UIIntVarField(position, *v, "%d", 10, 200, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
     position._y += 1;
     v = project_->FindVariable(VAR_SOFTCLIP);
-    field = new UIIntVarField(position, *v, "Type: %s", 0, 4, 1, 4);
+    field = new UIIntVarField(position, *v, "%s", 0, 4, 1, 4);
     T_SimpleList<UIField>::Insert(field);
 
     v = project_->FindVariable(VAR_SOFTCLIP_GAIN);
-    position._x += 13;
+    position._x += 7;
     field = new UIIntVarField(position, *v, "%s", 0, 1, 1, 1);
     T_SimpleList<UIField>::Insert(field);
-    position._x -= 13;
+    position._x -= 7;
 
     v = project_->FindVariable(VAR_TRANSPOSE);
     position._y += 2;
-    UIIntVarField *f2=new UIIntVarField(position,*v,"Transpose: %3.2d",-48,48,0x1,0xC) ;
-	T_SimpleList<UIField>::Insert(f2) ;
+    UIIntVarField *f2 =
+        new UIIntVarField(position, *v, "%+3.2d", -48, 48, 0x1, 0xC);
+    T_SimpleList<UIField>::Insert(f2) ;
 
     v = project_->FindVariable(VAR_SCALE);
 	// if scale name is not found, set the default chromatic scale
@@ -149,48 +153,47 @@ ProjectView::ProjectView(GUIWindow &w,ViewData *data):FieldView(w,data) {
 		v->SetInt(0);
     }
     position._y += 1;
-    field =
-        new UIIntVarField(position, *v, "Scale: %s", 0, scaleCount - 1, 1, 10);
+    field = new UIIntVarField(position, *v, "%s", 0, scaleCount - 1, 1, 10);
     T_SimpleList<UIField>::Insert(field);
 
     position._y += 2;
-    UIActionField *a1 =
-        new UIActionField("Compact Sequencer", ACTION_PURGE, position);
+    UIActionField *a1 = new UIActionField("Sequencer", ACTION_PURGE, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
 
-    position._y += 1;
-    a1 = new UIActionField("Compact Instruments", ACTION_PURGE_INSTRUMENT,
-                           position);
+    position._x += 10;
+    a1 = new UIActionField("Instruments", ACTION_PURGE_INSTRUMENT, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
+    position._x -= 10;
 
     position._y += 2;
-    a1 = new UIActionField("Load Song", ACTION_LOAD, position);
+    a1 = new UIActionField("Load", ACTION_LOAD, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
 
-    position._y += 1;
-    a1 = new UIActionField("Save Song", ACTION_SAVE, position);
+    position._x += 5;
+    a1 = new UIActionField("Save", ACTION_SAVE, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
 
-    position._y += 1;
-    a1 = new UIActionField("Save Song As", ACTION_SAVE_AS, position);
+    position._x += 5;
+    a1 = new UIActionField("Save As", ACTION_SAVE_AS, position);
     a1->AddObserver(*this);
     T_SimpleList<UIField>::Insert(a1);
+    position._x -= 10;
 
     v = project_->FindVariable(VAR_MIDIDEVICE);
     NAssert(v);
     position._y += 2;
-    field = new UIIntVarField(position, *v, "MIDI: %s", 0,
+    field = new UIIntVarField(position, *v, "%s", 0,
                               MidiService::GetInstance()->Size(), 1, 1);
     T_SimpleList<UIField>::Insert(field);
 
     position._y += 2;
     v = project_->FindVariable(VAR_RENDER);
     NAssert(v);
-    field = new UIIntVarField(position, *v, "Render: %s", 0,
+    field = new UIIntVarField(position, *v, "%s", 0,
                               project_->MAX_RENDER_MODE - 1, 1, 2);
     T_SimpleList<UIField>::Insert(field);
 
@@ -243,14 +246,30 @@ void ProjectView::DrawView() {
 	GUITextProperties props ;
 	GUIPoint pos=GetTitlePosition() ;
 
-// Draw title
-
-	char projectString[80] ;
-    sprintf(projectString, "Project (Build %s.%s.%s)", PROJECT_NUMBER,
-            PROJECT_RELEASE, BUILD_COUNT);
-
+    // Draw title
     SetColor(CD_NORMAL);
-    DrawString(pos._x,pos._y,projectString,props) ;
+    DrawString(pos._x, pos._y, "Project", props);
+
+    // Draw Row labels
+    pos=GetAnchor();
+    SetColor(CD_COL_TITLE);
+    DrawLabel(pos._x-1,  pos._y, 0,"Tempo") ;
+    DrawLabel(pos._x-2,pos._y+1, 1,"Master") ;
+    DrawLabel(pos._x-1,pos._y+3, 2,"Drive") ;
+    DrawLabel(pos._x,  pos._y+4, 3,4,"Type") ;
+    DrawLabel(pos._x-5,pos._y+6, 5,"Transpose") ;
+    DrawLabel(pos._x-1,pos._y+7, 6,"Scale") ;
+    DrawLabel(pos._x-3,pos._y+9, 7,8,"Compact") ;
+    DrawLabel(pos._x-3,pos._y+11,9,11, "Project") ;
+    DrawLabel(pos._x,  pos._y+13,12, "Midi") ;
+    DrawLabel(pos._x-2,pos._y+15,13, "Render") ;
+
+    // Draw version
+    SetColor(CD_SONGVIEWFE);
+    char projectString[80] ;
+    sprintf(projectString, "Build %s.%s.%s",
+        PROJECT_NUMBER, PROJECT_RELEASE, BUILD_COUNT);
+    DrawString(SCREEN_WIDTH - strlen(projectString), SCREEN_HEIGHT - 1 , projectString, props);
 
     FieldView::Redraw();
     drawMap();
